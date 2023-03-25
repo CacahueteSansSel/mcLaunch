@@ -6,6 +6,8 @@ using Avalonia.Interactivity;
 using Avalonia.Logging;
 using Avalonia.Markup.Xaml;
 using ddLaunch.Core.Boxes;
+using ddLaunch.Utilities;
+using ddLaunch.Views.Popups;
 
 namespace ddLaunch.Views.Pages;
 
@@ -28,6 +30,8 @@ public partial class BoxDetailsPage : UserControl
 
     private async void RunButtonClicked(object? sender, RoutedEventArgs e)
     {
+        Navigation.ShowPopup(new GameLaunchPopup());
+        
         await Box.PrepareAsync();
         Box.Run();
         
