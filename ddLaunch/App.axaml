@@ -1,0 +1,14 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ddLaunch.App">
+    <Application.Styles>
+        <FluentTheme Mode="Dark"/>
+    </Application.Styles>
+    <Application.Resources>
+        <SolidColorBrush x:Key="Background">#282828</SolidColorBrush>
+        <SolidColorBrush x:Key="BackgroundDarker">#1E1E1E</SolidColorBrush>
+        <SolidColorBrush x:Key="BackgroundLighter">#3C3C3C</SolidColorBrush>
+        <SolidColorBrush x:Key="BackgroundMiddle">#232323</SolidColorBrush>
+        <SolidColorBrush x:Key="DefaultAccent">#9DFF7B</SolidColorBrush>
+    </Application.Resources>
+</Application>

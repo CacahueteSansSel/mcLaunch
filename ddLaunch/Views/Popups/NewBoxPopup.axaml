@@ -1,0 +1,56 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="400"
+             Width="400" Height="450"
+             x:Class="ddLaunch.Views.Popups.NewBoxPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <StackPanel Margin="38">
+            <TextBlock Classes="title" FontSize="25">Create a new box</TextBlock>
+            <DockPanel Margin="0 20 0 0">
+                <StackPanel>
+                    <TextBlock Classes="light" Margin="0 0 0 0">Icon</TextBlock>
+                    <Image x:Name="BoxIconImage" Source="/resources/default_box_logo.png" Width="103"></Image>
+                    <Button Classes="secondary" Margin="0 20 0 0" Click="SelectFileButtonClicked">Select file</Button>
+                </StackPanel>
+                <StackPanel Margin="20 0 0 0" Orientation="Vertical">
+                    <TextBlock Classes="light" Margin="0 0 0 0">Box Name</TextBlock>
+                    <TextBox x:Name="BoxNameTb" Watermark="Name" UseFloatingWatermark="False"></TextBox>
+                    <TextBlock Classes="light" Margin="0 20 0 0">Author Name</TextBlock>
+                    <TextBox x:Name="AuthorNameTb" Watermark="Author" UseFloatingWatermark="False"></TextBox>
+                    <TextBlock Classes="light" Margin="0 20 0 0">Minecraft version</TextBlock>
+                    <ComboBox x:Name="MinecraftVersionCbox" SelectedItem="{Binding SelectedVersion}" SelectionChanged="NewMinecraftVersionSelectedCallback" Items="{Binding Versions}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Id}"></TextBlock>
+                                    <TextBlock Margin="7 0 0 0" Opacity="0.5" Text="{Binding Type}"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <TextBlock Classes="light" Margin="0 20 0 0">Modding framework</TextBlock>
+                    <ComboBox x:Name="ModloaderCbox" SelectedItem="{Binding SelectedModLoader}" Items="{Binding ModLoaders}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}"></TextBlock>
+                                    <TextBlock Margin="7 0 0 0" Opacity="0.5" Text="{Binding Type}"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </DockPanel>
+            <DockPanel Margin="0 20 0 0">
+                <Button DockPanel.Dock="Right" Classes="primary" Click="CreateBoxButtonClicked">Create</Button>
+                <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary" Click="CloseButtonClicked">Close</Button>
+                <Panel></Panel>
+            </DockPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

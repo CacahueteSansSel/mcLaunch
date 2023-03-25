@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Remove=".gitignore" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <TrimmerRootDescriptor Include="Roots.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="0.10.18" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
+        <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="resources\logo.png" />
+      <AvaloniaResource Include="resources\logo.png" />
+      <None Remove="resources\fonts\LexendDeca-Black.ttf" />
+      <AvaloniaResource Include="resources\fonts\LexendDeca-Black.ttf" />
+      <None Remove="resources\fonts\LexendDeca-Bold.ttf" />
+      <AvaloniaResource Include="resources\fonts\LexendDeca-Bold.ttf" />
+      <None Remove="resources\fonts\LexendDeca-ExtraBold.ttf" />
+      <AvaloniaResource Include="resources\fonts\LexendDeca-ExtraBold.ttf" />
+      <None Remove="resources\fonts\LexendDeca-ExtraLight.ttf" />
+      <AvaloniaResource Include="resources\fonts\LexendDeca-ExtraLight.ttf" />
+      <None Remove="resources\fonts\LexendDeca-Light.ttf" />
+      <AvaloniaResource Include="resources\fonts\LexendDeca-Light.ttf" />
+      <None Remove="resources\fonts\LexendDeca-Medium.ttf" />
+      <AvaloniaResource Include="resources\fonts\LexendDeca-Medium.ttf" />
+      <None Remove="resources\fonts\LexendDeca-Regular.ttf" />
+      <AvaloniaResource Include="resources\fonts\LexendDeca-Regular.ttf" />
+      <None Remove="resources\fonts\LexendDeca-SemiBold.ttf" />
+      <AvaloniaResource Include="resources\fonts\LexendDeca-SemiBold.ttf" />
+      <None Remove="resources\fonts\LexendDeca-Thin.ttf" />
+      <AvaloniaResource Include="resources\fonts\LexendDeca-Thin.ttf" />
+      <None Remove="resources\default_box_logo.png" />
+      <AvaloniaResource Include="resources\default_box_logo.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj" />
+      <ProjectReference Include="..\ddLaunch.Core\ddLaunch.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Managers" />
+    </ItemGroup>
+</Project>

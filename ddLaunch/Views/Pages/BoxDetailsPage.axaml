@@ -1,0 +1,45 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:ddLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="450"
+             Background="{DynamicResource BackgroundDarker}"
+             x:Class="ddLaunch.Views.Pages.BoxDetailsPage">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <ScrollViewer>
+        <StackPanel Background="black">
+            <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
+                <views:BackButton></views:BackButton>
+            </StackPanel>
+            <Border Classes="frame" Margin="0 10 0 100" Width="888">
+                <StackPanel Margin="1" Orientation="Vertical">
+                    <DockPanel Margin="38 38 38 0" LastChildFill="True">
+                        <Image DockPanel.Dock="Left" Source="{Binding Manifest.Icon}" Height="155"></Image>
+                        <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
+                            <Button Classes="primary" Width="124" HorizontalContentAlignment="Center" Click="RunButtonClicked">Run</Button>
+                            <Button Classes="secondary" Margin="0 14 0 0" Width="124" HorizontalContentAlignment="Center">Export</Button>
+                        </StackPanel>
+                        <StackPanel Margin="29 0 0 0" Orientation="Vertical">
+                            <TextBlock Classes="title" FontSize="32" Text="{Binding Manifest.Name}"></TextBlock>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Classes="light" FontSize="16">by</TextBlock>
+                                <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16" Text="{Binding Manifest.Author}"></TextBlock>
+                            </StackPanel>
+                            <TextBlock Classes="light" Margin="0 5 0 0" Opacity="0.25" FontSize="16" Text="{Binding Manifest.DescriptionLine}"></TextBlock>
+                        </StackPanel>
+                    </DockPanel>
+                    <DockPanel Margin="38 10 38 0">
+                        <Button DockPanel.Dock="Left" Classes="secondary">Add mods</Button>
+                        <Button DockPanel.Dock="Left" Margin="10 0 0 0" Classes="secondary">Update all</Button>
+                        <TextBlock DockPanel.Dock="Right" Classes="light" Opacity="0.25" VerticalAlignment="Center" HorizontalAlignment="Right" >0 MODS</TextBlock>
+                        <Panel></Panel>
+                    </DockPanel>
+                    <views:ModificationList Margin="38 10 38 20"></views:ModificationList>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
