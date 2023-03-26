@@ -23,6 +23,7 @@ public static class DownloadManager
     public static event Action OnDownloadFinished;
     public static event Action<string> OnDownloadPrepareStarting;
     public static event Action OnDownloadPrepareEnding;
+    public static event Action<string, int> OnDownloadSectionStarting;
 
     public static void Init()
     {
@@ -73,6 +74,7 @@ public static class DownloadManager
         foreach (DownloadSection section in sections)
         {
             CurrentSection = section;
+            OnDownloadSectionStarting?.Invoke(section.Name, sectionIndex);
             
             int progress = 0;
             foreach (DownloadEntry entry in section.Entries)

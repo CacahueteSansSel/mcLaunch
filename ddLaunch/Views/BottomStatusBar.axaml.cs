@@ -24,6 +24,14 @@ public partial class BottomStatusBar : UserControl
         DownloadManager.OnDownloadPrepareEnding += OnDownloadFinished;
         DownloadManager.OnDownloadProgressUpdate += OnDownloadProgressUpdate;
         DownloadManager.OnDownloadFinished += OnDownloadFinished;
+        DownloadManager.OnDownloadSectionStarting += OnDownloadSectionStarting;
+    }
+
+    private void OnDownloadSectionStarting(string sectionName, int index)
+    {
+        UIDataContext.Progress = 0;
+        UIDataContext.ResourceName = sectionName;
+        UIDataContext.ResourceCount = $"{index}/{DownloadManager.PendingSectionCount}";
     }
 
     private void OnDownloadPrepareStarting(string name)
