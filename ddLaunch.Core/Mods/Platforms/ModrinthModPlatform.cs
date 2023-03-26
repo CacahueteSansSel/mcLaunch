@@ -116,47 +116,53 @@ public class ModrinthModPlatform : ModPlatform
             {
                 if (dependency.DependencyType != DependencyType.Required) continue;
                 
-                targetBox.Manifest.Modifications.Add(new BoxStoredModification
-                {
-                    Id = dependency.ProjectId,
-                    PlatformId = Name,
-                    VersionId = dependency.VersionId
-                });
+                if (targetBox.Manifest.HasModification(dependency.ProjectId, dependency.VersionId, Name))
+                    continue;
                 
                 Version dependencyVersion = await client.Version.GetAsync(dependency.VersionId);
                 
                 DownloadManager.Begin($"Dependency {dependencyVersion.Name}");
-                
+
+                List<string> filenames = new();
                 foreach (File file in dependencyVersion.Files)
                 {
                     string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
                     string url = file.Url;
+                
+                    // TODO: This may break things
+                    if (System.IO.File.Exists(path)) continue;
             
                     DownloadManager.Add(url, path, EntryAction.Download);
+                    filenames.Add(path);
                 }
+                
+                targetBox.Manifest.AddModification(dependency.ProjectId, dependency.VersionId, Name, filenames.ToArray());
                 
                 DownloadManager.End();
             }
         }
-        
-        DownloadManager.Begin($"{mod.Name} {version.Name}");
-                
-        targetBox.Manifest.Modifications.Add(new BoxStoredModification
-        {
-            Id = mod.Id,
-            PlatformId = Name,
-            VersionId = versionId
-        });
 
-        foreach (File file in version.Files)
+        if (!targetBox.HasModification(mod))
         {
-            string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
-            string url = file.Url;
+            DownloadManager.Begin($"{mod.Name} {version.Name}");
+
+            List<string> filenames = new();
+            foreach (File file in version.Files)
+            {
+                string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
+                string url = file.Url;
+                
+                // TODO: This may break things
+                if (System.IO.File.Exists(path)) continue;
             
-            DownloadManager.Add(url, path, EntryAction.Download);
-        }
+                DownloadManager.Add(url, path, EntryAction.Download);
+                filenames.Add(path);
+            }
+                
+            targetBox.Manifest.AddModification(mod.Id, versionId, Name, filenames.ToArray());
         
-        DownloadManager.End();
+            DownloadManager.End();
+        }
 
         await DownloadManager.DownloadAll();
         

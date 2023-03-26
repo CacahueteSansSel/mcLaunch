@@ -67,8 +67,31 @@ public partial class ModDetailsPage : UserControl
                 TargetBox.Manifest.ModLoaderId,
                 TargetBox.Manifest.Version);
 
+        if (versions.Length == 0)
+        {
+            // TODO: Error message
+            
+            SetInstalled(false);
+            return;
+        }
+
         await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, versions[0]);
 
         SetInstalled(true);
+    }
+
+    private async void UninstallButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        InstallButton.IsVisible = false;
+        InstallButton.IsEnabled = false;
+
+        UninstallButton.IsVisible = false;
+        UninstallButton.IsEnabled = false;
+        
+        TargetBox.Manifest.RemoveModification(Mod.Id);
+        
+        TargetBox.SaveManifest();
+        
+        SetInstalled(false);
     }
 }

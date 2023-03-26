@@ -43,6 +43,40 @@ public class BoxManifest
         Version = version.Id;
     }
 
+    public bool HasModification(string id, string versionId, string platformId)
+        => Modifications.FirstOrDefault(m => m.Id == id 
+                                             && m.PlatformId == platformId 
+                                             && m.VersionId == versionId) != null;
+    
+    public bool HasModification(string id, string platformId)
+        => Modifications.FirstOrDefault(m => m.Id == id 
+                                             && m.PlatformId == platformId) != null;
+
+    public BoxStoredModification? GetModification(string id)
+        => Modifications.FirstOrDefault(mod => mod.Id == id);
+
+    public void AddModification(string id, string versionId, string platformId, string[] filenames)
+    {
+        if (HasModification(id, versionId, platformId)) return;
+        
+        Modifications.Add(new BoxStoredModification
+        {
+            Id = id,
+            PlatformId = platformId,
+            VersionId = versionId,
+            Filenames = filenames
+        });
+    }
+
+    public void RemoveModification(string id)
+    {
+        BoxStoredModification? mod = GetModification(id);
+        if (mod == null) return;
+        
+        mod.Delete();
+        Modifications.Remove(mod);
+    }
+
     public async Task<MinecraftVersion> Setup()
     {
         MinecraftVersion mcVersion =
@@ -78,4 +112,13 @@ public class BoxStoredModification
     public string Id { get; init; }
     public string VersionId { get; init; }
     public string PlatformId { get; init; }
+    public string[] Filenames { get; init; }
+
+    public void Delete()
+    {
+        foreach (string file in Filenames)
+        {
+            if (File.Exists(file)) File.Delete(file);
+        }
+    }
 }

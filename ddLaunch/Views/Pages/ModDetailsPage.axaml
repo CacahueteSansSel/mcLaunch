@@ -25,7 +25,7 @@
                                     Install
                                 </Button>
                                 <Button x:Name="UninstallButton" Classes="secondary" Width="124"
-                                        HorizontalContentAlignment="Center">
+                                        HorizontalContentAlignment="Center" Click="UninstallButtonClicked">
                                     Uninstall
                                 </Button>
                             </StackPanel>

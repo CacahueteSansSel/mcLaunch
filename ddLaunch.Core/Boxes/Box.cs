@@ -68,7 +68,7 @@ public class Box
     }
 
     public bool HasModification(Modification mod)
-        => Manifest.Modifications.FirstOrDefault(m => m.Id == mod.Id && m.PlatformId == mod.Platform.Name) != null;
+        => Manifest.HasModification(mod.Id, mod.Platform.Name);
 
     public void SaveManifest()
     {
