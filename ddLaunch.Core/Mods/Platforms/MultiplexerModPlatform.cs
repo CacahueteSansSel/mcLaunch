@@ -33,4 +33,22 @@ public class MultiplexerModPlatform : ModPlatform
         
         return mods.ToArray();
     }
+
+    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId)
+    {
+        ModPlatform modPlatform = mod.Platform;
+
+        if (!_platforms.Contains(modPlatform)) return false;
+
+        return await modPlatform.InstallModificationAsync(targetBox, mod, versionId);
+    }
+
+    public override async Task<Modification> DownloadAdditionalInfosAsync(Modification mod)
+    {
+        ModPlatform modPlatform = mod.Platform;
+
+        if (!_platforms.Contains(modPlatform)) return mod;
+
+        return await modPlatform.DownloadAdditionalInfosAsync(mod);
+    }
 }

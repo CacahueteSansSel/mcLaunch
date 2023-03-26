@@ -18,7 +18,7 @@ public partial class BoxDetailsPage : UserControl
 
     public BoxDetailsPage()
     {
-        
+        InitializeComponent();
     }
     
     public BoxDetailsPage(Box box)

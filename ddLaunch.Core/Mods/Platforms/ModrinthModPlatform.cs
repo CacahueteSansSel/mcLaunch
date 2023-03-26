@@ -38,8 +38,11 @@ public class ModrinthModPlatform : ModPlatform
         {
             Id = hit.ProjectId,
             Name = hit.Title,
+            ShortDescription = hit.Description,
             Author = hit.Author,
             IconPath = hit.IconUrl,
+            Versions = hit.Versions,
+            LatestVersion = hit.LatestVersion,
             Platform = this
         }).ToArray();
 
@@ -47,5 +50,21 @@ public class ModrinthModPlatform : ModPlatform
         foreach (Modification mod in mods) await mod.DownloadIconAsync();
 
         return mods;
+    }
+
+    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId)
+    {
+        return false;
+    }
+
+    public override async Task<Modification> DownloadAdditionalInfosAsync(Modification mod)
+    {
+        if (mod.LongDescriptionBody != null) return mod;
+        
+        Project project = await client.Project.GetAsync(mod.Id);
+
+        mod.LongDescriptionBody = project.Body;
+
+        return mod;
     }
 }

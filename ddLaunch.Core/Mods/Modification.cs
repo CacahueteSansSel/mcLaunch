@@ -1,14 +1,25 @@
 ﻿using Avalonia.Media.Imaging;
 using ddLaunch.Core.Managers;
+using ReactiveUI;
 
 namespace ddLaunch.Core.Mods;
 
-public class Modification
+public class Modification : ReactiveObject
 {
-    public string Name { get; set; }
+    string? longDescriptionBody;
+    public string? Name { get; set; }
     public string Id { get; set; }
     public string Author { get; set; }
-    public string IconPath { get; set; }
+    public string? ShortDescription { get; set; }
+
+    public string? LongDescriptionBody
+    {
+        get => longDescriptionBody;
+        set => this.RaiseAndSetIfChanged(ref longDescriptionBody, value);
+    }
+    public string? IconPath { get; set; }
+    public string[] Versions { get; set; }
+    public string? LatestVersion { get; set; }
     public Bitmap Icon { get; set; }
     public ModPlatform Platform { get; set; }
 

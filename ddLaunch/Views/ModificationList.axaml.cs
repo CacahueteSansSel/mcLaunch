@@ -9,6 +9,8 @@ using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Mods;
 using ddLaunch.Models;
+using ddLaunch.Utilities;
+using ddLaunch.Views.Pages;
 using ReactiveUI;
 
 namespace ddLaunch.Views;
@@ -89,5 +91,14 @@ public partial class ModificationList : UserControl
 
         LoadCircle.IsVisible = false;
         LoadMoreButton.IsEnabled = true;
+    }
+
+    private void ModSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (e.AddedItems.Count > 0)
+        {
+            Modification selectedMod = (Modification)e.AddedItems[0];
+            Navigation.Push(new ModDetailsPage(selectedMod, lastBox));
+        }
     }
 }
