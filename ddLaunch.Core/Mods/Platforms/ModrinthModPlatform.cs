@@ -36,6 +36,7 @@ public class ModrinthModPlatform : ModPlatform
 
         Modification[] mods = search.Hits.Select(hit => new Modification
         {
+            Id = hit.ProjectId,
             Name = hit.Title,
             Author = hit.Author,
             IconPath = hit.IconUrl,

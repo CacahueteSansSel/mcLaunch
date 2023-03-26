@@ -23,6 +23,7 @@ public partial class App : Application
         ModPlatformManager.Init(new MultiplexerModPlatform(
             new ModrinthModPlatform()
         ));
+        CacheManager.Init();
     }
 
     public override void OnFrameworkInitializationCompleted()

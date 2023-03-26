@@ -1,10 +1,12 @@
 ﻿using Avalonia.Media.Imaging;
+using ddLaunch.Core.Managers;
 
 namespace ddLaunch.Core.Mods;
 
 public class Modification
 {
     public string Name { get; set; }
+    public string Id { get; set; }
     public string Author { get; set; }
     public string IconPath { get; set; }
     public Bitmap Icon { get; set; }
@@ -30,6 +32,17 @@ public class Modification
 
     public async Task DownloadIconAsync()
     {
+        string cacheName = $"icon-mod-{Platform.Name}-{Id}";
+        if (CacheManager.Has(cacheName))
+        {
+            await Task.Run(() =>
+            {
+                Icon = CacheManager.Load(cacheName);
+            });
+
+            return;
+        }
+
         if (IconPath == null) return;
         
         await using (var imageStream = await LoadIconStreamAsync())
@@ -37,6 +50,8 @@ public class Modification
             if (imageStream == null) return;
             
             Icon = await Task.Run(() => Bitmap.DecodeToWidth(imageStream, 400));
+            
+            CacheManager.Store(Icon, cacheName);
         }
     }
 }
