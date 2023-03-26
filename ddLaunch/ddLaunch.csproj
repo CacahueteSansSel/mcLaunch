@@ -46,6 +46,8 @@
       <AvaloniaResource Include="resources\fonts\LexendDeca-Thin.ttf" />
       <None Remove="resources\default_box_logo.png" />
       <AvaloniaResource Include="resources\default_box_logo.png" />
+      <None Remove="resources\loading_circle.png" />
+      <AvaloniaResource Include="resources\loading_circle.png" />
     </ItemGroup>
 
     <ItemGroup>

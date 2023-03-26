@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using ddLaunch.Core;
 using ddLaunch.Core.Boxes;
@@ -14,6 +15,9 @@ namespace ddLaunch.Views;
 
 public partial class ModificationList : UserControl
 {
+    Box lastBox;
+    string lastQuery;
+    
     public ModificationList()
     {
         InitializeComponent();
@@ -28,20 +32,62 @@ public partial class ModificationList : UserControl
 
     public async Task SearchAsync(Box box, string query)
     {
-        // TODO: Loading indicator
+        LoadMoreButton.IsEnabled = false;
+        LoadCircle.IsVisible = true;
+        
         Data ctx = (Data) DataContext;
 
-        ctx.Modifications = await ModPlatformManager.Platform.GetModsAsync(0, box, query);
+        ctx.Modifications = await SearchModsAsync(box, query);
+
+        LoadCircle.IsVisible = false;
+        LoadMoreButton.IsEnabled = true;
     }
-    
+
+    async Task<Modification[]> SearchModsAsync(Box box, string query)
+    {
+        Data ctx = (Data) DataContext;
+        
+        var mods = await ModPlatformManager.Platform.GetModsAsync(ctx.Page, box, query);
+        
+        lastBox = box;
+        lastQuery = query;
+
+        return mods;
+    }
+
     public class Data : ReactiveObject
     {
         Modification[] mods;
+        int page;
         
         public Modification[] Modifications
         {
             get => mods;
             set => this.RaiseAndSetIfChanged(ref mods, value);
         }
+
+        public int Page
+        {
+            get => page;
+            set => this.RaiseAndSetIfChanged(ref page, value);
+        }
+    }
+
+    private async void LoadMoreButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Data ctx = (Data) DataContext;
+        
+        LoadMoreButton.IsEnabled = false;
+        LoadCircle.IsVisible = true;
+
+        ctx.Page++;
+
+        List<Modification> mods = new List<Modification>(ctx.Modifications);
+        mods.AddRange(await SearchModsAsync(lastBox, lastQuery));
+
+        ctx.Modifications = mods.ToArray();
+
+        LoadCircle.IsVisible = false;
+        LoadMoreButton.IsEnabled = true;
     }
 }

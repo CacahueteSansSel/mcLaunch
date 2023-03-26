@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:ddLaunch.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ddLaunch.Views.ModificationList">
     <UserControl.Styles>
@@ -11,27 +12,33 @@
             <Setter Property="Background" Value="transparent"></Setter>
         </Style>
     </UserControl.Styles>
-    <ListBox SelectionMode="Single" Items="{Binding Modifications}">
-        <ListBox.Styles>
-            <Style Selector="ListBoxItem">
-                <Setter Property="CornerRadius" Value="4"></Setter>
-                <Setter Property="Margin" Value="4"></Setter>
-            </Style>
-        </ListBox.Styles>
-        <ListBox.ItemTemplate>
-            <DataTemplate>
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="{Binding Icon}" Width="40"></Image>
-                        
-                    <StackPanel Margin="10 0 0 0" Orientation="Vertical">
-                        <TextBlock Classes="title" Text="{Binding Name}"></TextBlock>
+    <Panel>
+        <StackPanel Orientation="Vertical">
+            <ListBox SelectionMode="Single" Items="{Binding Modifications}">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="CornerRadius" Value="4"></Setter>
+                        <Setter Property="Margin" Value="4"></Setter>
+                    </Style>
+                </ListBox.Styles>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Classes="light" Margin="0 0 5 0">by</TextBlock>
-                            <TextBlock Classes="title" Text="{Binding Author}"></TextBlock>
+                            <Image Source="{Binding Icon}" Width="40"></Image>
+                        
+                            <StackPanel Margin="10 0 0 0" Orientation="Vertical">
+                                <TextBlock Classes="title" Text="{Binding Name}"></TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Classes="light" Margin="0 0 5 0">by</TextBlock>
+                                    <TextBlock Classes="title" Text="{Binding Author}"></TextBlock>
+                                </StackPanel>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </DataTemplate>
-        </ListBox.ItemTemplate>
-    </ListBox>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Button x:Name="LoadMoreButton" HorizontalAlignment="Center" Margin="0 20 0 0" Classes="secondary" Click="LoadMoreButtonClicked">Load more</Button>
+        </StackPanel>
+        <views:LoadingCircle x:Name="LoadCircle" IsVisible="False" IsHitTestVisible="False"/>
+    </Panel>
 </UserControl>
