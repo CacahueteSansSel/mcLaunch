@@ -14,7 +14,7 @@ public class MainWindowDataContext : PageNavigator
     Control curPage;
     Control curPopup;
     bool isPopupShown;
-    Stack<Type> stack = new();
+    Stack<Control> stack = new();
 
     public Control CurrentPage
     {
@@ -57,7 +57,7 @@ public class MainWindowDataContext : PageNavigator
 
     public void Push(Control value)
     {
-        stack.Push(value.GetType());
+        stack.Push(value);
         CurrentPage = value;
     }
 
@@ -66,7 +66,12 @@ public class MainWindowDataContext : PageNavigator
         if (stack.Count <= 1) return;
 
         stack.Pop();
-        CurrentPage = (Control)Activator.CreateInstance(stack.Peek())!;
+        
+        // Force the current page to update
+        CurrentPage = null;
+        this.RaisePropertyChanged(nameof(CurrentPage));
+        CurrentPage = stack.Peek();
+        this.RaisePropertyChanged(nameof(CurrentPage));
     }
 
     public void ShowPopup(Control popup)
