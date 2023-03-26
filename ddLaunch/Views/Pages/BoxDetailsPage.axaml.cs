@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -37,5 +38,10 @@ public partial class BoxDetailsPage : UserControl
         
         // TODO: watcher process that checks if minecraft is closed, then reopens the launcher
         Environment.Exit(0);
+    }
+
+    private void AddModsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.Push(new ModSearchPage(Box));
     }
 }

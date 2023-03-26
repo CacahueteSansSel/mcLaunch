@@ -21,7 +21,7 @@
         <ListBox.ItemTemplate>
             <DataTemplate>
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/resources/default_box_logo.png" Width="40"></Image>
+                    <Image Source="{Binding Icon}" Width="40"></Image>
                         
                     <StackPanel Margin="10 0 0 0" Orientation="Vertical">
                         <TextBlock Classes="title" Text="{Binding Name}"></TextBlock>

@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="Avalonia" Version="0.10.18" />
+      <PackageReference Include="Modrinth.Net" Version="3.1.0-rc3" />
     </ItemGroup>
 
 </Project>
