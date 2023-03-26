@@ -11,7 +11,8 @@ namespace ddLaunch.Core.Mods.Platforms;
 public class ModrinthModPlatform : ModPlatform
 {
     ModrinthClient client;
-    
+    Dictionary<string, Modification> modCache = new();
+
     public override string Name { get; } = "Modrinth";
 
     public ModrinthModPlatform()
@@ -58,10 +59,12 @@ public class ModrinthModPlatform : ModPlatform
 
     public override async Task<Modification> GetModAsync(string id)
     {
+        if (modCache.ContainsKey(id)) return modCache[id];
+        
         Project project = await client.Project.GetAsync(id);
         TeamMember[] team = await client.Team.GetAsync(project.Team);
 
-        return new Modification
+        Modification mod = new Modification
         {
             Id = project.Id,
             Name = project.Title,
@@ -75,6 +78,9 @@ public class ModrinthModPlatform : ModPlatform
             LongDescriptionBody = project.Body,
             Platform = this
         };
+        
+        modCache.Add(id, mod);
+        return mod;
     }
 
     public override async Task<string[]> GetVersionsForMinecraftVersionAsync(string modId, string modLoaderId, string minecraftVersionId)
