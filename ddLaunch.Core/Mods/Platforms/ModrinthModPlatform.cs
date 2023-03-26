@@ -44,7 +44,6 @@ public class ModrinthModPlatform : ModPlatform
         }).ToArray();
 
         // Download all mods images
-        // TODO: Cache
         foreach (Modification mod in mods) await mod.DownloadIconAsync();
 
         return mods;
