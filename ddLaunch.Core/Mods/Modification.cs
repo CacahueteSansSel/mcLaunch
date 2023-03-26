@@ -19,7 +19,9 @@ public class Modification : ReactiveObject
     }
     public string? IconPath { get; set; }
     public string[] Versions { get; set; }
+    public string[] MinecraftVersions { get; set; }
     public string? LatestVersion { get; set; }
+    public string? LatestMinecraftVersion { get; set; }
     public Bitmap Icon { get; set; }
     public ModPlatform Platform { get; set; }
 

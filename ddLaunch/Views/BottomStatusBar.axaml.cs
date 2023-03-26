@@ -15,17 +15,18 @@ public partial class BottomStatusBar : UserControl
     
     public BottomStatusBar()
     {
+        InitializeComponent();
         Instance = this;
         
-        InitializeComponent();
         DataContext = new Data();
         
-        DownloadManager.OnDownloadStarting += OnDownloadStarting;
+        DownloadManager.OnDownloadPrepareStarting += OnDownloadPrepareStarting;
+        DownloadManager.OnDownloadPrepareEnding += OnDownloadFinished;
         DownloadManager.OnDownloadProgressUpdate += OnDownloadProgressUpdate;
         DownloadManager.OnDownloadFinished += OnDownloadFinished;
     }
 
-    private void OnDownloadStarting(string name)
+    private void OnDownloadPrepareStarting(string name)
     {
         UIDataContext.Progress = 0;
         UIDataContext.ResourceName = $"Preparing downloading {name}";
@@ -35,19 +36,14 @@ public partial class BottomStatusBar : UserControl
     {
         UIDataContext.Progress = 0;
         UIDataContext.ResourceName = "No pending download";
+        UIDataContext.ResourceCount = string.Empty;
     }
 
-    private void OnDownloadProgressUpdate(string file, float percent)
+    private void OnDownloadProgressUpdate(string file, float percent, int currentSectionIndex)
     {
         UIDataContext.Progress = (int)MathF.Round(percent * 100);
-        UIDataContext.ResourceName = DownloadManager.DownloadName;
-        
-        Console.WriteLine(percent);
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
+        UIDataContext.ResourceName = DownloadManager.DescriptionLine;
+        UIDataContext.ResourceCount = $"{currentSectionIndex}/{DownloadManager.PendingSectionCount}";
     }
 
     public class Data : ReactiveObject

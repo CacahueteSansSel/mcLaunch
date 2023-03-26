@@ -54,14 +54,16 @@ public static class BoxManager
         return path;
     }
 
-    public static async Task SetupVersionAsync(MinecraftVersion version)
+    public static async Task SetupVersionAsync(MinecraftVersion version, string? customName = null, bool downloadAllAfter = true)
     {
-        DownloadManager.Begin($"Minecraft {version.Id}");
+        DownloadManager.Begin(customName ?? $"Minecraft {version.Id}");
         
         await systemFolder.InstallVersionAsync(version);
         await assetsDownloader.DownloadAsync(version, null);
         await librariesDownloader.DownloadAsync(version, null);
         
-        await DownloadManager.DownloadAll();
+        DownloadManager.End();
+        
+        if (downloadAllAfter) await DownloadManager.DownloadAll();
     }
 }

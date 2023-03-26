@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using Avalonia;
@@ -7,6 +8,8 @@ using Avalonia.Interactivity;
 using Avalonia.Logging;
 using Avalonia.Markup.Xaml;
 using ddLaunch.Core.Boxes;
+using ddLaunch.Core.Managers;
+using ddLaunch.Core.Mods;
 using ddLaunch.Utilities;
 using ddLaunch.Views.Popups;
 
@@ -27,6 +30,28 @@ public partial class BoxDetailsPage : UserControl
         
         Box = box;
         DataContext = box;
+
+        PopulateStoredModsList();
+    }
+
+    async void PopulateStoredModsList()
+    {
+        ModsList.HideLoadMoreButton();
+        ModsList.SetLoadingCircle(true);
+        
+        List<Modification> mods = new();
+
+        foreach (BoxStoredModification storedMod in Box.Manifest.Modifications)
+        {
+            Modification mod = await ModPlatformManager.Platform.GetModAsync(storedMod.Id);
+            await mod.DownloadIconAsync();
+            
+            mods.Add(mod);
+        }
+        
+        ModsList.SetModifications(mods.ToArray());
+        ModsList.SetLoadingCircle(false);
+        ModsList.SetBox(Box);
     }
 
     private async void RunButtonClicked(object? sender, RoutedEventArgs e)

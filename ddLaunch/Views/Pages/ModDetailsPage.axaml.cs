@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Mods;
+using Modrinth.Models;
 
 namespace ddLaunch.Views.Pages;
 
@@ -12,15 +13,15 @@ public partial class ModDetailsPage : UserControl
 {
     public Modification Mod { get; private set; }
     public Box TargetBox { get; private set; }
-    
+
     public ModDetailsPage()
     {
         InitializeComponent();
-        
+
         SetInstalled(false);
         LoadCircle.IsVisible = false;
     }
-    
+
     public ModDetailsPage(Modification mod, Box targetBox)
     {
         InitializeComponent();
@@ -28,8 +29,8 @@ public partial class ModDetailsPage : UserControl
         Mod = mod;
         TargetBox = targetBox;
         DataContext = mod;
-        
-        SetInstalled(false);
+
+        SetInstalled(targetBox.HasModification(mod));
         GetModAdditionalInfos();
     }
 
@@ -38,7 +39,7 @@ public partial class ModDetailsPage : UserControl
         LoadCircle.IsVisible = true;
 
         await ModPlatformManager.Platform.DownloadAdditionalInfosAsync(Mod);
-        
+
         LoadCircle.IsVisible = false;
     }
 
@@ -46,13 +47,28 @@ public partial class ModDetailsPage : UserControl
     {
         InstallButton.IsVisible = !isInstalled;
         InstallButton.IsEnabled = !isInstalled;
-        
+
         UninstallButton.IsVisible = isInstalled;
         UninstallButton.IsEnabled = isInstalled;
     }
 
-    private void InstallButtonClicked(object? sender, RoutedEventArgs e)
+    private async void InstallButtonClicked(object? sender, RoutedEventArgs e)
     {
-        
+        InstallButton.IsVisible = false;
+        InstallButton.IsEnabled = false;
+
+        UninstallButton.IsVisible = false;
+        UninstallButton.IsEnabled = false;
+
+        // TODO: Version selection
+
+        string[] versions =
+            await ModPlatformManager.Platform.GetVersionsForMinecraftVersionAsync(Mod.Id,
+                TargetBox.Manifest.ModLoaderId,
+                TargetBox.Manifest.Version);
+
+        await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, versions[0]);
+
+        SetInstalled(true);
     }
 }

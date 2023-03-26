@@ -18,18 +18,18 @@ public class BoxManifest
     public string ModLoaderId { get; set; }
     public string ModLoaderVersion { get; set; }
     public string DescriptionLine => $"{ModLoaderId.ToUpper()} {Version}";
-    
-    [JsonIgnore]
-    public IImage Icon { get; set; }
+    public List<BoxStoredModification> Modifications { get; set; } = new();
+
+    [JsonIgnore] public IImage Icon { get; set; }
 
     [JsonIgnore] public ModLoaderSupport? ModLoader => ModLoaderManager.Get(ModLoaderId);
 
     public BoxManifest()
     {
-        
     }
 
-    public BoxManifest(string name, string description, string author, string modLoaderId, string modLoaderVersion, IImage icon, ManifestMinecraftVersion version)
+    public BoxManifest(string name, string description, string author, string modLoaderId, string modLoaderVersion,
+        IImage icon, ManifestMinecraftVersion version)
     {
         Name = name;
         Description = description;
@@ -38,7 +38,7 @@ public class BoxManifest
         ModLoaderVersion = modLoaderVersion;
         Id = IdGenerator.Generate();
         Icon = icon;
-        
+
         this.version = version;
         Version = version.Id;
     }
@@ -48,25 +48,34 @@ public class BoxManifest
         MinecraftVersion mcVersion =
             await MinecraftManager.Manifest.Get(Version).DownloadOrGetLocally(BoxManager.SystemFolder);
 
-        await BoxManager.SetupVersionAsync(mcVersion);
+        await BoxManager.SetupVersionAsync(mcVersion, downloadAllAfter: false);
 
         ModLoaderSupport modLoader = ModLoader;
         if (modLoader != null && modLoader is not VanillaModLoaderSupport)
         {
             ModLoaderVersion[]? versions = await modLoader.GetVersionsAsync(Version);
             ModLoaderVersion version = versions.FirstOrDefault(v => v.Name == ModLoaderVersion);
-            
+
             MinecraftVersion? mlMcVersion = await version.GetMinecraftVersionAsync(Version);
-            
+
             // Merging
             mlMcVersion = mlMcVersion.Merge(mcVersion);
 
             // Install & setup this patched version for the modloader
-            await BoxManager.SetupVersionAsync(mlMcVersion);
+            await BoxManager.SetupVersionAsync(mlMcVersion, customName: $"{modLoader.Name} {version.Name}",
+                downloadAllAfter: false);
 
             return mlMcVersion;
         }
-        
+
+        await DownloadManager.DownloadAll();
+
         return mcVersion;
     }
+}
+public class BoxStoredModification
+{
+    public string Id { get; init; }
+    public string VersionId { get; init; }
+    public string PlatformId { get; init; }
 }

@@ -4,6 +4,7 @@ using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Models;
 using ddLaunch.Core.Managers;
+using ddLaunch.Core.Mods;
 
 namespace ddLaunch.Core.Boxes;
 
@@ -21,9 +22,9 @@ public class Box
     public Box(BoxManifest manifest, string path)
     {
         manifestPath = $"{path}/box.json";
-        
+
         File.WriteAllText(manifestPath, JsonSerializer.Serialize(manifest));
-        
+
         Folder = new MinecraftFolder($"{path}/minecraft");
         CreateMinecraft();
     }
@@ -38,7 +39,7 @@ public class Box
         {
             Manifest.Icon = new Bitmap($"{path}/icon.png");
         }
-        
+
         Folder = new MinecraftFolder($"{path}/minecraft");
     }
 
@@ -50,7 +51,7 @@ public class Box
     async Task CreateMinecraft()
     {
         await SetupVersionAsync();
-        
+
         Minecraft = new Minecraft(Version, Folder)
             .WithCustomLauncherDetails("ddLaunch", "1.0.0")
             .WithUser("Carton", Guid.Parse("29a01aaf-5e92-41d4-86eb-e325d38ee6f8"))
@@ -62,8 +63,16 @@ public class Box
     {
         await SetupVersionAsync();
         await CreateMinecraft();
-        
+
         await BoxManager.SetupVersionAsync(Version);
+    }
+
+    public bool HasModification(Modification mod)
+        => Manifest.Modifications.FirstOrDefault(m => m.Id == mod.Id && m.PlatformId == mod.Platform.Name) != null;
+
+    public void SaveManifest()
+    {
+        File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
     }
 
     public Process Run()

@@ -27,6 +27,29 @@ public partial class ModificationList : UserControl
         DataContext = new Data();
     }
 
+    public void SetBox(Box box)
+    {
+        lastBox = box;
+    }
+
+    public void HideLoadMoreButton()
+    {
+        LoadMoreButton.IsEnabled = false;
+        LoadMoreButton.IsVisible = false;
+    }
+
+    public void SetModifications(Modification[] mods)
+    {
+        Data ctx = (Data) DataContext;
+
+        ctx.Modifications = mods;
+    }
+
+    public void SetLoadingCircle(bool isLoading)
+    {
+        LoadCircle.IsVisible = isLoading;
+    }
+
     public async void Search(Box box, string query)
     {
         await SearchAsync(box, query);
@@ -77,6 +100,8 @@ public partial class ModificationList : UserControl
 
     private async void LoadMoreButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (lastBox == null) return;
+        
         Data ctx = (Data) DataContext;
         
         LoadMoreButton.IsEnabled = false;
