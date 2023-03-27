@@ -49,6 +49,10 @@
       <AvaloniaResource Include="resources\default_box_logo.png" />
       <None Remove="resources\loading_circle.png" />
       <AvaloniaResource Include="resources\loading_circle.png" />
+      <None Remove="resources\icons\edit.png" />
+      <AvaloniaResource Include="resources\icons\edit.png" />
+      <None Remove="resources\banner.png" />
+      <AvaloniaResource Include="resources\banner.png" />
     </ItemGroup>
 
     <ItemGroup>

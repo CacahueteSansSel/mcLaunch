@@ -7,6 +7,7 @@ namespace ddLaunch.Core.Mods;
 public class Modification : ReactiveObject
 {
     string? longDescriptionBody;
+    Bitmap background;
     public string? Name { get; set; }
     public string Id { get; set; }
     public string Author { get; set; }
@@ -18,11 +19,18 @@ public class Modification : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref longDescriptionBody, value);
     }
     public string? IconPath { get; set; }
+    public string? BackgroundPath { get; set; }
     public string[] Versions { get; set; }
     public string[] MinecraftVersions { get; set; }
     public string? LatestVersion { get; set; }
     public string? LatestMinecraftVersion { get; set; }
     public Bitmap Icon { get; set; }
+
+    public Bitmap Background
+    {
+        get => background;
+        set => this.RaiseAndSetIfChanged(ref background, value);
+    }
     public ModPlatform Platform { get; set; }
 
     public bool IsSimilar(Modification other)
@@ -65,6 +73,43 @@ public class Modification : ReactiveObject
             Icon = await Task.Run(() => Bitmap.DecodeToWidth(imageStream, 400));
             
             CacheManager.Store(Icon, cacheName);
+        }
+    }
+
+    async Task<Stream> LoadBackgroundStreamAsync()
+    {
+        if (BackgroundPath == null) return null;
+        
+        HttpClient client = new HttpClient();
+
+        HttpResponseMessage resp = await client.GetAsync(BackgroundPath);
+        if (!resp.IsSuccessStatusCode) return null;
+
+        return await resp.Content.ReadAsStreamAsync();
+    }
+
+    public async Task DownloadBackgroundAsync()
+    {
+        string cacheName = $"bkg-mod-{Platform.Name}-{Id}";
+        if (CacheManager.Has(cacheName))
+        {
+            await Task.Run(() =>
+            {
+                Background = CacheManager.Load(cacheName);
+            });
+
+            return;
+        }
+
+        if (BackgroundPath == null) return;
+        
+        await using (var imageStream = await LoadBackgroundStreamAsync())
+        {
+            if (imageStream == null) return;
+            
+            Background = await Task.Run(() => Bitmap.DecodeToWidth(imageStream, 1280));
+            
+            CacheManager.Store(Background, cacheName);
         }
     }
 }

@@ -124,6 +124,8 @@ public partial class ModificationList : UserControl
         {
             Modification selectedMod = (Modification)e.AddedItems[0];
             Navigation.Push(new ModDetailsPage(selectedMod, lastBox));
+            
+            ModList.UnselectAll();
         }
     }
 }

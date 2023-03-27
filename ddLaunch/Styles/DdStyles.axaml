@@ -6,6 +6,7 @@
             <StackPanel Orientation="Horizontal">
                 <Button Classes="primary" Margin="5">Primary !</Button>
                 <Button Classes="secondary" Margin="5">Secondary !</Button>
+                <Button Classes="transparent" Margin="5">Transparent !</Button>
                 <ProgressBar Value="70"></ProgressBar>
             </StackPanel>
         </Border>
@@ -74,6 +75,21 @@
     <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"></Setter>
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+    </Style>
+
+    <Style Selector="Button.transparent">
+        <Setter Property="Background" Value="#AA232323"></Setter>
+        <Setter Property="Padding" Value="10"></Setter>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+    
+    <Style Selector="Button.transparent:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#AA3C3C3C"></Setter>
     </Style>
     
     <Style Selector="ProgressBar:horizontal">

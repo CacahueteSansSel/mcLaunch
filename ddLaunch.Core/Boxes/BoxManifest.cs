@@ -1,15 +1,20 @@
 ﻿using System.Text.Json.Serialization;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Utilities;
+using ReactiveUI;
 
 namespace ddLaunch.Core.Boxes;
 
-public class BoxManifest
+public class BoxManifest : ReactiveObject
 {
     ManifestMinecraftVersion version;
+    Bitmap icon;
+    Bitmap? background;
+
     public string Name { get; set; }
     public string Id { get; set; }
     public string Description { get; set; }
@@ -20,7 +25,19 @@ public class BoxManifest
     public string DescriptionLine => $"{ModLoaderId.ToUpper()} {Version}";
     public List<BoxStoredModification> Modifications { get; set; } = new();
 
-    [JsonIgnore] public IImage Icon { get; set; }
+    [JsonIgnore]
+    public Bitmap Icon
+    {
+        get => icon;
+        set => this.RaiseAndSetIfChanged(ref icon, value);
+    }
+
+    [JsonIgnore]
+    public Bitmap? Background
+    {
+        get => background;
+        set => this.RaiseAndSetIfChanged(ref background, value);
+    }
 
     [JsonIgnore] public ModLoaderSupport? ModLoader => ModLoaderManager.Get(ModLoaderId);
 
@@ -29,7 +46,7 @@ public class BoxManifest
     }
 
     public BoxManifest(string name, string description, string author, string modLoaderId, string modLoaderVersion,
-        IImage icon, ManifestMinecraftVersion version)
+        Bitmap icon, ManifestMinecraftVersion version)
     {
         Name = name;
         Description = description;
@@ -44,12 +61,12 @@ public class BoxManifest
     }
 
     public bool HasModification(string id, string versionId, string platformId)
-        => Modifications.FirstOrDefault(m => m.Id == id 
-                                             && m.PlatformId == platformId 
+        => Modifications.FirstOrDefault(m => m.Id == id
+                                             && m.PlatformId == platformId
                                              && m.VersionId == versionId) != null;
-    
+
     public bool HasModification(string id, string platformId)
-        => Modifications.FirstOrDefault(m => m.Id == id 
+        => Modifications.FirstOrDefault(m => m.Id == id
                                              && m.PlatformId == platformId) != null;
 
     public BoxStoredModification? GetModification(string id)
@@ -58,7 +75,7 @@ public class BoxManifest
     public void AddModification(string id, string versionId, string platformId, string[] filenames)
     {
         if (HasModification(id, versionId, platformId)) return;
-        
+
         Modifications.Add(new BoxStoredModification
         {
             Id = id,
@@ -72,7 +89,7 @@ public class BoxManifest
     {
         BoxStoredModification? mod = GetModification(id);
         if (mod == null) return;
-        
+
         mod.Delete();
         Modifications.Remove(mod);
     }
@@ -107,6 +124,7 @@ public class BoxManifest
         return mcVersion;
     }
 }
+
 public class BoxStoredModification
 {
     public string Id { get; init; }

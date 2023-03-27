@@ -14,7 +14,7 @@
     </UserControl.Styles>
     <Panel>
         <StackPanel Orientation="Vertical">
-            <ListBox SelectionMode="Single" Items="{Binding Modifications}" SelectionChanged="ModSelectionChanged">
+            <ListBox x:Name="ModList" SelectionMode="Single" Items="{Binding Modifications}" SelectionChanged="ModSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="CornerRadius" Value="4"></Setter>

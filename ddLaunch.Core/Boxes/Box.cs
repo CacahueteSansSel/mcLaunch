@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Models;
@@ -11,6 +12,7 @@ namespace ddLaunch.Core.Boxes;
 public class Box
 {
     string manifestPath;
+    public string Path { get; }
     public MinecraftFolder Folder { get; }
     public Minecraft Minecraft { get; private set; }
     public Process MinecraftProcess { get; }
@@ -21,6 +23,7 @@ public class Box
 
     public Box(BoxManifest manifest, string path)
     {
+        Path = path;
         manifestPath = $"{path}/box.json";
 
         File.WriteAllText(manifestPath, JsonSerializer.Serialize(manifest));
@@ -31,6 +34,7 @@ public class Box
 
     public Box(string path)
     {
+        Path = path;
         manifestPath = $"{path}/box.json";
 
         Manifest = JsonSerializer.Deserialize<BoxManifest>(File.ReadAllText(manifestPath))!;
@@ -57,6 +61,26 @@ public class Box
             .WithUser("Carton", Guid.Parse("29a01aaf-5e92-41d4-86eb-e325d38ee6f8"))
             .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader)
             .WithSystemFolder(BoxManager.SystemFolder);
+    }
+
+    public void SetAndSaveIcon(Bitmap icon)
+    {
+        icon.Save($"{Path}/icon.png");
+        Manifest.Icon = icon;
+    }
+
+    public void SetAndSaveBackground(Bitmap background)
+    {
+        background.Save($"{Path}/background.png");
+        Manifest.Background = background;
+    }
+
+    public void LoadBackground()
+    {
+        if (Manifest.Background != null) return;
+        if (!File.Exists($"{Path}/background.png")) return;
+        
+        Manifest.Background = new Bitmap($"{Path}/background.png");
     }
 
     public async Task PrepareAsync()

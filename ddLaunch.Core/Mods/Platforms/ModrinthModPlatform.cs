@@ -2,6 +2,7 @@
 using ddLaunch.Core.Managers;
 using Modrinth;
 using Modrinth.Models;
+using Modrinth.Models.Enums.Project;
 using Modrinth.Models.Enums.Version;
 using File = Modrinth.Models.File;
 using Version = Modrinth.Models.Version;
@@ -33,11 +34,14 @@ public class ModrinthModPlatform : ModPlatform
     {
         FacetCollection collection = new FacetCollection
         {
-            {Facet.Category(box.Manifest.ModLoaderId.ToLower()), Facet.Version(box.Manifest.Version)}
+            {
+                Facet.Category(box.Manifest.ModLoaderId.ToLower()), Facet.Version(box.Manifest.Version),
+                Facet.ProjectType(ProjectType.Mod)
+            }
         };
 
         SearchResponse search =
-            await client.Project.SearchAsync(searchQuery, facets: collection, limit: 10, offset: (ulong)(page * 10));
+            await client.Project.SearchAsync(searchQuery, facets: collection, limit: 10, offset: (ulong) (page * 10));
 
         Modification[] mods = search.Hits.Select(hit => new Modification
         {
@@ -47,6 +51,7 @@ public class ModrinthModPlatform : ModPlatform
             Author = hit.Author,
             IconPath = hit.IconUrl,
             MinecraftVersions = hit.Versions,
+            BackgroundPath = hit.Gallery?.FirstOrDefault(),
             LatestMinecraftVersion = hit.LatestVersion,
             Platform = this
         }).ToArray();
@@ -60,7 +65,7 @@ public class ModrinthModPlatform : ModPlatform
     public override async Task<Modification> GetModAsync(string id)
     {
         if (modCache.ContainsKey(id)) return modCache[id];
-        
+
         Project project = await client.Project.GetAsync(id);
         TeamMember[] team = await client.Team.GetAsync(project.Team);
 
@@ -71,6 +76,7 @@ public class ModrinthModPlatform : ModPlatform
             ShortDescription = project.Description,
             Author = team.Last().User.Username,
             IconPath = project.IconUrl,
+            BackgroundPath = project.FeaturedGallery,
             MinecraftVersions = project.GameVersions,
             LatestMinecraftVersion = project.GameVersions.Last(),
             Versions = project.Versions,
@@ -78,12 +84,13 @@ public class ModrinthModPlatform : ModPlatform
             LongDescriptionBody = project.Body,
             Platform = this
         };
-        
+
         modCache.Add(id, mod);
         return mod;
     }
 
-    public override async Task<string[]> GetVersionsForMinecraftVersionAsync(string modId, string modLoaderId, string minecraftVersionId)
+    public override async Task<string[]> GetVersionsForMinecraftVersionAsync(string modId, string modLoaderId,
+        string minecraftVersionId)
     {
         Project project = await client.Project.GetAsync(modId);
         List<string> versionIds = new();
@@ -95,7 +102,7 @@ public class ModrinthModPlatform : ModPlatform
             if (version.GameVersions.Contains(minecraftVersionId) && version.Loaders.Contains(modLoaderId.ToLower()))
             {
                 versionIds.Add(versionId);
-                
+
                 // TODO: This bad fix fixes the infinite loop and spamming of the Modrinth API when scanning all versions
                 // This should be fixed in the future
                 break;
@@ -115,12 +122,12 @@ public class ModrinthModPlatform : ModPlatform
             foreach (Dependency dependency in version.Dependencies)
             {
                 if (dependency.DependencyType != DependencyType.Required) continue;
-                
+
                 if (targetBox.Manifest.HasModification(dependency.ProjectId, dependency.VersionId, Name))
                     continue;
-                
+
                 Version dependencyVersion = await client.Version.GetAsync(dependency.VersionId);
-                
+
                 DownloadManager.Begin($"Dependency {dependencyVersion.Name}");
 
                 List<string> filenames = new();
@@ -128,16 +135,17 @@ public class ModrinthModPlatform : ModPlatform
                 {
                     string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
                     string url = file.Url;
-                
+
                     // TODO: This may break things
                     if (System.IO.File.Exists(path)) continue;
-            
+
                     DownloadManager.Add(url, path, EntryAction.Download);
                     filenames.Add(path);
                 }
-                
-                targetBox.Manifest.AddModification(dependency.ProjectId, dependency.VersionId, Name, filenames.ToArray());
-                
+
+                targetBox.Manifest.AddModification(dependency.ProjectId, dependency.VersionId, Name,
+                    filenames.ToArray());
+
                 DownloadManager.End();
             }
         }
@@ -151,35 +159,36 @@ public class ModrinthModPlatform : ModPlatform
             {
                 string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
                 string url = file.Url;
-                
+
                 // TODO: This may break things
                 if (System.IO.File.Exists(path)) continue;
-            
+
                 DownloadManager.Add(url, path, EntryAction.Download);
                 filenames.Add(path);
             }
-                
+
             targetBox.Manifest.AddModification(mod.Id, versionId, Name, filenames.ToArray());
-        
+
             DownloadManager.End();
         }
 
         await DownloadManager.DownloadAll();
-        
+
         targetBox.SaveManifest();
-        
+
         return false;
     }
 
     public override async Task<Modification> DownloadAdditionalInfosAsync(Modification mod)
     {
         if (mod.LongDescriptionBody != null) return mod;
-        
+
         Project project = await client.Project.GetAsync(mod.Id);
 
         mod.Versions = project.Versions;
         mod.LatestVersion = mod.Versions.Last();
         mod.LongDescriptionBody = project.Body;
+        mod.BackgroundPath = project.FeaturedGallery;
 
         return mod;
     }

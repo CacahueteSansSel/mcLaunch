@@ -38,7 +38,11 @@ public partial class ModDetailsPage : UserControl
     {
         LoadCircle.IsVisible = true;
 
+        await Mod.DownloadBackgroundAsync();
         await ModPlatformManager.Platform.DownloadAdditionalInfosAsync(Mod);
+
+        if (Mod.Background == null) 
+            Mod.Background = TargetBox.Manifest.Background;
 
         LoadCircle.IsVisible = false;
     }

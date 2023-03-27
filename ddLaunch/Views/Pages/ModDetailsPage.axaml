@@ -10,8 +10,9 @@
         <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <Panel>
+        <Image Stretch="UniformToFill" Source="{Binding Background}"></Image>
         <ScrollViewer>
-            <StackPanel Background="black">
+            <StackPanel>
                 <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
                     <views:BackButton></views:BackButton>
                 </StackPanel>

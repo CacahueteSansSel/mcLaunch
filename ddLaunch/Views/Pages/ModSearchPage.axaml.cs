@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using ddLaunch.Core.Boxes;
 
@@ -11,7 +12,7 @@ public partial class ModSearchPage : UserControl
 
     public ModSearchPage()
     {
-        
+        InitializeComponent();
     }
     
     public ModSearchPage(Box box)
@@ -22,5 +23,10 @@ public partial class ModSearchPage : UserControl
         DataContext = Box;
         
         ModList.Search(box, "");
+    }
+
+    private void SearchButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        ModList.Search(Box, SearchBoxInput.Text);
     }
 }
