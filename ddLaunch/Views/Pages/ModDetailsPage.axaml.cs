@@ -5,6 +5,8 @@ using Avalonia.Markup.Xaml;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Mods;
+using ddLaunch.Utilities;
+using ddLaunch.Views.Popups;
 using Modrinth.Models;
 
 namespace ddLaunch.Views.Pages;
@@ -41,7 +43,7 @@ public partial class ModDetailsPage : UserControl
         await Mod.DownloadBackgroundAsync();
         await ModPlatformManager.Platform.DownloadAdditionalInfosAsync(Mod);
 
-        if (Mod.Background == null) 
+        if (Mod.Background == null)
             Mod.Background = TargetBox.Manifest.Background;
 
         LoadCircle.IsVisible = false;
@@ -73,8 +75,10 @@ public partial class ModDetailsPage : UserControl
 
         if (versions.Length == 0)
         {
-            // TODO: Error message
-            
+            Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
+                $"Unable to install {Mod.Name} : no compatible version found " +
+                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}"));
+
             SetInstalled(false);
             return;
         }
@@ -91,11 +95,11 @@ public partial class ModDetailsPage : UserControl
 
         UninstallButton.IsVisible = false;
         UninstallButton.IsEnabled = false;
-        
+
         TargetBox.Manifest.RemoveModification(Mod.Id);
-        
+
         TargetBox.SaveManifest();
-        
+
         SetInstalled(false);
     }
 }

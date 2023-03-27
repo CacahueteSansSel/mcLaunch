@@ -45,10 +45,17 @@ public class Modification : ReactiveObject
         
         HttpClient client = new HttpClient();
 
-        HttpResponseMessage resp = await client.GetAsync(IconPath);
-        if (!resp.IsSuccessStatusCode) return null;
+        try
+        {
+            HttpResponseMessage resp = await client.GetAsync(IconPath);
+            if (!resp.IsSuccessStatusCode) return null;
 
-        return await resp.Content.ReadAsStreamAsync();
+            return await resp.Content.ReadAsStreamAsync();
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
     public async Task DownloadIconAsync()
@@ -82,10 +89,17 @@ public class Modification : ReactiveObject
         
         HttpClient client = new HttpClient();
 
-        HttpResponseMessage resp = await client.GetAsync(BackgroundPath);
-        if (!resp.IsSuccessStatusCode) return null;
+        try
+        {
+            HttpResponseMessage resp = await client.GetAsync(BackgroundPath);
+            if (!resp.IsSuccessStatusCode) return null;
 
-        return await resp.Content.ReadAsStreamAsync();
+            return await resp.Content.ReadAsStreamAsync();
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
     public async Task DownloadBackgroundAsync()

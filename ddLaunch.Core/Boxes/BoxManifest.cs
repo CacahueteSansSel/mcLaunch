@@ -23,6 +23,7 @@ public class BoxManifest : ReactiveObject
     public string ModLoaderId { get; set; }
     public string ModLoaderVersion { get; set; }
     public string DescriptionLine => $"{ModLoaderId.ToUpper()} {Version}";
+    public string ModificationCount => Modifications.Count.ToString();
     public List<BoxStoredModification> Modifications { get; set; } = new();
 
     [JsonIgnore]

@@ -92,31 +92,14 @@ public class ModrinthModPlatform : ModPlatform
     public override async Task<string[]> GetVersionsForMinecraftVersionAsync(string modId, string modLoaderId,
         string minecraftVersionId)
     {
-        Project project = await client.Project.GetAsync(modId);
-        List<string> versionIds = new();
+        Version[] versions = await client.Version.GetProjectVersionListAsync(modId, new[] {modLoaderId},
+            new[] {minecraftVersionId});
 
-        foreach (string versionId in project.Versions.Reverse())
-        {
-            Version version = await client.Version.GetAsync(versionId);
-
-            if (version.GameVersions.Contains(minecraftVersionId) && version.Loaders.Contains(modLoaderId.ToLower()))
-            {
-                versionIds.Add(versionId);
-
-                // TODO: This bad fix fixes the infinite loop and spamming of the Modrinth API when scanning all versions
-                // This should be fixed in the future
-                break;
-            }
-        }
-
-        return versionIds.ToArray();
+        return versions.Select(v => v.Id).ToArray();
     }
 
-    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId)
+    async Task InstallVersionAsync(Box targetBox, Version version)
     {
-        Version version = await client.Version.GetAsync(versionId);
-        if (version == null) return false;
-
         if (version.Dependencies != null)
         {
             foreach (Dependency dependency in version.Dependencies)
@@ -126,56 +109,58 @@ public class ModrinthModPlatform : ModPlatform
                 if (targetBox.Manifest.HasModification(dependency.ProjectId, dependency.VersionId, Name))
                     continue;
 
-                Version dependencyVersion = await client.Version.GetAsync(dependency.VersionId);
+                string depVersionId = dependency.VersionId;
+                Version dependencyVersion;
 
-                DownloadManager.Begin($"Dependency {dependencyVersion.Name}");
-
-                List<string> filenames = new();
-                foreach (File file in dependencyVersion.Files)
+                if (depVersionId == null)
                 {
-                    string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
-                    string url = file.Url;
+                    // Grab the latest available version for this dependency
+                    Version[] depVersions = await client.Version.GetProjectVersionListAsync(dependency.ProjectId,
+                        new[] {targetBox.Manifest.ModLoaderId.ToLower()},
+                        new[] {targetBox.Manifest.Version});
 
-                    // TODO: This may break things
-                    if (System.IO.File.Exists(path)) continue;
-
-                    DownloadManager.Add(url, path, EntryAction.Download);
-                    filenames.Add(path);
+                    dependencyVersion = depVersions[0];
+                }
+                else
+                {
+                    dependencyVersion = await client.Version.GetAsync(depVersionId);
                 }
 
-                targetBox.Manifest.AddModification(dependency.ProjectId, dependency.VersionId, Name,
-                    filenames.ToArray());
-
-                DownloadManager.End();
+                await InstallVersionAsync(targetBox, dependencyVersion);
             }
         }
-
-        if (!targetBox.HasModification(mod))
+        
+        DownloadManager.Begin(version.Name);
+        
+        List<string> filenames = new();
+        foreach (File file in version.Files)
         {
-            DownloadManager.Begin($"{mod.Name} {version.Name}");
+            string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
+            string url = file.Url;
 
-            List<string> filenames = new();
-            foreach (File file in version.Files)
-            {
-                string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
-                string url = file.Url;
+            // TODO: This may break things
+            if (System.IO.File.Exists(path)) continue;
 
-                // TODO: This may break things
-                if (System.IO.File.Exists(path)) continue;
-
-                DownloadManager.Add(url, path, EntryAction.Download);
-                filenames.Add(path);
-            }
-
-            targetBox.Manifest.AddModification(mod.Id, versionId, Name, filenames.ToArray());
-
-            DownloadManager.End();
+            DownloadManager.Add(url, path, EntryAction.Download);
+            filenames.Add(path);
         }
+
+        targetBox.Manifest.AddModification(version.ProjectId, version.Id, Name,
+            filenames.ToArray());
+        
+        DownloadManager.End();
+    }
+
+    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId)
+    {
+        Version version = await client.Version.GetAsync(versionId);
+        if (version == null) return false;
+
+        if (!targetBox.HasModification(mod)) await InstallVersionAsync(targetBox, version);
 
         await DownloadManager.DownloadAll();
 
         targetBox.SaveManifest();
-
         return false;
     }
 

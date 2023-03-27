@@ -54,10 +54,15 @@
                         <DockPanel Margin="38 10 38 0">
                             <Button DockPanel.Dock="Left" Classes="secondary" Click="AddModsButtonClicked">Add mods</Button>
                             <Button DockPanel.Dock="Left" Margin="10 0 0 0" Classes="secondary">Update all</Button>
-                            <TextBlock DockPanel.Dock="Right" Classes="light" Opacity="0.25" VerticalAlignment="Center"
-                                       HorizontalAlignment="Right">
-                                0 MODS
-                            </TextBlock>
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                                <TextBlock Classes="light" Opacity="0.25" 
+                                           HorizontalAlignment="Right" Text="{Binding Manifest.ModificationCount}">
+                                </TextBlock>
+                                <TextBlock Classes="light" Margin="3 0 0 0" Opacity="0.25" 
+                                           HorizontalAlignment="Right">
+                                    MODS
+                                </TextBlock>
+                            </StackPanel>
                             <Panel></Panel>
                         </DockPanel>
                         <views:ModificationList x:Name="ModsList" Margin="38 10 38 20"></views:ModificationList>
