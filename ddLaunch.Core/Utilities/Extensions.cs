@@ -11,4 +11,21 @@ public static class Extensions
 
     public static string NormalizeUsername(this string username)
         => username.Trim().TrimEnd('_');
+
+    public static byte[] ReadToEndAndClose(this Stream stream, long? size = null)
+    {
+        byte[] data = new byte[size ?? stream.Length];
+        stream.Read(data, 0, data.Length);
+
+        try
+        {
+            stream.Close();
+        }
+        catch (Exception e)
+        {
+            
+        }
+
+        return data;
+    }
 }

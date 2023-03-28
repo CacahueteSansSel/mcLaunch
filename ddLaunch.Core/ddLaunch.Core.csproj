@@ -17,4 +17,8 @@
       <PackageReference Include="ReactiveUI" Version="13.2.10" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models" />
+    </ItemGroup>
+
 </Project>
