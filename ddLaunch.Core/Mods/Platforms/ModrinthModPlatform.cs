@@ -32,13 +32,11 @@ public class ModrinthModPlatform : ModPlatform
 
     public override async Task<Modification[]> GetModsAsync(int page, Box box, string searchQuery)
     {
-        FacetCollection collection = new FacetCollection
-        {
-            {
-                Facet.Category(box.Manifest.ModLoaderId.ToLower()), Facet.Version(box.Manifest.Version),
-                Facet.ProjectType(ProjectType.Mod)
-            }
-        };
+        FacetCollection collection = new();
+        
+        collection.Add(Facet.Category(box.Manifest.ModLoaderId.ToLower()));
+        collection.Add(Facet.Version(box.Manifest.Version));
+        collection.Add(Facet.ProjectType(ProjectType.Mod));
 
         SearchResponse search =
             await client.Project.SearchAsync(searchQuery, facets: collection, limit: 10, offset: (ulong) (page * 10));

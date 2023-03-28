@@ -18,6 +18,9 @@
                     <Button Margin="10 0 0 0" Classes="transparent" Click="EditBackgroundButtonClicked">
                         <Image Source="/resources/icons/edit.png" Width="18" Height="18"></Image>
                     </Button>
+                    <Button Margin="5 0 0 0" Classes="transparent" Click="OpenFolderButtonClicked">
+                        <Image Source="/resources/icons/folder.png" Width="18" Height="18"></Image>
+                    </Button>
                 </StackPanel>
                 <Border Classes="frame" Margin="0 10 0 100" Width="888">
                     <StackPanel Margin="1" Orientation="Vertical">

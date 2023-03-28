@@ -16,6 +16,8 @@ public static class CacheManager
 
     public static void Store(Bitmap bmp, string id)
     {
+        if (bmp == null) return;
+        
         bmp.Save($"{FolderPath}/{id}");
     }
 

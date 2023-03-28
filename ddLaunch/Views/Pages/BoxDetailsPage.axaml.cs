@@ -131,4 +131,9 @@ public partial class BoxDetailsPage : UserControl
         Bitmap iconBitmap = new Bitmap(files[0]);
         Box.SetAndSaveIcon(iconBitmap);
     }
+
+    private void OpenFolderButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        PlatformSpecific.OpenFolder(Box.Path);
+    }
 }

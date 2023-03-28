@@ -7,7 +7,7 @@ namespace ddLaunch.Core.Mods;
 public class Modification : ReactiveObject
 {
     string? longDescriptionBody;
-    Bitmap background;
+    Bitmap? background;
     public string? Name { get; set; }
     public string Id { get; set; }
     public string Author { get; set; }
@@ -24,9 +24,9 @@ public class Modification : ReactiveObject
     public string[] MinecraftVersions { get; set; }
     public string? LatestVersion { get; set; }
     public string? LatestMinecraftVersion { get; set; }
-    public Bitmap Icon { get; set; }
+    public Bitmap? Icon { get; set; }
 
-    public Bitmap Background
+    public Bitmap? Background
     {
         get => background;
         set => this.RaiseAndSetIfChanged(ref background, value);
@@ -77,7 +77,17 @@ public class Modification : ReactiveObject
         {
             if (imageStream == null) return;
             
-            Icon = await Task.Run(() => Bitmap.DecodeToWidth(imageStream, 400));
+            Icon = await Task.Run(() =>
+            {
+                try
+                {
+                    return Bitmap.DecodeToWidth(imageStream, 400);
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+            });
             
             CacheManager.Store(Icon, cacheName);
         }
@@ -121,7 +131,17 @@ public class Modification : ReactiveObject
         {
             if (imageStream == null) return;
             
-            Background = await Task.Run(() => Bitmap.DecodeToWidth(imageStream, 1280));
+            Background = await Task.Run(() =>
+            {
+                try
+                {
+                    return Bitmap.DecodeToWidth(imageStream, 1280);
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+            });
             
             CacheManager.Store(Background, cacheName);
         }
