@@ -59,6 +59,8 @@
       <AvaloniaResource Include="resources\icons\delete.png" />
       <None Remove="resources\icons\download.png" />
       <AvaloniaResource Include="resources\icons\download.png" />
+      <None Remove="resources\credentials\curseforge.txt" />
+      <AvaloniaResource Include="resources\credentials\curseforge.txt" />
     </ItemGroup>
 
     <ItemGroup>

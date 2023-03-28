@@ -1,5 +1,6 @@
 ﻿using Avalonia.Media.Imaging;
 using ddLaunch.Core.Managers;
+using ddLaunch.Core.Utilities;
 using ReactiveUI;
 
 namespace ddLaunch.Core.Mods;
@@ -35,8 +36,13 @@ public class Modification : ReactiveObject
 
     public bool IsSimilar(Modification other)
     {
-        return Name.Trim() == other.Name.Trim() 
-               && Author.Trim() == other.Author.Trim();
+        string nameNormalized = Name.NormalizeTitle();
+        string authorNormalized = Author.NormalizeUsername();
+        string otherNameNormalized = other.Name.NormalizeTitle();
+        string otherAuthorNormalized = other.Author.NormalizeUsername();
+
+        return nameNormalized == otherNameNormalized
+               && authorNormalized == otherAuthorNormalized;
     }
 
     async Task<Stream> LoadIconStreamAsync()

@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Mods.Platforms;
+using ddLaunch.Utilities;
 
 namespace ddLaunch;
 
@@ -21,7 +22,8 @@ public partial class App : Application
         await MinecraftManager.InitAsync();
         ModLoaderManager.Init();
         ModPlatformManager.Init(new MultiplexerModPlatform(
-            new ModrinthModPlatform()
+            new ModrinthModPlatform(),
+            new CurseForgeModPlatform(Credentials.Get("curseforge"))
         ));
         CacheManager.Init();
     }

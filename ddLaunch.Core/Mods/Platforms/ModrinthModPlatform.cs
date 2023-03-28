@@ -64,27 +64,34 @@ public class ModrinthModPlatform : ModPlatform
     {
         if (modCache.ContainsKey(id)) return modCache[id];
 
-        Project project = await client.Project.GetAsync(id);
-        TeamMember[] team = await client.Team.GetAsync(project.Team);
-
-        Modification mod = new Modification
+        try
         {
-            Id = project.Id,
-            Name = project.Title,
-            ShortDescription = project.Description,
-            Author = team.Last().User.Username,
-            IconPath = project.IconUrl,
-            BackgroundPath = project.FeaturedGallery,
-            MinecraftVersions = project.GameVersions,
-            LatestMinecraftVersion = project.GameVersions.Last(),
-            Versions = project.Versions,
-            LatestVersion = project.Versions.Last(),
-            LongDescriptionBody = project.Body,
-            Platform = this
-        };
+            Project project = await client.Project.GetAsync(id);
+            TeamMember[] team = await client.Team.GetAsync(project.Team);
 
-        modCache.Add(id, mod);
-        return mod;
+            Modification mod = new Modification
+            {
+                Id = project.Id,
+                Name = project.Title,
+                ShortDescription = project.Description,
+                Author = team.Last().User.Username,
+                IconPath = project.IconUrl,
+                BackgroundPath = project.FeaturedGallery,
+                MinecraftVersions = project.GameVersions,
+                LatestMinecraftVersion = project.GameVersions.Last(),
+                Versions = project.Versions,
+                LatestVersion = project.Versions.Last(),
+                LongDescriptionBody = project.Body,
+                Platform = this
+            };
+
+            modCache.Add(id, mod);
+            return mod;
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
     public override async Task<string[]> GetVersionsForMinecraftVersionAsync(string modId, string modLoaderId,
