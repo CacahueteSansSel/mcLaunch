@@ -9,6 +9,7 @@
         Title="ddLaunch"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaTitleBarHeightHint="50"
+        Icon="/resources/icon.ico"
         Background="{DynamicResource BackgroundDarker}">
     <Window.Styles>
         <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
