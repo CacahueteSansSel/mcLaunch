@@ -23,17 +23,29 @@
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="{Binding Icon}" Width="40"></Image>
-                        
-                            <StackPanel Margin="10 0 0 0" Orientation="Vertical">
-                                <TextBlock Classes="title" Text="{Binding Name}"></TextBlock>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Classes="light" Margin="0 0 5 0">by</TextBlock>
-                                    <TextBlock Classes="title" Text="{Binding Author}"></TextBlock>
-                                </StackPanel>
+                        <DockPanel>
+                            <Image Source="{Binding Icon}" DockPanel.Dock="Left" Width="40" Height="40"></Image>
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                <Button Classes="transparent">
+                                    <Image Source="/resources/icons/download.png" Width="18" Height="18"></Image>
+                                </Button>
+                                <Button Classes="transparent" Margin="5 0 0 0">
+                                    <Image Source="/resources/icons/delete.png" Width="18" Height="18"></Image>
+                                </Button>
                             </StackPanel>
-                        </StackPanel>
+                            <StackPanel Margin="10 0 10 0" Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Classes="title" Text="{Binding Name}"></TextBlock>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Classes="light" FontSize="12">by</TextBlock>
+                                    <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{Binding Author}"></TextBlock>
+                                    <TextBlock Classes="light" FontSize="12" Margin="5 0 0 0">from</TextBlock>
+                                    <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{Binding Platform.Name}"></TextBlock>
+                                </StackPanel>
+                                <TextBlock Classes="light" Text="{Binding ShortDescription}" Opacity="0.7"></TextBlock>
+                            </StackPanel>
+                        </DockPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

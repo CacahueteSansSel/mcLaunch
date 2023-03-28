@@ -55,6 +55,10 @@
       <AvaloniaResource Include="resources\banner.png" />
       <None Remove="resources\icons\folder.png" />
       <AvaloniaResource Include="resources\icons\folder.png" />
+      <None Remove="resources\icons\delete.png" />
+      <AvaloniaResource Include="resources\icons\delete.png" />
+      <None Remove="resources\icons\download.png" />
+      <AvaloniaResource Include="resources\icons\download.png" />
     </ItemGroup>
 
     <ItemGroup>

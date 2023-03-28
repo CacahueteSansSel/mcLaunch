@@ -8,6 +8,7 @@ using ddLaunch.Core;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Mods;
+using ddLaunch.Core.Mods.Platforms;
 using ddLaunch.Models;
 using ddLaunch.Utilities;
 using ddLaunch.Views.Pages;
@@ -24,7 +25,36 @@ public partial class ModificationList : UserControl
     {
         InitializeComponent();
 
-        DataContext = new Data();
+        DataContext = new Data()
+        {
+            Modifications = new Modification[]
+            {
+                new Modification
+                {
+                    Author = "Cacahuète",
+                    Name = "Example Fabric Mod",
+                    Id = "ex-fabric",
+                    ShortDescription = "An example mod for Fabric",
+                    Platform = new ModrinthModPlatform()
+                },
+                new Modification
+                {
+                    Author = "Cacahuète",
+                    Name = "Example Forge Mod",
+                    Id = "ex-forge",
+                    ShortDescription = "An example mod for Forge",
+                    Platform = new ModrinthModPlatform()
+                },
+                new Modification
+                {
+                    Author = "Cacahuète",
+                    Name = "Example Quilt Mod",
+                    Id = "ex-quilt",
+                    ShortDescription = "An example mod for Quilt",
+                    Platform = new ModrinthModPlatform()
+                }
+            }
+        };
     }
 
     public void SetBox(Box box)

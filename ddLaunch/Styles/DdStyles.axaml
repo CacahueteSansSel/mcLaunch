@@ -3,11 +3,23 @@
         xmlns:views="clr-namespace:ddLaunch.Views">
     <Design.PreviewWith>
         <Border Padding="20">
-            <StackPanel Orientation="Horizontal">
-                <Button Classes="primary" Margin="5">Primary !</Button>
-                <Button Classes="secondary" Margin="5">Secondary !</Button>
-                <Button Classes="transparent" Margin="5">Transparent !</Button>
-                <ProgressBar Value="70"></ProgressBar>
+            <StackPanel Orientation="Vertical">
+                <Border Classes="frame">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Classes="primary" Margin="5">Primary !</Button>
+                        <Button Classes="secondary" Margin="5">Secondary !</Button>
+                        <Button Classes="transparent" Margin="5">Transparent !</Button>
+                        <ProgressBar Value="70"></ProgressBar>
+                    </StackPanel>
+                </Border>
+                <Border Classes="frame-light" Margin="0 10 0 0">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Classes="primary" Margin="5">Primary !</Button>
+                        <Button Classes="secondary" Margin="5">Secondary !</Button>
+                        <Button Classes="transparent" Margin="5">Transparent !</Button>
+                        <ProgressBar Value="70"></ProgressBar>
+                    </StackPanel>
+                </Border>
             </StackPanel>
         </Border>
     </Design.PreviewWith>
@@ -17,6 +29,13 @@
         <Setter Property="CornerRadius" Value="4"></Setter>
         <Setter Property="BorderThickness" Value="1"></Setter>
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+    </Style>
+    
+    <Style Selector="Border.frame-light">
+        <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"></Setter>
+        <Setter Property="CornerRadius" Value="4"></Setter>
+        <Setter Property="BorderThickness" Value="1"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource Background}"></Setter>
     </Style>
     
     <Style Selector="TextBlock.title">
