@@ -60,6 +60,15 @@ public static class DownloadManager
         OnDownloadPrepareEnding?.Invoke();
     }
 
+    public static async Task WaitForPendingDownloads()
+    {
+        await Task.Run(async () =>
+        {
+            while (IsDownloadInProgress) 
+                await Task.Delay(1);
+        });
+    }
+
     public static void Add(string source, string target, EntryAction action)
     {
         currentSectionEntries.Add(new DownloadEntry {Source = source, Target = target, Action = action});

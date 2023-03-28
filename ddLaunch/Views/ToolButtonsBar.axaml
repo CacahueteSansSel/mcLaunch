@@ -10,6 +10,6 @@
     </UserControl.Styles>
     <StackPanel Orientation="Horizontal">
         <Button Margin="20 0 0 0" Classes="primary" Click="NewBoxButtonClicked">New box</Button>
-        <Button Margin="10 0 0 0" Classes="secondary">Import a box</Button>
+        <Button Margin="10 0 0 0" Classes="secondary" Click="ImportBoxButtonClicked">Import a box</Button>
     </StackPanel>
 </UserControl>

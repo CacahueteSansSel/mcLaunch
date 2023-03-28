@@ -1,4 +1,6 @@
-﻿namespace ddLaunch.Core.Mods;
+﻿using ddLaunch.Core.Boxes;
+
+namespace ddLaunch.Core.Mods;
 
 public abstract class ModificationPack
 {
@@ -18,7 +20,9 @@ public abstract class ModificationPack
     {
         
     }
-    
+
+    public abstract Task InstallModificationAsync(Box targetBox, SerializedModification mod);
+
     public class SerializedModification
     {
         public string ModId { get; init; }

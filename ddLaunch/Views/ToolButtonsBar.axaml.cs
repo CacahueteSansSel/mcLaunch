@@ -23,4 +23,9 @@ public partial class ToolButtonsBar : UserControl
     {
         Navigation.ShowPopup(new NewBoxPopup());
     }
+
+    private void ImportBoxButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new ImportBoxPopup());
+    }
 }

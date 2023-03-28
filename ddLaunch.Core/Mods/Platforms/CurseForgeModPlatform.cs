@@ -12,8 +12,9 @@ namespace ddLaunch.Core.Mods.Platforms;
 
 public class CurseForgeModPlatform : ModPlatform
 {
+    public static CurseForgeModPlatform Instance { get; private set; }
     public const int MinecraftGameId = 432;
-    
+
     CurseForgeClient client;
     Dictionary<string, Modification> modCache = new();
     
@@ -21,6 +22,7 @@ public class CurseForgeModPlatform : ModPlatform
 
     public CurseForgeModPlatform(string apiKey)
     {
+        Instance = this;
         client = new CurseForgeClient(apiKey, "ddLaunch/1.0.0");
     }
     
@@ -167,12 +169,10 @@ public class CurseForgeModPlatform : ModPlatform
 
     public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId)
     {
-        Mod cfMod = (await client.GetMod(uint.Parse(mod.Id))).Data;
-        var version = cfMod.LatestFiles.FirstOrDefault(file => file.Id == uint.Parse(versionId));
-
+        var version = await client.GetModFile(uint.Parse(mod.Id), uint.Parse(versionId));
         if (version == null) return false;
 
-        await InstallFile(targetBox, version);
+        await InstallFile(targetBox, version.Data);
         
         await DownloadManager.DownloadAll();
 

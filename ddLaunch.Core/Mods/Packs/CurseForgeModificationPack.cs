@@ -1,6 +1,8 @@
 ﻿using System.IO.Compression;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ddLaunch.Core.Boxes;
+using ddLaunch.Core.Mods.Platforms;
 using ddLaunch.Core.Utilities;
 
 namespace ddLaunch.Core.Mods.Packs;
@@ -49,6 +51,14 @@ public class CurseForgeModificationPack : ModificationPack
             Path = entry.FullName.Replace("overrides/", ""),
             Data = entry.Open().ReadToEndAndClose(entry.Length),
         }).ToArray();
+    }
+    
+    public override async Task InstallModificationAsync(Box targetBox, SerializedModification mod)
+    {
+        await CurseForgeModPlatform.Instance.InstallModificationAsync(targetBox, new Modification
+        {
+            Id = mod.ModId
+        }, mod.VersionId);
     }
 
     public class ModelManifest

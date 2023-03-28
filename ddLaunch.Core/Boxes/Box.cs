@@ -24,6 +24,7 @@ public class Box
     public Box(BoxManifest manifest, string path)
     {
         Path = path;
+        Manifest = manifest;
         manifestPath = $"{path}/box.json";
 
         File.WriteAllText(manifestPath, JsonSerializer.Serialize(manifest));
