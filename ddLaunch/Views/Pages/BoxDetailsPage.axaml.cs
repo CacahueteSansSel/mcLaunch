@@ -12,6 +12,7 @@ using Avalonia.Media.Imaging;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Mods;
+using ddLaunch.Core.Utilities;
 using ddLaunch.Utilities;
 using ddLaunch.Views.Popups;
 
@@ -48,6 +49,7 @@ public partial class BoxDetailsPage : UserControl
         foreach (BoxStoredModification storedMod in Box.Manifest.Modifications)
         {
             Modification mod = await ModPlatformManager.Platform.GetModAsync(storedMod.Id);
+            
             await mod.DownloadIconAsync();
             
             mods.Add(mod);
@@ -60,6 +62,13 @@ public partial class BoxDetailsPage : UserControl
 
     private async void RunButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (Box.Manifest.ModLoader == null)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Can't run Minecraft", $"The modloader {Box.Manifest.ModLoaderId.Capitalize()} isn't supported"));
+            
+            return;
+        }
+        
         Navigation.ShowPopup(new GameLaunchPopup());
         
         await Box.PrepareAsync();

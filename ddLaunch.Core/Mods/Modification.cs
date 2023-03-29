@@ -1,4 +1,5 @@
-﻿using Avalonia.Media.Imaging;
+﻿using System.Text.Json.Serialization;
+using Avalonia.Media.Imaging;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Utilities;
 using ReactiveUI;
@@ -8,7 +9,10 @@ namespace ddLaunch.Core.Mods;
 public class Modification : ReactiveObject
 {
     string? longDescriptionBody;
+    Bitmap? icon;
     Bitmap? background;
+    ModPlatform? platform;
+    
     public string? Name { get; set; }
     public string Id { get; set; }
     public string Author { get; set; }
@@ -25,14 +29,33 @@ public class Modification : ReactiveObject
     public string[] MinecraftVersions { get; set; }
     public string? LatestVersion { get; set; }
     public string? LatestMinecraftVersion { get; set; }
-    public Bitmap? Icon { get; set; }
 
+    [JsonIgnore]
+    public Bitmap? Icon
+    {
+        get => icon;
+        set => this.RaiseAndSetIfChanged(ref icon, value);
+    }
+
+    [JsonIgnore]
     public Bitmap? Background
     {
         get => background;
         set => this.RaiseAndSetIfChanged(ref background, value);
     }
-    public ModPlatform Platform { get; set; }
+
+    public string ModPlatformId
+    {
+        get => Platform?.Name;
+        set => Platform = ModPlatformManager.Platform.GetModPlatform(value);
+    }
+
+    [JsonIgnore]
+    public ModPlatform Platform
+    {
+        get => platform;
+        set => platform = value;
+    }
 
     public bool IsSimilar(Modification other)
     {
@@ -71,7 +94,7 @@ public class Modification : ReactiveObject
         {
             await Task.Run(() =>
             {
-                Icon = CacheManager.Load(cacheName);
+                Icon = CacheManager.LoadBitmap(cacheName);
             });
 
             return;
@@ -125,7 +148,7 @@ public class Modification : ReactiveObject
         {
             await Task.Run(() =>
             {
-                Background = CacheManager.Load(cacheName);
+                Background = CacheManager.LoadBitmap(cacheName);
             });
 
             return;

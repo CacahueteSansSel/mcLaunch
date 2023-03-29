@@ -73,6 +73,8 @@ public class CurseForgeModPlatform : ModPlatform
 
     public override async Task<Modification> GetModAsync(string id)
     {
+        string cacheName = $"mod-{id}";
+        if (CacheManager.Has(cacheName)) return CacheManager.LoadModification(cacheName)!;
         if (modCache.ContainsKey(id))
             return modCache[id];
 
@@ -107,6 +109,7 @@ public class CurseForgeModPlatform : ModPlatform
             };
 
             modCache.Add(id, mod);
+            CacheManager.Store(mod, cacheName);
             return mod;
         }
         catch (Exception e)
@@ -198,5 +201,12 @@ public class CurseForgeModPlatform : ModPlatform
         // With the CurseForge API, we don't need to download additional infos for a mod (when searching for example)
         
         return mod;
+    }
+
+    public override ModPlatform GetModPlatform(string id)
+    {
+        if (id == Name) return this;
+
+        return null;
     }
 }

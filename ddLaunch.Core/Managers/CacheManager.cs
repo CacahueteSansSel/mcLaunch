@@ -1,4 +1,6 @@
-﻿using Avalonia.Media.Imaging;
+﻿using System.Text.Json;
+using Avalonia.Media.Imaging;
+using ddLaunch.Core.Mods;
 using Path = System.IO.Path;
 
 namespace ddLaunch.Core.Managers;
@@ -21,8 +23,18 @@ public static class CacheManager
         bmp.Save($"{FolderPath}/{id}");
     }
 
-    public static Bitmap Load(string id)
+    public static void Store(Modification mod, string id)
+    {
+        if (mod == null) return;
+        
+        File.WriteAllText($"{FolderPath}/{id}", JsonSerializer.Serialize(mod));
+    }
+
+    public static Bitmap LoadBitmap(string id)
         => new Bitmap($"{FolderPath}/{id}");
+
+    public static Modification? LoadModification(string id)
+        => JsonSerializer.Deserialize<Modification>(File.ReadAllText($"{FolderPath}/{id}"));
 
     public static bool Has(string id)
         => File.Exists($"{FolderPath}/{id}");

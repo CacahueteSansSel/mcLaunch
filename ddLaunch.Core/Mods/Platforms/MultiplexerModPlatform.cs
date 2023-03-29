@@ -1,4 +1,5 @@
 ﻿using ddLaunch.Core.Boxes;
+using ddLaunch.Core.Managers;
 
 namespace ddLaunch.Core.Mods.Platforms;
 
@@ -69,5 +70,16 @@ public class MultiplexerModPlatform : ModPlatform
         if (!_platforms.Contains(modPlatform)) return mod;
 
         return await modPlatform.DownloadAdditionalInfosAsync(mod);
+    }
+
+    public override ModPlatform GetModPlatform(string id)
+    {
+        foreach (ModPlatform platform in _platforms)
+        {
+            ModPlatform p = platform.GetModPlatform(id);
+            if (p != null) return p;
+        }
+
+        return null;
     }
 }

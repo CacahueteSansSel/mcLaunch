@@ -15,4 +15,5 @@ public abstract class ModPlatform
     public abstract Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId);
 
     public abstract Task<Modification> DownloadAdditionalInfosAsync(Modification mod);
+    public abstract ModPlatform GetModPlatform(string id);
 }

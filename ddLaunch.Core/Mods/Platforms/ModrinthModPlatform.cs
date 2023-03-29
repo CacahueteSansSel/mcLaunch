@@ -62,7 +62,10 @@ public class ModrinthModPlatform : ModPlatform
 
     public override async Task<Modification> GetModAsync(string id)
     {
-        if (modCache.ContainsKey(id)) return modCache[id];
+        string cacheName = $"mod-{id}";
+        if (CacheManager.Has(cacheName)) return CacheManager.LoadModification(cacheName)!;
+        if (modCache.ContainsKey(id)) 
+            return modCache[id];
 
         try
         {
@@ -86,6 +89,7 @@ public class ModrinthModPlatform : ModPlatform
             };
 
             modCache.Add(id, mod);
+            CacheManager.Store(mod, cacheName);
             return mod;
         }
         catch (Exception e)
@@ -181,5 +185,12 @@ public class ModrinthModPlatform : ModPlatform
         mod.BackgroundPath = project.FeaturedGallery;
 
         return mod;
+    }
+
+    public override ModPlatform GetModPlatform(string id)
+    {
+        if (id == Name) return this;
+
+        return null;
     }
 }
