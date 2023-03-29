@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Mods.Packs;
 using ddLaunch.Utilities;
@@ -52,9 +55,22 @@ public partial class ImportBoxPopup : UserControl
         if (files == null) return;
 
         CurseForgeModificationPack modpack = new CurseForgeModificationPack(files[0]);
-        Box box = await BoxManager.CreateFromModificationPack(modpack);
+        
+        Navigation.HidePopup();
+        Navigation.ShowPopup(new StatusPopup($"Importing {modpack.Name}", "Please wait for the modpack to be imported"));
+        
+        Box box = await BoxManager.CreateFromModificationPack(modpack, (msg, percent) =>
+        {
+            StatusPopup.Instance.Status = msg;
+            StatusPopup.Instance.StatusPercent = percent;
+        });
+        
+        Navigation.HidePopup();
+        
+        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+        Bitmap bmp = new Bitmap(assets.Open(new Uri($"avares://ddLaunch/resources/default_cf_modpack_logo.png")));
+        box.SetAndSaveIcon(bmp);
         
         Navigation.Push(new BoxDetailsPage(box));
-        Navigation.HidePopup();
     }
 }

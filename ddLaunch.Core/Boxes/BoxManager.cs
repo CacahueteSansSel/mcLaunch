@@ -55,7 +55,7 @@ public static class BoxManager
         return path;
     }
 
-    public static async Task<Box> CreateFromModificationPack(ModificationPack pack)
+    public static async Task<Box> CreateFromModificationPack(ModificationPack pack, Action<string, float> progressCallback)
     {
         BoxManifest manifest = new BoxManifest(pack.Name, "Imported from a CurseForge modpack", pack.Author,
             pack.ModloaderId, pack.ModloaderVersion, null,
@@ -64,18 +64,36 @@ public static class BoxManager
         string path = await Create(manifest);
 
         Box box = new Box(manifest, path);
+        
+        progressCallback?.Invoke($"Preparing Minecraft {pack.MinecraftVersion}", 0f);
 
         // Wait any download to finish
         await DownloadManager.WaitForPendingDownloads();
 
+        int index = 0;
         foreach (var mod in pack.Modifications)
         {
+            progressCallback?.Invoke($"Installing modification {index}/{pack.Modifications.Length}", 
+                (float)index / pack.Modifications.Length / 2);
+            
             await pack.InstallModificationAsync(box, mod);
+
+            index++;
         }
 
+        index = 0;
         foreach (var additionalFile in pack.AdditionalFiles)
         {
-            await File.WriteAllBytesAsync($"{path}/{additionalFile.Path}", additionalFile.Data);
+            progressCallback?.Invoke($"Writing file override {index}/{pack.AdditionalFiles.Length}", 
+                0.5f + (float)index / pack.AdditionalFiles.Length / 2);
+            
+            string filename = $"{box.Folder.Path}/{additionalFile.Path}";
+            string folderPath = filename.Replace(Path.GetFileName(filename), "").Trim('/');
+
+            if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+            
+            await File.WriteAllBytesAsync(filename, additionalFile.Data);
+            index++;
         }
         
         box.SaveManifest();

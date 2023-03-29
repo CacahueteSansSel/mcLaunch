@@ -1,0 +1,23 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:ddLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="500"
+             Width="450" MaxHeight="500"
+             x:Class="ddLaunch.Views.Popups.StatusPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <DockPanel Margin="38">
+            <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25" Text="{Binding Title}"></TextBlock>
+            <TextBlock DockPanel.Dock="Top" Margin="0 20 0 0" TextWrapping="WrapWithOverflow"  Text="{Binding Text}"></TextBlock>
+            <StackPanel DockPanel.Dock="Top"  Orientation="Vertical"  Spacing="10" Margin="0 20 0 0">
+                <views:LoadingCircle/>
+                <TextBlock Classes="light" Text="{Binding StatusText}"></TextBlock>
+                <ProgressBar Value="{Binding StatusPercent}"></ProgressBar>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

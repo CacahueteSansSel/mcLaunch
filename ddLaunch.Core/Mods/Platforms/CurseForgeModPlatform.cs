@@ -1,4 +1,5 @@
-﻿using ddLaunch.Core.Boxes;
+﻿using System.Diagnostics;
+using ddLaunch.Core.Boxes;
 using CurseForge.Models;
 using CurseForge.Models.Files;
 using CurseForge.Models.Games;
@@ -138,6 +139,12 @@ public class CurseForgeModPlatform : ModPlatform
 
     async Task InstallFile(Box targetBox, File file)
     {
+        if (!file.GameVersions.Contains(targetBox.Manifest.Version))
+        {
+            Debug.WriteLine($"Mod {file.DisplayName} is incompatible ! Skipping");
+            return;
+        }
+        
         if (file.Dependencies != null && file.Dependencies.Count > 0)
         {
             foreach (FileDependency dep in file.Dependencies)
@@ -147,6 +154,12 @@ public class CurseForgeModPlatform : ModPlatform
                 Mod cfMod = (await client.GetMod(dep.ModId)).Data;
                 await InstallFile(targetBox, cfMod.LatestFiles[0]);
             }
+        }
+
+        if (targetBox.Manifest.HasModification(file.ModId.ToString(), Name))
+        {
+            Debug.WriteLine($"Mod {file.DisplayName} already installed in {targetBox.Manifest.Name}");
+            return;
         }
         
         DownloadManager.Begin(file.DisplayName);

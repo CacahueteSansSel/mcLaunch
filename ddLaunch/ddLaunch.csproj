@@ -65,6 +65,8 @@
       <AvaloniaResource Include="resources\icon.png" />
       <None Remove="resources\icon.ico" />
       <AvaloniaResource Include="resources\icon.ico" />
+      <None Remove="resources\default_cf_modpack_logo.png" />
+      <AvaloniaResource Include="resources\default_cf_modpack_logo.png" />
     </ItemGroup>
 
     <ItemGroup>

@@ -148,7 +148,8 @@ public class Minecraft
             FileName = jvm,
             UseShellExecute = false,
             RedirectStandardOutput = true,
-            RedirectStandardError = true
+            RedirectStandardError = true,
+            WorkingDirectory = Folder.CompletePath
         };
         
         return Process.Start(info);
