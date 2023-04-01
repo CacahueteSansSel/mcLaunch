@@ -5,6 +5,7 @@ using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Mods;
+using ddLaunch.Core.Utilities;
 
 namespace ddLaunch.Core.Boxes;
 
@@ -63,12 +64,11 @@ public static class BoxManager
 
         string path = await Create(manifest);
 
-        Box box = new Box(manifest, path);
-        
-        progressCallback?.Invoke($"Preparing Minecraft {pack.MinecraftVersion}", 0f);
+        Box box = new Box(manifest, path, false);
 
-        // Wait any download to finish
-        await DownloadManager.WaitForPendingDownloads();
+        progressCallback?.Invoke($"Preparing Minecraft {pack.MinecraftVersion} ({pack.ModloaderId.Capitalize()})", 0f);
+
+        await box.CreateMinecraftAsync();
 
         int index = 0;
         foreach (var mod in pack.Modifications)

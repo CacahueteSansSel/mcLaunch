@@ -25,8 +25,7 @@ public partial class ModificationList : UserControl
     {
         InitializeComponent();
 
-        DataContext = new Data();
-        /*
+        DataContext = new Data()
         {
             Modifications = new Modification[]
             {
@@ -56,7 +55,6 @@ public partial class ModificationList : UserControl
                 }
             }
         };
-        */
     }
 
     public void SetBox(Box box)
@@ -75,6 +73,23 @@ public partial class ModificationList : UserControl
         Data ctx = (Data) DataContext;
 
         ctx.Modifications = mods;
+        
+        SetModificationsAttributes();
+    }
+
+    void SetModificationsAttributes()
+    {
+        if (lastBox == null) return;
+        
+        Data ctx = (Data) DataContext;
+        List<Modification> newList = new List<Modification>(ctx.Modifications);
+
+        foreach (Modification mod in newList)
+        {
+            mod.IsInstalledOnCurrentBox = lastBox.HasModification(mod);
+        }
+        
+        ctx.Modifications = newList.ToArray();
     }
 
     public void SetLoadingCircle(bool isLoading)
@@ -95,6 +110,8 @@ public partial class ModificationList : UserControl
         Data ctx = (Data) DataContext;
 
         ctx.Modifications = await SearchModsAsync(box, query);
+        
+        SetModificationsAttributes();
 
         LoadCircle.IsVisible = false;
         LoadMoreButton.IsEnabled = true;

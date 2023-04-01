@@ -54,10 +54,10 @@ public partial class BoxDetailsPage : UserControl
             
             mods.Add(mod);
         }
-        
+
+        ModsList.SetBox(Box);
         ModsList.SetModifications(mods.ToArray());
         ModsList.SetLoadingCircle(false);
-        ModsList.SetBox(Box);
     }
 
     private async void RunButtonClicked(object? sender, RoutedEventArgs e)
@@ -71,7 +71,7 @@ public partial class BoxDetailsPage : UserControl
         
         Navigation.ShowPopup(new GameLaunchPopup());
         
-        await Box.PrepareAsync();
+        await Box.PrepareAsync(); 
         Box.Run();
         
         // TODO: watcher process that checks if minecraft is closed, then reopens the launcher

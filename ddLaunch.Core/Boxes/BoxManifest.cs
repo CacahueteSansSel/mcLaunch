@@ -4,6 +4,7 @@ using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using ddLaunch.Core.Managers;
+using ddLaunch.Core.Mods;
 using ddLaunch.Core.Utilities;
 using ReactiveUI;
 
@@ -14,6 +15,7 @@ public class BoxManifest : ReactiveObject
     ManifestMinecraftVersion version;
     Bitmap icon;
     Bitmap? background;
+    MinecraftVersion setUpVersion;
 
     public string Name { get; set; }
     public string Id { get; set; }
@@ -61,21 +63,24 @@ public class BoxManifest : ReactiveObject
         Version = version.Id;
     }
 
-    public bool HasModification(string id, string versionId, string platformId)
+    public bool HasModificationStrict(string id, string versionId, string platformId)
         => Modifications.FirstOrDefault(m => m.Id == id
                                              && m.PlatformId == platformId
                                              && m.VersionId == versionId) != null;
 
-    public bool HasModification(string id, string platformId)
+    public bool HasModificationStrict(string id, string platformId)
         => Modifications.FirstOrDefault(m => m.Id == id
                                              && m.PlatformId == platformId) != null;
+
+    public bool HasModificationSoft(Modification mod)
+        => Modifications.FirstOrDefault(m => mod.IsSimilar(m) || HasModificationStrict(m.Id, m.PlatformId)) != null;
 
     public BoxStoredModification? GetModification(string id)
         => Modifications.FirstOrDefault(mod => mod.Id == id);
 
     public void AddModification(string id, string versionId, string platformId, string[] filenames)
     {
-        if (HasModification(id, versionId, platformId)) return;
+        if (HasModificationStrict(id, versionId, platformId)) return;
 
         Modifications.Add(new BoxStoredModification
         {
@@ -97,6 +102,8 @@ public class BoxManifest : ReactiveObject
 
     public async Task<MinecraftVersion> Setup()
     {
+        if (setUpVersion != null) return setUpVersion;
+
         MinecraftVersion mcVersion =
             await MinecraftManager.Manifest.Get(Version).DownloadOrGetLocally(BoxManager.SystemFolder);
 
@@ -111,14 +118,19 @@ public class BoxManifest : ReactiveObject
             MinecraftVersion? mlMcVersion = await version.GetMinecraftVersionAsync(Version);
 
             // Merging
-            mlMcVersion = mlMcVersion.Merge(mcVersion);
+            if (modLoader.NeedsMerging)
+                mlMcVersion = mlMcVersion.Merge(mcVersion);
 
             // Install & setup this patched version for the modloader
             await BoxManager.SetupVersionAsync(mlMcVersion, customName: $"{modLoader.Name} {version.Name}",
                 downloadAllAfter: false);
 
+            setUpVersion = mlMcVersion;
+
             return mlMcVersion;
         }
+
+        setUpVersion = mcVersion;
 
         await DownloadManager.DownloadAll();
 
@@ -132,6 +144,8 @@ public class BoxStoredModification
     public string VersionId { get; init; }
     public string PlatformId { get; init; }
     public string[] Filenames { get; init; }
+    public string Name { get; init; }
+    public string Author { get; init; }
 
     public void Delete()
     {

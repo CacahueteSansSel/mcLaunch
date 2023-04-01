@@ -42,7 +42,8 @@ public class LibrariesDownloader
         string url = library.DeduceUrl()!;
         string dir = path.Replace(filename, "").Trim('/');
 
-        if (path.EndsWith(".jar")) ClassPath.Add(System.IO.Path.GetFullPath(path));
+        if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path))) 
+            ClassPath.Add(System.IO.Path.GetFullPath(path));
 
         if (File.Exists(path) && !force) return path;
 
@@ -63,7 +64,8 @@ public class LibrariesDownloader
         string filename = System.IO.Path.GetFileName(path);
         string dir = path.Replace(filename, "").Trim('/');
 
-        if (path.EndsWith(".jar")) ClassPath.Add(System.IO.Path.GetFullPath(path));
+        if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path))) 
+            ClassPath.Add(System.IO.Path.GetFullPath(path));
 
         if (File.Exists(path) && !force) return path;
 

@@ -115,7 +115,7 @@ public class ModrinthModPlatform : ModPlatform
             {
                 if (dependency.DependencyType != DependencyType.Required) continue;
 
-                if (targetBox.Manifest.HasModification(dependency.ProjectId, dependency.VersionId, Name))
+                if (targetBox.Manifest.HasModificationStrict(dependency.ProjectId, dependency.VersionId, Name))
                     continue;
 
                 string depVersionId = dependency.VersionId;

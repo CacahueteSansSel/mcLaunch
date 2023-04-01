@@ -8,4 +8,9 @@ public static class Extensions
 
         return list;
     }
+    public static List<T> AddsOnce<T>(this List<T> list, IEnumerable<T> array)
+    {
+        list.AddRange(array.Where(e => !list.Contains(e)));
+        return list;
+    }
 }

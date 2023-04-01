@@ -1,4 +1,5 @@
-﻿using System.IO.Compression;
+﻿using System.Diagnostics;
+using System.IO.Compression;
 using System.Net.Http.Headers;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Download;
@@ -41,7 +42,7 @@ public static class DownloadManager
         currentSectionName = name;
 
         client = new HttpClient();
-        //client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("ddLaunch"));
+        client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("ddLaunch", "1.0.0"));
         
         OnDownloadPrepareStarting?.Invoke(name);
     }
@@ -117,7 +118,10 @@ public static class DownloadManager
         
         IsDownloadInProgress = false;
         sections.Clear();
+        currentSectionEntries.Clear();
         OnDownloadFinished?.Invoke();
+        
+        Debug.WriteLine("Download Jobs Finished");
     }
 
     public class Downloader : ResourceDownloader

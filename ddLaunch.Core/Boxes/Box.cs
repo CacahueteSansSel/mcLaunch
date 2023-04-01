@@ -21,7 +21,7 @@ public class Box
 
     public bool IsRunning => MinecraftProcess != null && !MinecraftProcess.HasExited;
 
-    public Box(BoxManifest manifest, string path)
+    public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
         Path = path;
         Manifest = manifest;
@@ -30,7 +30,7 @@ public class Box
         File.WriteAllText(manifestPath, JsonSerializer.Serialize(manifest));
 
         Folder = new MinecraftFolder($"{path}/minecraft");
-        CreateMinecraft();
+        if (createMinecraft) CreateMinecraftAsync();
     }
 
     public Box(string path)
@@ -50,11 +50,14 @@ public class Box
 
     async Task SetupVersionAsync()
     {
+        if (Version != null) return;
         Version = await Manifest.Setup();
     }
 
-    async Task CreateMinecraft()
+    public async Task CreateMinecraftAsync()
     {
+        if (Minecraft != null) return;
+        
         await SetupVersionAsync();
 
         Minecraft = new Minecraft(Version, Folder)
@@ -87,13 +90,13 @@ public class Box
     public async Task PrepareAsync()
     {
         await SetupVersionAsync();
-        await CreateMinecraft();
+        await CreateMinecraftAsync();
 
         await BoxManager.SetupVersionAsync(Version);
     }
 
     public bool HasModification(Modification mod)
-        => Manifest.HasModification(mod.Id, mod.Platform.Name);
+        => Manifest.HasModificationStrict(mod.Id, mod.Platform.Name);
 
     public void SaveManifest()
     {

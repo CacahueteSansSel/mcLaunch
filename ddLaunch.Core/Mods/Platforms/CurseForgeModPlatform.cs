@@ -18,7 +18,7 @@ public class CurseForgeModPlatform : ModPlatform
 
     CurseForgeClient client;
     Dictionary<string, Modification> modCache = new();
-    
+
     public override string Name { get; } = "Curseforge";
 
     public CurseForgeModPlatform(string apiKey)
@@ -26,16 +26,16 @@ public class CurseForgeModPlatform : ModPlatform
         Instance = this;
         client = new CurseForgeClient(apiKey, "ddLaunch/1.0.0");
     }
-    
+
     public override async Task<Modification[]> GetModsAsync(int page, Box box, string searchQuery)
     {
         CursePaginatedResponse<List<Mod>> resp = await client.SearchMods(MinecraftGameId,
             gameVersion: box.Manifest.Version,
-            modLoaderType: Enum.Parse<ModLoaderType>(box.Manifest.ModLoaderId, true), 
-            sortField: ModsSearchSortField.Popularity, 
+            modLoaderType: Enum.Parse<ModLoaderType>(box.Manifest.ModLoaderId, true),
+            sortField: ModsSearchSortField.Popularity,
             pageSize: 10,
-            searchFilter: searchQuery, 
-            index: (uint)(page * 10)
+            searchFilter: searchQuery,
+            index: (uint) (page * 10)
         );
 
         Modification[] mods = resp.Data.Select(mod =>
@@ -50,21 +50,25 @@ public class CurseForgeModPlatform : ModPlatform
                         minecraftVersions.Add(ver);
                 }
             }
-            
-            return new Modification
+
+            Modification m = new Modification
             {
                 Id = mod.Id.ToString(),
                 Name = mod.Name,
                 ShortDescription = mod.Summary,
                 Author = mod.Authors?.FirstOrDefault()?.Name,
-                IconPath = mod.Logo.Url,
+                IconPath = mod.Logo?.Url,
                 MinecraftVersions = minecraftVersions.ToArray(),
                 LatestMinecraftVersion = minecraftVersions.Last(),
                 BackgroundPath = mod.Screnshots?.FirstOrDefault()?.Url,
                 Platform = this
             };
+            
+            m.TransformLongDescriptionToMarkdown();
+
+            return m;
         }).ToArray();
-        
+
         // Download all mods images
         foreach (Modification mod in mods) await mod.DownloadIconAsync();
 
@@ -107,6 +111,8 @@ public class CurseForgeModPlatform : ModPlatform
                 LongDescriptionBody = (await client.GetModDescription(cfMod.Id)).Data,
                 Platform = this
             };
+            
+            mod.TransformLongDescriptionToMarkdown();
 
             modCache.Add(id, mod);
             CacheManager.Store(mod, cacheName);
@@ -118,23 +124,16 @@ public class CurseForgeModPlatform : ModPlatform
         }
     }
 
-    public override async Task<string[]> GetVersionsForMinecraftVersionAsync(string modId, string modLoaderId, string minecraftVersionId)
+    public override async Task<string[]> GetVersionsForMinecraftVersionAsync(string modId, string modLoaderId,
+        string minecraftVersionId)
     {
-        Mod cfMod = (await client.GetMod(uint.Parse(modId))).Data;
+        //Mod cfMod = (await client.GetMod(uint.Parse(modId))).Data;
         List<string> modVersions = new();
 
-        foreach (var file in cfMod.LatestFiles)
+        foreach (File file in (await client.GetModFiles(uint.Parse(modId), minecraftVersionId,
+                     Enum.Parse<ModLoaderType>(modLoaderId, true), pageSize: 100)).Data)
         {
-            // Mod.GameVersions contains the Minecraft version (1.19.4), the mod loader (Fabric), and the side (Client)
-            // We need to check those
-            
-            if (!file.GameVersions.Contains(modLoaderId.Capitalize()) 
-                || !file.GameVersions.Contains("Client")
-                || !file.GameVersions.Contains(minecraftVersionId))
-                continue;
-            
-            if (!modVersions.Contains(file.Id.ToString()))
-                modVersions.Add(file.Id.ToString());
+            modVersions.Add(file.Id.ToString());
         }
 
         return modVersions.ToArray();
@@ -147,28 +146,28 @@ public class CurseForgeModPlatform : ModPlatform
             Debug.WriteLine($"Mod {file.DisplayName} is incompatible ! Skipping");
             return;
         }
-        
+
         if (file.Dependencies != null && file.Dependencies.Count > 0)
         {
             foreach (FileDependency dep in file.Dependencies)
             {
                 if (dep.RelationType != FileRelationType.RequiredDependency) continue;
-                
+
                 Mod cfMod = (await client.GetMod(dep.ModId)).Data;
                 await InstallFile(targetBox, cfMod.LatestFiles[0]);
             }
         }
 
-        if (targetBox.Manifest.HasModification(file.ModId.ToString(), Name))
+        if (targetBox.Manifest.HasModificationStrict(file.ModId.ToString(), Name))
         {
             Debug.WriteLine($"Mod {file.DisplayName} already installed in {targetBox.Manifest.Name}");
             return;
         }
-        
+
         DownloadManager.Begin(file.DisplayName);
-        
+
         List<string> filenames = new();
-        
+
         string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
         string url = file.DownloadUrl;
 
@@ -179,7 +178,7 @@ public class CurseForgeModPlatform : ModPlatform
 
         targetBox.Manifest.AddModification(file.ModId.ToString(), file.Id.ToString(), Name,
             filenames.ToArray());
-        
+
         DownloadManager.End();
     }
 
@@ -189,7 +188,7 @@ public class CurseForgeModPlatform : ModPlatform
         if (version == null) return false;
 
         await InstallFile(targetBox, version.Data);
-        
+
         await DownloadManager.DownloadAll();
 
         targetBox.SaveManifest();
@@ -198,8 +197,10 @@ public class CurseForgeModPlatform : ModPlatform
 
     public override async Task<Modification> DownloadAdditionalInfosAsync(Modification mod)
     {
-        // With the CurseForge API, we don't need to download additional infos for a mod (when searching for example)
+        mod.LongDescriptionBody = (await client.GetModDescription(uint.Parse(mod.Id))).Data;
         
+        mod.TransformLongDescriptionToMarkdown();
+
         return mod;
     }
 

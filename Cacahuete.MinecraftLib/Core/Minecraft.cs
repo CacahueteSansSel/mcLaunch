@@ -127,7 +127,9 @@ public class Minecraft
             {"launcher_name", launcherName},
             {"launcher_version", launcherVersion},
             {"classpath", classPath + Path.GetFullPath(jarPath)},
+            {"classpath_separator", classPathSeparator},
             {"natives_directory", nativesPath},
+            {"library_directory", $"{sysFolder.CompletePath}/libraries"},
         }, Version.MainClass);
         
         Console.WriteLine(args);

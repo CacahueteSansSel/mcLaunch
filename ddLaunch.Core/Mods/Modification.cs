@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
+using System.Web;
 using Avalonia.Media.Imaging;
+using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Utilities;
 using ReactiveUI;
@@ -29,6 +31,8 @@ public class Modification : ReactiveObject
     public string[] MinecraftVersions { get; set; }
     public string? LatestVersion { get; set; }
     public string? LatestMinecraftVersion { get; set; }
+    
+    public bool IsInstalledOnCurrentBox { get; set; }
 
     [JsonIgnore]
     public Bitmap? Icon
@@ -57,16 +61,31 @@ public class Modification : ReactiveObject
         set => platform = value;
     }
 
-    public bool IsSimilar(Modification other)
+    public void TransformLongDescriptionToMarkdown()
+    {
+        if (string.IsNullOrWhiteSpace(LongDescriptionBody)) 
+            return;
+        
+        var converter = new ReverseMarkdown.Converter();
+        LongDescriptionBody = HttpUtility.HtmlDecode(converter.Convert(LongDescriptionBody));
+    }
+
+    public bool IsSimilar(string name, string author)
     {
         string nameNormalized = Name.NormalizeTitle();
         string authorNormalized = Author.NormalizeUsername();
-        string otherNameNormalized = other.Name.NormalizeTitle();
-        string otherAuthorNormalized = other.Author.NormalizeUsername();
+        string otherNameNormalized = name.NormalizeTitle();
+        string otherAuthorNormalized = author.NormalizeUsername();
 
         return nameNormalized == otherNameNormalized
                && authorNormalized == otherAuthorNormalized;
     }
+
+    public bool IsSimilar(Modification other)
+        => IsSimilar(other.Name, other.Author);
+
+    public bool IsSimilar(BoxStoredModification other)
+        => IsSimilar(other.Name, other.Author);
 
     async Task<Stream> LoadIconStreamAsync()
     {

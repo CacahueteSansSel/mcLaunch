@@ -65,8 +65,8 @@ public class MinecraftVersion
         {
             Arguments = new ModelArguments
             {
-                Game = new List<object>(Arguments.Game).Adds(other.Arguments.Game).ToArray(),
-                JVM = new List<object>(Arguments.JVM).Adds(other.Arguments.JVM).ToArray()
+                Game = new List<object>(Arguments.Game).AddsOnce(other.Arguments.Game).ToArray(),
+                JVM = new List<object>(Arguments.JVM).AddsOnce(other.Arguments.JVM).ToArray()
             },
             AssetIndex = this.AssetIndex ?? other.AssetIndex,
             Assets = this.Assets ?? other.Assets,
@@ -285,6 +285,7 @@ public class MinecraftVersion
         public string Build(Dictionary<string, string> replacements, string middle = "")
         {
             string final = "";
+            List<string> processedArgs = new();
 
             foreach (object arg in JVM)
             {
@@ -312,16 +313,20 @@ public class MinecraftVersion
 
                     if (abort) continue;
 
-                    Console.WriteLine(valueJson + "\n");
-
                     if (valueJson.ValueKind == JsonValueKind.String)
                     {
+                        if (processedArgs.Contains(valueJson.GetString())) continue;
+                        processedArgs.Add(valueJson.GetString());
+                        
                         final += FormatArgument(valueJson.GetString(), replacements) + " ";
                         continue;
                     }
 
                     foreach (JsonElement value in valueJson.EnumerateArray())
                     {
+                        if (processedArgs.Contains(value.GetString())) continue;
+                        processedArgs.Add(value.GetString());
+                        
                         final += FormatArgument(value.GetString(), replacements) + " ";
                     }
                 }
@@ -333,6 +338,9 @@ public class MinecraftVersion
             {
                 if (arg is not JsonElement elmt) continue;
                 if (elmt.ValueKind != JsonValueKind.String) continue;
+                
+                if (processedArgs.Contains(elmt.GetString())) continue;
+                processedArgs.Add(elmt.GetString());
 
                 final += FormatArgument(elmt.GetString(), replacements) + " ";
             }

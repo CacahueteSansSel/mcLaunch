@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:ddLaunch.Views"
              mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="500"
-             Width="450" Height="210"
+             Width="450" Height="250"
              x:Class="ddLaunch.Views.Popups.StatusPopup">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
