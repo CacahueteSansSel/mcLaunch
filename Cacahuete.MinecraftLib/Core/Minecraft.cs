@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Cacahuete.MinecraftLib.Auth;
 using Cacahuete.MinecraftLib.Models;
 
 namespace Cacahuete.MinecraftLib.Core;
@@ -66,6 +67,18 @@ public class Minecraft
     {
         this.username = username;
         this.uuid = uuid.ToString().Replace("-", "");
+
+        return this;
+    }
+
+    public Minecraft WithUser(AuthenticationResult auth, AuthenticationPlatform platform)
+    {
+        username = auth.Username;
+        uuid = auth.Uuid;
+        xuid = auth.Xuid;
+        clientId = platform.ClientId;
+        accessToken = auth.AccessToken;
+        userType = platform.UserType;
 
         return this;
     }

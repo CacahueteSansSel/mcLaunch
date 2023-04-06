@@ -9,7 +9,7 @@ namespace Cacahuete.MinecraftLib.Models;
 
 public class MinecraftVersion
 {
-    [JsonPropertyName("arguments")] public ModelArguments Arguments { get; set; }
+    [JsonPropertyName("arguments")] public ModelArguments? Arguments { get; set; }
 
     [JsonPropertyName("assetIndex")] public ModelAssetIndex AssetIndex { get; set; }
 
@@ -65,8 +65,8 @@ public class MinecraftVersion
         {
             Arguments = new ModelArguments
             {
-                Game = new List<object>(Arguments.Game).AddsOnce(other.Arguments.Game).ToArray(),
-                JVM = new List<object>(Arguments.JVM).AddsOnce(other.Arguments.JVM).ToArray()
+                Game = new List<object>((Arguments ?? ModelArguments.Default).Game).AddsOnce(other.Arguments?.Game).ToArray(),
+                JVM = new List<object>((Arguments ?? ModelArguments.Default).JVM).AddsOnce(other.Arguments?.JVM).ToArray()
             },
             AssetIndex = this.AssetIndex ?? other.AssetIndex,
             Assets = this.Assets ?? other.Assets,
@@ -223,9 +223,9 @@ public class MinecraftVersion
 
     public class ModelArguments
     {
-        [JsonPropertyName("game")] public object[] Game { get; set; }
+        [JsonPropertyName("game")] public object[]? Game { get; set; }
 
-        [JsonPropertyName("jvm")] public object[] JVM { get; set; }
+        [JsonPropertyName("jvm")] public object[]? JVM { get; set; }
 
         bool RuleSatisfied(JsonElement ruleJson)
         {
@@ -348,7 +348,7 @@ public class MinecraftVersion
             return final.Trim();
         }
 
-        public static ModelArguments Default =>
+        public static ModelArguments Default { get; } =
             JsonSerializer.Deserialize<ModelArguments>(File.ReadAllText("system/default_args.json"))!;
     }
 

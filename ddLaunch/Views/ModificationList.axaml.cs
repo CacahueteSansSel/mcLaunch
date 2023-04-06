@@ -25,7 +25,8 @@ public partial class ModificationList : UserControl
     {
         InitializeComponent();
 
-        DataContext = new Data()
+        DataContext = new Data();
+        /*
         {
             Modifications = new Modification[]
             {
@@ -55,6 +56,7 @@ public partial class ModificationList : UserControl
                 }
             }
         };
+        */
     }
 
     public void SetBox(Box box)
