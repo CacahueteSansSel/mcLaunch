@@ -75,6 +75,8 @@ public partial class BoxDetailsPage : UserControl
         Box.Run();
         
         // TODO: watcher process that checks if minecraft is closed, then reopens the launcher
+        // TODO: crash report parser
+        // RegExp for mod dependencies error : /(Failure message): .+/g
         Environment.Exit(0);
     }
 

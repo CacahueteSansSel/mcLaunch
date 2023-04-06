@@ -22,7 +22,6 @@ public static class PlatformSpecific
 
         if (OperatingSystem.IsLinux())
         {
-            // TODO: check if this is right
             Process.Start("xdg-open", path);
         }
     }

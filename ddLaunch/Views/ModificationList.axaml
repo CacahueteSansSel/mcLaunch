@@ -26,12 +26,12 @@
                         <DockPanel>
                             <Image Source="{Binding Icon}" DockPanel.Dock="Left" Width="40" Height="40"></Image>
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                                <Button IsVisible="{Binding !IsInstalledOnCurrentBox}" IsEnabled="{Binding !IsInstalled}" Classes="transparent">
+                                <!--<Button IsVisible="{Binding !IsInstalledOnCurrentBox}" IsEnabled="{Binding !IsInstalled}" Classes="transparent">
                                     <Image Source="/resources/icons/download.png" Width="18" Height="18"></Image>
                                 </Button>
                                 <Button IsVisible="{Binding IsInstalledOnCurrentBox}" IsEnabled="{Binding IsInstalled}" Classes="transparent" Margin="5 0 0 0">
                                     <Image Source="/resources/icons/delete.png" Width="18" Height="18"></Image>
-                                </Button>
+                                </Button>-->
                             </StackPanel>
                             <StackPanel Margin="10 0 10 0" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">

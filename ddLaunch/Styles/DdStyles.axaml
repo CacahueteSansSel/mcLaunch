@@ -20,9 +20,44 @@
                         <ProgressBar Value="70"></ProgressBar>
                     </StackPanel>
                 </Border>
+                <Border Classes="frame" Padding="5" Margin="0 10 0 0">
+                    <TextBox></TextBox>
+                </Border>
             </StackPanel>
         </Border>
     </Design.PreviewWith>
+    
+    <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundDarkest}" />
+    </Style>
+
+    <Style Selector="TextBox:pointerover /template/ TextBlock#PART_Watermark">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlPlaceholderForegroundPointerOver}" />
+    </Style>
+
+    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThicknessFocused}" />
+    </Style>
+    
+    <Style Selector="TextBox:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource Background}"></Setter>
+        <Setter Property="BorderBrush" Value="red"></Setter>
+    </Style>
+
+    <Style Selector="TextBox /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLightest}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThicknessFocused}" />
+    </Style>
+    
+    <Style Selector="TextBox">
+        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}"></Setter>
+        <Setter Property="CornerRadius" Value="4"></Setter>
+        <Setter Property="BorderThickness" Value="1"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+    </Style>
     
     <Style Selector="Border.frame">
         <Setter Property="Background" Value="{DynamicResource Background}"></Setter>
@@ -53,7 +88,7 @@
     </Style>
 
     <Style Selector="Button.primary">
-        <Setter Property="Background" Value="#6CB752"></Setter>
+        <Setter Property="Background" Value="{DynamicResource DarkerAccent}"></Setter>
         <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}"></Setter>
         <Setter Property="Padding" Value="20 10 20 10"></Setter>
         <Setter Property="Transitions">
@@ -65,7 +100,8 @@
     </Style>
     
     <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource DefaultAccent}"></Setter>
+        <Setter Property="Background" Value="{DynamicResource MiddleAccent}"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}"></Setter>
     </Style>    
     
     <Style Selector="Button.primary:pressed /template/ ContentPresenter">
@@ -73,7 +109,7 @@
     </Style>    
     
     <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
-        <Setter Property="TextBlock.Foreground" Value="Black"/>
+        <Setter Property="TextBlock.Foreground" Value="White"/>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.2"/>
@@ -94,7 +130,7 @@
     </Style>
     
     <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"></Setter>
+        <Setter Property="Background" Value="{DynamicResource Background}"></Setter>
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
     </Style>
 

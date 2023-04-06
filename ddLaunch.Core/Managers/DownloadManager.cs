@@ -23,6 +23,7 @@ public static class DownloadManager
     public static event Action<string, float, int> OnDownloadProgressUpdate;
     public static event Action OnDownloadFinished;
     public static event Action<string> OnDownloadPrepareStarting;
+    public static event Action<string, string> OnDownloadError;
     public static event Action OnDownloadPrepareEnding;
     public static event Action<string, int> OnDownloadSectionStarting;
 
@@ -92,13 +93,20 @@ public static class DownloadManager
                 switch (entry.Action)
                 {
                     case EntryAction.Download:
-                        HttpResponseMessage resp = await client.GetAsync(entry.Source);
-                        resp.EnsureSuccessStatusCode();
+                        try
+                        {
+                            HttpResponseMessage resp = await client.GetAsync(entry.Source);
+                            resp.EnsureSuccessStatusCode();
 
-                        string folder = entry.Target.Replace(Path.GetFileName(entry.Target), "").Trim('/');
-                        if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                            string folder = entry.Target.Replace(Path.GetFileName(entry.Target), "").Trim('/');
+                            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
 
-                        await File.WriteAllBytesAsync(entry.Target, await resp.Content.ReadAsByteArrayAsync());
+                            await File.WriteAllBytesAsync(entry.Target, await resp.Content.ReadAsByteArrayAsync());
+                        }
+                        catch (Exception e)
+                        {
+                            OnDownloadError?.Invoke(section.Name, entry.Source);
+                        }
                         break;
                     case EntryAction.Extract:
                         if (!Directory.Exists(entry.Target)) Directory.CreateDirectory(entry.Target);

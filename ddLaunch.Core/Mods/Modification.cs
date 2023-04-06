@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using System.Web;
+using System.Windows.Input;
 using Avalonia.Media.Imaging;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
@@ -14,6 +15,7 @@ public class Modification : ReactiveObject
     Bitmap? icon;
     Bitmap? background;
     ModPlatform? platform;
+    bool isInstalledOnCurrentBox;
     
     public string? Name { get; set; }
     public string Id { get; set; }
@@ -31,8 +33,12 @@ public class Modification : ReactiveObject
     public string[] MinecraftVersions { get; set; }
     public string? LatestVersion { get; set; }
     public string? LatestMinecraftVersion { get; set; }
-    
-    public bool IsInstalledOnCurrentBox { get; set; }
+
+    public bool IsInstalledOnCurrentBox
+    {
+        get => isInstalledOnCurrentBox;
+        set => this.RaiseAndSetIfChanged(ref isInstalledOnCurrentBox, value);
+    }
 
     [JsonIgnore]
     public Bitmap? Icon
@@ -193,5 +199,22 @@ public class Modification : ReactiveObject
             
             CacheManager.Store(Background, cacheName);
         }
+    }
+
+    public async void CommandDownload(Box target)
+    {
+        // TODO: Version selection
+
+        string[] versions =
+            await ModPlatformManager.Platform.GetVersionsForMinecraftVersionAsync(Id,
+                target.Manifest.ModLoaderId,
+                target.Manifest.Version);
+
+        // TODO: maybe tell the user when the installation failed
+        if (versions.Length == 0) return;
+
+        await ModPlatformManager.Platform.InstallModificationAsync(target, this, versions[0]);
+
+        IsInstalledOnCurrentBox = true;
     }
 }

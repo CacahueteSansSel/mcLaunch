@@ -7,8 +7,12 @@
     <Application.Resources>
         <SolidColorBrush x:Key="Background">#282828</SolidColorBrush>
         <SolidColorBrush x:Key="BackgroundDarker">#1E1E1E</SolidColorBrush>
+        <SolidColorBrush x:Key="BackgroundDarkest">#141414</SolidColorBrush>
         <SolidColorBrush x:Key="BackgroundLighter">#3C3C3C</SolidColorBrush>
+        <SolidColorBrush x:Key="BackgroundLightest">#5A5A5A</SolidColorBrush>
         <SolidColorBrush x:Key="BackgroundMiddle">#232323</SolidColorBrush>
-        <SolidColorBrush x:Key="DefaultAccent">#9DFF7B</SolidColorBrush>
+        <SolidColorBrush x:Key="DefaultAccent">#008F58</SolidColorBrush>
+        <SolidColorBrush x:Key="MiddleAccent">#007A42</SolidColorBrush>
+        <SolidColorBrush x:Key="DarkerAccent">#006035</SolidColorBrush>
     </Application.Resources>
 </Application>

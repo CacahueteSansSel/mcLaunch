@@ -3,6 +3,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ddLaunch.Core.Managers;
+using ddLaunch.Utilities;
+using ddLaunch.Views.Popups;
 using ReactiveUI;
 
 namespace ddLaunch.Views;
@@ -25,6 +27,12 @@ public partial class BottomStatusBar : UserControl
         DownloadManager.OnDownloadProgressUpdate += OnDownloadProgressUpdate;
         DownloadManager.OnDownloadFinished += OnDownloadFinished;
         DownloadManager.OnDownloadSectionStarting += OnDownloadSectionStarting;
+        DownloadManager.OnDownloadError += OnDownloadError;
+    }
+
+    private void OnDownloadError(string sectionName, string file)
+    {
+        Navigation.ShowPopup(new MessageBoxPopup($"Download failed for {sectionName}", $"{sectionName} failed to download (file: {file}). Try restarting the download."));
     }
 
     private void OnDownloadSectionStarting(string sectionName, int index)
