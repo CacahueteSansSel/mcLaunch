@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using Cacahuete.MinecraftLib.Models;
 
@@ -17,6 +18,20 @@ public static class Api
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
 
         if (patchDateTimes) json = json.Replace("+0000", "");
+    
+        return JsonSerializer.Deserialize<T>(json);
+    }
+    
+    public static async Task<T?> GetAsyncAuthBearer<T>(string url, string auth)
+    {
+        HttpClient client = new HttpClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth);
+
+        HttpResponseMessage resp = await client.GetAsync(url);
+        Console.WriteLine($"{url} => {(int)resp.StatusCode} {resp.StatusCode}");
+        resp.EnsureSuccessStatusCode();
+
+        string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
     
         return JsonSerializer.Deserialize<T>(json);
     }

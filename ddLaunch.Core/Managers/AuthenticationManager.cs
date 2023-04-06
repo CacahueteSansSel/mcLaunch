@@ -27,7 +27,7 @@ public static class AuthenticationManager
 
     public static async Task<bool> TryLoginAsync()
     {
-        Account = await Platform.TryLogin();
+        Account = await Platform.TryLoginAsync();
         
         if (Account != null) OnLogin?.Invoke(Account);
 
@@ -41,5 +41,10 @@ public static class AuthenticationManager
         if (Account != null) OnLogin?.Invoke(Account);
 
         return Account != null;
+    }
+
+    public static async Task<bool> HasMinecraftAsync()
+    {
+        return await Platform.HasMinecraftAsync(Account);
     }
 }

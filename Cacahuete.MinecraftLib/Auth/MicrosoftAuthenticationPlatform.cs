@@ -1,8 +1,10 @@
 ﻿using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Web;
 using Cacahuete.MinecraftLib.Http;
+using Cacahuete.MinecraftLib.Models;
 using CmlLib.Core.Auth;
 using CmlLib.Core.Auth.Microsoft;
 using CmlLib.Core.Auth.Microsoft.Cache;
@@ -36,7 +38,7 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
             .Build();
     }
 
-    public override async Task<AuthenticationResult?> TryLogin()
+    public override async Task<AuthenticationResult?> TryLoginAsync()
     {
         try
         {
@@ -76,5 +78,15 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
         await handler.ClearCache();
 
         return true;
+    }
+
+    public override async Task<bool> HasMinecraftAsync(AuthenticationResult result)
+    {
+        string token = result.AccessToken;
+
+        MinecraftStore? store = await Api.GetAsyncAuthBearer<MinecraftStore>
+            ("https://api.minecraftservices.com/entitlements/mcstore", token);
+
+        return store.Items.Length > 0;
     }
 }

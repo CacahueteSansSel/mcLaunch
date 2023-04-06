@@ -41,6 +41,14 @@ public partial class MainWindow : Window
 
         if (loggedIn)
         {
+            if (!await AuthenticationManager.HasMinecraftAsync())
+            {
+                MainWindowDataContext.Instance.Push(new ErrorPage("This account does not own Minecraft. This launcher only supports paid Minecraft accounts"), false);
+
+                await AuthenticationManager.DisconnectAsync();
+                return;
+            }
+            
             MainWindowDataContext.Instance.Push<MainPage>();
             
             return;

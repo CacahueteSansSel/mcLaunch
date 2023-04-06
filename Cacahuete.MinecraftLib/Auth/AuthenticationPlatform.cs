@@ -7,9 +7,10 @@ public abstract class AuthenticationPlatform
     public abstract string UserType { get; }
     public abstract string ClientId { get; }
     public abstract bool IsLoggedIn { get; }
-    public abstract Task<AuthenticationResult?> TryLogin();
+    public abstract Task<AuthenticationResult?> TryLoginAsync();
     public abstract Task<AuthenticationResult?> AuthenticateAsync();
     public abstract Task<bool> DisconnectAsync();
+    public abstract Task<bool> HasMinecraftAsync(AuthenticationResult result);
 }
 
 public class AuthenticationResult
