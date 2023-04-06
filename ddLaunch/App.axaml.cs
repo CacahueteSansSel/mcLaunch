@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Platform;
 using Avalonia.Markup.Xaml;
+using Cacahuete.MinecraftLib.Auth;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Mods.Platforms;
@@ -26,17 +27,18 @@ public partial class App : Application
             new CurseForgeModPlatform(Credentials.Get("curseforge"))
         ));
         CacheManager.Init();
+        AuthenticationManager.Init(Credentials.Get("azure"));
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
+        InitManagers();
+        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow();
         }
 
         base.OnFrameworkInitializationCompleted();
-
-        InitManagers();
     }
 }

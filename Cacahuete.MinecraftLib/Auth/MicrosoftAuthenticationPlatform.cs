@@ -62,4 +62,11 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
 
         return new AuthenticationResult(minecraftSession);
     }
+
+    public override async Task<bool> DisconnectAsync()
+    {
+        await handler.ClearCache();
+
+        return true;
+    }
 }

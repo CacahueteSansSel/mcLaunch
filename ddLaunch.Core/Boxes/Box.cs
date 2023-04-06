@@ -62,7 +62,7 @@ public class Box
 
         Minecraft = new Minecraft(Version, Folder)
             .WithCustomLauncherDetails("ddLaunch", "1.0.0")
-            .WithUser("Carton", Guid.Parse("29a01aaf-5e92-41d4-86eb-e325d38ee6f8"))
+            .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
             .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader)
             .WithSystemFolder(BoxManager.SystemFolder);
     }

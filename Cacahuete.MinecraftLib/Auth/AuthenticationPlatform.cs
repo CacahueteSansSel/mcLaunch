@@ -9,6 +9,7 @@ public abstract class AuthenticationPlatform
     public abstract bool IsLoggedIn { get; }
     public abstract Task<AuthenticationResult?> TryLogin();
     public abstract Task<AuthenticationResult?> AuthenticateAsync();
+    public abstract Task<bool> DisconnectAsync();
 }
 
 public class AuthenticationResult

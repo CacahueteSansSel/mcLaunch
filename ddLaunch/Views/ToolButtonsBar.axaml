@@ -8,8 +8,13 @@
     <UserControl.Styles>
         <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
     </UserControl.Styles>
-    <StackPanel Orientation="Horizontal">
-        <Button Margin="20 0 0 0" Classes="primary" Click="NewBoxButtonClicked">New box</Button>
-        <Button Margin="10 0 0 0" Classes="secondary" Click="ImportBoxButtonClicked">Import a box</Button>
-    </StackPanel>
+    <DockPanel>
+        <Button DockPanel.Dock="Left" Margin="20 0 0 0" Classes="primary" Click="NewBoxButtonClicked">New box</Button>
+        <Button DockPanel.Dock="Left" Margin="10 0 0 0" Classes="secondary" Click="ImportBoxButtonClicked">Import a box</Button>
+        <StackPanel DockPanel.Dock="Right" Margin="0 0 10 0" VerticalAlignment="Center">
+            <TextBlock Text="{Binding Account.Username}"></TextBlock>
+        </StackPanel>
+        <Button DockPanel.Dock="Right" Margin="10 0 10 0" Classes="secondary" Click="DisconnectButtonClicked">Disconnect</Button>
+        <Panel></Panel>
+    </DockPanel>
 </UserControl>

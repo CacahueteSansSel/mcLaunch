@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
+using ddLaunch.Views.Pages;
 using ReactiveUI;
 
 namespace ddLaunch.Models;
@@ -34,11 +35,11 @@ public class MainWindowDataContext : PageNavigator
         set => this.RaiseAndSetIfChanged(ref isPopupShown, value);
     }
     
-    public MainWindowDataContext(Control mainPage)
+    public MainWindowDataContext(Control? mainPage)
     {
         Instance = this;
         
-        Push(mainPage);
+        if (mainPage != null) Push(mainPage);
         HidePopup();
     }
 
@@ -50,6 +51,21 @@ public class MainWindowDataContext : PageNavigator
     void Set(Control value)
     {
         CurrentPage = value;
+    }
+
+    public void Reset()
+    {
+        stack.Clear();
+    }
+
+    public void ShowLoadingScreen()
+    {
+        CurrentPopup = new LoadingPage();
+    }
+
+    public void HideLoadingScreen()
+    {
+        CurrentPopup = stack.Count == 0 ? null : stack.Peek();
     }
 
     public void Push<T>() where T : Control, new()

@@ -68,6 +68,8 @@
       <AvaloniaResource Include="resources\icon.ico" />
       <None Remove="resources\default_cf_modpack_logo.png" />
       <AvaloniaResource Include="resources\default_cf_modpack_logo.png" />
+      <None Remove="resources\credentials\azure.txt" />
+      <AvaloniaResource Include="resources\credentials\azure.txt" />
     </ItemGroup>
 
     <ItemGroup>
