@@ -22,6 +22,7 @@ public partial class ModDetailsPage : UserControl
 
         SetInstalled(false);
         LoadCircle.IsVisible = false;
+        LoadingButtonFrame.IsVisible = false;
     }
 
     public ModDetailsPage(Modification mod, Box targetBox)
@@ -65,6 +66,8 @@ public partial class ModDetailsPage : UserControl
 
         UninstallButton.IsVisible = false;
         UninstallButton.IsEnabled = false;
+        
+        LoadingButtonFrame.IsVisible = true;
 
         // TODO: Version selection
 
@@ -78,13 +81,15 @@ public partial class ModDetailsPage : UserControl
             Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
                 $"Unable to install {Mod.Name} : no compatible version found " +
                 $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}"));
-
+            
+            LoadingButtonFrame.IsVisible = false;
             SetInstalled(false);
             return;
         }
 
         await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, versions[0]);
-
+        
+        LoadingButtonFrame.IsVisible = false;
         SetInstalled(true);
     }
 

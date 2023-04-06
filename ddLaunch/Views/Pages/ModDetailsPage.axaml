@@ -29,6 +29,10 @@
                                         HorizontalContentAlignment="Center" Click="UninstallButtonClicked">
                                     Uninstall
                                 </Button>
+                                <Border x:Name="LoadingButtonFrame" IsVisible="False" Width="124" Height="40" Background="{DynamicResource BackgroundDarker}"
+                                        BorderBrush="{DynamicResource BackgroundLighter}" BorderThickness="1" CornerRadius="4">
+                                    <views:LoadingCircle RenderTransform="scale(0.65)"></views:LoadingCircle>
+                                </Border>
                             </StackPanel>
                             <StackPanel Margin="29 0 0 0" Orientation="Vertical">
                                 <TextBlock Classes="title" FontSize="32" Text="{Binding Name}"></TextBlock>
