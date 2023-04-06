@@ -70,6 +70,10 @@
       <AvaloniaResource Include="resources\default_cf_modpack_logo.png" />
       <None Remove="resources\credentials\azure.txt" />
       <AvaloniaResource Include="resources\credentials\azure.txt" />
+      <None Remove="resources\background_onboarding.png" />
+      <AvaloniaResource Include="resources\background_onboarding.png" />
+      <None Remove="resources\background_onboarding_2.png" />
+      <AvaloniaResource Include="resources\background_onboarding_2.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -79,5 +83,12 @@
 
     <ItemGroup>
       <Folder Include="Managers" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\Popups\LoadingPopup.axaml.cs">
+        <DependentUpon>LoadingPopup.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>

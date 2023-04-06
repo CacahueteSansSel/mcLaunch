@@ -16,10 +16,17 @@ public partial class MainWindow : Window
         Instance = this;
         InitializeComponent();
 
-        DataContext = new MainWindowDataContext(null);
+        DataContext = new MainWindowDataContext(null, false);
         
-        MainWindowDataContext.Instance.ShowLoadingScreen();
+        MainWindowDataContext.Instance.ShowLoadingPage();
         Authenticate();
+    }
+
+    public void SetDecorations(bool showDecorations)
+    {
+        TopBar.IsVisible = showDecorations;
+        BottomBar.IsVisible = showDecorations;
+        TopHeaderBar.IsVisible = showDecorations;
     }
 
     async void Authenticate()
@@ -34,13 +41,11 @@ public partial class MainWindow : Window
 
         if (loggedIn)
         {
-            MainWindowDataContext.Instance.HideLoadingScreen();
             MainWindowDataContext.Instance.Push<MainPage>();
             
             return;
         }
         
-        MainWindowDataContext.Instance.HideLoadingScreen();
-        MainWindowDataContext.Instance.Push<OnBoardingPage>();
+        MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
     }
 }

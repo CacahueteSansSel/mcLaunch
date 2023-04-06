@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:views="clr-namespace:ddLaunch.Views">
     <Design.PreviewWith>
-        <Border Padding="20">
+        <Border Padding="20"  Background="white">
             <StackPanel Orientation="Vertical">
                 <Border Classes="frame">
                     <StackPanel Orientation="Horizontal">
@@ -29,6 +29,7 @@
         <Setter Property="CornerRadius" Value="4"></Setter>
         <Setter Property="BorderThickness" Value="1"></Setter>
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+        <Setter Property="BoxShadow" Value="0 3 10 1 #AA000000"></Setter>
     </Style>
     
     <Style Selector="Border.frame-light">
@@ -36,6 +37,7 @@
         <Setter Property="CornerRadius" Value="4"></Setter>
         <Setter Property="BorderThickness" Value="1"></Setter>
         <Setter Property="BorderBrush" Value="{DynamicResource Background}"></Setter>
+        <Setter Property="BoxShadow" Value="0 3 10 1 #55000000"></Setter>
     </Style>
     
     <Style Selector="TextBlock.title">

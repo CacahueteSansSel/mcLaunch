@@ -2,16 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="600"
              x:Class="ddLaunch.Views.Pages.OnBoardingPage">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <Panel>
-        <Image Stretch="UniformToFill" Source="{Binding Background}"></Image>
-        <ScrollViewer>
-            <StackPanel VerticalAlignment="Center">
-                <Border Classes="frame" Padding="10" Margin="0 10 0 100" Width="888">
+        <Image Stretch="UniformToFill" IsHitTestVisible="False" Source="/resources/background_onboarding_2.png"></Image>
+        <DockPanel>
+            <Panel DockPanel.Dock="Top" Height="50" IsHitTestVisible="False"></Panel>
+            <StackPanel VerticalAlignment="Center" Margin="0 0 0 50">
+                <Border Classes="frame" Padding="10" Width="888">
                     <StackPanel Margin="1" Orientation="Vertical">
                         <Image Source="/resources/banner.png"></Image>
                         <TextBlock Classes="title" FontSize="25" Margin="10 10 0 0">Welcome to ddLaunch !</TextBlock>
@@ -22,6 +23,6 @@
                     </StackPanel>
                 </Border>
             </StackPanel>
-        </ScrollViewer>
+        </DockPanel>
     </Panel>
 </UserControl>

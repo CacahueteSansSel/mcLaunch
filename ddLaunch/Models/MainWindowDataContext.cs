@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using ddLaunch.Views.Pages;
+using ddLaunch.Views.Popups;
 using ReactiveUI;
 
 namespace ddLaunch.Models;
@@ -34,11 +35,17 @@ public class MainWindowDataContext : PageNavigator
         get => isPopupShown;
         set => this.RaiseAndSetIfChanged(ref isPopupShown, value);
     }
+
+    public bool ShowDecorations
+    {
+        set => MainWindow.Instance.SetDecorations(value);
+    }
     
-    public MainWindowDataContext(Control? mainPage)
+    public MainWindowDataContext(Control? mainPage, bool decorations)
     {
         Instance = this;
-        
+
+        ShowDecorations = decorations;
         if (mainPage != null) Push(mainPage);
         HidePopup();
     }
@@ -58,23 +65,35 @@ public class MainWindowDataContext : PageNavigator
         stack.Clear();
     }
 
-    public void ShowLoadingScreen()
+    public void ShowLoadingPopup()
     {
-        CurrentPopup = new LoadingPage();
+        ShowPopup(new LoadingPopup());
     }
 
-    public void HideLoadingScreen()
+    public void HideLoadingPopup()
     {
-        CurrentPopup = stack.Count == 0 ? null : stack.Peek();
+        HidePopup();
     }
 
-    public void Push<T>() where T : Control, new()
-        => Push(new T());
+    public void ShowLoadingPage()
+    {
+        CurrentPage = new LoadingPage();
+    }
 
-    public void Push(Control value)
+    public void HideLoadingPage()
+    {
+        CurrentPage = stack.Count == 0 ? null : stack.Peek();
+    }
+
+    public void Push<T>(bool decorations = true) where T : Control, new()
+        => Push(new T(), decorations);
+
+    public void Push(Control value, bool decorations = true)
     {
         stack.Push(value);
+        
         CurrentPage = value;
+        ShowDecorations = decorations;
     }
 
     public void Pop()

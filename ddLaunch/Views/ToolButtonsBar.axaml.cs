@@ -56,6 +56,6 @@ public partial class ToolButtonsBar : UserControl
         await AuthenticationManager.DisconnectAsync();
         
         MainWindowDataContext.Instance.Reset();
-        MainWindowDataContext.Instance.Push<OnBoardingPage>();
+        MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
     }
 }

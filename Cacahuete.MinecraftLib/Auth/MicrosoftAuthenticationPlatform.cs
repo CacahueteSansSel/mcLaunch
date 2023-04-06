@@ -55,12 +55,20 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
 
     public override async Task<AuthenticationResult?> AuthenticateAsync()
     {
-        JavaEditionSessionCache sessionCache = await handler.LoginFromOAuth();
-        if (!sessionCache.CheckValidation()) return null;
+        try
+        {
+            JavaEditionSessionCache sessionCache = await handler.LoginFromOAuth();
+            if (!sessionCache.CheckValidation()) return null;
 
-        minecraftSession = sessionCache.GameSession;
+            minecraftSession = sessionCache.GameSession;
 
-        return new AuthenticationResult(minecraftSession);
+            return new AuthenticationResult(minecraftSession);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"Exception of type: {e.GetType().FullName}");
+            return null;
+        }
     }
 
     public override async Task<bool> DisconnectAsync()
