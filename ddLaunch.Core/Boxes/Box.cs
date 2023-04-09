@@ -39,6 +39,7 @@ public class Box
         manifestPath = $"{path}/box.json";
 
         Manifest = JsonSerializer.Deserialize<BoxManifest>(File.ReadAllText(manifestPath))!;
+        Manifest?.RunPostDeserializationChecks();
 
         if (File.Exists($"{path}/icon.png"))
         {

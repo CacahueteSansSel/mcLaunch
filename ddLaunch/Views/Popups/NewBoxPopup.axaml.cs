@@ -22,6 +22,11 @@ public partial class NewBoxPopup : UserControl
     {
         InitializeComponent();
         this.DataContext = new Data();
+
+        if (AuthenticationManager.Account != null)
+        {
+            AuthorNameTb.Text = AuthenticationManager.Account.Username;
+        }
     }
 
     private void CloseButtonClicked(object? sender, RoutedEventArgs e)
@@ -42,6 +47,9 @@ public partial class NewBoxPopup : UserControl
         {
             return;
         }
+        
+        Navigation.HidePopup();
+        Navigation.ShowPopup(new StatusPopup($"Creating {boxName}", "We are creating the box... Please wait..."));
 
         Bitmap bmp;
         if (BoxIconImage.Source is Bitmap bitmap)
@@ -54,15 +62,23 @@ public partial class NewBoxPopup : UserControl
             bmp = new Bitmap(assets.Open(new Uri("avares:resources/default_box_logo.png")));
         }
         
-        Navigation.HidePopup();
-        
         // We fetch automatically the latest version of the modloader for now
         // TODO: Allow the user to select a specific modloader version
         ModLoaderVersion[]? modloaderVersions = await modloader.GetVersionsAsync(minecraftVersion.Id);
+
+        if (modloaderVersions == null || modloaderVersions.Length == 0)
+        {
+            Navigation.HidePopup();
+            Navigation.ShowPopup(new MessageBoxPopup("Failed to initialize the mod loader", $"Failed to get any version of {modloader.Name} for Minecraft {minecraftVersion.Id}"));
+            return;
+        }
         
         BoxManifest newBoxManifest = new BoxManifest(boxName, null, boxAuthor, modloader.Id, modloaderVersions[0].Name, bmp, minecraftVersion);
         
         await BoxManager.Create(newBoxManifest);
+        
+        Navigation.HidePopup();
+        
         MainPage.Instance?.PopulateBoxList();
     }
 

@@ -100,6 +100,11 @@ public class BoxManifest : ReactiveObject
         Modifications.Remove(mod);
     }
 
+    public void RunPostDeserializationChecks()
+    {
+        if (string.IsNullOrWhiteSpace(Author)) Author = "Unknown";
+    }
+
     public async Task<MinecraftVersion> Setup()
     {
         if (setUpVersion != null) return setUpVersion;
