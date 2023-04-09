@@ -24,6 +24,8 @@ public partial class ModificationList : UserControl
     public ModificationList()
     {
         InitializeComponent();
+        
+        LoadMoreButton.IsVisible = false;
 
         DataContext = new Data();
         /*
@@ -92,11 +94,14 @@ public partial class ModificationList : UserControl
         }
         
         ctx.Modifications = newList.ToArray();
+        
+        LoadMoreButton.IsVisible = true;
     }
 
     public void SetLoadingCircle(bool isLoading)
     {
         LoadCircle.IsVisible = isLoading;
+        LoadMoreButton.IsVisible = !isLoading;
     }
 
     public async void Search(Box box, string query)
