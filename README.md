@@ -1,8 +1,8 @@
 ![The ddLaunch banner](ddLaunch/resources/banner.png)
 
-<div style="text-align: center; font-weight: bold; font-size: 40px">ddLaunch</div>
+<h3 align="center">ddLaunch</h3>
 
-<p>The Minecraft launcher that puts your Minecraft in a box 📦</p>
+<p align="center">The Minecraft launcher that puts your Minecraft in a box 📦</p>
 
 ![Main Screenshot](res/screenshot.png)
 ![Screenshot Collection](res/screenshots.png)
