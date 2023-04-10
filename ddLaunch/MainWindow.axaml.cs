@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using ddLaunch.Core.Managers;
 using ddLaunch.Models;
+using ddLaunch.Utilities;
 using ddLaunch.Views.Pages;
+using ddLaunch.Views.Popups;
 
 namespace ddLaunch;
 
@@ -50,10 +52,18 @@ public partial class MainWindow : Window
             }
             
             MainWindowDataContext.Instance.Push<MainPage>();
-            
-            return;
         }
-        
-        MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
+        else
+        {
+            MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
+        }
+
+        if (App.Args.Contains("from-guard"))
+        {
+            if (!int.TryParse(App.Args.Get("exit-code"), out int exitCode)) 
+                return;
+            
+            Navigation.ShowPopup(new CrashPopup(exitCode, App.Args.Get("box-id")));
+        }
     }
 }

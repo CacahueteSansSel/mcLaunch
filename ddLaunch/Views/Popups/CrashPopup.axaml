@@ -1,0 +1,27 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:ddLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="500"
+             Width="500" Height="500"
+             x:Class="ddLaunch.Views.Popups.CrashPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <DockPanel Margin="38">
+            <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25">A box has crashed</TextBlock>
+            <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
+                <Button DockPanel.Dock="Right" Classes="primary" Click="ClosePopupButtonClicked">Close</Button>
+                <Button DockPanel.Dock="Right" Classes="secondary" Margin="0 0 10 0" Click="OpenBoxDetailsButtonClicked">Open details</Button>
+                <Button DockPanel.Dock="Right" Classes="secondary" Margin="0 0 10 0" Click="RestartBoxButtonClicked">Restart</Button>
+                <Panel></Panel>
+            </DockPanel>
+            <DockPanel>
+                <views:BoxEntryCard x:Name="BoxCard" DockPanel.Dock="Left" IsHitTestVisible="False" ></views:BoxEntryCard>
+                <TextBlock x:Name="BodyText" DockPanel.Dock="Right" Margin="20 40 10 20" TextWrapping="WrapWithOverflow">This is the error message</TextBlock>
+            </DockPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

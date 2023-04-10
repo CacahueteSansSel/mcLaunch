@@ -15,13 +15,18 @@ public partial class BoxEntryCard : UserControl
 
     public BoxEntryCard()
     {
-        
+        InitializeComponent();
     }
     
     public BoxEntryCard(Box box)
     {
         InitializeComponent();
 
+        SetBox(box);
+    }
+
+    public void SetBox(Box box)
+    {
         Box = box;
         DataContext = box.Manifest;
     }
@@ -31,10 +36,5 @@ public partial class BoxEntryCard : UserControl
         base.OnPointerPressed(e);
         
         Navigation.Push(new BoxDetailsPage(Box));
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 }

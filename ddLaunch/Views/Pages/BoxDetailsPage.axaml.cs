@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -61,7 +62,7 @@ public partial class BoxDetailsPage : UserControl
         ModsList.SetLoadingCircle(false);
     }
 
-    private async void RunButtonClicked(object? sender, RoutedEventArgs e)
+    public async void Run()
     {
         if (Box.Manifest.ModLoader == null)
         {
@@ -73,12 +74,32 @@ public partial class BoxDetailsPage : UserControl
         Navigation.ShowPopup(new GameLaunchPopup());
         
         await Box.PrepareAsync(); 
-        Box.Run();
+        Process java = Box.Run();
         
-        // TODO: watcher process that checks if minecraft is closed, then reopens the launcher
         // TODO: crash report parser
         // RegExp for mod dependencies error : /(Failure message): .+/g
+
+        string backgroundProcessFilename 
+            = Path.GetFullPath("ddLaunch.MinecraftGuard" + (OperatingSystem.IsWindows() ? ".exe" : ""));
+
+        if (File.Exists(backgroundProcessFilename))
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = backgroundProcessFilename, 
+                Arguments = $"{java.Id.ToString()} {Box.Manifest.Id}",
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                UseShellExecute = false
+            });
+        }
+        
         Environment.Exit(0);
+    }
+
+    private async void RunButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Run();
     }
 
     private void AddModsButtonClicked(object? sender, RoutedEventArgs e)

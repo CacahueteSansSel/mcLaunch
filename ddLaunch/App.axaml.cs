@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Platform;
@@ -12,6 +14,8 @@ namespace ddLaunch;
 
 public partial class App : Application
 {
+    public static ArgumentsParser Args { get; private set; }
+    
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -19,6 +23,8 @@ public partial class App : Application
 
     public async void InitManagers()
     {
+        Args = new ArgumentsParser(Environment.GetCommandLineArgs().Skip(1).ToArray());
+        
         DownloadManager.Init();
         await MinecraftManager.InitAsync();
         ModLoaderManager.Init();

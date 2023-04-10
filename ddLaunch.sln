@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ddLaunch", "ddLaunch\ddLaun
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ddLaunch.Core", "ddLaunch.Core\ddLaunch.Core.csproj", "{28DFF7B4-E66F-4720-A9E6-21784B61974A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ddLaunch.MinecraftGuard", "ddLaunch.MinecraftGuard\ddLaunch.MinecraftGuard.csproj", "{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{28DFF7B4-E66F-4720-A9E6-21784B61974A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28DFF7B4-E66F-4720-A9E6-21784B61974A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28DFF7B4-E66F-4720-A9E6-21784B61974A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

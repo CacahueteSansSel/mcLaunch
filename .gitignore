@@ -5,5 +5,7 @@ ddLaunch/bin
 ddLaunch/obj
 ddLaunch.Core/bin
 ddLaunch.Core/obj
+ddLaunch.MinecraftGuard/bin
+ddLaunch.MinecraftGuard/obj
 Tester
 ddLaunch/resources/credentials
