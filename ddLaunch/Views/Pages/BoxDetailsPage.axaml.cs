@@ -12,6 +12,7 @@ using Avalonia.Media.Imaging;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Mods;
+using ddLaunch.Core.Mods.Packs;
 using ddLaunch.Core.Utilities;
 using ddLaunch.Utilities;
 using ddLaunch.Views.Popups;
@@ -146,5 +147,33 @@ public partial class BoxDetailsPage : UserControl
     private void OpenFolderButtonClicked(object? sender, RoutedEventArgs e)
     {
         PlatformSpecific.OpenFolder(Box.Path);
+    }
+
+    private async void ExportButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        SaveFileDialog sfd = new SaveFileDialog();
+        sfd.Title = $"Export {Box.Manifest.Name}";
+        sfd.Filters = new List<FileDialogFilter>()
+        {
+            new()
+            {
+                Extensions = new List<string>()
+                {
+                    "box"
+                },
+                Name = "ddLaunch Box Binary File"
+            }
+        };
+
+        string? filename = await sfd.ShowAsync(MainWindow.Instance);
+        if (filename == null) return;
+        
+        Navigation.ShowPopup(new StatusPopup($"Exporting {Box.Manifest.Name}", "Please wait while we package your box in a file..."));
+
+        BoxBinaryModificationPack bb = new();
+        await bb.ExportAsync(Box, filename);
+        
+        Navigation.HidePopup();
+        Navigation.ShowPopup(new MessageBoxPopup("Success !", $"The box {Box.Manifest.Name} have been exported successfully"));
     }
 }

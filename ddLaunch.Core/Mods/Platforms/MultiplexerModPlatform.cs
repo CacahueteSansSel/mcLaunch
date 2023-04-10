@@ -56,9 +56,9 @@ public class MultiplexerModPlatform : ModPlatform
 
     public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId)
     {
-        ModPlatform modPlatform = mod.Platform;
+        ModPlatform? modPlatform = mod.Platform ?? _platforms.FirstOrDefault(p => p.Name == mod.ModPlatformId);
 
-        if (!_platforms.Contains(modPlatform)) return false;
+        if (modPlatform == null || !_platforms.Contains(modPlatform)) return false;
 
         return await modPlatform.InstallModificationAsync(targetBox, mod, versionId);
     }

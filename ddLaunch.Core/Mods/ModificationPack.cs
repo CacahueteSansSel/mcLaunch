@@ -7,6 +7,8 @@ public abstract class ModificationPack
     public abstract string Name { get; }
     public abstract string Author { get; }
     public abstract string Version { get; }
+    public abstract string? Id { get; }
+    public abstract string? Description { get; }
     
     public abstract string MinecraftVersion { get; }
     public abstract string ModloaderId { get; }
@@ -16,12 +18,19 @@ public abstract class ModificationPack
     
     public abstract AdditionalFile[] AdditionalFiles { get; }
 
+    public ModificationPack()
+    {
+        
+    }
+
     public ModificationPack(string filename)
     {
         
     }
 
     public abstract Task InstallModificationAsync(Box targetBox, SerializedModification mod);
+
+    public abstract Task ExportAsync(Box box, string filename);
 
     public class SerializedModification
     {

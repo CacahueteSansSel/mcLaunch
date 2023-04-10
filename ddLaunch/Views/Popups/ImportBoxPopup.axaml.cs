@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -30,9 +31,50 @@ public partial class ImportBoxPopup : UserControl
         Navigation.HidePopup();
     }
 
-    private void ImportDdLaunchBoxButtonClicked(object? sender, RoutedEventArgs e)
+    private async void ImportDdLaunchBoxButtonClicked(object? sender, RoutedEventArgs e)
     {
+        OpenFileDialog ofd = new OpenFileDialog();
+        ofd.Title = "Select a ddLaunch Box Binary file...";
+        ofd.Filters = new List<FileDialogFilter>()
+        {
+            new()
+            {
+                Extensions = new List<string>()
+                {
+                    "box"
+                },
+                Name = "ddLaunch Box Binary file"
+            }
+        };
+
+        string[]? files = await ofd.ShowAsync(MainWindow.Instance);
+        if (files == null) return;
+
+        BoxBinaryModificationPack bb = new(files[0]);
         
+        Navigation.HidePopup();
+        Navigation.ShowPopup(new StatusPopup($"Importing {bb.Name}", "Please wait for the modpack to be imported"));
+        
+        Box box = await BoxManager.CreateFromModificationPack(bb, (msg, percent) =>
+        {
+            StatusPopup.Instance.Status = msg;
+            StatusPopup.Instance.StatusPercent = percent;
+        });
+
+        try
+        {
+            box.SetAndSaveIcon(new Bitmap(new MemoryStream(bb.IconData)));
+            box.SetAndSaveBackground(new Bitmap(new MemoryStream(bb.BackgroundData)));
+        }
+        catch (Exception exception)
+        {
+            
+        }
+        
+        Navigation.HidePopup();
+        
+        Navigation.Push(new BoxDetailsPage(box));
+        MainPage.Instance.PopulateBoxList();
     }
 
     private async void ImportCurseForgeModpackButtonClicked(object? sender, RoutedEventArgs e)
@@ -72,5 +114,6 @@ public partial class ImportBoxPopup : UserControl
         box.SetAndSaveIcon(bmp);
         
         Navigation.Push(new BoxDetailsPage(box));
+        MainPage.Instance.PopulateBoxList();
     }
 }

@@ -58,9 +58,11 @@ public static class BoxManager
 
     public static async Task<Box> CreateFromModificationPack(ModificationPack pack, Action<string, float> progressCallback)
     {
-        BoxManifest manifest = new BoxManifest(pack.Name, "Imported from a CurseForge modpack", pack.Author,
+        BoxManifest manifest = new BoxManifest(pack.Name, pack.Description ?? "no description", pack.Author,
             pack.ModloaderId, pack.ModloaderVersion, null,
             await MinecraftManager.GetManifestAsync(pack.MinecraftVersion));
+
+        if (pack.Id != null) manifest.Id = pack.Id;
 
         string path = await Create(manifest);
 

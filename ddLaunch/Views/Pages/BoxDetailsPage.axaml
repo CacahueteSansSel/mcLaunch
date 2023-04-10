@@ -37,7 +37,7 @@
                                     Run
                                 </Button>
                                 <Button Classes="secondary" Margin="0 14 0 0" Width="124"
-                                        HorizontalContentAlignment="Center">
+                                        HorizontalContentAlignment="Center" Click="ExportButtonClicked">
                                     Export
                                 </Button>
                             </StackPanel>

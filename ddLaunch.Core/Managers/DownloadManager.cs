@@ -97,6 +97,9 @@ public static class DownloadManager
                     case EntryAction.Download:
                         try
                         {
+                            // Some files can have empty source link, we ignore those
+                            if (string.IsNullOrWhiteSpace(entry.Source)) continue;
+                            
                             HttpResponseMessage resp = await client.GetAsync(entry.Source,
                                 HttpCompletionOption.ResponseHeadersRead);
                             resp.EnsureSuccessStatusCode();

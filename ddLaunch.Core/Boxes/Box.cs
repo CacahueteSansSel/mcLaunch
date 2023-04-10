@@ -68,6 +68,29 @@ public class Box
             .WithSystemFolder(BoxManager.SystemFolder);
     }
 
+    public List<string> GetAdditionalFiles()
+    {
+        List<string> files = new();
+        
+        // TODO: Ask the user for the folders/files to export
+        string[] inclusions = {
+            "config",
+            "servers.dat",
+            "options.txt"
+        };
+        
+        foreach (string file in Directory.GetFiles($"{Path}/minecraft", "*", SearchOption.AllDirectories))
+        {
+            string absPath = file.Replace(Path, "").Replace('\\', '/')
+                .Replace("minecraft/", "").Replace(Path, "").Trim('/').Trim();
+            if (inclusions.Count(ex => absPath.ToLower().StartsWith(ex)) == 0) continue;
+            
+            files.Add(absPath);
+        }
+
+        return files;
+    }
+
     public void SetAndSaveIcon(Bitmap icon)
     {
         icon.Save($"{Path}/icon.png");

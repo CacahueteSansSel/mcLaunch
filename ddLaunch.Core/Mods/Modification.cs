@@ -61,7 +61,7 @@ public class Modification : ReactiveObject
     }
 
     [JsonIgnore]
-    public ModPlatform Platform
+    public ModPlatform? Platform
     {
         get => platform;
         set => platform = value;

@@ -12,6 +12,8 @@ public class CurseForgeModificationPack : ModificationPack
     public override string Name { get; }
     public override string Author { get; }
     public override string Version { get; }
+    public override string? Id { get; }
+    public override string? Description { get; }
     public override string MinecraftVersion { get; }
     public override string ModloaderId { get; }
     public override string ModloaderVersion { get; }
@@ -33,6 +35,7 @@ public class CurseForgeModificationPack : ModificationPack
         Author = manifest.Author;
         Version = manifest.Version;
         MinecraftVersion = manifest.Minecraft.Version;
+        Description = "Imported from a CurseForge modpack";
         
         string[] modloaderVersionTokens = manifest.Minecraft.Modloaders[0].Id.Split('-');
         ModloaderId = modloaderVersionTokens[0];
@@ -59,6 +62,11 @@ public class CurseForgeModificationPack : ModificationPack
         {
             Id = mod.ModId
         }, mod.VersionId);
+    }
+
+    public override Task ExportAsync(Box box, string filename)
+    {
+        throw new NotImplementedException();
     }
 
     public class ModelManifest
