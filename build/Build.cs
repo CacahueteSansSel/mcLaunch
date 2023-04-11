@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI;
@@ -51,9 +52,40 @@ class Build : NukeBuild
             DotNetRestore(s => s
                 .SetProjectFile(Solution));
         });
+    
+    Target KillPreviewerProcesses => _ => _
+        .Executes(() =>
+        {
+            // WARNING: this kills every other instance of dotnet running
+            // this should be used with caution
+            
+            Process[] previewers = Process.GetProcessesByName("dotnet")
+                .Where(p => p.Id != Process.GetCurrentProcess().Id).ToArray();
+            
+            foreach (Process p in previewers) p.Kill();
+        });
+
+    Target Publish => _ => _
+        .DependsOn(Restore, KillPreviewerProcesses)
+        .Executes(() =>
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = Solution.GetProject("ddLaunch").Directory,
+                Arguments = "publish -r win-x64"
+            }).WaitForExit();
+            
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = Solution.GetProject("ddLaunch").Directory,
+                Arguments = "publish -r linux-x64"
+            }).WaitForExit();
+        });
 
     Target Compile => _ => _
-        .DependsOn(Restore)
+        .DependsOn(Restore, KillPreviewerProcesses)
         .Executes(() =>
         {
             DotNetBuild(s => s
