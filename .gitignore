@@ -3,6 +3,8 @@ Cacahuete.MinecraftLib/bin
 Cacahuete.MinecraftLib/obj
 ddLaunch/bin
 ddLaunch/obj
+build/bin
+build/obj
 ddLaunch.Core/bin
 ddLaunch.Core/obj
 ddLaunch.MinecraftGuard/bin
