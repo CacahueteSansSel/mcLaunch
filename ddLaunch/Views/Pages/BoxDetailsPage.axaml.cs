@@ -28,14 +28,14 @@ public partial class BoxDetailsPage : UserControl
     {
         InitializeComponent();
     }
-    
+
     public BoxDetailsPage(Box box)
     {
         InitializeComponent();
-        
+
         Box = box;
         DataContext = box;
-        
+
         box.LoadBackground();
 
         PopulateStoredModsList();
@@ -45,15 +45,15 @@ public partial class BoxDetailsPage : UserControl
     {
         ModsList.HideLoadMoreButton();
         ModsList.SetLoadingCircle(true);
-        
+
         List<Modification> mods = new();
 
         foreach (BoxStoredModification storedMod in Box.Manifest.Modifications)
         {
             Modification mod = await ModPlatformManager.Platform.GetModAsync(storedMod.Id);
-            
+
             await mod.DownloadIconAsync();
-            
+
             mods.Add(mod);
         }
 
@@ -66,34 +66,35 @@ public partial class BoxDetailsPage : UserControl
     {
         if (Box.Manifest.ModLoader == null)
         {
-            Navigation.ShowPopup(new MessageBoxPopup("Can't run Minecraft", $"The modloader {Box.Manifest.ModLoaderId.Capitalize()} isn't supported"));
-            
+            Navigation.ShowPopup(new MessageBoxPopup("Can't run Minecraft",
+                $"The modloader {Box.Manifest.ModLoaderId.Capitalize()} isn't supported"));
+
             return;
         }
-        
+
         Navigation.ShowPopup(new GameLaunchPopup());
-        
-        await Box.PrepareAsync(); 
+
+        await Box.PrepareAsync();
         Process java = Box.Run();
-        
+
         // TODO: crash report parser
         // RegExp for mod dependencies error : /(Failure message): .+/g
 
-        string backgroundProcessFilename 
+        string backgroundProcessFilename
             = Path.GetFullPath("ddLaunch.MinecraftGuard" + (OperatingSystem.IsWindows() ? ".exe" : ""));
 
         if (File.Exists(backgroundProcessFilename))
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName = backgroundProcessFilename, 
+                FileName = backgroundProcessFilename,
                 Arguments = $"{java.Id.ToString()} {Box.Manifest.Id}",
                 CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
                 UseShellExecute = false
             });
         }
-        
+
         Environment.Exit(0);
     }
 
@@ -188,13 +189,35 @@ public partial class BoxDetailsPage : UserControl
 
         string? filename = await sfd.ShowAsync(MainWindow.Instance);
         if (filename == null) return;
-        
-        Navigation.ShowPopup(new StatusPopup($"Exporting {Box.Manifest.Name}", "Please wait while we package your box in a file..."));
+
+        Navigation.ShowPopup(new StatusPopup($"Exporting {Box.Manifest.Name}",
+            "Please wait while we package your box in a file..."));
 
         BoxBinaryModificationPack bb = new();
         await bb.ExportAsync(Box, filename);
-        
+
         Navigation.HidePopup();
-        Navigation.ShowPopup(new MessageBoxPopup("Success !", $"The box {Box.Manifest.Name} have been exported successfully"));
+        Navigation.ShowPopup(new MessageBoxPopup("Success !",
+            $"The box {Box.Manifest.Name} have been exported successfully"));
+    }
+
+    private void DeleteBoxButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Delete {Box.Manifest.Name} ?",
+            "Everything will be lost (mods, worlds, configs, etc.) and there is no coming back",
+            () =>
+            {
+                try
+                {
+                    Directory.Delete(Box.Path, true);
+                    MainPage.Instance.PopulateBoxList();
+                    
+                    Navigation.Pop();
+                }
+                catch (Exception exception)
+                {
+                    Navigation.ShowPopup(new MessageBoxPopup("Failed to delete box", $"Failed to delete the box {Box.Manifest.Name} : {exception.Message}"));
+                }
+            }));
     }
 }

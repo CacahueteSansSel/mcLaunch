@@ -21,11 +21,15 @@
                     </StackPanel>
                 </Border>
                 <Border Classes="frame" Padding="5" Margin="0 10 0 0">
-                    <TextBox></TextBox>
+                    <TextBlock Classes="id">Hello</TextBlock>
                 </Border>
             </StackPanel>
         </Border>
     </Design.PreviewWith>
+    
+    <Style Selector="TextBlock.id">
+        <Setter Property="FontFamily" Value="/resources/fonts/JetBrainsMono-Regular.ttf#JetBrains Mono"></Setter>
+    </Style>
     
     <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"/>

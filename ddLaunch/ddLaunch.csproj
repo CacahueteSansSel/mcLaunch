@@ -74,6 +74,8 @@
       <AvaloniaResource Include="resources\background_onboarding.png" />
       <None Remove="resources\background_onboarding_2.png" />
       <AvaloniaResource Include="resources\background_onboarding_2.png" />
+      <None Remove="resources\fonts\JetBrainsMono-Regular.ttf" />
+      <AvaloniaResource Include="resources\fonts\JetBrainsMono-Regular.ttf" />
     </ItemGroup>
 
     <ItemGroup>

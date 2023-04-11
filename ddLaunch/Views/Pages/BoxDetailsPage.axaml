@@ -11,12 +11,16 @@
     </UserControl.Styles>
     <Panel>
         <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}"></Image>
+        <TextBlock Classes="id" Opacity="0.4" Margin="20 10 0 0" Text="{Binding Manifest.Id}"></TextBlock>
         <ScrollViewer>
             <StackPanel>
                 <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
                     <views:BackButton></views:BackButton>
                     <Button Margin="10 0 0 0" Classes="transparent" Click="EditBackgroundButtonClicked">
                         <Image Source="/resources/icons/edit.png" Width="18" Height="18"></Image>
+                    </Button>
+                    <Button Margin="5 0 0 0" Classes="transparent" Click="DeleteBoxButtonClicked">
+                        <Image Source="/resources/icons/delete.png" Width="18" Height="18"></Image>
                     </Button>
                     <Button Margin="5 0 0 0" Classes="transparent" Click="OpenFolderButtonClicked">
                         <Image Source="/resources/icons/folder.png" Width="18" Height="18"></Image>
