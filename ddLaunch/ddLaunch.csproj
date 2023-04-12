@@ -77,6 +77,14 @@
       <AvaloniaResource Include="resources\background_onboarding_2.png" />
       <None Remove="resources\fonts\JetBrainsMono-Regular.ttf" />
       <AvaloniaResource Include="resources\fonts\JetBrainsMono-Regular.ttf" />
+      <None Remove="resources\box_icons\0.png" />
+      <AvaloniaResource Include="resources\box_icons\0.png" />
+      <None Remove="resources\box_icons\1.png" />
+      <AvaloniaResource Include="resources\box_icons\1.png" />
+      <None Remove="resources\box_icons\2.png" />
+      <AvaloniaResource Include="resources\box_icons\2.png" />
+      <None Remove="resources\box_icons\3.png" />
+      <AvaloniaResource Include="resources\box_icons\3.png" />
     </ItemGroup>
 
     <ItemGroup>

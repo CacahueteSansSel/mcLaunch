@@ -19,7 +19,7 @@
                 </StackPanel>
                 <StackPanel Margin="20 0 0 0" Orientation="Vertical">
                     <TextBlock Classes="light" Margin="0 0 0 0">Box Name</TextBlock>
-                    <TextBox x:Name="BoxNameTb" Watermark="Name" UseFloatingWatermark="False"></TextBox>
+                    <TextBox x:Name="BoxNameTb" Watermark="Name" UseFloatingWatermark="False" KeyUp="BoxNameTextChanged"></TextBox>
                     <TextBlock Classes="light" Margin="0 20 0 0">Author Name</TextBlock>
                     <TextBox x:Name="AuthorNameTb" Watermark="Author" UseFloatingWatermark="False"></TextBox>
                     <TextBlock Classes="light" Margin="0 20 0 0">Minecraft version</TextBlock>

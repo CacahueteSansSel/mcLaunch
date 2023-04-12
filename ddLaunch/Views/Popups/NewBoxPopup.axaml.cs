@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
@@ -22,6 +23,12 @@ public partial class NewBoxPopup : UserControl
     {
         InitializeComponent();
         this.DataContext = new Data();
+        
+        Random rng = new Random();
+            
+        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+        Bitmap bmp = new Bitmap(assets.Open(new Uri($"avares://ddLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
+        BoxIconImage.Source = bmp;
 
         if (AuthenticationManager.Account != null)
         {
@@ -58,8 +65,10 @@ public partial class NewBoxPopup : UserControl
         }
         else
         {
+            Random rng = new Random(BoxNameTb.Text.GetHashCode());
+            
             var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            bmp = new Bitmap(assets.Open(new Uri("avares:resources/default_box_logo.png")));
+            bmp = new Bitmap(assets.Open(new Uri($"avares://ddLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
         }
         
         // We fetch automatically the latest version of the modloader for now
@@ -144,5 +153,15 @@ public partial class NewBoxPopup : UserControl
     private void NewMinecraftVersionSelectedCallback(object? sender, SelectionChangedEventArgs e)
     {
         
+    }
+
+    private void BoxNameTextChanged(object? sender, KeyEventArgs e)
+    {
+        Random rng = new Random(BoxNameTb.Text.GetHashCode());
+            
+        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+        Bitmap bmp = new Bitmap(assets.Open(new Uri($"avares://ddLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
+        
+        BoxIconImage.Source = bmp;
     }
 }
