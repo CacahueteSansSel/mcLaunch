@@ -73,7 +73,12 @@ public class BoxManifest : ReactiveObject
                                              && m.PlatformId == platformId) != null;
 
     public bool HasModificationSoft(Modification mod)
-        => Modifications.FirstOrDefault(m => mod.IsSimilar(m) || HasModificationStrict(m.Id, m.PlatformId)) != null;
+    {
+        BoxStoredModification? storedMod =
+            Modifications.FirstOrDefault(m => mod.IsSimilar(m) || HasModificationStrict(mod.Id, mod.ModPlatformId));
+
+        return storedMod != null;
+    }
 
     public BoxStoredModification? GetModification(string id)
         => Modifications.FirstOrDefault(mod => mod.Id == id);
@@ -100,9 +105,28 @@ public class BoxManifest : ReactiveObject
         Modifications.Remove(mod);
     }
 
-    public void RunPostDeserializationChecks()
+    public async Task<bool> RunPostDeserializationChecks()
     {
-        if (string.IsNullOrWhiteSpace(Author)) Author = "Unknown";
+        bool hadChange = false;
+
+        if (string.IsNullOrWhiteSpace(Author))
+        {
+            Author = "Unknown";
+            hadChange = true;
+        }
+
+        foreach (BoxStoredModification mod in Modifications)
+        {
+            if (!string.IsNullOrWhiteSpace(mod.Name) && !string.IsNullOrWhiteSpace(mod.Author)) continue;
+
+            Modification dlMod = await ModPlatformManager.Platform.GetModAsync(mod.Id);
+            mod.Name = dlMod.Name;
+            mod.Author = dlMod.Author;
+
+            hadChange = true;
+        }
+
+        return hadChange;
     }
 
     public async Task<MinecraftVersion> Setup()
@@ -149,8 +173,8 @@ public class BoxStoredModification
     public string VersionId { get; init; }
     public string PlatformId { get; init; }
     public string[] Filenames { get; init; }
-    public string Name { get; init; }
-    public string Author { get; init; }
+    public string Name { get; set; }
+    public string Author { get; set; }
 
     public void Delete()
     {

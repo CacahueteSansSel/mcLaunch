@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -29,7 +30,6 @@ public partial class ModificationList : UserControl
 
         DataContext = new Data();
 
-        /*
         DataContext = new Data()
         {
             Modifications = new Modification[]
@@ -61,7 +61,6 @@ public partial class ModificationList : UserControl
                 }
             }
         };
-        */
     }
 
     public void SetBox(Box box)
@@ -93,7 +92,9 @@ public partial class ModificationList : UserControl
 
         foreach (Modification mod in newList)
         {
-            mod.IsInstalledOnCurrentBox = lastBox.HasModification(mod);
+            mod.IsInstalledOnCurrentBox = lastBox.HasModificationSoft(mod);
+            
+            Debug.WriteLine($"Is {mod.Name} installed on {lastBox.Manifest.Name} : {mod.IsInstalledOnCurrentBox}");
         }
         
         ctx.Modifications = newList.ToArray();

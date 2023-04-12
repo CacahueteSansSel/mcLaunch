@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics;
+using System.Text.Json.Serialization;
 using System.Web;
 using System.Windows.Input;
 using Avalonia.Media.Imaging;
@@ -80,6 +81,9 @@ public class Modification : ReactiveObject
 
     public bool IsSimilar(string name, string author)
     {
+        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(author)) 
+            return false;
+        
         string nameNormalized = Name.NormalizeTitle();
         string authorNormalized = Author.NormalizeUsername();
         string otherNameNormalized = name.NormalizeTitle();

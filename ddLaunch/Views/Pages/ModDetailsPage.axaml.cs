@@ -35,7 +35,7 @@ public partial class ModDetailsPage : UserControl
         TargetBox = targetBox;
         DataContext = mod;
 
-        SetInstalled(targetBox.HasModification(mod));
+        SetInstalled(targetBox.HasModificationSoft(mod));
         GetModAdditionalInfos();
 
         UpdateButton.IsEnabled = mod.IsUpdateRequired;

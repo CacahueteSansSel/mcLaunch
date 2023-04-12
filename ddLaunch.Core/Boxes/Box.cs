@@ -39,7 +39,7 @@ public class Box
         manifestPath = $"{path}/box.json";
 
         Manifest = JsonSerializer.Deserialize<BoxManifest>(File.ReadAllText(manifestPath))!;
-        Manifest?.RunPostDeserializationChecks();
+        RunPostDeserializationChecks();
 
         if (File.Exists($"{path}/icon.png"))
         {
@@ -47,6 +47,14 @@ public class Box
         }
 
         Folder = new MinecraftFolder($"{path}/minecraft");
+    }
+
+    async void RunPostDeserializationChecks()
+    {
+        if (await Manifest?.RunPostDeserializationChecks())
+        {
+            SaveManifest();
+        }
     }
 
     async Task SetupVersionAsync()
@@ -121,6 +129,9 @@ public class Box
 
     public bool HasModification(Modification mod)
         => Manifest.HasModificationStrict(mod.Id, mod.Platform.Name);
+
+    public bool HasModificationSoft(Modification mod)
+        => Manifest.HasModificationSoft(mod);
 
     public void SaveManifest()
     {
