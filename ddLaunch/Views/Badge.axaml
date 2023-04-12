@@ -10,8 +10,8 @@
     </UserControl.Styles>
     <Border Classes="frame-light" Padding="5 0 5 0">
         <StackPanel Orientation="Horizontal">
-            <Image VerticalAlignment="Center" Width="12" Height="12" Source="/resources/icons/edit.png"></Image>
-            <TextBlock Margin="5 0 0 0" Classes="light">Editor</TextBlock>
+            <Image x:Name="IconImage" VerticalAlignment="Center" Width="12" Height="12" Source="/resources/icons/edit.png"></Image>
+            <TextBlock x:Name="Label" Margin="5 0 0 0" Classes="light">Editor</TextBlock>
         </StackPanel>
     </Border>
 </UserControl>

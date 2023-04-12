@@ -51,6 +51,7 @@ public partial class BoxDetailsPage : UserControl
         foreach (BoxStoredModification storedMod in Box.Manifest.Modifications)
         {
             Modification mod = await ModPlatformManager.Platform.GetModAsync(storedMod.Id);
+            mod.InstalledVersion = storedMod.VersionId;
 
             await mod.DownloadIconAsync();
 
@@ -60,6 +61,22 @@ public partial class BoxDetailsPage : UserControl
         ModsList.SetBox(Box);
         ModsList.SetModifications(mods.ToArray());
         ModsList.SetLoadingCircle(false);
+
+        List<Modification> updateMods = new();
+        bool isChanges = false;
+
+        foreach (Modification mod in mods)
+        {
+            string[] versions = await ModPlatformManager.Platform.GetVersionsForMinecraftVersionAsync(mod.Id,
+                Box.Manifest.ModLoaderId, Box.Manifest.Version);
+
+            mod.IsUpdateRequired = versions[0] != mod.InstalledVersion;
+            if (mod.IsUpdateRequired) isChanges = true;
+
+            updateMods.Add(mod);
+        }
+        
+        if (isChanges) ModsList.SetModifications(updateMods.ToArray());
     }
 
     public async void Run()

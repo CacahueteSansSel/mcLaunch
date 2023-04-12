@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -13,6 +14,7 @@ namespace ddLaunch.Views.Pages;
 
 public partial class ModDetailsPage : UserControl
 {
+    bool isInstalling = false;
     public Modification Mod { get; private set; }
     public Box TargetBox { get; private set; }
 
@@ -35,6 +37,9 @@ public partial class ModDetailsPage : UserControl
 
         SetInstalled(targetBox.HasModification(mod));
         GetModAdditionalInfos();
+
+        UpdateButton.IsEnabled = mod.IsUpdateRequired;
+        UpdateButton.IsVisible = mod.IsUpdateRequired;
     }
 
     async void GetModAdditionalInfos()
@@ -61,6 +66,8 @@ public partial class ModDetailsPage : UserControl
 
     private async void InstallButtonClicked(object? sender, RoutedEventArgs e)
     {
+        isInstalling = true;
+        
         InstallButton.IsVisible = false;
         InstallButton.IsEnabled = false;
 
@@ -91,6 +98,8 @@ public partial class ModDetailsPage : UserControl
         
         LoadingButtonFrame.IsVisible = false;
         SetInstalled(true);
+
+        isInstalling = false;
     }
 
     private async void UninstallButtonClicked(object? sender, RoutedEventArgs e)
@@ -106,5 +115,31 @@ public partial class ModDetailsPage : UserControl
         TargetBox.SaveManifest();
 
         SetInstalled(false);
+    }
+
+    private async void UpdateButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        InstallButton.IsVisible = false;
+        InstallButton.IsEnabled = false;
+
+        UninstallButton.IsVisible = false;
+        UninstallButton.IsEnabled = false;
+
+        UpdateButton.IsVisible = false;
+        UpdateButton.IsEnabled = false;
+        
+        TargetBox.Manifest.RemoveModification(Mod.Id);
+        InstallButtonClicked(sender, e);
+
+        await Task.Run(async () =>
+        {
+            while (isInstalling)
+                await Task.Delay(1);
+        });
+
+        Mod.IsUpdateRequired = false;
+
+        UninstallButton.IsVisible = true;
+        UninstallButton.IsEnabled = true;
     }
 }

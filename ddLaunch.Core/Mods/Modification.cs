@@ -33,6 +33,8 @@ public class Modification : ReactiveObject
     public string[] MinecraftVersions { get; set; }
     public string? LatestVersion { get; set; }
     public string? LatestMinecraftVersion { get; set; }
+    public string? InstalledVersion { get; set; }
+    public bool IsUpdateRequired { get; set; }
 
     public bool IsInstalledOnCurrentBox
     {

@@ -7,14 +7,15 @@
              x:Class="ddLaunch.Views.ModificationList">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
-        
+
         <Style Selector="ListBox">
             <Setter Property="Background" Value="transparent"></Setter>
         </Style>
     </UserControl.Styles>
     <Panel>
         <StackPanel Orientation="Vertical">
-            <ListBox x:Name="ModList" SelectionMode="Single" Items="{Binding Modifications}" SelectionChanged="ModSelectionChanged">
+            <ListBox x:Name="ModList" SelectionMode="Single" Items="{Binding Modifications}"
+                     SelectionChanged="ModSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="CornerRadius" Value="4"></Setter>
@@ -26,22 +27,22 @@
                         <DockPanel>
                             <Image Source="{Binding Icon}" DockPanel.Dock="Left" Width="40" Height="40"></Image>
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                                <!--<Button IsVisible="{Binding !IsInstalledOnCurrentBox}" IsEnabled="{Binding !IsInstalled}" Classes="transparent">
-                                    <Image Source="/resources/icons/download.png" Width="18" Height="18"></Image>
-                                </Button>
-                                <Button IsVisible="{Binding IsInstalledOnCurrentBox}" IsEnabled="{Binding IsInstalled}" Classes="transparent" Margin="5 0 0 0">
-                                    <Image Source="/resources/icons/delete.png" Width="18" Height="18"></Image>
-                                </Button>-->
+
                             </StackPanel>
                             <StackPanel Margin="10 0 10 0" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="title" Text="{Binding Name}"></TextBlock>
+                                    <views:Badge IsVisible="{Binding IsUpdateRequired}" Margin="10 -2 0 0" Text="Update available"
+                                                 Icon="/resources/icons/download.png">
+                                    </views:Badge>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="light" FontSize="12">by</TextBlock>
                                     <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{Binding Author}"></TextBlock>
                                     <TextBlock Classes="light" FontSize="12" Margin="5 0 0 0">from</TextBlock>
-                                    <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{Binding Platform.Name}"></TextBlock>
+                                    <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0"
+                                               Text="{Binding Platform.Name}">
+                                    </TextBlock>
                                 </StackPanel>
                                 <TextBlock Classes="light" Text="{Binding ShortDescription}" Opacity="0.7"></TextBlock>
                             </StackPanel>
@@ -49,8 +50,11 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Button x:Name="LoadMoreButton" HorizontalAlignment="Center" Margin="0 20 0 0" Classes="secondary" Click="LoadMoreButtonClicked">Load more</Button>
+            <Button x:Name="LoadMoreButton" HorizontalAlignment="Center" Margin="0 20 0 0" Classes="secondary"
+                    Click="LoadMoreButtonClicked">
+                Load more
+            </Button>
         </StackPanel>
-        <views:LoadingCircle x:Name="LoadCircle" IsVisible="False" IsHitTestVisible="False"/>
+        <views:LoadingCircle x:Name="LoadCircle" IsVisible="False" IsHitTestVisible="False" />
     </Panel>
 </UserControl>

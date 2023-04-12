@@ -27,8 +27,9 @@ public partial class ModificationList : UserControl
         
         LoadMoreButton.IsVisible = false;
 
-        DataContext = new Data();
-        /*
+        //DataContext = new Data();
+
+        DataContext = new Data()
         {
             Modifications = new Modification[]
             {
@@ -37,6 +38,7 @@ public partial class ModificationList : UserControl
                     Author = "Cacahuète",
                     Name = "Example Fabric Mod",
                     Id = "ex-fabric",
+                    IsUpdateRequired = true,
                     ShortDescription = "An example mod for Fabric",
                     Platform = new ModrinthModPlatform()
                 },
@@ -58,7 +60,6 @@ public partial class ModificationList : UserControl
                 }
             }
         };
-        */
     }
 
     public void SetBox(Box box)

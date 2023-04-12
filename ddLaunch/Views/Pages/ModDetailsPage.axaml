@@ -25,6 +25,10 @@
                                         HorizontalContentAlignment="Center" Click="InstallButtonClicked">
                                     Install
                                 </Button>
+                                <Button x:Name="UpdateButton" Classes="primary" Width="124" Margin="0 0 0 10"
+                                        HorizontalContentAlignment="Center" Click="UpdateButtonClicked">
+                                    Update
+                                </Button>
                                 <Button x:Name="UninstallButton" Classes="secondary" Width="124"
                                         HorizontalContentAlignment="Center" Click="UninstallButtonClicked">
                                     Uninstall

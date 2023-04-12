@@ -85,6 +85,8 @@
       <AvaloniaResource Include="resources\box_icons\2.png" />
       <None Remove="resources\box_icons\3.png" />
       <AvaloniaResource Include="resources\box_icons\3.png" />
+      <None Remove="resources\icons\update.png" />
+      <AvaloniaResource Include="resources\icons\update.png" />
     </ItemGroup>
 
     <ItemGroup>
