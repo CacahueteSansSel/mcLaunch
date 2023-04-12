@@ -47,8 +47,8 @@
                 </StackPanel>
             </DockPanel>
             <DockPanel Margin="0 20 0 0">
-                <Button DockPanel.Dock="Right" Classes="primary" Click="CreateBoxButtonClicked">Create</Button>
-                <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary" Click="CloseButtonClicked">Close</Button>
+                <Button DockPanel.Dock="Right" Classes="secondary" Click="CloseButtonClicked">Close</Button>
+                <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="primary" Click="CreateBoxButtonClicked">Create</Button>
                 <Panel></Panel>
             </DockPanel>
         </StackPanel>

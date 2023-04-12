@@ -131,6 +131,11 @@ public partial class BoxDetailsPage : UserControl
         Box.SetAndSaveBackground(backgroundBitmap);
     }
 
+    private async void EditButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new EditBoxPopup(Box));
+    }
+
     private void BoxIconCursorEntered(object? sender, PointerEventArgs e)
     {
         EditIconButton.IsVisible = true;
