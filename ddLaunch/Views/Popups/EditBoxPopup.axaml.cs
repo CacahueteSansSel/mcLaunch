@@ -6,6 +6,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Utilities;
+using ddLaunch.Views.Pages;
 
 namespace ddLaunch.Views.Popups;
 
@@ -62,6 +63,11 @@ public partial class EditBoxPopup : UserControl
         box.SetAndSaveIcon((Bitmap)BoxIconImage.Source);
         
         box.SaveManifest();
+        
+        MainPage.Instance.PopulateBoxList();
+        
+        Navigation.Pop();
+        Navigation.Push(new BoxDetailsPage(box));
         
         Navigation.HidePopup();
     }
