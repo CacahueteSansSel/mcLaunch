@@ -27,8 +27,9 @@ public partial class ModificationList : UserControl
         
         LoadMoreButton.IsVisible = false;
 
-        //DataContext = new Data();
+        DataContext = new Data();
 
+        /*
         DataContext = new Data()
         {
             Modifications = new Modification[]
@@ -60,6 +61,7 @@ public partial class ModificationList : UserControl
                 }
             }
         };
+        */
     }
 
     public void SetBox(Box box)
