@@ -5,6 +5,7 @@ using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Models;
 using ddLaunch.Core.Managers;
+using ddLaunch.Core.MinecraftFormats;
 using ddLaunch.Core.Mods;
 
 namespace ddLaunch.Core.Boxes;
@@ -61,6 +62,20 @@ public class Box
     {
         if (Version != null) return;
         Version = await Manifest.Setup();
+    }
+
+    public MinecraftWorld[] LoadWorlds()
+    {
+        if (!Directory.Exists($"{Folder.Path}/saves")) return Array.Empty<MinecraftWorld>();
+        
+        List<MinecraftWorld> worlds = new();
+
+        foreach (string folder in Directory.GetDirectories($"{Folder.Path}/saves"))
+        {
+            worlds.Add(new MinecraftWorld(System.IO.Path.GetFullPath(folder)));
+        }
+
+        return worlds.ToArray();
     }
 
     public async Task CreateMinecraftAsync()

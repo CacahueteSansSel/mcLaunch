@@ -82,7 +82,7 @@
                             </StackPanel>
                         </Panel>
                         <Panel x:Name="SubControlContainer" Margin="38 0 38 0">
-                            <boxDetails:ModListSubControl></boxDetails:ModListSubControl>
+                            
                         </Panel>
                     </StackPanel>
                 </Border>

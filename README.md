@@ -43,3 +43,4 @@ Libraries used by the project :
 + ReverseMarkdown (to render mod pages)
 + CmlLib.Core.Auth.Microsoft.MsalClient (for logging in with Microsoft)
 + Markdown.Avalonia (to render mod pages)
++ SharpNBT (for reading world's level.dat files)

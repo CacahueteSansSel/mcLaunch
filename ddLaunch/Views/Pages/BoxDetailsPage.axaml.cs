@@ -236,7 +236,7 @@ public partial class BoxDetailsPage : UserControl
 
     private void SubControlWorldButtonClicked(object? sender, RoutedEventArgs e)
     {
-        // TODO: Worlds SubControl (NBT)
+        SetSubControl(new WorldListSubControl());
     }
 
     private void SubControlScreenshotClicked(object? sender, RoutedEventArgs e)

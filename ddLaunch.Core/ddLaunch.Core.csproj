@@ -17,6 +17,7 @@
       <PackageReference Include="Modrinth.Net" Version="3.1.0-rc3" />
       <PackageReference Include="ReactiveUI" Version="13.2.10" />
       <PackageReference Include="ReverseMarkdown" Version="3.24.0" />
+      <PackageReference Include="SharpNBT" Version="1.2.0" />
     </ItemGroup>
 
     <ItemGroup>
