@@ -19,17 +19,27 @@ namespace ddLaunch.Views;
 
 public partial class ModificationList : UserControl
 {
+    public static AttachedProperty<bool> HideInstalledBadgesProperty
+        = AvaloniaProperty.RegisterAttached<ModificationList, UserControl, bool>(
+            nameof(HideInstalledBadges),
+            false,
+            true
+        );
+
     Box lastBox;
     string lastQuery;
-    
+
+    public bool HideInstalledBadges { get; set; }
+
     public ModificationList()
     {
         InitializeComponent();
-        
+
         LoadMoreButton.IsVisible = false;
 
         DataContext = new Data();
-
+        
+        /*
         DataContext = new Data()
         {
             Modifications = new Modification[]
@@ -48,6 +58,7 @@ public partial class ModificationList : UserControl
                     Author = "Cacahuète",
                     Name = "Example Forge Mod",
                     Id = "ex-forge",
+                    IsInvalid = true,
                     ShortDescription = "An example mod for Forge",
                     Platform = new ModrinthModPlatform()
                 },
@@ -61,6 +72,7 @@ public partial class ModificationList : UserControl
                 }
             }
         };
+        */
     }
 
     public void SetBox(Box box)
@@ -79,26 +91,25 @@ public partial class ModificationList : UserControl
         Data ctx = (Data) DataContext;
 
         ctx.Modifications = mods;
-        
+
         SetModificationsAttributes();
     }
 
     void SetModificationsAttributes()
     {
         if (lastBox == null) return;
-        
+
         Data ctx = (Data) DataContext;
         List<Modification> newList = new List<Modification>(ctx.Modifications);
 
         foreach (Modification mod in newList)
         {
             mod.IsInstalledOnCurrentBox = lastBox.HasModificationSoft(mod);
-            
-            Debug.WriteLine($"Is {mod.Name} installed on {lastBox.Manifest.Name} : {mod.IsInstalledOnCurrentBox}");
+            mod.IsInstalledOnCurrentBoxUi = !HideInstalledBadges && mod.IsInstalledOnCurrentBox;
         }
-        
+
         ctx.Modifications = newList.ToArray();
-        
+
         LoadMoreButton.IsVisible = true;
     }
 
@@ -117,11 +128,11 @@ public partial class ModificationList : UserControl
     {
         LoadMoreButton.IsEnabled = false;
         LoadCircle.IsVisible = true;
-        
+
         Data ctx = (Data) DataContext;
 
         ctx.Modifications = await SearchModsAsync(box, query);
-        
+
         SetModificationsAttributes();
 
         LoadCircle.IsVisible = false;
@@ -131,9 +142,9 @@ public partial class ModificationList : UserControl
     async Task<Modification[]> SearchModsAsync(Box box, string query)
     {
         Data ctx = (Data) DataContext;
-        
+
         var mods = await ModPlatformManager.Platform.GetModsAsync(ctx.Page, box, query);
-        
+
         lastBox = box;
         lastQuery = query;
 
@@ -144,7 +155,7 @@ public partial class ModificationList : UserControl
     {
         Modification[] mods;
         int page;
-        
+
         public Modification[] Modifications
         {
             get => mods;
@@ -161,9 +172,9 @@ public partial class ModificationList : UserControl
     private async void LoadMoreButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (lastBox == null) return;
-        
+
         Data ctx = (Data) DataContext;
-        
+
         LoadMoreButton.IsEnabled = false;
         LoadCircle.IsVisible = true;
 
@@ -182,9 +193,9 @@ public partial class ModificationList : UserControl
     {
         if (e.AddedItems.Count > 0)
         {
-            Modification selectedMod = (Modification)e.AddedItems[0];
+            Modification selectedMod = (Modification) e.AddedItems[0];
             Navigation.Push(new ModDetailsPage(selectedMod, lastBox));
-            
+
             ModList.UnselectAll();
         }
     }

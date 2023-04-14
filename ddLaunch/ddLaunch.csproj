@@ -89,6 +89,14 @@
       <AvaloniaResource Include="resources\icons\update.png" />
       <None Remove="resources\icons\checkmark.png" />
       <AvaloniaResource Include="resources\icons\checkmark.png" />
+      <None Remove="resources\icons\mod.png" />
+      <AvaloniaResource Include="resources\icons\mod.png" />
+      <None Remove="resources\icons\resource_pack.png" />
+      <AvaloniaResource Include="resources\icons\resource_pack.png" />
+      <None Remove="resources\icons\screenshot.png" />
+      <AvaloniaResource Include="resources\icons\screenshot.png" />
+      <None Remove="resources\icons\world.png" />
+      <AvaloniaResource Include="resources\icons\world.png" />
     </ItemGroup>
 
     <ItemGroup>

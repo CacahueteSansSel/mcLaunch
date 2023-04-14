@@ -32,7 +32,10 @@
                             <StackPanel Margin="10 0 10 0" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="title" Text="{Binding Name}"></TextBlock>
-                                    <views:Badge IsVisible="{Binding IsInstalledOnCurrentBox}" Margin="10 -2 0 0" Text="Installed"
+                                    <views:Badge IsVisible="{Binding IsInvalid}" Margin="10 -2 0 0" Text="Invalid"
+                                                 Icon="/resources/icons/delete.png">
+                                    </views:Badge>
+                                    <views:Badge IsVisible="{Binding IsInstalledOnCurrentBoxUi}" Margin="10 -2 0 0" Text="Installed"
                                                  Icon="/resources/icons/checkmark.png">
                                     </views:Badge>
                                     <views:Badge IsVisible="{Binding IsUpdateRequired}" Margin="10 -2 0 0" Text="Update available"

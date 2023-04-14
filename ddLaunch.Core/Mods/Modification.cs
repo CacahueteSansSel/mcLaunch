@@ -42,6 +42,9 @@ public class Modification : ReactiveObject
         get => isInstalledOnCurrentBox;
         set => this.RaiseAndSetIfChanged(ref isInstalledOnCurrentBox, value);
     }
+    
+    public bool IsInstalledOnCurrentBoxUi { get; set; }
+    public bool IsInvalid { get; set; }
 
     [JsonIgnore]
     public Bitmap? Icon

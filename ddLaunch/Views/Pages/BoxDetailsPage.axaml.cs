@@ -16,6 +16,7 @@ using ddLaunch.Core.Mods;
 using ddLaunch.Core.Mods.Packs;
 using ddLaunch.Core.Utilities;
 using ddLaunch.Utilities;
+using ddLaunch.Views.Pages.BoxDetails;
 using ddLaunch.Views.Popups;
 
 namespace ddLaunch.Views.Pages;
@@ -23,6 +24,7 @@ namespace ddLaunch.Views.Pages;
 public partial class BoxDetailsPage : UserControl
 {
     public Box Box { get; }
+    public ISubControl SubControl { get; private set; }
 
     public BoxDetailsPage()
     {
@@ -38,45 +40,24 @@ public partial class BoxDetailsPage : UserControl
 
         box.LoadBackground();
 
-        PopulateStoredModsList();
+        SetSubControl(new ModListSubControl());
     }
 
-    async void PopulateStoredModsList()
+    public void SetSubControl(ISubControl control)
     {
-        ModsList.HideLoadMoreButton();
-        ModsList.SetLoadingCircle(true);
+        SubControl = control;
+        SubControlContainer.Children.Clear();
+        SubControlContainer.Children.Add(SubControl);
 
-        List<Modification> mods = new();
-
-        foreach (BoxStoredModification storedMod in Box.Manifest.Modifications)
-        {
-            Modification mod = await ModPlatformManager.Platform.GetModAsync(storedMod.Id);
-            mod.InstalledVersion = storedMod.VersionId;
-
-            await mod.DownloadIconAsync();
-
-            mods.Add(mod);
-        }
-
-        ModsList.SetBox(Box);
-        ModsList.SetModifications(mods.ToArray());
-        ModsList.SetLoadingCircle(false);
-
-        List<Modification> updateMods = new();
-        bool isChanges = false;
-
-        foreach (Modification mod in mods)
-        {
-            string[] versions = await ModPlatformManager.Platform.GetVersionsForMinecraftVersionAsync(mod.Id,
-                Box.Manifest.ModLoaderId, Box.Manifest.Version);
-
-            mod.IsUpdateRequired = versions[0] != mod.InstalledVersion;
-            if (mod.IsUpdateRequired) isChanges = true;
-
-            updateMods.Add(mod);
-        }
+        SubControlNameText.Text = control.Title;
         
-        if (isChanges) ModsList.SetModifications(updateMods.ToArray());
+        PopulateSubControl();
+    }
+
+    async void PopulateSubControl()
+    {
+        SubControl.Box = Box;
+        await SubControl.PopulateAsync();
     }
 
     public async void Run()
@@ -241,5 +222,25 @@ public partial class BoxDetailsPage : UserControl
                     Navigation.ShowPopup(new MessageBoxPopup("Failed to delete box", $"Failed to delete the box {Box.Manifest.Name} : {exception.Message}"));
                 }
             }));
+    }
+
+    private void SubControlModButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        SetSubControl(new ModListSubControl());
+    }
+
+    private void SubControlResourcePackButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        // TODO: Resources packs SubControl
+    }
+
+    private void SubControlWorldButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        // TODO: Worlds SubControl (NBT)
+    }
+
+    private void SubControlScreenshotClicked(object? sender, RoutedEventArgs e)
+    {
+        // TODO: Screenshots SubControl
     }
 }
