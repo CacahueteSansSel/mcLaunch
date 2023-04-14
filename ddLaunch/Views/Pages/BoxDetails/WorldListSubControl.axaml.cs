@@ -25,5 +25,7 @@ public partial class WorldListSubControl : UserControl, ISubControl
         
         WorldsList.SetWorlds(worlds);
         WorldsList.SetLoadingCircle(false);
+
+        DataContext = worlds.Length;
     }
 }
