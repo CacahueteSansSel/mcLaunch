@@ -32,6 +32,7 @@ public partial class WorldList : UserControl
 
         DataContext = new Data();
         
+        /*
         SetWorlds(new []
         {
             new MinecraftWorld
@@ -39,9 +40,12 @@ public partial class WorldList : UserControl
                 Name = "Survie hardcore",
                 GameMode = MinecraftGameMode.Creative,
                 Icon = null,
-                LastPlayed = DateTime.Now
+                LastPlayed = DateTime.Now,
+                IsCheats = true,
+                Version = "1.19.84"
             }
         });
+        */
     }
 
     public void SetBox(Box box)
