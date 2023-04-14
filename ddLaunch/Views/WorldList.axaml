@@ -14,7 +14,7 @@
     </UserControl.Styles>
     <Panel>
         <StackPanel Orientation="Vertical">
-            <ListBox x:Name="ModList" SelectionMode="Single" Items="{Binding Worlds}"
+            <ListBox x:Name="WorldsList" SelectionMode="Single" Items="{Binding Worlds}"
                      SelectionChanged="WorldSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">

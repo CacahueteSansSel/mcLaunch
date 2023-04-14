@@ -85,6 +85,6 @@ public partial class WorldList : UserControl
 
     private void WorldSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        
+        WorldsList.UnselectAll();
     }
 }
