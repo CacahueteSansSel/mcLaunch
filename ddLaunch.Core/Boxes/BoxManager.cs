@@ -15,11 +15,13 @@ public static class BoxManager
 
     static AssetsDownloader assetsDownloader = new(systemFolder);
     static LibrariesDownloader librariesDownloader = new(systemFolder);
+    static JVMDownloader jvmDownloader = new(systemFolder);
 
     public static string BoxesPath => Path.GetFullPath("boxes");
     public static MinecraftFolder SystemFolder => systemFolder;
     public static AssetsDownloader AssetsDownloader => assetsDownloader;
     public static LibrariesDownloader LibrariesDownloader => librariesDownloader;
+    public static JVMDownloader JVMDownloader => jvmDownloader;
 
     public static Box[] LoadLocalBoxes()
     {
@@ -106,8 +108,16 @@ public static class BoxManager
     public static async Task SetupVersionAsync(MinecraftVersion version, string? customName = null,
         bool downloadAllAfter = true)
     {
+        if (!JVMDownloader.HasJVM(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(), 
+                version.JavaVersion.Component))
+        {
+            DownloadManager.Begin(customName ?? $"Java {version.JavaVersion.MajorVersion}");
+            await JVMDownloader.DownloadForCurrentPlatformAsync(version.JavaVersion.Component);
+            DownloadManager.End();
+        }
+        
         DownloadManager.Begin(customName ?? $"Minecraft {version.Id}");
-
+        
         await systemFolder.InstallVersionAsync(version);
         await assetsDownloader.DownloadAsync(version, null);
         await librariesDownloader.DownloadAsync(version, null);

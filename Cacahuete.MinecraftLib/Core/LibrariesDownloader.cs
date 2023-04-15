@@ -54,7 +54,7 @@ public class LibrariesDownloader
         return path;
     }
 
-    async Task<string> DownloadArtifactAsync(MinecraftVersion.ModelLibrary.ModelDownloads.ModelArtifact artifact,
+    async Task<string> DownloadArtifactAsync(FileArtifact artifact,
         bool force)
     {
         if (artifact == null) return null;

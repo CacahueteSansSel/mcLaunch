@@ -165,31 +165,20 @@ public class MinecraftVersion
 
         public class ModelDownloads
         {
-            [JsonPropertyName("artifact")] public ModelArtifact Artifact { get; set; }
+            [JsonPropertyName("artifact")] public FileArtifact Artifact { get; set; }
             [JsonPropertyName("classifiers")] public ModelClassifiers Classifiers { get; set; }
-
-            public class ModelArtifact
-            {
-                [JsonPropertyName("path")] public string Path { get; set; }
-
-                [JsonPropertyName("sha1")] public string Hash { get; set; }
-
-                [JsonPropertyName("size")] public ulong Size { get; set; }
-
-                [JsonPropertyName("url")] public string Url { get; set; }
-            }
 
             public class ModelClassifiers
             {
-                [JsonPropertyName("natives-linux")] public ModelArtifact NativesLinux { get; set; }
+                [JsonPropertyName("natives-linux")] public FileArtifact NativesLinux { get; set; }
 
-                [JsonPropertyName("natives-macos")] public ModelArtifact NativesMacOS { get; set; }
+                [JsonPropertyName("natives-macos")] public FileArtifact NativesMacOS { get; set; }
 
-                [JsonPropertyName("natives-windows")] public ModelArtifact NativesWindows { get; set; }
+                [JsonPropertyName("natives-windows")] public FileArtifact NativesWindows { get; set; }
 
-                [JsonPropertyName("natives-sources")] public ModelArtifact Sources { get; set; }
+                [JsonPropertyName("natives-sources")] public FileArtifact Sources { get; set; }
 
-                [JsonPropertyName("natives-javadoc")] public ModelArtifact Javadoc { get; set; }
+                [JsonPropertyName("natives-javadoc")] public FileArtifact Javadoc { get; set; }
             }
         }
     }

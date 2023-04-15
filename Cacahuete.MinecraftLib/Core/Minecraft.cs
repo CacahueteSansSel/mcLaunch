@@ -46,23 +46,6 @@ public class Minecraft
         return this;
     }
 
-    public Minecraft WithJVM(string jvmPath)
-    {
-        this.jvmPath = jvmPath;
-
-        return this;
-    }
-
-    public Minecraft WithJVMBaseFolder(string jvmPath)
-    {
-        string platform = $"{Utilities.GetPlatformIdentifier()}-{Utilities.GetArchitecture()}";
-
-        this.jvmPath = $"{Path.GetFullPath(jvmPath)}/{Version.JavaVersion.Component}/{platform}/{Version.JavaVersion.Component}/bin/javaw" +
-                       (platform.StartsWith("windows") ? ".exe" : "");
-
-        return this;
-    }
-
     public Minecraft WithUser(string username, Guid uuid)
     {
         this.username = username;
@@ -105,11 +88,16 @@ public class Minecraft
         return this;
     }
     
-    public Minecraft WithDownloaders(AssetsDownloader assets, LibrariesDownloader libraries)
+    public Minecraft WithDownloaders(AssetsDownloader assets, LibrariesDownloader libraries, JVMDownloader jvm)
     {
         assetsRoot = Path.GetFullPath(assets.Path);
         classPath = string.Join(classPathSeparator, libraries.ClassPath) + classPathSeparator;
         nativesPath = Path.GetFullPath(libraries.NativesPath);
+        jvmPath = jvm.GetJVMPath(Utilities.GetJavaPlatformIdentifier(), Version.JavaVersion.Component)
+            .TrimEnd('/');
+
+        if (OperatingSystem.IsWindows()) jvmPath += "/bin/javaw.exe";
+        else jvmPath += "/bin/java";
 
         return this;
     }

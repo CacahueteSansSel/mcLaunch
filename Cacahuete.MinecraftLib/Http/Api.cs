@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Cacahuete.MinecraftLib.Models;
 
 namespace Cacahuete.MinecraftLib.Http;
@@ -34,5 +35,20 @@ public static class Api
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
     
         return JsonSerializer.Deserialize<T>(json);
+    }
+    
+    public static async Task<JsonNode?> GetNodeAsync(string url, bool patchDateTimes = false)
+    {
+        HttpClient client = new HttpClient();
+
+        HttpResponseMessage resp = await client.GetAsync(url);
+        Console.WriteLine($"{url} => {(int)resp.StatusCode} {resp.StatusCode}");
+        resp.EnsureSuccessStatusCode();
+
+        string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
+
+        if (patchDateTimes) json = json.Replace("+0000", "");
+
+        return JsonNode.Parse(json);
     }
 }

@@ -14,9 +14,31 @@ public static class Utilities
             case PlatformID.WinCE:
                 return "windows";
             case PlatformID.Unix:
+                if (OperatingSystem.IsMacOS()) 
+                    return "osx";
+                
                 return "linux";
             case PlatformID.MacOSX:
                 return "osx";
+            default:
+                return "unknown";
+        }
+    }
+    
+    public static string GetJavaPlatformIdentifier()
+    {
+        switch (Environment.OSVersion.Platform)
+        {
+            case PlatformID.Win32S:
+            case PlatformID.Win32Windows:
+            case PlatformID.Win32NT:
+            case PlatformID.WinCE:
+                return $"windows-{GetArchitecture()}";
+            case PlatformID.Unix:
+                if (OperatingSystem.IsMacOS()) 
+                    return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "mac-os-arm64" : "mac-os";
+                
+                return RuntimeInformation.ProcessArchitecture == Architecture.X86 ? "linux-i386" : "linux";
             default:
                 return "unknown";
         }

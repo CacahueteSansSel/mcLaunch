@@ -94,7 +94,7 @@ public class Box
         Minecraft = new Minecraft(Version, Folder)
             .WithCustomLauncherDetails("ddLaunch", "1.0.0")
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
-            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader)
+            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader)
             .WithSystemFolder(BoxManager.SystemFolder);
     }
 
