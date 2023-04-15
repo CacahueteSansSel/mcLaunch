@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Download;
 using System;
+using ddLaunch.Core.Utilities;
 
 namespace ddLaunch.Core.Managers;
 
@@ -143,6 +144,13 @@ public static class DownloadManager
 
                         ZipFile.ExtractToDirectory(entry.Source, entry.Target, true);
                         break;
+                    case EntryAction.Chmod:
+                        string perms = entry.Source;
+                        string file = entry.Target;
+
+                        await Unix.ChmodAsync(file, perms);
+                        
+                        break;
                 }
 
                 progress++;
@@ -178,6 +186,13 @@ public static class DownloadManager
 
             return true;
         }
+
+        public override async Task<bool> ChmodAsync(string target, string perms)
+        {
+            Add(perms, target, EntryAction.Chmod);
+
+            return true;
+        }
     }
 }
 
@@ -197,5 +212,6 @@ public class DownloadSection
 public enum EntryAction
 {
     Download,
-    Extract
+    Extract,
+    Chmod
 }

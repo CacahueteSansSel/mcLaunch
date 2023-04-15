@@ -26,4 +26,9 @@ public class HttpResourceDownloader : ResourceDownloader
         ZipFile.ExtractToDirectory(sourceArchive, targetDir, true);
         return true;
     }
+
+    public override async Task<bool> ChmodAsync(string target, string perms)
+    {
+        return false;
+    }
 }

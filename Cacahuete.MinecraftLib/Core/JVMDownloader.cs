@@ -53,7 +53,8 @@ public class JVMDownloader
                     break;
                 case "file":
                     await Context.Downloader.DownloadAsync(file.Downloads.Raw.Url, fullPath);
-                    // TODO: chmod +x <file> on Linux if file is executable
+
+                    if (file.Executable) await Context.Downloader.ChmodAsync(fullPath, "+x");
                     break;
             }
         }
