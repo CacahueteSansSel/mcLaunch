@@ -23,6 +23,6 @@
             </StackPanel>
             <Panel></Panel>
         </DockPanel>
-        <views:ModificationList x:Name="ModsList" HideInstalledBadges="True" Margin="0 10 0 20"></views:ModificationList>
+        <views:ModificationList x:Name="ModsList" HideInstalledBadges="True" Margin="0 10 0 0"></views:ModificationList>
     </StackPanel>
 </UserControl>

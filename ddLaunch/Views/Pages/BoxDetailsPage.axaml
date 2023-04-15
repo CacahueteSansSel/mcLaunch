@@ -81,7 +81,7 @@
                                 <TextBlock x:Name="SubControlNameText" Opacity="0.7" Margin="38 0 38 5">MODS</TextBlock>
                             </StackPanel>
                         </Panel>
-                        <Panel x:Name="SubControlContainer" Margin="38 0 38 0">
+                        <Panel x:Name="SubControlContainer" Margin="38 0 38 38">
                             
                         </Panel>
                     </StackPanel>

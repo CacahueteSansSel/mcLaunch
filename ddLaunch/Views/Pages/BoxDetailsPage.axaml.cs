@@ -241,6 +241,6 @@ public partial class BoxDetailsPage : UserControl
 
     private void SubControlScreenshotClicked(object? sender, RoutedEventArgs e)
     {
-        // TODO: Screenshots SubControl
+        SetSubControl(new ScreenshotListSubControl());
     }
 }

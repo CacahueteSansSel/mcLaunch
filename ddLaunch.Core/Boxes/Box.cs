@@ -78,6 +78,13 @@ public class Box
         return worlds.ToArray();
     }
 
+    public string[] GetScreenshotPaths()
+    {
+        if (!Directory.Exists($"{Folder.Path}/screenshots")) return Array.Empty<string>();
+
+        return Directory.GetFiles($"{Folder.Path}/screenshots", "*.png");
+    }
+
     public async Task CreateMinecraftAsync()
     {
         if (Minecraft != null) return;

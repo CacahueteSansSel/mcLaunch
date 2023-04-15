@@ -21,6 +21,6 @@
             </StackPanel>
             <Panel></Panel>
         </DockPanel>
-        <views:WorldList x:Name="WorldsList" Margin="0 10 0 20"></views:WorldList>
+        <views:WorldList x:Name="WorldsList" Margin="0 10 0 0"></views:WorldList>
     </StackPanel>
 </UserControl>

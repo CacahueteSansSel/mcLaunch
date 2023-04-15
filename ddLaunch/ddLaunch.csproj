@@ -97,6 +97,8 @@
       <AvaloniaResource Include="resources\icons\screenshot.png" />
       <None Remove="resources\icons\world.png" />
       <AvaloniaResource Include="resources\icons\world.png" />
+      <None Remove="resources\default_screenshot.png" />
+      <AvaloniaResource Include="resources\default_screenshot.png" />
     </ItemGroup>
 
     <ItemGroup>
