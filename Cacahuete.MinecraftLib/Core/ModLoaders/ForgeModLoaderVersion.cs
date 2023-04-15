@@ -9,7 +9,7 @@ namespace Cacahuete.MinecraftLib.Core.ModLoaders;
 public class ForgeModLoaderVersion : ModLoaderVersion
 {
     public string FullName => $"{MinecraftVersion}-{Name}";
-    public string JvmExecutablePath { get; init; }
+    public string JvmExecutablePath { get; set; }
     public string SystemFolderPath { get; init; }
 
     public string InstallerUrl =>
@@ -45,6 +45,8 @@ public class ForgeModLoaderVersion : ModLoaderVersion
 
         string args =
             $"-cp {wrapperJarPath};{Path.GetFullPath(fullPath)} portablemc.wrapper.Main \"{SystemFolderPath}\" {versionName}";
+
+        if (!File.Exists(JvmExecutablePath)) JvmExecutablePath = "java";
 
         Process forgeInstaller = Process.Start(new ProcessStartInfo
         {

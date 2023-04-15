@@ -10,7 +10,7 @@
     </UserControl.Styles>
     <StackPanel>
         <DockPanel>
-            <Button DockPanel.Dock="Left" Classes="secondary">Add mods</Button>
+            <Button DockPanel.Dock="Left" Classes="secondary" Click="AddModsButtonClicked">Add mods</Button>
             <Button DockPanel.Dock="Left" Margin="10 0 0 0" Classes="secondary">Update all</Button>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
                 <TextBlock Classes="light" Opacity="0.25" 

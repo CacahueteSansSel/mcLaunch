@@ -101,11 +101,6 @@ public partial class BoxDetailsPage : UserControl
         Run();
     }
 
-    private void AddModsButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        Navigation.Push(new ModSearchPage(Box));
-    }
-
     private async void EditBackgroundButtonClicked(object? sender, RoutedEventArgs e)
     {
         OpenFileDialog ofd = new OpenFileDialog();

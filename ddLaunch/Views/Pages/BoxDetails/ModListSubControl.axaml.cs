@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Mods;
+using ddLaunch.Utilities;
 
 namespace ddLaunch.Views.Pages.BoxDetails;
 
@@ -64,5 +66,10 @@ public partial class ModListSubControl : UserControl, ISubControl
         }
         
         if (isChanges) ModsList.SetModifications(updateMods.ToArray());
+    }
+
+    private void AddModsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.Push(new ModSearchPage(Box));
     }
 }

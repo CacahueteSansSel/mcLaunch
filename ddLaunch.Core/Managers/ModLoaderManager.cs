@@ -11,13 +11,15 @@ public static class ModLoaderManager
     {
         // Vanilla (unmodded original Minecraft)
         All.Add(new VanillaModLoaderSupport());
-        
+
         // Fabric
         All.Add(new FabricModLoaderSupport());
-        
+
         // Forge
         // TODO: avoid to hardcode the jvm to use for Forge's installer
-        All.Add(new ForgeModLoaderSupport(BoxManager.SystemFolder.GetJVM("java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
+        All.Add(new ForgeModLoaderSupport(
+            BoxManager.JVMDownloader.GetJVMPath(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
+                "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
     }
 
     public static ModLoaderSupport? Get(string id) => All.FirstOrDefault(ml => ml.Id == id);
