@@ -19,7 +19,7 @@ public partial class BottomStatusBar : UserControl
     {
         InitializeComponent();
         Instance = this;
-        
+
         DataContext = new Data();
         
         DownloadManager.OnDownloadPrepareStarting += OnDownloadPrepareStarting;

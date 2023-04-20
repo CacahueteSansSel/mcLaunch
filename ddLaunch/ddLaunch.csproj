@@ -103,6 +103,8 @@
       <AvaloniaResource Include="resources\settings\default_args.json" />
       <None Remove="resources\icons\at.png" />
       <AvaloniaResource Include="resources\icons\at.png" />
+      <None Remove="resources\logo_beta.png" />
+      <AvaloniaResource Include="resources\logo_beta.png" />
     </ItemGroup>
 
     <ItemGroup>

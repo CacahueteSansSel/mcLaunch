@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
@@ -10,5 +11,7 @@ public partial class HeaderBar : UserControl
     public HeaderBar()
     {
         InitializeComponent();
+
+        IsVisible = !OperatingSystem.IsLinux();
     }
 }
