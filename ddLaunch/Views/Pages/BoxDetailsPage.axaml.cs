@@ -57,10 +57,12 @@ public partial class BoxDetailsPage : UserControl
     async void PopulateSubControl()
     {
         SubControl.Box = Box;
+        SubControl.ParentPage = this;
+        
         await SubControl.PopulateAsync();
     }
 
-    public async void Run()
+    public async void Run(string? serverAddress = null, string? serverPort = null)
     {
         if (Box.Manifest.ModLoader == null)
         {
@@ -73,10 +75,13 @@ public partial class BoxDetailsPage : UserControl
         Navigation.ShowPopup(new GameLaunchPopup());
 
         await Box.PrepareAsync();
-        Process java = Box.Run();
+        Process java;
+
+        if (serverAddress != null) java = Box.Run(serverAddress, serverPort ?? "25565");
+        else java = Box.Run();
 
         // TODO: crash report parser
-        // RegExp for mod dependencies error : /(Failure message): .+/g
+        // RegExp for mod dependencies error (Forge) : /(Failure message): .+/g
 
         string backgroundProcessFilename
             = Path.GetFullPath("ddLaunch.MinecraftGuard" + (OperatingSystem.IsWindows() ? ".exe" : ""));
@@ -237,5 +242,10 @@ public partial class BoxDetailsPage : UserControl
     private void SubControlScreenshotClicked(object? sender, RoutedEventArgs e)
     {
         SetSubControl(new ScreenshotListSubControl());
+    }
+
+    private void SubControlServerButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        SetSubControl(new ServerListSubControl());
     }
 }

@@ -7,6 +7,7 @@ using Cacahuete.MinecraftLib.Models;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.MinecraftFormats;
 using ddLaunch.Core.Mods;
+using SharpNBT;
 
 namespace ddLaunch.Core.Boxes;
 
@@ -71,11 +72,23 @@ public class Box
         List<MinecraftWorld> worlds = new();
 
         foreach (string folder in Directory.GetDirectories($"{Folder.Path}/saves"))
-        {
             worlds.Add(new MinecraftWorld(System.IO.Path.GetFullPath(folder)));
-        }
 
         return worlds.ToArray();
+    }
+
+    public MinecraftServer[] LoadServers()
+    {
+        if (!File.Exists($"{Folder.Path}/servers.dat")) return Array.Empty<MinecraftServer>();
+        
+        List<MinecraftServer> servers = new();
+        CompoundTag tag = NbtFile.Read($"{Folder.Path}/servers.dat", FormatOptions.Java);
+        ListTag serversTag = (ListTag)tag["servers"];
+
+        foreach (CompoundTag server in serversTag)
+            servers.Add(new MinecraftServer(server));
+        
+        return servers.ToArray();
     }
 
     public string[] GetScreenshotPaths()
@@ -163,5 +176,12 @@ public class Box
     public Process Run()
     {
         return Minecraft.Run();
+    }
+
+    public Process Run(string serverAddress, string serverPort)
+    {
+        return Minecraft
+            .WithServer(serverAddress, serverPort)
+            .Run();
     }
 }

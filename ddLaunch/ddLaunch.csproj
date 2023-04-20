@@ -99,6 +99,10 @@
       <AvaloniaResource Include="resources\icons\world.png" />
       <None Remove="resources\default_screenshot.png" />
       <AvaloniaResource Include="resources\default_screenshot.png" />
+      <None Remove="resources\settings\default_args.json" />
+      <AvaloniaResource Include="resources\settings\default_args.json" />
+      <None Remove="resources\icons\at.png" />
+      <AvaloniaResource Include="resources\icons\at.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -117,6 +121,14 @@
       </Compile>
       <Compile Update="Views\WorldList.axaml.cs">
         <DependentUpon>WorldList.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\ServerList.axaml.cs">
+        <DependentUpon>ServerList.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Pages\BoxDetails\ServerListSubControl.axaml.cs">
+        <DependentUpon>ServerListSubControl.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

@@ -1,10 +1,12 @@
 using System;
 using System.Linq;
+using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Platform;
 using Avalonia.Markup.Xaml;
 using Cacahuete.MinecraftLib.Auth;
+using Cacahuete.MinecraftLib.Models;
 using ddLaunch.Core.Boxes;
 using ddLaunch.Core.Managers;
 using ddLaunch.Core.Mods.Platforms;
@@ -34,6 +36,8 @@ public partial class App : Application
         ));
         CacheManager.Init();
         AuthenticationManager.Init(Credentials.Get("azure"));
+        MinecraftVersion.ModelArguments.Default =
+            JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(Settings.Get("default_args.json"))!;
     }
 
     public override void OnFrameworkInitializationCompleted()

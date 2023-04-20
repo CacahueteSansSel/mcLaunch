@@ -6,6 +6,7 @@ namespace ddLaunch.Views.Pages.BoxDetails;
 
 public interface ISubControl : IControl
 {
+    public BoxDetailsPage ParentPage { get; set; }
     public Box Box { get; set; }
     public string Title { get; }
     

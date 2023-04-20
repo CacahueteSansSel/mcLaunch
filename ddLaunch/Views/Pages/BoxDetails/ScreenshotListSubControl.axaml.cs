@@ -13,6 +13,7 @@ public partial class ScreenshotListSubControl : UserControl, ISubControl
         InitializeComponent();
     }
 
+    public BoxDetailsPage ParentPage { get; set; }
     public Box Box { get; set; }
     public string Title { get; } = "SCREENSHOTS";
     

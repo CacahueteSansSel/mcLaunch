@@ -337,8 +337,7 @@ public class MinecraftVersion
             return final.Trim();
         }
 
-        public static ModelArguments Default { get; } =
-            JsonSerializer.Deserialize<ModelArguments>(File.ReadAllText("system/default_args.json"))!;
+        public static ModelArguments Default { get; set; }
     }
 
     public class ModelAssetIndex

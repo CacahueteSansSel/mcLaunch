@@ -80,6 +80,14 @@ public class Minecraft
         return this;
     }
 
+    public Minecraft WithServer(string address, string port)
+    {
+        serverAddress = address;
+        serverPort = int.Parse(port);
+
+        return this;
+    }
+
     public Minecraft WithCustomLauncherDetails(string launcherName, string launcherVersion)
     {
         this.launcherName = launcherName;
@@ -135,12 +143,12 @@ public class Minecraft
         
         Console.WriteLine(args);
 
-        if (disableMultiplayer) args += "--disableMultiplayer";
-        if (disableChat) args += "--disableChat";
+        if (disableMultiplayer) args += " --disableMultiplayer";
+        if (disableChat) args += " --disableChat";
         if (serverAddress != null)
         {
-            args += "--server " + serverAddress;
-            args += "--port " + serverPort;
+            args += " --server " + serverAddress;
+            args += " --port " + serverPort;
         }
         
         Console.WriteLine(args);

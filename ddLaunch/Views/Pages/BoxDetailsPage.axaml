@@ -71,6 +71,9 @@
                                     <Button Classes="secondary" Click="SubControlResourcePackButtonClicked">
                                         <Image Source="/resources/icons/resource_pack.png" Width="18" Height="18"></Image>
                                     </Button>
+                                    <Button Classes="secondary" Click="SubControlServerButtonClicked">
+                                        <Image Source="/resources/icons/at.png" Width="18" Height="18"></Image>
+                                    </Button>
                                     <Button Classes="secondary" Click="SubControlWorldButtonClicked">
                                         <Image Source="/resources/icons/world.png" Width="18" Height="18"></Image>
                                     </Button>
