@@ -16,14 +16,14 @@ public static class CacheManager
         if (!Directory.Exists(FolderPath)) Directory.CreateDirectory(FolderPath);
     }
 
-    public static void Store(Bitmap bmp, string id)
+    public static void Store(Bitmap? bmp, string id)
     {
         if (bmp == null) return;
         
         bmp.Save($"{FolderPath}/{id}");
     }
 
-    public static void Store(Modification mod, string id)
+    public static void Store(Modification? mod, string id)
     {
         if (mod == null) return;
         

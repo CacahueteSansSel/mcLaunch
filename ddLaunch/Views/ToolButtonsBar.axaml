@@ -9,12 +9,26 @@
         <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <DockPanel>
-        <Button DockPanel.Dock="Left" Margin="20 0 0 0" Classes="primary" Click="NewBoxButtonClicked">New box</Button>
-        <Button DockPanel.Dock="Left" Margin="10 0 0 0" Classes="secondary" Click="ImportBoxButtonClicked">Import a box</Button>
-        <StackPanel DockPanel.Dock="Right" Margin="0 0 20 0" VerticalAlignment="Center">
-            <TextBlock Text="{Binding Account.Username}"></TextBlock>
-        </StackPanel>
-        <Button DockPanel.Dock="Right" Margin="10 0 10 0" Classes="secondary" Click="DisconnectButtonClicked">Disconnect</Button>
+        <Button DockPanel.Dock="Left" Margin="20 0 0 0" Classes="primary square" Click="NewBoxButtonClicked">
+            <Image Source="/resources/icons/plus.png" Width="13" Height="13"></Image>
+        </Button>
+        <Button DockPanel.Dock="Left" Margin="10 0 0 0" Classes="secondary square" Click="ImportBoxButtonClicked">
+            <Image Source="/resources/icons/down_arrow.png" Width="13" Height="13"></Image>
+        </Button>
+        <Button DockPanel.Dock="Right" Margin="0 0 20 0" Classes="secondary square" Click="ImportBoxButtonClicked">
+            <Image Source="/resources/icons/cog.png" Width="16" Height="16"></Image>
+        </Button>
+        <Border Classes="frame" Margin="10 10 10 10" BoxShadow="" Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding HeadIcon}" Margin="10 7 7 7"></Image>
+                <StackPanel Margin="5 0 0 0" VerticalAlignment="Center">
+                    <TextBlock Classes="light" Text="{Binding Account.Username}"></TextBlock>
+                </StackPanel>
+                <Button Margin="10 0 10 0" Classes="transparent square" Click="DisconnectButtonClicked">
+                    <Image Source="/resources/icons/logout.png"></Image>
+                </Button>
+            </StackPanel>
+        </Border>
         <Panel></Panel>
     </DockPanel>
 </UserControl>

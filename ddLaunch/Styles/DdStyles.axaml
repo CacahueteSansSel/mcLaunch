@@ -137,6 +137,12 @@
             </Transitions>
         </Setter>
     </Style>
+
+    <Style Selector="Button.square">
+        <Setter Property="Padding" Value="10"></Setter>
+        <Setter Property="Height" Value="39"></Setter>
+        <Setter Property="Width" Value="39"></Setter>
+    </Style>
     
     <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource Background}"></Setter>

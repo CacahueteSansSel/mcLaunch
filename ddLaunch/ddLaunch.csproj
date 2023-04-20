@@ -105,6 +105,14 @@
       <AvaloniaResource Include="resources\icons\at.png" />
       <None Remove="resources\logo_beta.png" />
       <AvaloniaResource Include="resources\logo_beta.png" />
+      <None Remove="resources\icons\cog.png" />
+      <AvaloniaResource Include="resources\icons\cog.png" />
+      <None Remove="resources\icons\down_arrow.png" />
+      <AvaloniaResource Include="resources\icons\down_arrow.png" />
+      <None Remove="resources\icons\logout.png" />
+      <AvaloniaResource Include="resources\icons\logout.png" />
+      <None Remove="resources\icons\plus.png" />
+      <AvaloniaResource Include="resources\icons\plus.png" />
     </ItemGroup>
 
     <ItemGroup>
