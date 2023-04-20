@@ -37,6 +37,7 @@ public class Minecraft
         Version = version;
         Folder = folder;
         sysFolder = folder;
+        versionType = version.Type;
     }
 
     public Minecraft WithSystemFolder(MinecraftFolder systemFolder)
@@ -88,10 +89,12 @@ public class Minecraft
         return this;
     }
 
-    public Minecraft WithCustomLauncherDetails(string launcherName, string launcherVersion)
+    public Minecraft WithCustomLauncherDetails(string launcherName, string launcherVersion, bool expose = false)
     {
         this.launcherName = launcherName;
         this.launcherVersion = launcherVersion;
+        
+        if (expose) versionType = launcherName;
 
         return this;
     }
@@ -132,7 +135,7 @@ public class Minecraft
             {"clientid", clientId},
             {"auth_xuid", xuid},
             {"user_type", userType},
-            {"version_type", Version.Type},
+            {"version_type", versionType},
             {"launcher_name", launcherName},
             {"launcher_version", launcherVersion},
             {"classpath", classPath + Path.GetFullPath(jarPath)},
