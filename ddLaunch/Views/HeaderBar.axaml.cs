@@ -13,6 +13,6 @@ public partial class HeaderBar : UserControl
         InitializeComponent();
 
         IsVisible = !OperatingSystem.IsLinux();
-        Logo.IsVisible = !OperatingSystem.IsMacOS();
+        Logo.SetValue(DockPanel.DockProperty, OperatingSystem.IsMacOS() ? Dock.Right : Dock.Left);
     }
 }
