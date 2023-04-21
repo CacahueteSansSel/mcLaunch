@@ -13,5 +13,6 @@ public partial class HeaderBar : UserControl
         InitializeComponent();
 
         IsVisible = !OperatingSystem.IsLinux();
+        Logo.IsVisible = !OperatingSystem.IsMacOS();
     }
 }

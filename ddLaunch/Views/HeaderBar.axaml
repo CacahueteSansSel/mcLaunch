@@ -9,7 +9,7 @@
              IsHitTestVisible="False">
     <Panel>
         <WrapPanel>
-            <Image IsHitTestVisible="False" Source="/resources/logo_beta.png" Height="35" Margin="15 5 0 0"></Image>
+            <Image x:Name="Logo" IsHitTestVisible="False" Source="/resources/logo_beta.png" Height="35" Margin="15 5 0 0"></Image>
         </WrapPanel>
     </Panel>
 </UserControl>

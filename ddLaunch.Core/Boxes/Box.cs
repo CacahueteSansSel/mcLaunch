@@ -105,7 +105,7 @@ public class Box
         await SetupVersionAsync();
 
         Minecraft = new Minecraft(Version, Folder)
-            .WithCustomLauncherDetails("ddLaunch", "1.0.0")
+            .WithCustomLauncherDetails("ddLaunch", "1.0.0", true)
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
             .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader)
             .WithSystemFolder(BoxManager.SystemFolder);
