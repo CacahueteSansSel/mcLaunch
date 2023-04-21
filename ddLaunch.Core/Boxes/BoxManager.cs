@@ -55,6 +55,8 @@ public static class BoxManager
 
         await manifest.Setup();
 
+        Directory.CreateDirectory($"{path}/minecraft");
+
         return path;
     }
 
