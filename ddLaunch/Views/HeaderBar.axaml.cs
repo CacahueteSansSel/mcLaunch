@@ -14,5 +14,6 @@ public partial class HeaderBar : UserControl
 
         IsVisible = !OperatingSystem.IsLinux();
         Logo.SetValue(DockPanel.DockProperty, OperatingSystem.IsMacOS() ? Dock.Right : Dock.Left);
+        Logo.Margin = new Thickness(15, 5, OperatingSystem.IsMacOS() ? -150 : 0, 0);
     }
 }
