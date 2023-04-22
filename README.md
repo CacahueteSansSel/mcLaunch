@@ -1,5 +1,7 @@
 ![The ddLaunch banner](ddLaunch/resources/banner.png)
 
+> This project is in a very early stage, some things just don't work or aren't implemented yet !
+
 <h3 align="center">ddLaunch</h3>
 
 <p align="center">The Minecraft launcher that puts your Minecraft in a box 📦</p>
@@ -44,3 +46,6 @@ Libraries used by the project :
 + CmlLib.Core.Auth.Microsoft.MsalClient (for logging in with Microsoft)
 + Markdown.Avalonia (to render mod pages)
 + SharpNBT (for reading world's level.dat files)
+
+Projects that helped the development of this project
++ [portablemc](https://github.com/mindstorm38/portablemc) (general Minecraft launcher stuff + Forge installer wrapper code)
