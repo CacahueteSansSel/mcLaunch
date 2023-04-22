@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -23,9 +24,20 @@ public partial class CrashPopup : UserControl
         
         BoxCard.SetBox(box);
 
-        BodyText.Text =
-            $"Minecraft has exited with code {exitCode}. This indicates that Minecraft has encountered an error " +
-            $"and shut down. Verify that every mod is up to date, not duplicate, and compatible with each other";
+        string bodyText;
+        string latestLogsPath = $"{box.Folder.CompletePath}/logs/latest.log";
+
+        if (File.Exists(latestLogsPath))
+        {
+            bodyText = File.ReadAllText(latestLogsPath) + $"\n\nMinecraft exited with code {exitCode}";
+        }
+        else
+        {
+            bodyText = $"Minecraft has exited with code {exitCode}. This indicates that Minecraft has encountered an error " +
+                       $"and shut down. Verify that every mod is up to date, not duplicate, and compatible with each other";
+        }
+
+        BodyText.Text = bodyText;
     }
 
     public CrashPopup()
