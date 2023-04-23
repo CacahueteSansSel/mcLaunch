@@ -108,6 +108,7 @@ public class Minecraft
             .TrimEnd('/');
 
         if (OperatingSystem.IsWindows()) jvmPath += "/bin/javaw.exe";
+        else if (OperatingSystem.IsMacOS()) jvmPath += "/jre.bundle/Contents/Home/bin/java";
         else jvmPath += "/bin/java";
 
         return this;
