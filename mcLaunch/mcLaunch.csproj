@@ -7,7 +7,6 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>resources\icon.ico</ApplicationIcon>
         <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
-        <RootNamespace>ddLaunch</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
         <None Remove=".gitignore" />

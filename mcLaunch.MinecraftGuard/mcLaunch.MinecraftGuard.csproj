@@ -7,7 +7,6 @@
         <Nullable>enable</Nullable>
         <Company>ddLaunch</Company>
         <Product>ddLaunch Minecraft Background Process</Product>
-        <RootNamespace>ddLaunch.MinecraftGuard</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
