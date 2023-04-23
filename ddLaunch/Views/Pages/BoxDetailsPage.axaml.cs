@@ -73,6 +73,8 @@ public partial class BoxDetailsPage : UserControl
         }
 
         Navigation.ShowPopup(new GameLaunchPopup());
+        
+        Box.SetExposeLauncher(Utilities.Settings.Instance.ExposeLauncherNameToMinecraft);
 
         await Box.PrepareAsync();
         Process java;

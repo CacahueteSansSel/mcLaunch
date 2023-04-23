@@ -13,7 +13,8 @@ namespace ddLaunch.Core.Boxes;
 
 public class Box
 {
-    string manifestPath;
+    private string manifestPath;
+    private bool exposeLauncher = false;
     public string Path { get; }
     public MinecraftFolder Folder { get; }
     public Minecraft Minecraft { get; private set; }
@@ -105,10 +106,15 @@ public class Box
         await SetupVersionAsync();
 
         Minecraft = new Minecraft(Version, Folder)
-            .WithCustomLauncherDetails("ddLaunch", "1.0.0")
+            .WithCustomLauncherDetails("ddLaunch", "1.0.0", exposeLauncher)
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
             .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader)
             .WithSystemFolder(BoxManager.SystemFolder);
+    }
+
+    public void SetExposeLauncher(bool exposeLauncher)
+    {
+        this.exposeLauncher = exposeLauncher;
     }
 
     public List<string> GetAdditionalFiles()

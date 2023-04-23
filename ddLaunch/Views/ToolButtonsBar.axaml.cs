@@ -118,4 +118,9 @@ public partial class ToolButtonsBar : UserControl
         MainWindowDataContext.Instance.Reset();
         MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
     }
+
+    private void SettingsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        MainWindowDataContext.Instance.Push<SettingsPage>();
+    }
 }

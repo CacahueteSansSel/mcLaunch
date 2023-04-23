@@ -27,6 +27,7 @@ public partial class App : Application
     {
         Args = new ArgumentsParser(Environment.GetCommandLineArgs().Skip(1).ToArray());
         
+        Settings.Load();
         DownloadManager.Init();
         await MinecraftManager.InitAsync();
         ModLoaderManager.Init();
@@ -37,7 +38,7 @@ public partial class App : Application
         CacheManager.Init();
         AuthenticationManager.Init(Credentials.Get("azure"));
         MinecraftVersion.ModelArguments.Default =
-            JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(Settings.Get("default_args.json"))!;
+            JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(InternalSettings.Get("default_args.json"))!;
     }
 
     public override void OnFrameworkInitializationCompleted()
