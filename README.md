@@ -2,7 +2,7 @@
 
 > This project is in a very early stage, some things just don't work or aren't implemented yet !
 
-<h3 align="center">ddLaunch</h3>
+<h3 align="center">mcLaunch</h3>
 
 <p align="center">The Minecraft launcher that puts your Minecraft in a box 📦</p>
 
