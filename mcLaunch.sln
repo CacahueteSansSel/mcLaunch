@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{2FB093FC-205A-4AD8-8DC2-BE630EE5A453}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cacahuete.MinecraftLib", "Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj", "{EF7D96AB-0279-46DE-878A-B8982AC48443}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch", "mcLaunch\mcLaunch.csproj", "{7290B968-F67B-4D50-BE0C-0AA7A757EBB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Core", "mcLaunch.Core\mcLaunch.Core.csproj", "{28DFF7B4-E66F-4720-A9E6-21784B61974A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.MinecraftGuard", "mcLaunch.MinecraftGuard\mcLaunch.MinecraftGuard.csproj", "{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{1FE4C42B-48B6-45B7-B676-88A6786F16DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1FE4C42B-48B6-45B7-B676-88A6786F16DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FE4C42B-48B6-45B7-B676-88A6786F16DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FB093FC-205A-4AD8-8DC2-BE630EE5A453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FB093FC-205A-4AD8-8DC2-BE630EE5A453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FB093FC-205A-4AD8-8DC2-BE630EE5A453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FB093FC-205A-4AD8-8DC2-BE630EE5A453}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF7D96AB-0279-46DE-878A-B8982AC48443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF7D96AB-0279-46DE-878A-B8982AC48443}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF7D96AB-0279-46DE-878A-B8982AC48443}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF7D96AB-0279-46DE-878A-B8982AC48443}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7290B968-F67B-4D50-BE0C-0AA7A757EBB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7290B968-F67B-4D50-BE0C-0AA7A757EBB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7290B968-F67B-4D50-BE0C-0AA7A757EBB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7290B968-F67B-4D50-BE0C-0AA7A757EBB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28DFF7B4-E66F-4720-A9E6-21784B61974A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28DFF7B4-E66F-4720-A9E6-21784B61974A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28DFF7B4-E66F-4720-A9E6-21784B61974A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28DFF7B4-E66F-4720-A9E6-21784B61974A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

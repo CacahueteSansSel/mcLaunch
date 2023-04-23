@@ -1,4 +1,4 @@
-![The ddLaunch banner](ddLaunch/resources/banner.png)
+![The mcLaunch banner](ddLaunch/resources/banner.png)
 
 > This project is in a very early stage, some things just don't work or aren't implemented yet !
 

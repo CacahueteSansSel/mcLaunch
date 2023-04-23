@@ -1,0 +1,26 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="mcLaunch.Views.Pages.BoxDetails.ServerListSubControl">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <StackPanel>
+        <DockPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                <TextBlock Classes="light" Opacity="0.25" 
+                           HorizontalAlignment="Right" Text="{Binding .}">
+                </TextBlock>
+                <TextBlock Classes="light" Margin="3 0 0 0" Opacity="0.25" 
+                           HorizontalAlignment="Right">
+                    SERVERS
+                </TextBlock>
+            </StackPanel>
+            <Panel></Panel>
+        </DockPanel>
+        <views:ServerList x:Name="ServersList" Margin="0 10 0 0"></views:ServerList>
+    </StackPanel>
+</UserControl>

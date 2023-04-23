@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:mcLaunch.Views"
+        xmlns:popups="clr-namespace:mcLaunch.Views.Popups"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="450"
+        x:Class="mcLaunch.MainWindow"
+        Title="mcLaunch"
+        MinWidth="640" MinHeight="450"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="50"
+        Icon="/resources/icon.ico"
+        Background="{DynamicResource BackgroundDarker}">
+    <Window.Styles>
+        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+    </Window.Styles>
+    
+    <Panel>
+        <DockPanel>
+            <views:HeaderBar x:Name="TopHeaderBar" ZIndex="10" IsHitTestVisible="False" DockPanel.Dock="Top"></views:HeaderBar>
+            <views:ToolButtonsBar x:Name="TopBar" ZIndex="10" IsVisible="{Binding ShowDecorations}" IsEnabled="{Binding ShowDecorations}" DockPanel.Dock="Top"></views:ToolButtonsBar>
+            <views:BottomStatusBar x:Name="BottomBar" ZIndex="10" IsVisible="{Binding ShowDecorations}" IsEnabled="{Binding ShowDecorations}" DockPanel.Dock="Bottom"></views:BottomStatusBar>
+            <ContentControl Content="{Binding CurrentPage}">
+                
+            </ContentControl>
+        </DockPanel>
+        
+        <Panel IsHitTestVisible="{Binding IsPopup}">
+            <Panel IsEnabled="{Binding IsPopup}" IsVisible="{Binding IsPopup}" Background="black" Opacity="0.5"></Panel>
+            <TransitioningContentControl Content="{Binding CurrentPopup}">
+                
+            </TransitioningContentControl>
+        </Panel>
+    </Panel>
+</Window>

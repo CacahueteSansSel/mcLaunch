@@ -1,0 +1,95 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:boxDetails="clr-namespace:mcLaunch.Views.Pages.BoxDetails"
+             mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="450"
+             Background="{DynamicResource BackgroundDarker}"
+             x:Class="mcLaunch.Views.Pages.BoxDetailsPage">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <Panel>
+        <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}"></Image>
+        <TextBlock Classes="id" Opacity="0.4" Margin="20 10 0 0" Text="{Binding Manifest.Id}"></TextBlock>
+        <Button Margin="0 10 15 0" ZIndex="10" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Right" Classes="transparent" Click="EditBackgroundButtonClicked">
+            <Image Source="/resources/icons/edit.png" Width="18" Height="18"></Image>
+        </Button>
+        <ScrollViewer>
+            <StackPanel>
+                <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
+                    <views:BackButton></views:BackButton>
+                    <Button Margin="10 0 0 0" Classes="transparent" Click="EditButtonClicked">
+                        <Image Source="/resources/icons/edit.png" Width="18" Height="18"></Image>
+                    </Button>
+                    <Button Margin="5 0 0 0" Classes="transparent" Click="DeleteBoxButtonClicked">
+                        <Image Source="/resources/icons/delete.png" Width="18" Height="18"></Image>
+                    </Button>
+                    <Button Margin="5 0 0 0" Classes="transparent" Click="OpenFolderButtonClicked">
+                        <Image Source="/resources/icons/folder.png" Width="18" Height="18"></Image>
+                    </Button>
+                </StackPanel>
+                <Border Classes="frame" Margin="0 10 0 100" Width="888">
+                    <StackPanel Margin="1" Orientation="Vertical">
+                        <DockPanel Margin="38 38 38 0" LastChildFill="True">
+                            <Panel>
+                                <Image PointerEnter="BoxIconCursorEntered" PointerLeave="BoxIconCursorLeft" DockPanel.Dock="Left" Source="{Binding Manifest.Icon}" Height="155"></Image>
+                                <Button IsVisible="False" IsEnabled="False" PointerEnter="BoxIconCursorEntered" x:Name="EditIconButton" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 5 5" Classes="transparent" Click="EditIconButtonClicked">
+                                    <Image Source="/resources/icons/edit.png" Width="18" Height="18"></Image>
+                                </Button>
+                            </Panel>
+                            <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
+                                <Button Classes="primary" Width="124" HorizontalContentAlignment="Center"
+                                        Click="RunButtonClicked">
+                                    Run
+                                </Button>
+                                <Button Classes="secondary" Margin="0 14 0 0" Width="124"
+                                        HorizontalContentAlignment="Center" Click="ExportButtonClicked">
+                                    Export
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Margin="29 0 0 0" Orientation="Vertical">
+                                <TextBlock Classes="title" FontSize="32" Text="{Binding Manifest.Name}"></TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Classes="light" FontSize="16">by</TextBlock>
+                                    <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16"
+                                               Text="{Binding Manifest.Author}">
+                                    </TextBlock>
+                                </StackPanel>
+                                <TextBlock Classes="light" Margin="0 5 0 0" Opacity="0.25" FontSize="16"
+                                           Text="{Binding Manifest.DescriptionLine}">
+                                </TextBlock>
+                            </StackPanel>
+                        </DockPanel>
+                        <Panel Margin="0 10 0 10" Background="{DynamicResource BackgroundMiddle}">
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Margin="38 5 38 5" Spacing="10" Orientation="Horizontal">
+                                    <Button Classes="secondary" Click="SubControlModButtonClicked">
+                                        <Image Source="/resources/icons/mod.png" Width="18" Height="18"></Image>
+                                    </Button>
+                                    <Button Classes="secondary" Click="SubControlResourcePackButtonClicked">
+                                        <Image Source="/resources/icons/resource_pack.png" Width="18" Height="18"></Image>
+                                    </Button>
+                                    <Button Classes="secondary" Click="SubControlServerButtonClicked">
+                                        <Image Source="/resources/icons/at.png" Width="18" Height="18"></Image>
+                                    </Button>
+                                    <Button Classes="secondary" Click="SubControlWorldButtonClicked">
+                                        <Image Source="/resources/icons/world.png" Width="18" Height="18"></Image>
+                                    </Button>
+                                    <Button Classes="secondary" Click="SubControlScreenshotClicked">
+                                        <Image Source="/resources/icons/screenshot.png" Width="18" Height="18"></Image>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock x:Name="SubControlNameText" Opacity="0.7" Margin="38 0 38 5">MODS</TextBlock>
+                            </StackPanel>
+                        </Panel>
+                        <Panel x:Name="SubControlContainer" Margin="38 0 38 38">
+                            
+                        </Panel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Panel>
+</UserControl>

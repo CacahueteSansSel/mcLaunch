@@ -72,14 +72,14 @@ class Build : NukeBuild
             Process.Start(new ProcessStartInfo
             {
                 FileName = "dotnet",
-                WorkingDirectory = Solution.GetProject("ddLaunch").Directory,
+                WorkingDirectory = Solution.GetProject("mcLaunch").Directory,
                 Arguments = "publish -r win-x64"
             }).WaitForExit();
             
             Process.Start(new ProcessStartInfo
             {
                 FileName = "dotnet",
-                WorkingDirectory = Solution.GetProject("ddLaunch").Directory,
+                WorkingDirectory = Solution.GetProject("mcLaunch").Directory,
                 Arguments = "publish -r linux-x64"
             }).WaitForExit();
         });

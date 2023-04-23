@@ -1,0 +1,17 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="150"
+             Width="450" Height="150"
+             x:Class="mcLaunch.Views.Popups.GameLaunchPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <StackPanel Margin="38">
+            <TextBlock Classes="title" FontSize="25">Preparing Minecraft</TextBlock>
+            <TextBlock Margin="0 20 0 0">The launcher will close when the process has started</TextBlock>
+        </StackPanel>
+    </Border>
+</UserControl>

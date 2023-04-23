@@ -25,7 +25,7 @@ public class ForgeModLoaderVersion : ModLoaderVersion
                 await File.ReadAllTextAsync($"{SystemFolderPath}/versions/{versionName}/{versionName}.json"));
 
         HttpClient client = new HttpClient();
-        client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("ddLaunch", "1.0.0"));
+        client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("mcLaunch", "1.0.0"));
 
         string filename = $"forge-{FullName}-installer.jar";
         string fullPath = $"temp/{filename}";
