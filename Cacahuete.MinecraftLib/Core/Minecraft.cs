@@ -144,8 +144,6 @@ public class Minecraft
             {"natives_directory", nativesPath},
             {"library_directory", $"{sysFolder.CompletePath}/libraries"},
         }, Version.MainClass);
-        
-        Console.WriteLine(args);
 
         if (disableMultiplayer) args += " --disableMultiplayer";
         if (disableChat) args += " --disableChat";
@@ -154,8 +152,6 @@ public class Minecraft
             args += " --server " + serverAddress;
             args += " --port " + serverPort;
         }
-        
-        Console.WriteLine(args);
 
         ProcessStartInfo info = new()
         {

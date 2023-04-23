@@ -9,6 +9,7 @@ namespace Cacahuete.MinecraftLib.Models;
 
 public class MinecraftVersion
 {
+    private string args;
     [JsonPropertyName("arguments")] public ModelArguments? Arguments { get; set; }
 
     [JsonPropertyName("assetIndex")] public ModelAssetIndex AssetIndex { get; set; }
@@ -37,6 +38,30 @@ public class MinecraftVersion
     public int? MinimumLauncherVersion { get; set; }
 
     [JsonPropertyName("mainClass")] public string MainClass { get; set; }
+
+    [JsonPropertyName("minecraftArguments")]
+    public string MinecraftArguments
+    {
+        get => args;
+        set
+        {
+            args = value;
+            
+            if (args != null)
+            {
+                if (Arguments == null) Arguments = new ModelArguments();
+
+                foreach (string arg in MinecraftArguments.Split(' '))
+                {
+                    if (Arguments.Game != null && Arguments.Game.Contains(arg)) continue;
+                
+                    List<object> objs = new List<object>(Arguments.Game ?? Array.Empty<object>());
+                    objs.Add(arg);
+                    Arguments.Game = objs.ToArray();
+                }
+            }
+        }
+    }
     
     // Needed to specify a custom client url (used by modloaders for example)
     [JsonIgnore] public string? CustomClientUrl { get; set; }
@@ -61,12 +86,15 @@ public class MinecraftVersion
     /// <returns></returns>
     public MinecraftVersion Merge(MinecraftVersion other)
     {
+        if (Arguments.Game == null) Arguments.Game = Array.Empty<object>();
+        if (Arguments.JVM == null) Arguments.JVM = Array.Empty<object>();
+        
         return new MinecraftVersion
         {
             Arguments = new ModelArguments
             {
-                Game = new List<object>((Arguments ?? ModelArguments.Default).Game).AddsOnce(other.Arguments?.Game).ToArray(),
-                JVM = new List<object>((Arguments ?? ModelArguments.Default).JVM).AddsOnce(other.Arguments?.JVM).ToArray()
+                Game = new List<object>((Arguments ?? ModelArguments.Default).Game).AddsOnce(other.Arguments.Game ?? ModelArguments.Default.Game).ToArray(),
+                JVM = new List<object>((Arguments ?? ModelArguments.Default).JVM).AddsOnce(other.Arguments.JVM ?? ModelArguments.Default.JVM).ToArray()
             },
             AssetIndex = this.AssetIndex ?? other.AssetIndex,
             Assets = this.Assets ?? other.Assets,
@@ -80,7 +108,8 @@ public class MinecraftVersion
             MinimumLauncherVersion = this.MinimumLauncherVersion ?? other.MinimumLauncherVersion,
             Type = this.Type ?? other.Type,
             Time = this.Time ?? other.Time,
-            ReleaseTime = this.ReleaseTime ?? other.ReleaseTime
+            ReleaseTime = this.ReleaseTime ?? other.ReleaseTime,
+            MinecraftArguments = this.MinecraftArguments ?? other.MinecraftArguments
         };
     }
 
