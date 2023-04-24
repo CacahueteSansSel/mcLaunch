@@ -19,6 +19,16 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         DataContext = new MainWindowDataContext(null, false);
+
+        DownloadManager.OnDownloadPrepareStarting += (input) =>
+        {
+            SetBottomBarShown(true);
+        };
+
+        DownloadManager.OnDownloadFinished += () =>
+        {
+            SetBottomBarShown(false);
+        };
         
         MainWindowDataContext.Instance.ShowLoadingPage();
         Authenticate();
@@ -27,8 +37,12 @@ public partial class MainWindow : Window
     public void SetDecorations(bool showDecorations)
     {
         TopBar.IsVisible = showDecorations;
-        BottomBar.IsVisible = showDecorations;
         TopHeaderBar.IsVisible = showDecorations;
+    }
+
+    public void SetBottomBarShown(bool show)
+    {
+        BottomBar.IsVisible = show;
     }
 
     async void Authenticate()
