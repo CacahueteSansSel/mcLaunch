@@ -9,7 +9,7 @@
         <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <Panel>
-        <Button Classes="picture" Margin="5" Height="200" Padding="2">
+        <Button Classes="picture" Margin="5" Height="200" Padding="2" Click="PictureClicked">
             <Image x:Name="Picture" Source="/resources/default_screenshot.png"></Image>
         </Button>
         <Panel x:Name="Overlay" Background="Black" Opacity="0.5">

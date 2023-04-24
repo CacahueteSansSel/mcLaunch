@@ -1,0 +1,35 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
+             Width="700" Height="403"
+             x:Class="mcLaunch.Views.Popups.ScreenshotPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <Panel Margin="10">
+            <Image x:Name="Picture" Source="/resources/default_screenshot.png" PointerEnter="EnterScreenshot" PointerLeave="LeaveScreenshot"></Image>
+            <DockPanel x:Name="Overlay" IsVisible="False"  PointerEnter="EnterScreenshot" PointerLeave="LeaveScreenshot">
+                <StackPanel Margin="10" DockPanel.Dock="Right">
+                    <Button Classes="transparent" Click="CloseButtonClicked">
+                        <Image Source="/resources/icons/close.png" Width="15"></Image>
+                    </Button>
+                </StackPanel>
+                <StackPanel Margin="10" Spacing="10" Orientation="Horizontal" DockPanel.Dock="Bottom">
+                    <Button Classes="transparent" Margin="0" Click="OpenButtonClicked">
+                        <Image Source="/resources/icons/open.png" Width="15" Height="15"></Image>
+                    </Button>
+                    <Button Classes="transparent" Margin="0" Click="OpenFolderButtonClicked">
+                        <Image Source="/resources/icons/folder.png" Width="15" Height="15"></Image>
+                    </Button>
+                    <Button Classes="transparent" Margin="0" Click="SetAsBoxBackgroundButtonClicked">
+                        <Image Source="/resources/icons/screenshot.png" Width="15" Height="15"></Image>
+                    </Button>
+                </StackPanel>
+                <Panel></Panel>
+            </DockPanel>
+        </Panel>
+    </Border>
+</UserControl>

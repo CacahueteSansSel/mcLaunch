@@ -113,6 +113,10 @@
       <AvaloniaResource Include="resources\icons\logout.png" />
       <None Remove="resources\icons\plus.png" />
       <AvaloniaResource Include="resources\icons\plus.png" />
+      <None Remove="resources\icons\open.png" />
+      <AvaloniaResource Include="resources\icons\open.png" />
+      <None Remove="resources\icons\close.png" />
+      <AvaloniaResource Include="resources\icons\close.png" />
     </ItemGroup>
 
     <ItemGroup>

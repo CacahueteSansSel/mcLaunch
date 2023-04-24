@@ -22,6 +22,6 @@ public partial class ScreenshotListSubControl : UserControl, ISubControl
         Container.Children.Clear();
         
         foreach (string path in Box.GetScreenshotPaths())
-            Container.Children.Add(new PictureFrame(path));
+            Container.Children.Add(new PictureFrame(path, Box));
     }
 }
