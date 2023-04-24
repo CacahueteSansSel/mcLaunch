@@ -6,7 +6,7 @@
              Width="400" Height="360"
              x:Class="mcLaunch.Views.Popups.EditBoxPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <Border Classes="frame">
         <StackPanel Margin="38">

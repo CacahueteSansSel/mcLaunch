@@ -6,7 +6,7 @@
              Width="600" Height="300"
              x:Class="mcLaunch.Views.Popups.ConfirmMessageBoxPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">

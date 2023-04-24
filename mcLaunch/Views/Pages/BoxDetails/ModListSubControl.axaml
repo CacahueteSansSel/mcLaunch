@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.BoxDetails.ModListSubControl">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <StackPanel>
         <DockPanel>

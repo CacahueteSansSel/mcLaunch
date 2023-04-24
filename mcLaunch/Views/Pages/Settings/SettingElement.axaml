@@ -5,7 +5,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="36" Height="36"
              x:Class="mcLaunch.Views.Pages.Settings.SettingElement">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <DockPanel VerticalAlignment="Center">
         <TextBlock x:Name="Label" VerticalAlignment="Center" Classes="light" Margin="15 0 0 0">hello</TextBlock>

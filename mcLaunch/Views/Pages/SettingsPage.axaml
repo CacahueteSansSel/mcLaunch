@@ -8,7 +8,7 @@
              Background="{DynamicResource BackgroundDarker}"
              x:Class="mcLaunch.Views.Pages.SettingsPage">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <Panel>
         <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}"></Image>

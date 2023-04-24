@@ -7,7 +7,7 @@
              Width="450" Height="250"
              x:Class="mcLaunch.Views.Popups.StatusPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">

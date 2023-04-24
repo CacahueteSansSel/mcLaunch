@@ -117,6 +117,8 @@
       <AvaloniaResource Include="resources\icons\open.png" />
       <None Remove="resources\icons\close.png" />
       <AvaloniaResource Include="resources\icons\close.png" />
+      <None Remove="resources\bottom_bar_progress_background.png" />
+      <AvaloniaResource Include="resources\bottom_bar_progress_background.png" />
     </ItemGroup>
 
     <ItemGroup>

@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
@@ -11,17 +12,18 @@ namespace mcLaunch.Views;
 
 public partial class BottomStatusBar : UserControl
 {
+    double offset = 0;
     public static BottomStatusBar Instance { get; private set; }
 
-    public Data UIDataContext => (Data)DataContext;
-    
+    public Data UIDataContext => (Data) DataContext;
+
     public BottomStatusBar()
     {
         InitializeComponent();
         Instance = this;
 
         DataContext = new Data();
-        
+
         DownloadManager.OnDownloadPrepareStarting += OnDownloadPrepareStarting;
         DownloadManager.OnDownloadPrepareEnding += OnDownloadFinished;
         DownloadManager.OnDownloadProgressUpdate += OnDownloadProgressUpdate;
@@ -32,7 +34,8 @@ public partial class BottomStatusBar : UserControl
 
     private void OnDownloadError(string sectionName, string file)
     {
-        Navigation.ShowPopup(new MessageBoxPopup($"Download failed for {sectionName}", $"{sectionName} failed to download (file: {file}). Try restarting the download."));
+        Navigation.ShowPopup(new MessageBoxPopup($"Download failed for {sectionName}",
+            $"{sectionName} failed to download (file: {file}). Try restarting the download."));
     }
 
     private void OnDownloadSectionStarting(string sectionName, int index)
@@ -57,7 +60,7 @@ public partial class BottomStatusBar : UserControl
 
     private void OnDownloadProgressUpdate(string file, float percent, int currentSectionIndex)
     {
-        UIDataContext.Progress = (int)MathF.Round(percent * 100);
+        UIDataContext.Progress = (int) MathF.Round(percent * 100);
         UIDataContext.ResourceName = DownloadManager.DescriptionLine;
         UIDataContext.ResourceCount = $"{currentSectionIndex}/{DownloadManager.PendingSectionCount}";
     }
@@ -67,19 +70,19 @@ public partial class BottomStatusBar : UserControl
         int progress;
         string resourceName = "No pending download";
         string resourceCount;
-        
+
         public int Progress
         {
             get => progress;
             set => this.RaiseAndSetIfChanged(ref progress, value);
         }
-        
+
         public string ResourceName
         {
             get => resourceName;
             set => this.RaiseAndSetIfChanged(ref resourceName, value);
         }
-        
+
         public string ResourceCount
         {
             get => resourceCount;

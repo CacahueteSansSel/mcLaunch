@@ -5,7 +5,7 @@
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="600"
              x:Class="mcLaunch.Views.Pages.OnBoardingPage">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <Panel>
         <Image Stretch="UniformToFill" IsHitTestVisible="False" Source="/resources/background_onboarding_2.png"></Image>

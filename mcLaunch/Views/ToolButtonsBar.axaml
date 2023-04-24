@@ -6,7 +6,7 @@
              Height="65" Background="{DynamicResource Background}"
              x:Class="mcLaunch.Views.ToolButtonsBar">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <DockPanel>
         <Button DockPanel.Dock="Left" Margin="20 0 0 0" Classes="primary square" Click="NewBoxButtonClicked">

@@ -9,7 +9,7 @@
              Background="{DynamicResource Background}"
              x:Class="mcLaunch.Views.BoxEntryCard">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/DdStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
         
         <Style Selector="views|BoxEntryCard">
             <Setter Property="CornerRadius" Value="4"></Setter>

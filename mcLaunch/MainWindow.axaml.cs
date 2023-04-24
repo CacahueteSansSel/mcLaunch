@@ -20,7 +20,7 @@ public partial class MainWindow : Window
 
         DataContext = new MainWindowDataContext(null, false);
 
-        DownloadManager.OnDownloadPrepareStarting += (input) =>
+        DownloadManager.OnDownloadPrepareStarting += _ =>
         {
             SetBottomBarShown(true);
         };
