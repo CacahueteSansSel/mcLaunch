@@ -16,7 +16,7 @@ public class MinecraftVersion
 
     [JsonPropertyName("downloads")] public ModelDownloads Downloads { get; set; }
 
-    [JsonPropertyName("javaVersion")] public ModelJavaVersion JavaVersion { get; set; }
+    [JsonPropertyName("javaVersion")] public ModelJavaVersion? JavaVersion { get; set; }
 
     [JsonPropertyName("libraries")] public ModelLibrary[] Libraries { get; set; }
 
@@ -305,62 +305,68 @@ public class MinecraftVersion
             string final = "";
             List<string> processedArgs = new();
 
-            foreach (object arg in JVM)
+            if (JVM != null)
             {
-                if (arg is not JsonElement elmt) continue;
-
-                if (elmt.ValueKind == JsonValueKind.String)
+                foreach (object arg in JVM)
                 {
-                    final += FormatArgument(elmt.GetString(), replacements) + " ";
-                }
+                    if (arg is not JsonElement elmt) continue;
 
-                if (elmt.ValueKind == JsonValueKind.Object
-                    && elmt.TryGetProperty("rules", out JsonElement rulesJson)
-                    && elmt.TryGetProperty("value", out JsonElement valueJson))
-                {
-                    bool abort = false;
-
-                    foreach (JsonElement rule in rulesJson.EnumerateArray())
+                    if (elmt.ValueKind == JsonValueKind.String)
                     {
-                        if (!RuleSatisfied(rule))
+                        final += FormatArgument(elmt.GetString(), replacements) + " ";
+                    }
+
+                    if (elmt.ValueKind == JsonValueKind.Object
+                        && elmt.TryGetProperty("rules", out JsonElement rulesJson)
+                        && elmt.TryGetProperty("value", out JsonElement valueJson))
+                    {
+                        bool abort = false;
+
+                        foreach (JsonElement rule in rulesJson.EnumerateArray())
                         {
-                            abort = true;
-                            break;
+                            if (!RuleSatisfied(rule))
+                            {
+                                abort = true;
+                                break;
+                            }
                         }
-                    }
 
-                    if (abort) continue;
+                        if (abort) continue;
 
-                    if (valueJson.ValueKind == JsonValueKind.String)
-                    {
-                        if (processedArgs.Contains(valueJson.GetString())) continue;
-                        processedArgs.Add(valueJson.GetString());
+                        if (valueJson.ValueKind == JsonValueKind.String)
+                        {
+                            if (processedArgs.Contains(valueJson.GetString())) continue;
+                            processedArgs.Add(valueJson.GetString());
                         
-                        final += FormatArgument(valueJson.GetString(), replacements) + " ";
-                        continue;
-                    }
+                            final += FormatArgument(valueJson.GetString(), replacements) + " ";
+                            continue;
+                        }
 
-                    foreach (JsonElement value in valueJson.EnumerateArray())
-                    {
-                        if (processedArgs.Contains(value.GetString())) continue;
-                        processedArgs.Add(value.GetString());
+                        foreach (JsonElement value in valueJson.EnumerateArray())
+                        {
+                            if (processedArgs.Contains(value.GetString())) continue;
+                            processedArgs.Add(value.GetString());
                         
-                        final += FormatArgument(value.GetString(), replacements) + " ";
+                            final += FormatArgument(value.GetString(), replacements) + " ";
+                        }
                     }
                 }
             }
 
             final += middle + " ";
 
-            foreach (object arg in Game)
+            if (Game != null)
             {
-                if (arg is not JsonElement elmt) continue;
-                if (elmt.ValueKind != JsonValueKind.String) continue;
+                foreach (object arg in Game)
+                {
+                    if (arg is not JsonElement elmt) continue;
+                    if (elmt.ValueKind != JsonValueKind.String) continue;
                 
-                if (processedArgs.Contains(elmt.GetString())) continue;
-                processedArgs.Add(elmt.GetString());
+                    if (processedArgs.Contains(elmt.GetString())) continue;
+                    processedArgs.Add(elmt.GetString());
 
-                final += FormatArgument(elmt.GetString(), replacements) + " ";
+                    final += FormatArgument(elmt.GetString(), replacements) + " ";
+                }
             }
 
             return final.Trim();

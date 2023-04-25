@@ -111,7 +111,7 @@ public static class BoxManager
         bool downloadAllAfter = true)
     {
         if (!JVMDownloader.HasJVM(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(), 
-                version.JavaVersion.Component))
+                (version.JavaVersion?.Component ?? "jre-legacy")))
         {
             DownloadManager.Begin(customName ?? $"Java {version.JavaVersion.MajorVersion}");
             await JVMDownloader.DownloadForCurrentPlatformAsync(version.JavaVersion.Component);

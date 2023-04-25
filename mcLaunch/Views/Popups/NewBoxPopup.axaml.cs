@@ -190,7 +190,7 @@ public partial class NewBoxPopup : UserControl
 
     private void BoxNameTextChanged(object? sender, KeyEventArgs e)
     {
-        Random rng = new Random(BoxNameTb.Text.GetHashCode());
+        Random rng = new Random((BoxNameTb.Text ?? string.Empty).GetHashCode());
 
         var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
         Bitmap bmp = new Bitmap(assets.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));

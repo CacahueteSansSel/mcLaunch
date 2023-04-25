@@ -104,7 +104,7 @@ public class Minecraft
         assetsRoot = Path.GetFullPath(assets.Path);
         classPath = string.Join(classPathSeparator, libraries.ClassPath) + classPathSeparator;
         nativesPath = Path.GetFullPath(libraries.NativesPath);
-        jvmPath = jvm.GetJVMPath(Utilities.GetJavaPlatformIdentifier(), Version.JavaVersion.Component)
+        jvmPath = jvm.GetJVMPath(Utilities.GetJavaPlatformIdentifier(), Version.JavaVersion?.Component ?? "jre-legacy")
             .TrimEnd('/');
 
         if (OperatingSystem.IsWindows()) jvmPath += "/bin/javaw.exe";
@@ -123,11 +123,18 @@ public class Minecraft
         {
             Version.Arguments = MinecraftVersion.ModelArguments.Default;
         }
+
+        if (Version.Arguments.JVM == null)
+        {
+            Version.Arguments.JVM = MinecraftVersion.ModelArguments.Default.JVM;
+        }
         
         string args = Version.Arguments.Build(new Dictionary<string, string>()
         {
             {"auth_player_name", username},
+            {"auth_session", $"token:{accessToken}:{uuid}"},
             {"version_name", Version.Id},
+            {"game_assets", $"{sysFolder.CompletePath}/assets/virtual"},
             {"game_directory", Folder.CompletePath},
             {"assets_root", assetsRoot},
             {"assets_index_name", Version.AssetIndex.Id},
@@ -143,6 +150,7 @@ public class Minecraft
             {"classpath_separator", classPathSeparator},
             {"natives_directory", nativesPath},
             {"library_directory", $"{sysFolder.CompletePath}/libraries"},
+            {"user_properties", "{}"}
         }, Version.MainClass);
 
         if (disableMultiplayer) args += " --disableMultiplayer";
