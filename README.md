@@ -11,7 +11,7 @@
 
 # Features
 
-+ Launches Minecraft 1.12.2 up to 1.19.4 🚀
++ Launches Minecraft 1.7.10 up to 1.19.4 🚀
 + Supports Fabric and Forge 📜
 + Installs mods from CurseForge and Modrinth 🧩
 + Imports modpacks from CurseForge 🛬
