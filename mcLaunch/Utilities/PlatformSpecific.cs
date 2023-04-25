@@ -10,7 +10,7 @@ public static class PlatformSpecific
     {
         if (OperatingSystem.IsWindows())
         {
-            Process.Start("explorer", path);
+            Process.Start("explorer", path.Replace("/", "\\"));
             return;
         }
 
