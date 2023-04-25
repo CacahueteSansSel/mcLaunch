@@ -22,10 +22,11 @@ public partial class NewBoxPopup : UserControl
     public NewBoxPopup()
     {
         InitializeComponent();
-        this.DataContext = new Data();
-        
+        DataContext = new Data(this);
+        Data ctx = (Data) DataContext;
+
         Random rng = new Random();
-            
+
         var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
         Bitmap bmp = new Bitmap(assets.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
         BoxIconImage.Source = bmp;
@@ -34,6 +35,22 @@ public partial class NewBoxPopup : UserControl
         {
             AuthorNameTb.Text = AuthenticationManager.Account.Username;
         }
+
+        FetchModLoadersLatestVersions(ctx.Versions[0].Id);
+    }
+
+    async void FetchModLoadersLatestVersions(string versionId)
+    {
+        Data ctx = (Data) DataContext;
+        List<ModLoaderSupport> all = new();
+
+        foreach (ModLoaderSupport ml in ModLoaderManager.All)
+        {
+            ModLoaderVersion? version = await ml.FetchLatestVersion(versionId);
+            if (version != null) all.Add(ml);
+        }
+
+        ctx.ModLoaders = all.ToArray();
     }
 
     private void CloseButtonClicked(object? sender, RoutedEventArgs e)
@@ -54,7 +71,7 @@ public partial class NewBoxPopup : UserControl
         {
             return;
         }
-        
+
         Navigation.HidePopup();
         Navigation.ShowPopup(new StatusPopup($"Creating {boxName}", "We are creating the box... Please wait..."));
 
@@ -66,11 +83,11 @@ public partial class NewBoxPopup : UserControl
         else
         {
             Random rng = new Random(BoxNameTb.Text.GetHashCode());
-            
+
             var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
             bmp = new Bitmap(assets.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
         }
-        
+
         // We fetch automatically the latest version of the modloader for now
         // TODO: Allow the user to select a specific modloader version
         ModLoaderVersion[]? modloaderVersions = await modloader.GetVersionsAsync(minecraftVersion.Id);
@@ -78,32 +95,46 @@ public partial class NewBoxPopup : UserControl
         if (modloaderVersions == null || modloaderVersions.Length == 0)
         {
             Navigation.HidePopup();
-            Navigation.ShowPopup(new MessageBoxPopup("Failed to initialize the mod loader", $"Failed to get any version of {modloader.Name} for Minecraft {minecraftVersion.Id}"));
+            Navigation.ShowPopup(new MessageBoxPopup("Failed to initialize the mod loader",
+                $"Failed to get any version of {modloader.Name} for Minecraft {minecraftVersion.Id}"));
             return;
         }
-        
-        BoxManifest newBoxManifest = new BoxManifest(boxName, null, boxAuthor, modloader.Id, modloaderVersions[0].Name, bmp, minecraftVersion);
-        
+
+        BoxManifest newBoxManifest = new BoxManifest(boxName, null, boxAuthor, modloader.Id, modloaderVersions[0].Name,
+            bmp, minecraftVersion);
+
         await BoxManager.Create(newBoxManifest);
-        
+
         Navigation.HidePopup();
-        
+
         MainPage.Instance?.PopulateBoxList();
     }
 
     public class Data : ReactiveObject
     {
+        private NewBoxPopup popup;
         ModLoaderVersion latestVersion;
         ManifestMinecraftVersion selectedVersion;
         ModLoaderSupport selectedModLoader;
-        
+        private ModLoaderSupport[] modLoaders;
+
         public ManifestMinecraftVersion[] Versions { get; }
-        public ModLoaderSupport[] ModLoaders { get; }
+
+        public ModLoaderSupport[] ModLoaders
+        {
+            get => modLoaders;
+            set => this.RaiseAndSetIfChanged(ref modLoaders, value);
+        }
 
         public ManifestMinecraftVersion SelectedVersion
         {
             get => selectedVersion;
-            set => this.RaiseAndSetIfChanged(ref selectedVersion, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref selectedVersion, value);
+                
+                popup.FetchModLoadersLatestVersions(selectedVersion.Id);
+            }
         }
 
         public ModLoaderSupport SelectedModLoader
@@ -118,9 +149,12 @@ public partial class NewBoxPopup : UserControl
             set => this.RaiseAndSetIfChanged(ref latestVersion, value);
         }
 
-        public Data()
+        public Data(NewBoxPopup popup)
         {
-            Versions = MinecraftManager.ManifestVersions;
+            this.popup = popup;
+            Versions = Settings.Instance.EnableSnapshots
+                ? MinecraftManager.Manifest!.Versions
+                : MinecraftManager.ManifestVersions;
             ModLoaders = ModLoaderManager.All.ToArray();
 
             selectedVersion = Versions[0];
@@ -152,16 +186,15 @@ public partial class NewBoxPopup : UserControl
 
     private void NewMinecraftVersionSelectedCallback(object? sender, SelectionChangedEventArgs e)
     {
-        
     }
 
     private void BoxNameTextChanged(object? sender, KeyEventArgs e)
     {
         Random rng = new Random(BoxNameTb.Text.GetHashCode());
-            
+
         var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
         Bitmap bmp = new Bitmap(assets.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
-        
+
         BoxIconImage.Source = bmp;
     }
 }

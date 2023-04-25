@@ -11,6 +11,16 @@ public abstract class ModLoaderSupport
     public virtual bool NeedsMerging => true;
 
     public abstract Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion);
+
+    public async Task<ModLoaderVersion?> FetchLatestVersion(string minecraftVersion)
+    {
+        ModLoaderVersion[]? versions = await GetVersionsAsync(minecraftVersion);
+
+        if (versions == null || versions.Length == 0) return null;
+
+        LatestVersion = versions[0];
+        return LatestVersion;
+    }
 }
 
 public class ModLoaderVersion

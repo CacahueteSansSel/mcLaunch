@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Text.RegularExpressions;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
@@ -29,6 +30,10 @@ public partial class BoxEntryCard : UserControl
     {
         Box = box;
         DataContext = box.Manifest;
+
+        Regex snapshotVersionRegex = new Regex("\\d.w\\d.a");
+
+        SnapshotStripe.IsVisible = snapshotVersionRegex.IsMatch(box.Manifest.Version);
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
