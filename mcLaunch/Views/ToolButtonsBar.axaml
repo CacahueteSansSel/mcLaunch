@@ -9,13 +9,13 @@
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <DockPanel>
-        <Button DockPanel.Dock="Left" Margin="20 0 0 0" Classes="primary square" Click="NewBoxButtonClicked">
+        <Button DockPanel.Dock="Left" Margin="20 0 0 0" ToolTip.Tip="New box" Classes="primary square" Click="NewBoxButtonClicked">
             <Image Source="/resources/icons/plus.png" Width="13" Height="13"></Image>
         </Button>
-        <Button DockPanel.Dock="Left" Margin="10 0 0 0" Classes="secondary square" Click="ImportBoxButtonClicked">
+        <Button DockPanel.Dock="Left" Margin="10 0 0 0" ToolTip.Tip="Import a box/Minecraft instance" Classes="secondary square" Click="ImportBoxButtonClicked">
             <Image Source="/resources/icons/down_arrow.png" Width="13" Height="13"></Image>
         </Button>
-        <Button DockPanel.Dock="Right" Margin="0 0 20 0" Classes="secondary square" Click="SettingsButtonClicked">
+        <Button DockPanel.Dock="Right" Margin="0 0 20 0" Classes="secondary square" ToolTip.Tip="Manage settings" Click="SettingsButtonClicked">
             <Image Source="/resources/icons/cog.png" Width="16" Height="16"></Image>
         </Button>
         <Border Classes="frame" Margin="10 10 10 10" BoxShadow="" Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
@@ -24,7 +24,7 @@
                 <StackPanel Margin="5 0 0 0" VerticalAlignment="Center">
                     <TextBlock Classes="light" Text="{Binding Account.Username}"></TextBlock>
                 </StackPanel>
-                <Button Margin="10 0 10 0" Classes="transparent square" Click="DisconnectButtonClicked">
+                <Button Margin="10 0 10 0" Classes="transparent square" ToolTip.Tip="Disconnect" Click="DisconnectButtonClicked">
                     <Image Source="/resources/icons/logout.png"></Image>
                 </Button>
             </StackPanel>

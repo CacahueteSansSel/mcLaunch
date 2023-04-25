@@ -10,8 +10,9 @@
     </UserControl.Styles>
     <StackPanel>
         <DockPanel>
-            <Button DockPanel.Dock="Left" Classes="secondary" Click="AddModsButtonClicked">Add mods</Button>
-            <Button DockPanel.Dock="Left" Margin="10 0 0 0" Classes="secondary">Update all</Button>
+            <Button DockPanel.Dock="Left" Classes="secondary square" Click="AddModsButtonClicked" ToolTip.Tip="Add mods">
+                <Image Source="/resources/icons/plus.png"></Image>
+            </Button>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
                 <TextBlock Classes="light" Opacity="0.25" 
                            HorizontalAlignment="Right" Text="{Binding Manifest.ModificationCount}">
