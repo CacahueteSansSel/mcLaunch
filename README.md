@@ -23,7 +23,7 @@ Work in progress
 
 # Build
 
-Make sure to have the **.NET 6.0 SDK** installed, then clone and build the project :
+Make sure to have the **.NET 7.0 SDK** installed, then clone and build the project :
 
 ```shell
 $ cd ddLaunch
@@ -39,6 +39,7 @@ $ dotnet run
 
 Libraries used by the project :
 + Avalonia (UI Library)
++ ReactiveUI (UI Library)
 + Modrinth.Net (for Modrinth)
 + CurseForge.NET (for CurseForge)
 + K4os.Compression.LZ4 (compression, used by the Box Binary format)
