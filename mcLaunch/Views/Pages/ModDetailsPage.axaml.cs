@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -94,7 +95,38 @@ public partial class ModDetailsPage : UserControl
             return;
         }
 
-        await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, versions[0]);
+        string version = versions[0];
+
+        ModPlatform.ModDependency[] deps = await ModPlatformManager.Platform.GetModDependenciesAsync(Mod.Id,
+            TargetBox.Manifest.ModLoaderId, version, TargetBox.Manifest.Version);
+
+        ModPlatform.ModDependency[] optionalDeps =
+            deps.Where(dep => dep.Type == ModPlatform.DependencyRelationType.Optional).ToArray();
+
+        if (optionalDeps.Length > 0)
+        {
+            Navigation.ShowPopup(new OptionalModsPopup(TargetBox, Mod, optionalDeps, async () =>
+            {
+                await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, version, true);
+        
+                LoadingButtonFrame.IsVisible = false;
+                SetInstalled(true);
+
+                isInstalling = false;
+            }, async () =>
+            {
+                await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, version, false);
+        
+                LoadingButtonFrame.IsVisible = false;
+                SetInstalled(true);
+
+                isInstalling = false;
+            }));
+        
+            return;
+        }
+
+        await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, version, false);
         
         LoadingButtonFrame.IsVisible = false;
         SetInstalled(true);

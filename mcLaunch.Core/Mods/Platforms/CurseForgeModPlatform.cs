@@ -63,7 +63,7 @@ public class CurseForgeModPlatform : ModPlatform
                 BackgroundPath = mod.Screnshots?.FirstOrDefault()?.Url,
                 Platform = this
             };
-            
+
             m.TransformLongDescriptionToMarkdown();
 
             return m;
@@ -111,7 +111,7 @@ public class CurseForgeModPlatform : ModPlatform
                 LongDescriptionBody = (await client.GetModDescription(cfMod.Id)).Data,
                 Platform = this
             };
-            
+
             mod.TransformLongDescriptionToMarkdown();
 
             modCache.Add(id, mod);
@@ -139,7 +139,39 @@ public class CurseForgeModPlatform : ModPlatform
         return modVersions.ToArray();
     }
 
-    async Task InstallFile(Box targetBox, File file)
+    public override async Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId,
+        string minecraftVersionId)
+    {
+        List<File> files = (await client.GetModFiles(uint.Parse(id), minecraftVersionId,
+            Enum.Parse<ModLoaderType>(modLoaderId, true), pageSize: 100)).Data;
+        File? file = files.FirstOrDefault(f => f.Id == uint.Parse(versionId));
+
+        return await Task.Run(() =>
+        {
+            return file.Dependencies.Select(dep => new ModDependency
+            {
+                Mod = GetModAsync(dep.ModId.ToString()).GetAwaiter().GetResult(),
+                Type = ToRelationType(dep.RelationType)
+            }).ToArray();
+        });
+    }
+
+    DependencyRelationType ToRelationType(FileRelationType fileRelationType)
+    {
+        switch (fileRelationType)
+        {
+            case FileRelationType.OptionalDependency:
+                return DependencyRelationType.Optional;
+            case FileRelationType.RequiredDependency:
+                return DependencyRelationType.Required;
+            case FileRelationType.Incompatible:
+                return DependencyRelationType.Incompatible;
+            default:
+                return DependencyRelationType.Unknown;
+        }
+    }
+
+    async Task InstallFile(Box targetBox, File file, bool installOptional)
     {
         if (!file.GameVersions.Contains(targetBox.Manifest.Version))
         {
@@ -151,10 +183,18 @@ public class CurseForgeModPlatform : ModPlatform
         {
             foreach (FileDependency dep in file.Dependencies)
             {
-                if (dep.RelationType != FileRelationType.RequiredDependency) continue;
+                if (installOptional)
+                {
+                    if (dep.RelationType != FileRelationType.RequiredDependency &&
+                        dep.RelationType != FileRelationType.OptionalDependency) continue;
+                }
+                else
+                {
+                    if (dep.RelationType != FileRelationType.RequiredDependency) continue;
+                }
 
                 Mod cfMod = (await client.GetMod(dep.ModId)).Data;
-                await InstallFile(targetBox, cfMod.LatestFiles[0]);
+                await InstallFile(targetBox, cfMod.LatestFiles[0], false);
             }
         }
 
@@ -182,12 +222,13 @@ public class CurseForgeModPlatform : ModPlatform
         DownloadManager.End();
     }
 
-    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId)
+    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId,
+        bool installOptional)
     {
         var version = await client.GetModFile(uint.Parse(mod.Id), uint.Parse(versionId));
         if (version == null) return false;
 
-        await InstallFile(targetBox, version.Data);
+        await InstallFile(targetBox, version.Data, installOptional);
 
         await DownloadManager.DownloadAll();
 
@@ -198,7 +239,7 @@ public class CurseForgeModPlatform : ModPlatform
     public override async Task<Modification> DownloadAdditionalInfosAsync(Modification mod)
     {
         mod.LongDescriptionBody = (await client.GetModDescription(uint.Parse(mod.Id))).Data;
-        
+
         mod.TransformLongDescriptionToMarkdown();
 
         return mod;

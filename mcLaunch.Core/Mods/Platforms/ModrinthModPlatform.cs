@@ -33,7 +33,7 @@ public class ModrinthModPlatform : ModPlatform
     public override async Task<Modification[]> GetModsAsync(int page, Box box, string searchQuery)
     {
         FacetCollection collection = new();
-        
+
         collection.Add(Facet.Category(box.Manifest.ModLoaderId.ToLower()));
         collection.Add(Facet.Version(box.Manifest.Version));
         collection.Add(Facet.ProjectType(ProjectType.Mod));
@@ -60,11 +60,28 @@ public class ModrinthModPlatform : ModPlatform
         return mods;
     }
 
+    public override async Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId,
+        string minecraftVersionId)
+    {
+        Version[] versions = await client.Version.GetProjectVersionListAsync(id, new[] {modLoaderId},
+            new[] {minecraftVersionId});
+        Version? version = versions.FirstOrDefault(v => v.Id == versionId);
+
+        return await Task.Run(() =>
+        {
+            return version.Dependencies.Select(dep => new ModDependency
+            {
+                Mod = GetModAsync(dep.ProjectId).GetAwaiter().GetResult(),
+                Type = (DependencyRelationType) dep.DependencyType
+            }).ToArray();
+        });
+    }
+
     public override async Task<Modification> GetModAsync(string id)
     {
         string cacheName = $"mod-{id}";
         if (CacheManager.Has(cacheName)) return CacheManager.LoadModification(cacheName)!;
-        if (modCache.ContainsKey(id)) 
+        if (modCache.ContainsKey(id))
             return modCache[id];
 
         try
@@ -107,13 +124,21 @@ public class ModrinthModPlatform : ModPlatform
         return versions.Select(v => v.Id).ToArray();
     }
 
-    async Task InstallVersionAsync(Box targetBox, Version version)
+    async Task InstallVersionAsync(Box targetBox, Version version, bool installOptional)
     {
         if (version.Dependencies != null)
         {
             foreach (Dependency dependency in version.Dependencies)
             {
-                if (dependency.DependencyType != DependencyType.Required) continue;
+                if (installOptional)
+                {
+                    if (dependency.DependencyType != DependencyType.Required &&
+                        dependency.DependencyType != DependencyType.Optional) continue;
+                }
+                else
+                {
+                    if (dependency.DependencyType != DependencyType.Required) continue;
+                }
 
                 if (targetBox.Manifest.HasModificationStrict(dependency.ProjectId, dependency.VersionId, Name))
                     continue;
@@ -135,12 +160,12 @@ public class ModrinthModPlatform : ModPlatform
                     dependencyVersion = await client.Version.GetAsync(depVersionId);
                 }
 
-                await InstallVersionAsync(targetBox, dependencyVersion);
+                await InstallVersionAsync(targetBox, dependencyVersion, false);
             }
         }
-        
+
         DownloadManager.Begin(version.Name);
-        
+
         List<string> filenames = new();
         foreach (File file in version.Files)
         {
@@ -156,16 +181,17 @@ public class ModrinthModPlatform : ModPlatform
 
         targetBox.Manifest.AddModification(version.ProjectId, version.Id, Name,
             filenames.ToArray());
-        
+
         DownloadManager.End();
     }
 
-    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId)
+    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId,
+        bool installOptional)
     {
         Version version = await client.Version.GetAsync(versionId);
         if (version == null) return false;
 
-        if (!targetBox.HasModification(mod)) await InstallVersionAsync(targetBox, version);
+        if (!targetBox.HasModification(mod)) await InstallVersionAsync(targetBox, version, installOptional);
 
         await DownloadManager.DownloadAll();
 

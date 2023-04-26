@@ -35,6 +35,14 @@ public class MultiplexerModPlatform : ModPlatform
         return mods.ToArray();
     }
 
+    public override async Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId, string minecraftVersionId)
+    {
+        Modification mod = await GetModAsync(id);
+        if (mod == null) return null;
+
+        return await mod.Platform.GetModDependenciesAsync(id, modLoaderId, versionId, minecraftVersionId);
+    }
+
     public override async Task<Modification> GetModAsync(string id)
     {
         foreach (ModPlatform platform in _platforms)
@@ -54,13 +62,13 @@ public class MultiplexerModPlatform : ModPlatform
         return await mod.Platform.GetVersionsForMinecraftVersionAsync(modId, modLoaderId, minecraftVersionId);
     }
 
-    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId)
+    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId, bool installOptional)
     {
         ModPlatform? modPlatform = mod.Platform ?? _platforms.FirstOrDefault(p => p.Name == mod.ModPlatformId);
 
         if (modPlatform == null || !_platforms.Contains(modPlatform)) return false;
 
-        return await modPlatform.InstallModificationAsync(targetBox, mod, versionId);
+        return await modPlatform.InstallModificationAsync(targetBox, mod, versionId, installOptional);
     }
 
     public override async Task<Modification> DownloadAdditionalInfosAsync(Modification mod)

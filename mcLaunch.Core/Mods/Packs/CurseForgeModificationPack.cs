@@ -61,7 +61,7 @@ public class CurseForgeModificationPack : ModificationPack
         await CurseForgeModPlatform.Instance.InstallModificationAsync(targetBox, new Modification
         {
             Id = mod.ModId
-        }, mod.VersionId);
+        }, mod.VersionId, false);
     }
 
     public override Task ExportAsync(Box box, string filename)
