@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Cacahuete.MinecraftLib.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
@@ -24,6 +25,17 @@ public partial class ModListSubControl : UserControl, ISubControl
 
     public async Task PopulateAsync()
     {
+        if (Box.Manifest.ModLoader is VanillaModLoaderSupport)
+        {
+            ModsList.HideLoadMoreButton();
+            VanillaDisclaimer.IsVisible = true;
+            ContentPanel.IsVisible = false;
+            
+            return;
+        }
+        
+        VanillaDisclaimer.IsVisible = false;
+        
         ModsList.HideLoadMoreButton();
         ModsList.SetLoadingCircle(true);
 

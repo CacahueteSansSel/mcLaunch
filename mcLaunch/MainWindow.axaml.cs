@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using mcLaunch.Core.Managers;
 using mcLaunch.Models;
