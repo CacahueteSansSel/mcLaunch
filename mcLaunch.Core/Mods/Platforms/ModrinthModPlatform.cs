@@ -211,7 +211,7 @@ public class ModrinthModPlatform : ModPlatform
 
     public override async Task<Modification> DownloadAdditionalInfosAsync(Modification mod)
     {
-        if (mod.LongDescriptionBody != null) return mod;
+        if (mod.LongDescriptionBody != null && mod.Changelog != null) return mod;
 
         Project project = await client.Project.GetAsync(mod.Id);
         Version latest = await client.Version.GetAsync(project.Versions[0]);
