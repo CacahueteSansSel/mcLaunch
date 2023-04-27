@@ -204,11 +204,13 @@ public class ModrinthModPlatform : ModPlatform
         if (mod.LongDescriptionBody != null) return mod;
 
         Project project = await client.Project.GetAsync(mod.Id);
+        Version latest = await client.Version.GetAsync(project.Versions[0]);
 
         mod.Versions = project.Versions;
         mod.LatestVersion = mod.Versions.Last();
         mod.LongDescriptionBody = project.Body;
         mod.BackgroundPath = project.FeaturedGallery;
+        mod.Changelog = latest.Changelog;
 
         return mod;
     }

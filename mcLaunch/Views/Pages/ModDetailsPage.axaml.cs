@@ -160,6 +160,48 @@ public partial class ModDetailsPage : UserControl
         UpdateButton.IsVisible = false;
         UpdateButton.IsEnabled = false;
         
+        string[] versions =
+            await ModPlatformManager.Platform.GetVersionsForMinecraftVersionAsync(Mod.Id,
+                TargetBox.Manifest.ModLoaderId,
+                TargetBox.Manifest.Version);
+
+        if (versions.Length == 0)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
+                $"Unable to install {Mod.Name} : no compatible version found " +
+                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}"));
+            
+            LoadingButtonFrame.IsVisible = false;
+            SetInstalled(false);
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(Mod.Changelog))
+        {
+            Navigation.ShowPopup(new ChangelogPopup(Mod, versions[0], async () =>
+            {
+                TargetBox.Manifest.RemoveModification(Mod.Id);
+                InstallButtonClicked(sender, e);
+
+                await Task.Run(async () =>
+                {
+                    while (isInstalling)
+                        await Task.Delay(1);
+                });
+
+                Mod.IsUpdateRequired = false;
+
+                UninstallButton.IsVisible = true;
+                UninstallButton.IsEnabled = true;
+            }, () =>
+            {
+                UpdateButton.IsVisible = true;
+                UpdateButton.IsEnabled = true;
+            }));
+            
+            return;
+        }
+        
         TargetBox.Manifest.RemoveModification(Mod.Id);
         InstallButtonClicked(sender, e);
 

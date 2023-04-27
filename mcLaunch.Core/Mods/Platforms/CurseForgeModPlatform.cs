@@ -238,6 +238,11 @@ public class CurseForgeModPlatform : ModPlatform
 
     public override async Task<Modification> DownloadAdditionalInfosAsync(Modification mod)
     {
+        Mod cfMod = (await client.GetMod(uint.Parse(mod.Id))).Data;
+
+        mod.Changelog = (cfMod.LatestFiles == null || cfMod.LatestFiles.FirstOrDefault() == null)
+            ? string.Empty
+            : (await client.GetModFileChangelog(cfMod.Id, cfMod.LatestFiles.FirstOrDefault().Id)).Data;
         mod.LongDescriptionBody = (await client.GetModDescription(uint.Parse(mod.Id))).Data;
 
         mod.TransformLongDescriptionToMarkdown();

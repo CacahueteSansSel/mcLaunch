@@ -22,6 +22,7 @@ public class Modification : ReactiveObject
     public string Id { get; set; }
     public string Author { get; set; }
     public string? ShortDescription { get; set; }
+    public string? Changelog { get; set; }
 
     public string? LongDescriptionBody
     {
