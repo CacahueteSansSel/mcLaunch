@@ -15,7 +15,7 @@ public class Settings
     
     [Setting(Name = "Expose launcher name to Minecraft", Group = "Minecraft")]
     public bool ExposeLauncherNameToMinecraft { get; set; }
-    [Setting(Name = "Enable snapshots version of Minecraft", Group = "Minecraft")]
+    [Setting(Name = "Enable snapshots versions of Minecraft", Group = "Minecraft")]
     public bool EnableSnapshots { get; set; }
 
     public Settings()
