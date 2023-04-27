@@ -18,8 +18,17 @@
                     <views:BackButton></views:BackButton>
                     <TextBlock Classes="title" Margin="15 0 0 0" FontSize="30">Settings</TextBlock>
                 </StackPanel>
-                <StackPanel x:Name="SettingsRoot" Margin="0 10 0 100" Spacing="10" Width="888">
+                <StackPanel x:Name="SettingsRoot" Margin="0 10 0 0" Spacing="10" Width="888">
                     
+                </StackPanel>
+                <StackPanel Margin="0 20 0 0" Spacing="5" Width="888" Orientation="Vertical">
+                    <Image Source="/resources/logo.png" Height="40" HorizontalAlignment="Left"></Image>
+                    <TextBlock>mcLaunch, Copyright (c) Cacahuète Dev and Contributors, 2023</TextBlock>
+                    <TextBlock>Licensed under the GNU General Public License v3.0</TextBlock>
+                    <TextBlock>Minecraft is the property of Mojang Studios, and they are not affiliated with this project</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Classes="secondary" Click="OpenGithubRepoButtonClicked">GitHub</Button>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
