@@ -31,7 +31,7 @@ public partial class MainWindow : Window
             SetBottomBarShown(false);
         };
         
-        MainWindowDataContext.Instance.ShowLoadingPage();
+        MainWindowDataContext.Instance.ShowStartingPage();
         Authenticate();
     }
 

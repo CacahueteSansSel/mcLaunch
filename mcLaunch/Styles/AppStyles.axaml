@@ -26,6 +26,21 @@
             </StackPanel>
         </Border>
     </Design.PreviewWith>
+        
+    <Style Selector="StackPanel.smoothShowLeft">
+        <Style.Animations>
+            <Animation Duration="0:0:.5" Easing="QuinticEaseInOut" IterationCount="1">
+                <KeyFrame Cue="0%">
+                    <Setter Property="TranslateTransform.X" Value="-10"/>
+                    <Setter Property="Opacity" Value="0"/>
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="TranslateTransform.X" Value="0"/>
+                    <Setter Property="Opacity" Value="1"/>
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
     
     <Style Selector="Button.picture">
         <Setter Property="BorderBrush" Value="{DynamicResource Background}"></Setter>

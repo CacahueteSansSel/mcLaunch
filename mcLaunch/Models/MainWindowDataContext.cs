@@ -80,6 +80,11 @@ public class MainWindowDataContext : PageNavigator
         CurrentPage = new LoadingPage();
     }
 
+    public void ShowStartingPage()
+    {
+        CurrentPage = new StartingPage();
+    }
+
     public void HideLoadingPage()
     {
         CurrentPage = stack.Count == 0 ? null : stack.Peek();

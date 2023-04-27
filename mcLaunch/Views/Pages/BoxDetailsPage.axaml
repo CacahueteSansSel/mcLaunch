@@ -49,7 +49,7 @@
                                     Export
                                 </Button>
                             </StackPanel>
-                            <StackPanel Margin="29 0 0 0" Orientation="Vertical">
+                            <StackPanel Classes="smoothShowLeft" Margin="29 0 0 0" Orientation="Vertical">
                                 <TextBlock Classes="title" FontSize="32" Text="{Binding Manifest.Name}"></TextBlock>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="light" FontSize="16">by</TextBlock>

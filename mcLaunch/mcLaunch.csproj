@@ -121,6 +121,8 @@
       <AvaloniaResource Include="resources\bottom_bar_progress_background.png" />
       <None Remove="resources\snapshot_stripe.png" />
       <AvaloniaResource Include="resources\snapshot_stripe.png" />
+      <None Remove="resources\logo_big.png" />
+      <AvaloniaResource Include="resources\logo_big.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -147,6 +149,10 @@
       </Compile>
       <Compile Update="Views\Pages\BoxDetails\ServerListSubControl.axaml.cs">
         <DependentUpon>ServerListSubControl.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Pages\StartingPage.axaml.cs">
+        <DependentUpon>StartingPage.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

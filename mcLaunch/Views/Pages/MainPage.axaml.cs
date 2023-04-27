@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
@@ -18,11 +19,13 @@ public partial class MainPage : UserControl
         PopulateBoxList();
     }
 
-    public void PopulateBoxList()
+    public async void PopulateBoxList()
     {
         BoxContainer.Children.Clear();
+
+        Box[] boxes = await Task.Run(BoxManager.LoadLocalBoxes);
         
-        foreach (Box box in BoxManager.LoadLocalBoxes())
+        foreach (Box box in boxes)
         {
             BoxContainer.Children.Add(new BoxEntryCard(box));
         }
