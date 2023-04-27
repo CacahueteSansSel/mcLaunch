@@ -13,6 +13,8 @@ namespace mcLaunch.Core.Mods.Packs;
 
 public class ModrinthModificationPack : ModificationPack
 {
+    private ModelModrinthIndex manifest;
+    private ZipArchiveEntry[] overridesEntries;
     public override string Name { get; }
     public override string Author { get; }
     public override string Version { get; }
@@ -21,17 +23,17 @@ public class ModrinthModificationPack : ModificationPack
     public override string MinecraftVersion { get; }
     public override string ModloaderId { get; }
     public override string ModloaderVersion { get; }
-    public override SerializedModification[] Modifications { get; }
-    public override AdditionalFile[] AdditionalFiles { get; }
+    public override SerializedModification[] Modifications { get; set; }
+    public override AdditionalFile[] AdditionalFiles { get; set; }
 
     public ModrinthModificationPack(string filename)
     {
         ZipArchive zip = ZipFile.Open(filename, ZipArchiveMode.Read);
 
         using Stream manifestStream = zip.GetEntry("modrinth.index.json")!.Open();
-        ModelModrinthIndex manifest = JsonSerializer.Deserialize<ModelModrinthIndex>(manifestStream)!;
+        manifest = JsonSerializer.Deserialize<ModelModrinthIndex>(manifestStream)!;
 
-        ZipArchiveEntry[] overridesEntries = zip.Entries
+        overridesEntries = zip.Entries
             .Where(e => e.FullName.StartsWith("overrides"))
             .ToArray();
 
@@ -48,7 +50,10 @@ public class ModrinthModificationPack : ModificationPack
         }
 
         // TODO: Forge
+    }
 
+    public async Task SetupAsync()
+    {
         List<SerializedModification> mods = new();
         foreach (var file in manifest.Files)
         {
@@ -70,16 +75,15 @@ public class ModrinthModificationPack : ModificationPack
 
                     if (versionNumberRegex.IsMatch(version))
                     {
-
                         try
                         {
-                            ver = ModrinthModPlatform.Instance.Client.Version.GetByVersionNumberAsync(id, version)
-                                .GetAwaiter().GetResult();
+                            ver = await ModrinthModPlatform.Instance.Client.Version.GetByVersionNumberAsync(id, version);
                         }
                         catch (Exception e)
                         {
-                            Version[] versions = ModrinthModPlatform.Instance.Client.Version.GetProjectVersionListAsync(id, gameVersions: new []{MinecraftVersion}, loaders: new []{ModloaderId})
-                                .GetAwaiter().GetResult();
+                            Version[] versions =
+                                await ModrinthModPlatform.Instance.Client.Version.GetProjectVersionListAsync(id,
+                                    gameVersions: new[] {MinecraftVersion}, loaders: new[] {ModloaderId});
 
                             ver = versions.FirstOrDefault(v => v.GameVersions.Contains(MinecraftVersion));
 
@@ -95,8 +99,7 @@ public class ModrinthModificationPack : ModificationPack
 
                     if (ver == null)
                     {
-                        ver = ModrinthModPlatform.Instance.Client.Version.GetAsync(version)
-                            .GetAwaiter().GetResult();
+                        ver = await ModrinthModPlatform.Instance.Client.Version.GetAsync(version);
                     }
 
                     Regex rootMcVerRegex = new Regex("\\d+\\.\\d+");
@@ -104,8 +107,8 @@ public class ModrinthModificationPack : ModificationPack
 
                     if (!ver.GameVersions.Contains(MinecraftVersion) && !ver.GameVersions.Contains(rootMcVer))
                     {
-                        Version[] versions = ModrinthModPlatform.Instance.Client.Version.GetProjectVersionListAsync(id, gameVersions: new []{MinecraftVersion}, loaders: new []{ModloaderId})
-                            .GetAwaiter().GetResult();
+                        Version[] versions = await ModrinthModPlatform.Instance.Client.Version.GetProjectVersionListAsync(id,
+                            gameVersions: new[] {MinecraftVersion}, loaders: new[] {ModloaderId});
 
                         ver = versions.FirstOrDefault(v => v.GameVersions.Contains(MinecraftVersion));
 

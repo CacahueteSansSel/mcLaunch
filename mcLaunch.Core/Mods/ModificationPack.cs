@@ -14,9 +14,9 @@ public abstract class ModificationPack
     public abstract string ModloaderId { get; }
     public abstract string ModloaderVersion { get; }
     
-    public abstract SerializedModification[] Modifications { get; }
+    public abstract SerializedModification[] Modifications { get; set; }
     
-    public abstract AdditionalFile[] AdditionalFiles { get; }
+    public abstract AdditionalFile[] AdditionalFiles { get; set; }
 
     public ModificationPack()
     {

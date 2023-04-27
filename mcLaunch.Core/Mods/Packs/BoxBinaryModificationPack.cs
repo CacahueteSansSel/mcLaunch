@@ -15,8 +15,8 @@ public class BoxBinaryModificationPack : ModificationPack
     public override string MinecraftVersion => boxBinary.Version;
     public override string ModloaderId => boxBinary.ModLoaderId;
     public override string ModloaderVersion => boxBinary.ModLoaderVersion;
-    public override SerializedModification[] Modifications { get; }
-    public override AdditionalFile[] AdditionalFiles { get; }
+    public override SerializedModification[] Modifications { get; set; }
+    public override AdditionalFile[] AdditionalFiles { get; set; }
     public byte[] IconData => boxBinary.IconData;
     public byte[] BackgroundData => boxBinary.BackgroundData;
 

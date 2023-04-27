@@ -17,8 +17,8 @@ public class CurseForgeModificationPack : ModificationPack
     public override string MinecraftVersion { get; }
     public override string ModloaderId { get; }
     public override string ModloaderVersion { get; }
-    public override SerializedModification[] Modifications { get; }
-    public override AdditionalFile[] AdditionalFiles { get; }
+    public override SerializedModification[] Modifications { get; set; }
+    public override AdditionalFile[] AdditionalFiles { get; set; }
 
     public CurseForgeModificationPack(string filename) : base(filename)
     {
