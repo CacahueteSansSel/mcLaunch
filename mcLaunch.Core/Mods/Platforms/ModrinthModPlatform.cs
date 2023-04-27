@@ -153,6 +153,8 @@ public class ModrinthModPlatform : ModPlatform
                         new[] {targetBox.Manifest.ModLoaderId.ToLower()},
                         new[] {targetBox.Manifest.Version});
 
+                    if (depVersions.Length == 0) continue;
+
                     dependencyVersion = depVersions[0];
                 }
                 else

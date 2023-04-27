@@ -35,9 +35,12 @@ public partial class OptionalModsPopup : UserControl
 
     async void DownloadIconAndApplyAsync(Box box, Modification mod, ModPlatform.ModDependency[] dependencies)
     {
+        ModList.SetLoadingCircle(true);
+        
         foreach (ModPlatform.ModDependency dep in dependencies)
             await dep.Mod.DownloadIconAsync();
 
+        ModList.SetLoadingCircle(false);
         ModList.SetBox(box);
         ModList.SetModifications(dependencies.Select(dep => dep.Mod).ToArray());
     }

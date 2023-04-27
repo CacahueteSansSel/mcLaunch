@@ -23,6 +23,8 @@ namespace mcLaunch.Views.Pages;
 
 public partial class BoxDetailsPage : UserControl
 {
+    public static BoxDetailsPage? LastOpened { get; private set; }
+    
     public Box Box { get; }
     public ISubControl SubControl { get; private set; }
 
@@ -33,6 +35,7 @@ public partial class BoxDetailsPage : UserControl
 
     public BoxDetailsPage(Box box)
     {
+        LastOpened = this;
         InitializeComponent();
 
         Box = box;
@@ -51,6 +54,11 @@ public partial class BoxDetailsPage : UserControl
 
         SubControlNameText.Text = control.Title;
         
+        PopulateSubControl();
+    }
+
+    public void Reload()
+    {
         PopulateSubControl();
     }
 

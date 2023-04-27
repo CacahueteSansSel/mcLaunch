@@ -68,13 +68,13 @@ public partial class ModDetailsPage : UserControl
     private async void InstallButtonClicked(object? sender, RoutedEventArgs e)
     {
         isInstalling = true;
-        
+
         InstallButton.IsVisible = false;
         InstallButton.IsEnabled = false;
 
         UninstallButton.IsVisible = false;
         UninstallButton.IsEnabled = false;
-        
+
         LoadingButtonFrame.IsVisible = true;
 
         // TODO: Version selection
@@ -89,7 +89,7 @@ public partial class ModDetailsPage : UserControl
             Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
                 $"Unable to install {Mod.Name} : no compatible version found " +
                 $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}"));
-            
+
             LoadingButtonFrame.IsVisible = false;
             SetInstalled(false);
             return;
@@ -101,35 +101,43 @@ public partial class ModDetailsPage : UserControl
             TargetBox.Manifest.ModLoaderId, version, TargetBox.Manifest.Version);
 
         ModPlatform.ModDependency[] optionalDeps =
-            deps.Where(dep => dep.Type == ModPlatform.DependencyRelationType.Optional).ToArray();
+            deps.Where(dep =>
+                    dep.Type == ModPlatform.DependencyRelationType.Optional && !TargetBox.HasModificationSoft(dep.Mod))
+                .ToArray();
 
         if (optionalDeps.Length > 0)
         {
             Navigation.ShowPopup(new OptionalModsPopup(TargetBox, Mod, optionalDeps, async () =>
             {
                 await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, version, true);
-        
+
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
+        
+                BoxDetailsPage.LastOpened?.Reload();
 
                 isInstalling = false;
             }, async () =>
             {
                 await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, version, false);
-        
+
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
+        
+                BoxDetailsPage.LastOpened?.Reload();
 
                 isInstalling = false;
             }));
-        
+
             return;
         }
 
         await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, version, false);
-        
+
         LoadingButtonFrame.IsVisible = false;
         SetInstalled(true);
+        
+        BoxDetailsPage.LastOpened?.Reload();
 
         isInstalling = false;
     }
@@ -145,6 +153,8 @@ public partial class ModDetailsPage : UserControl
         TargetBox.Manifest.RemoveModification(Mod.Id);
 
         TargetBox.SaveManifest();
+        
+        BoxDetailsPage.LastOpened?.Reload();
 
         SetInstalled(false);
     }
@@ -159,7 +169,7 @@ public partial class ModDetailsPage : UserControl
 
         UpdateButton.IsVisible = false;
         UpdateButton.IsEnabled = false;
-        
+
         string[] versions =
             await ModPlatformManager.Platform.GetVersionsForMinecraftVersionAsync(Mod.Id,
                 TargetBox.Manifest.ModLoaderId,
@@ -170,7 +180,7 @@ public partial class ModDetailsPage : UserControl
             Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
                 $"Unable to install {Mod.Name} : no compatible version found " +
                 $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}"));
-            
+
             LoadingButtonFrame.IsVisible = false;
             SetInstalled(false);
             return;
@@ -197,11 +207,14 @@ public partial class ModDetailsPage : UserControl
             {
                 UpdateButton.IsVisible = true;
                 UpdateButton.IsEnabled = true;
+
+                UninstallButton.IsVisible = true;
+                UninstallButton.IsEnabled = true;
             }));
-            
+
             return;
         }
-        
+
         TargetBox.Manifest.RemoveModification(Mod.Id);
         InstallButtonClicked(sender, e);
 
