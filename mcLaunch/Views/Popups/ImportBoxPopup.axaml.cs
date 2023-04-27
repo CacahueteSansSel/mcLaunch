@@ -116,4 +116,52 @@ public partial class ImportBoxPopup : UserControl
         Navigation.Push(new BoxDetailsPage(box));
         MainPage.Instance.PopulateBoxList();
     }
+
+    private async void ImportModrinthModpackButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        OpenFileDialog ofd = new OpenFileDialog();
+        ofd.Title = "Select a Modrinth modpack...";
+        ofd.Filters = new List<FileDialogFilter>()
+        {
+            new()
+            {
+                Extensions = new List<string>()
+                {
+                    "mrpack"
+                },
+                Name = "Modrinth Modpack"
+            }
+        };
+
+        string[]? files = await ofd.ShowAsync(MainWindow.Instance);
+        if (files == null) return;
+
+        ModrinthModificationPack modpack = new ModrinthModificationPack(files[0]);
+        
+        Navigation.HidePopup();
+        Navigation.ShowPopup(new StatusPopup($"Importing {modpack.Name}", "Please wait for the modpack to be imported"));
+        
+        Box box = await BoxManager.CreateFromModificationPack(modpack, (msg, percent) =>
+        {
+            StatusPopup.Instance.Status = msg;
+            StatusPopup.Instance.StatusPercent = percent;
+        });
+        
+        Navigation.HidePopup();
+
+        if (File.Exists($"{box.Path}/minecraft/icon.png"))
+        {
+            Bitmap modpackIcon = new Bitmap($"{box.Path}/minecraft/icon.png");
+            box.SetAndSaveIcon(modpackIcon);
+        }
+        else
+        {
+            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+            Bitmap bmp = new Bitmap(assets.Open(new Uri($"avares://mcLaunch/resources/default_box_logo.png")));
+            box.SetAndSaveIcon(bmp);
+        }
+
+        Navigation.Push(new BoxDetailsPage(box));
+        MainPage.Instance.PopulateBoxList();
+    }
 }

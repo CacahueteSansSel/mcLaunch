@@ -16,17 +16,23 @@
                 <Button DockPanel.Dock="Right" Classes="secondary" Click="ClosePopupButtonClicked">Close</Button>
                 <Panel></Panel>
             </DockPanel>
-            <StackPanel DockPanel.Dock="Top"  Orientation="Vertical"  Spacing="10" Margin="0 20 0 0">
-                <Button Classes="secondary" Click="ImportDdLaunchBoxButtonClicked">
+            <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Spacing="10" Margin="0 20 0 0">
+                <Button Classes="secondary" Width="370" Click="ImportDdLaunchBoxButtonClicked">
                     <StackPanel Orientation="Vertical">
                         <TextBlock Classes="title">mcLaunch's Box</TextBlock>
                         <TextBlock Classes="light">The mcLaunch modpack format, binary and small</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Classes="secondary" Click="ImportCurseForgeModpackButtonClicked">
+                <Button Classes="secondary" Width="370" Click="ImportCurseForgeModpackButtonClicked">
                     <StackPanel Orientation="Vertical">
                         <TextBlock Classes="title">CurseForge's modpack profile</TextBlock>
                         <TextBlock Classes="light">A modpack exported from the CurseForge launcher</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Classes="secondary" Width="370" Click="ImportModrinthModpackButtonClicked">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Classes="title">Modrinth modpack</TextBlock>
+                        <TextBlock Classes="light">A modpack from Modrinth</TextBlock>
                     </StackPanel>
                 </Button>
             </StackPanel>

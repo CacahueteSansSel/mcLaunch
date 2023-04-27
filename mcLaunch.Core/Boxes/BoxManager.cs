@@ -75,8 +75,9 @@ public static class BoxManager
         progressCallback?.Invoke($"Preparing Minecraft {pack.MinecraftVersion} ({pack.ModloaderId.Capitalize()})", 0f);
 
         await box.CreateMinecraftAsync();
-
+        
         int index = 0;
+
         foreach (var mod in pack.Modifications)
         {
             progressCallback?.Invoke($"Installing modification {index}/{pack.Modifications.Length}", 
@@ -86,10 +87,12 @@ public static class BoxManager
 
             index++;
         }
-
+        
         index = 0;
         foreach (var additionalFile in pack.AdditionalFiles)
         {
+            if (additionalFile.Path.EndsWith('/')) continue;
+            
             progressCallback?.Invoke($"Writing file override {index}/{pack.AdditionalFiles.Length}", 
                 0.5f + (float)index / pack.AdditionalFiles.Length / 2);
             

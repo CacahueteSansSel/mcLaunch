@@ -23,8 +23,8 @@ public static class Extensions
 
     public static byte[] ReadToEndAndClose(this Stream stream, long? size = null)
     {
-        byte[] data = new byte[size ?? stream.Length];
-        stream.Read(data, 0, data.Length);
+        MemoryStream arrayStream = new();
+        stream.CopyTo(arrayStream);
 
         try
         {
@@ -34,6 +34,9 @@ public static class Extensions
         {
             
         }
+
+        byte[] data = arrayStream.ToArray();
+        arrayStream.Close();
 
         return data;
     }

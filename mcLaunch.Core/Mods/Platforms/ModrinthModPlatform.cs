@@ -11,13 +11,18 @@ namespace mcLaunch.Core.Mods.Platforms;
 
 public class ModrinthModPlatform : ModPlatform
 {
+    public static ModrinthModPlatform Instance { get; private set; }
+    
     ModrinthClient client;
     Dictionary<string, Modification> modCache = new();
 
     public override string Name { get; } = "Modrinth";
+    public ModrinthClient Client => client;
 
     public ModrinthModPlatform()
     {
+        Instance = this;
+        
         UserAgent ua = new UserAgent
         {
             ProjectName = "mcLaunch Minecraft Launcher",
@@ -140,7 +145,7 @@ public class ModrinthModPlatform : ModPlatform
                     if (dependency.DependencyType != DependencyType.Required) continue;
                 }
 
-                if (targetBox.Manifest.HasModificationStrict(dependency.ProjectId, dependency.VersionId, Name))
+                if (targetBox.Manifest.HasModificationStrict(dependency.ProjectId, Name))
                     continue;
 
                 string depVersionId = dependency.VersionId;
@@ -171,6 +176,9 @@ public class ModrinthModPlatform : ModPlatform
         List<string> filenames = new();
         foreach (File file in version.Files)
         {
+            // Ignore the sources jars to avoid problems
+            if (file.FileName.Contains("-sources")) continue;
+            
             string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
             string url = file.Url;
 
