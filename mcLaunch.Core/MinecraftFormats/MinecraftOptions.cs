@@ -21,7 +21,7 @@ public class MinecraftOptions : Dictionary<string, object>
 
         foreach (var kv in this)
         {
-            finalStr += $"{kv.Key}:{kv.Value}{Environment.NewLine}";
+            finalStr += $"{kv.Key}:{ObjectToString(kv.Value)}{Environment.NewLine}";
         }
 
         return finalStr;
@@ -30,6 +30,16 @@ public class MinecraftOptions : Dictionary<string, object>
     public void Save()
     {
         File.WriteAllText(Filename, Build());
+    }
+
+    string ObjectToString(object obj)
+    {
+        if (obj is float f) return f.ToString(CultureInfo.InvariantCulture);
+        if (obj is int i) return i.ToString(CultureInfo.InvariantCulture);
+        if (obj is bool b) return b.ToString().ToLower();
+        if (obj is object[] arr) return JsonSerializer.Serialize(arr.Select(ObjectToString));
+        
+        return obj.ToString();
     }
 
     object ParseValue(string input)
