@@ -80,6 +80,9 @@
                                     <Button Classes="secondary" Click="SubControlScreenshotClicked" ToolTip.Tip="Screenshots">
                                         <Image Source="/resources/icons/screenshot.png" Width="18" Height="18"></Image>
                                     </Button>
+                                    <Button Classes="secondary" Click="SubControlSettingsClicked" ToolTip.Tip="Game Settings">
+                                        <Image Source="/resources/icons/settings.png" Width="18" Height="18"></Image>
+                                    </Button>
                                 </StackPanel>
                                 <TextBlock x:Name="SubControlNameText" Opacity="0.7" Margin="38 0 38 5">MODS</TextBlock>
                             </StackPanel>

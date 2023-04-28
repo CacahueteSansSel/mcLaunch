@@ -123,6 +123,8 @@
       <AvaloniaResource Include="resources\snapshot_stripe.png" />
       <None Remove="resources\logo_big.png" />
       <AvaloniaResource Include="resources\logo_big.png" />
+      <None Remove="resources\icons\settings.png" />
+      <AvaloniaResource Include="resources\icons\settings.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -153,6 +155,10 @@
       </Compile>
       <Compile Update="Views\Pages\StartingPage.axaml.cs">
         <DependentUpon>StartingPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Pages\Settings\GameSettingElement.axaml.cs">
+        <DependentUpon>GameSettingElement.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

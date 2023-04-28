@@ -6,6 +6,16 @@ namespace mcLaunch.Core.MinecraftFormats;
 
 public class MinecraftOptions : Dictionary<string, object>
 {
+    static string[] excludedOptions = {
+        "version",
+        "resourcePacks",
+        "incompatibleResourcePacks",
+        "lastServer",
+        "soundDevice",
+        "tutorialStep",
+        "joinedFirstServer"
+    };
+    
     public string Filename { get; }
     
     public MinecraftOptions(string filename)
@@ -14,6 +24,9 @@ public class MinecraftOptions : Dictionary<string, object>
         
         Load(File.ReadAllLines(filename));
     }
+
+    public bool CanOptionBeChanged(string key) 
+        => !key.StartsWith("key_") && !excludedOptions.Contains(key);
 
     public string Build()
     {
@@ -34,7 +47,8 @@ public class MinecraftOptions : Dictionary<string, object>
 
     string ObjectToString(object obj)
     {
-        if (obj is float f) return f.ToString(CultureInfo.InvariantCulture);
+        if (obj is double d) return d.ToString(CultureInfo.InvariantCulture).Replace(',', '.');
+        if (obj is float f) return f.ToString(CultureInfo.InvariantCulture).Replace(',', '.');
         if (obj is int i) return i.ToString(CultureInfo.InvariantCulture);
         if (obj is bool b) return b.ToString().ToLower();
         if (obj is object[] arr) return JsonSerializer.Serialize(arr.Select(ObjectToString));
@@ -61,10 +75,16 @@ public class MinecraftOptions : Dictionary<string, object>
         if (int.TryParse(input, CultureInfo.InvariantCulture, out int intValue))
         {
             return intValue;
-        } else if (float.TryParse(input, CultureInfo.InvariantCulture, out float floatValue))
+        }
+        if (float.TryParse(input, CultureInfo.InvariantCulture, out float floatValue))
         {
             return floatValue;
-        } else if (bool.TryParse(input, out bool boolValue))
+        }
+        if (double.TryParse(input, CultureInfo.InvariantCulture, out double doubleValue))
+        {
+            return doubleValue;
+        }
+        if (bool.TryParse(input, out bool boolValue))
         {
             return boolValue;
         }

@@ -258,4 +258,9 @@ public partial class BoxDetailsPage : UserControl
     {
         SetSubControl(new ServerListSubControl());
     }
+
+    private void SubControlSettingsClicked(object? sender, RoutedEventArgs e)
+    {
+        SetSubControl(new GameSettingsSubControl());
+    }
 }

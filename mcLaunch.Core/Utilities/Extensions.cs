@@ -5,6 +5,28 @@ public static class Extensions
     public static string Capitalize(this string text)
         => char.ToUpper(text[0]) + text[1..];
 
+    public static string NormalizeCase(this string text)
+    {
+        string str = "";
+        int counter = -1;
+
+        foreach (char c in text)
+        {
+            counter++;
+
+            if (counter == 0) str += char.ToUpper(c);
+            else if (c == '_')
+            {
+                counter = -1;
+                str += " ";
+            }
+            else if (char.IsUpper(c)) str += $" {c}";
+            else str += c;
+        }
+        
+        return str;
+    }
+    
     // This ugly hacks must be used to ensure that two mods are similar on different platforms
     public static string NormalizeTitle(this string title)
         => title
