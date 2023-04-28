@@ -21,7 +21,7 @@ public class MinecraftServer
     
     public MinecraftServer(CompoundTag nbt)
     {
-        IsHidden = ((ByteTag) nbt["hidden"]).Value == 1;
+        IsHidden = nbt["hidden"] == null ? false : ((ByteTag) nbt["hidden"]).Value == 1;
         IconData = Convert.FromBase64String(((StringTag) nbt["icon"]).Value);
         ip = ((StringTag) nbt["ip"]).Value;
         Name = ((StringTag) nbt["name"]).Value;
