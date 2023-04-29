@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Cacahuete.MinecraftLib.Auth;
 using mcLaunch.Core.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
@@ -54,9 +55,9 @@ public partial class MainWindow : Window
                 await Task.Delay(1);
         });
 
-        bool loggedIn = await AuthenticationManager.TryLoginAsync();
+        AuthenticationResult? loggedIn = await AuthenticationManager.TryLoginAsync();
 
-        if (loggedIn)
+        if (loggedIn != null && loggedIn.IsSuccess)
         {
             if (!await AuthenticationManager.HasMinecraftAsync())
             {

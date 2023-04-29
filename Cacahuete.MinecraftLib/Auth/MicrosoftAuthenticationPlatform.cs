@@ -11,11 +11,24 @@ using CmlLib.Core.Auth.Microsoft.Cache;
 using CmlLib.Core.Auth.Microsoft.MsalClient;
 using CmlLib.Core.Auth.Microsoft.XboxLive;
 using Microsoft.Identity.Client;
+using XboxAuthNet.XboxLive;
 
 namespace Cacahuete.MinecraftLib.Auth;
 
 public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
 {
+    private static Dictionary<string, string> errors = new()
+    {
+        {"8015dc03", "The device or user was banned"},
+        {"8015dc04", "The device or user was banned"},
+        {"8015dc0b", "This resource is not available in the country associated with the user"},
+        {"8015dc0c", "Access to this resource requires age verification"},
+        {"8015dc0d", "Access to this resource requires age verification"},
+        {"8015dc0e", "Child's account is not in the family"},
+        {"8015dc09", "Creating a new account is required"},
+        {"8015dc10", "Account maintenance is required"}
+    };
+
     public override string UserType { get; } = "msa";
     public override string ClientId => appId;
     public override bool IsLoggedIn => minecraftSession != null && minecraftSession.CheckIsValid();
@@ -29,6 +42,8 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
         this.appId = appId;
 
         app = MsalMinecraftLoginHelper.CreateDefaultApplicationBuilder(appId)
+            .WithClientName("mcLaunch")
+            .WithClientVersion("1.0.0")
             .Build();
 
         handler = new LoginHandlerBuilder()
@@ -51,7 +66,15 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
         }
         catch (MsalUiRequiredException e)
         {
-            return null;
+            if (e.Message.Contains(", ") && e.Message.Contains("xbox"))
+            {
+                string code = e.Message.Split(',')[0].Trim();
+
+                return new AuthenticationResult(errors.TryGetValue(code, out string? error) ? error : "Unknown error",
+                    code);
+            }
+
+            return new AuthenticationResult(e.Message);
         }
     }
 
@@ -66,10 +89,15 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
 
             return new AuthenticationResult(minecraftSession);
         }
-        catch (Exception e)
+        catch (XboxAuthException e)
         {
-            Debug.WriteLine($"Exception of type: {e.GetType().FullName}");
-            return null;
+            if (e.Error != null)
+            {
+                return new AuthenticationResult(
+                    errors.TryGetValue(e.Error, out string? error) ? error : "Unknown error", e.Error);
+            }
+
+            return new AuthenticationResult(e.Message);
         }
     }
 

@@ -25,22 +25,22 @@ public static class AuthenticationManager
         OnDisconnect?.Invoke();
     }
 
-    public static async Task<bool> TryLoginAsync()
+    public static async Task<AuthenticationResult?> TryLoginAsync()
     {
         Account = await Platform.TryLoginAsync();
         
         if (Account != null) OnLogin?.Invoke(Account);
 
-        return Account != null;
+        return Account;
     }
 
-    public static async Task<bool> AuthenticateAsync()
+    public static async Task<AuthenticationResult?> AuthenticateAsync()
     {
         Account = await Platform.AuthenticateAsync();
         
         if (Account != null) OnLogin?.Invoke(Account);
 
-        return Account != null;
+        return Account;
     }
 
     public static async Task<bool> HasMinecraftAsync()
