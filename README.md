@@ -44,7 +44,6 @@ Libraries used by the project :
 + CurseForge.NET (for CurseForge)
 + K4os.Compression.LZ4 (compression, used by the Box Binary format)
 + ReverseMarkdown (to render mod pages)
-+ CmlLib.Core.Auth.Microsoft.MsalClient (for logging in with Microsoft)
 + Markdown.Avalonia (to render mod pages)
 + SharpNBT (for reading world's level.dat files)
 

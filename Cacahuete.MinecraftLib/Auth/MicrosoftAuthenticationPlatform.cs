@@ -138,6 +138,9 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
 
     public override async Task<bool> DisconnectAsync()
     {
+        cache?.Clear("msaMinecraftTokens");
+        cache?.Clear("msaCacheFast");
+        
         return false;
     }
 

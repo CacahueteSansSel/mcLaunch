@@ -57,4 +57,28 @@ public class CredentialsCache
         File.WriteAllBytes($"{RootPath}/{filename}", result.data);
         File.WriteAllBytes($"{RootPath}/{ivFilename}", result.iv);
     }
+
+    public bool Clear(string name)
+    {
+        using SHA256 sha = SHA256.Create();
+
+        string filename = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(name)))
+            .ToLower();
+
+        string ivFilename = Convert
+            .ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(filename)))
+            .ToLower();
+
+        try
+        {
+            File.Delete($"{RootPath}/{filename}");
+            File.Delete($"{RootPath}/{ivFilename}");
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
 }

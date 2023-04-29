@@ -34,4 +34,9 @@ public partial class BrowserDeviceCodePopup : UserControl
         
         PlatformSpecific.OpenUrl(parameters.Url);
     }
+
+    private void CancelButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.HidePopup();
+    }
 }

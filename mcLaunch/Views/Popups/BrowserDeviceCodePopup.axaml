@@ -29,7 +29,7 @@
             <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25">Login with Microsoft</TextBlock>
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" x:Name="CopyAndOpenButton" Classes="primary" Click="CopyAndOpenButtonClicked">Copy and open Url</Button>
-                <Button DockPanel.Dock="Right" x:Name="CancelButton" Margin="0 0 10 0" Classes="secondary">Cancel</Button>
+                <Button DockPanel.Dock="Right" x:Name="CancelButton" Margin="0 0 10 0" Classes="secondary" Click="CancelButtonClicked">Cancel</Button>
                 <StackPanel x:Name="WaitingForMicrosoft" IsVisible="False" DockPanel.Dock="Left" Orientation="Horizontal">
                     <views:LoadingCircle RenderTransform="scale(0.7)"></views:LoadingCircle>
                     <TextBlock Height="20" Classes="light">Waiting for Microsoft...</TextBlock>
