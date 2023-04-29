@@ -3,9 +3,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Cacahuete.MinecraftLib.Auth;
 using mcLaunch.Core.Managers;
 using mcLaunch.Models;
+using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 
 namespace mcLaunch.Views.Pages;
@@ -29,7 +31,14 @@ public partial class OnBoardingPage : UserControl
     {
         MainWindowDataContext.Instance.ShowLoadingPopup();
 
-        AuthenticationResult? auth = await AuthenticationManager.AuthenticateAsync();
+        MinecraftAuthenticationResult? auth = await AuthenticationManager.AuthenticateAsync(result =>
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                Navigation.ShowPopup(new MessageBoxPopup("Login with Microsoft", $"{result.Message}"));
+                PlatformSpecific.OpenUrl(result.Url);
+            });
+        });
 
         if (auth != null && auth.IsSuccess)
         {

@@ -55,7 +55,7 @@ public partial class MainWindow : Window
                 await Task.Delay(1);
         });
 
-        AuthenticationResult? loggedIn = await AuthenticationManager.TryLoginAsync();
+        MinecraftAuthenticationResult? loggedIn = await AuthenticationManager.TryLoginAsync();
 
         if (loggedIn != null && loggedIn.IsSuccess)
         {

@@ -6,15 +6,15 @@ public static class AuthenticationManager
 {
     public static AuthenticationPlatform? Platform { get; private set; }
     
-    public static AuthenticationResult? Account { get; private set; }
+    public static MinecraftAuthenticationResult? Account { get; private set; }
     public static bool IsInitialized => Platform != null;
 
-    public static event Action<AuthenticationResult> OnLogin; 
+    public static event Action<MinecraftAuthenticationResult> OnLogin; 
     public static event Action OnDisconnect; 
 
     public static void Init(string microsoftAppId)
     {
-        Platform = new MicrosoftAuthenticationPlatform(microsoftAppId);
+        Platform = new NewMicrosoftAuthenticationPlatform(microsoftAppId);
     }
 
     public static async Task DisconnectAsync()
@@ -25,7 +25,7 @@ public static class AuthenticationManager
         OnDisconnect?.Invoke();
     }
 
-    public static async Task<AuthenticationResult?> TryLoginAsync()
+    public static async Task<MinecraftAuthenticationResult?> TryLoginAsync()
     {
         Account = await Platform.TryLoginAsync();
         
@@ -34,8 +34,9 @@ public static class AuthenticationManager
         return Account;
     }
 
-    public static async Task<AuthenticationResult?> AuthenticateAsync()
+    public static async Task<MinecraftAuthenticationResult?> AuthenticateAsync(Action<BrowserLoginCallbackParameters> deviceCodeCallback = null)
     {
+        Platform.WithBrowserLoginCallback(deviceCodeCallback);
         Account = await Platform.AuthenticateAsync();
         
         if (Account != null) OnLogin?.Invoke(Account);

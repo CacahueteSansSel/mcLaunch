@@ -55,7 +55,7 @@ public class Minecraft
         return this;
     }
 
-    public Minecraft WithUser(AuthenticationResult auth, AuthenticationPlatform platform)
+    public Minecraft WithUser(MinecraftAuthenticationResult auth, AuthenticationPlatform platform)
     {
         username = auth.Username;
         uuid = auth.Uuid;

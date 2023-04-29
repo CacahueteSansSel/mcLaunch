@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -50,5 +51,21 @@ public static class Api
         if (patchDateTimes) json = json.Replace("+0000", "");
 
         return JsonNode.Parse(json);
+    }
+    
+    public static async Task<TResponse?> PostAsync<TRequest, TResponse>(string url, TRequest data)
+    {
+        HttpClient client = new HttpClient();
+        
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        string inputJson = JsonSerializer.Serialize(data);
+        HttpContent content = new StringContent(inputJson, new MediaTypeHeaderValue("application/json"));
+        HttpResponseMessage resp = await client.PostAsync(url, content);
+        resp.EnsureSuccessStatusCode();
+
+        string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
+    
+        return JsonSerializer.Deserialize<TResponse>(json);
     }
 }

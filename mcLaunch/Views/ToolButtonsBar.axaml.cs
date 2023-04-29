@@ -38,7 +38,7 @@ public partial class ToolButtonsBar : UserControl
     
     public class Data : ReactiveObject
     {
-        private AuthenticationResult? account;
+        private MinecraftAuthenticationResult? account;
         private Bitmap head;
 
         public Data()
@@ -79,7 +79,7 @@ public partial class ToolButtonsBar : UserControl
             };
         }
         
-        async Task<Stream> LoadIconStreamAsync(AuthenticationResult? account)
+        async Task<Stream> LoadIconStreamAsync(MinecraftAuthenticationResult? account)
         {
             if (account == null) return null;
         
@@ -98,7 +98,7 @@ public partial class ToolButtonsBar : UserControl
             }
         }
 
-        public AuthenticationResult? Account
+        public MinecraftAuthenticationResult? Account
         {
             get => account;
             set => this.RaiseAndSetIfChanged(ref account, value);
