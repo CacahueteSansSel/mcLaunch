@@ -1,4 +1,7 @@
-﻿namespace Cacahuete.MinecraftLib.Auth;
+﻿using System.Text.Json.Serialization;
+using Cacahuete.MinecraftLib.Models;
+
+namespace Cacahuete.MinecraftLib.Auth;
 
 public abstract class AuthenticationPlatform
 {
@@ -39,6 +42,8 @@ public class MinecraftAuthenticationResult
     public string Xuid { get; set; }
     public string AccessToken { get; set; }
     public string Username { get; set; }
+    
+    public MinecraftProfile Profile { get; set; }
 
     public MinecraftAuthenticationResult()
     {
@@ -52,14 +57,15 @@ public class MinecraftAuthenticationResult
         ErrorCode = code;
     }
 
-    public MinecraftAuthenticationResult(string accessToken, string uuid, string username)
+    public MinecraftAuthenticationResult(string accessToken, MinecraftProfile profile)
     {
         JwtToken<MinecraftSessionJWTBody> jwt = Jwt.Decode<MinecraftSessionJWTBody>(accessToken);
 
         Xuid = jwt.Body.Xuid;
-        Uuid = uuid;
-        Username = username;
+        Uuid = profile.Uuid;
+        Username = profile.Name;
         AccessToken = accessToken;
+        Profile = profile;
 
         IsSuccess = true;
     }

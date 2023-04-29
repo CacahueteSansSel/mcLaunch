@@ -113,7 +113,7 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
             return new MinecraftAuthenticationResult("Failed to login to Minecraft (step 2: fetching Minecraft profile) : Do you really own Minecraft ?");
         }
         
-        return new MinecraftAuthenticationResult(mcToken, profile.Uuid, profile.Name);
+        return new MinecraftAuthenticationResult(mcToken, profile);
     }
 
     public override async Task<MinecraftAuthenticationResult?> AuthenticateAsync(ProgressCallback? callback)

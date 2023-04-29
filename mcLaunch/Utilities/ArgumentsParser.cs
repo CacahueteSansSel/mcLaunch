@@ -13,7 +13,7 @@ public class ArgumentsParser
             string current = args[i];
             string? next = i + 1 >= args.Length ? null : args[i + 1];
 
-            if (current.StartsWith("-") && !next.StartsWith("-"))
+            if (current.StartsWith("-") && next != null && !next.StartsWith("-"))
             {
                 dict.Add(current.TrimStart('-'), next);
                 i++;

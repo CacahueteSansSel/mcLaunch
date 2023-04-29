@@ -55,16 +55,33 @@ public partial class MainWindow : Window
                 await Task.Delay(1);
         });
 
-        MinecraftAuthenticationResult? loggedIn = await AuthenticationManager.TryLoginAsync();
+        MinecraftAuthenticationResult? authResult;
 
-        if (loggedIn != null && loggedIn.IsSuccess)
+        if (App.Args.Contains("fast"))
         {
+            authResult = AuthenticationManager.Cache.Get<MinecraftAuthenticationResult>("msaCacheFast") 
+                         ?? await AuthenticationManager.TryLoginAsync();
+        }
+        else
+        {
+            authResult = await AuthenticationManager.TryLoginAsync();
+        }
+
+        if (authResult != null && authResult.IsSuccess)
+        {
+            AuthenticationManager.SetAccount(authResult);
+            
             if (!await AuthenticationManager.HasMinecraftAsync())
             {
                 MainWindowDataContext.Instance.Push(new ErrorPage("This account does not own Minecraft. This launcher only supports paid Minecraft accounts"), false);
 
                 await AuthenticationManager.DisconnectAsync();
                 return;
+            }
+
+            if (App.Args.Contains("fast"))
+            {
+                AuthenticationManager.Cache.Set("msaCacheFast", authResult);
             }
             
             MainWindowDataContext.Instance.Push<MainPage>();
