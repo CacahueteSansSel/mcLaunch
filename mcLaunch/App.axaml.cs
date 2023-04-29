@@ -36,7 +36,7 @@ public partial class App : Application
             new CurseForgeModPlatform(Credentials.Get("curseforge"))
         ));
         CacheManager.Init();
-        AuthenticationManager.Init(Credentials.Get("azure"));
+        AuthenticationManager.Init(Credentials.Get("azure"), Credentials.Get("tokens"));
         MinecraftVersion.ModelArguments.Default =
             JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(InternalSettings.Get("default_args.json"))!;
     }

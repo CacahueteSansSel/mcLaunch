@@ -1,4 +1,5 @@
 ﻿using Cacahuete.MinecraftLib.Auth;
+using Cacahuete.MinecraftLib.Cache;
 
 namespace mcLaunch.Core.Managers;
 
@@ -12,9 +13,10 @@ public static class AuthenticationManager
     public static event Action<MinecraftAuthenticationResult> OnLogin; 
     public static event Action OnDisconnect; 
 
-    public static void Init(string microsoftAppId)
+    public static void Init(string microsoftAppId, string credentialsKey)
     {
-        Platform = new NewMicrosoftAuthenticationPlatform(microsoftAppId);
+        Platform = new MicrosoftAuthenticationPlatform(microsoftAppId, new CredentialsCache("system/balance", 
+            credentialsKey));
     }
 
     public static async Task DisconnectAsync()
@@ -34,10 +36,10 @@ public static class AuthenticationManager
         return Account;
     }
 
-    public static async Task<MinecraftAuthenticationResult?> AuthenticateAsync(Action<BrowserLoginCallbackParameters> deviceCodeCallback = null)
+    public static async Task<MinecraftAuthenticationResult?> AuthenticateAsync(Action<BrowserLoginCallbackParameters> deviceCodeCallback = null, AuthenticationPlatform.ProgressCallback progressCallback = null)
     {
         Platform.WithBrowserLoginCallback(deviceCodeCallback);
-        Account = await Platform.AuthenticateAsync();
+        Account = await Platform.AuthenticateAsync(progressCallback);
         
         if (Account != null) OnLogin?.Invoke(Account);
 

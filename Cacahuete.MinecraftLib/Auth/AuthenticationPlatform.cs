@@ -2,12 +2,14 @@
 
 public abstract class AuthenticationPlatform
 {
+    public delegate void ProgressCallback(string stepName, int stepIndex, int maxStepCount);
+    
     public Action<BrowserLoginCallbackParameters> BrowserLoginCallback { get; private set; }
     public abstract string UserType { get; }
     public abstract string ClientId { get; }
     public abstract bool IsLoggedIn { get; }
     public abstract Task<MinecraftAuthenticationResult?> TryLoginAsync();
-    public abstract Task<MinecraftAuthenticationResult?> AuthenticateAsync();
+    public abstract Task<MinecraftAuthenticationResult?> AuthenticateAsync(ProgressCallback? callback);
     public abstract Task<bool> DisconnectAsync();
     public abstract Task<bool> HasMinecraftAsync(MinecraftAuthenticationResult result);
 
@@ -29,14 +31,19 @@ public class BrowserLoginCallbackParameters
 
 public class MinecraftAuthenticationResult
 {
-    public bool IsSuccess { get; }
-    public string ErrorCode { get; }
-    public string Message { get; }
+    public bool IsSuccess { get; set; }
+    public string ErrorCode { get; set; }
+    public string Message { get; set; }
 
-    public string Uuid { get; }
-    public string Xuid { get; }
-    public string AccessToken { get; }
-    public string Username { get; }
+    public string Uuid { get; set; }
+    public string Xuid { get; set; }
+    public string AccessToken { get; set; }
+    public string Username { get; set; }
+
+    public MinecraftAuthenticationResult()
+    {
+        
+    }
 
     public MinecraftAuthenticationResult(string errorMessage, string code = null)
     {

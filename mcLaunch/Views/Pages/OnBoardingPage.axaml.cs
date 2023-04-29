@@ -30,14 +30,24 @@ public partial class OnBoardingPage : UserControl
     private async void LoginWithMicrosoftButton(object? sender, RoutedEventArgs e)
     {
         MainWindowDataContext.Instance.ShowLoadingPopup();
+        bool wasStatusPopupShown = false;
 
         MinecraftAuthenticationResult? auth = await AuthenticationManager.AuthenticateAsync(result =>
         {
             Dispatcher.UIThread.Post(() =>
             {
-                Navigation.ShowPopup(new MessageBoxPopup("Login with Microsoft", $"{result.Message}"));
-                PlatformSpecific.OpenUrl(result.Url);
+                Navigation.ShowPopup(new BrowserDeviceCodePopup(result));
             });
+        }, (name, stepIndex, stepCount) =>
+        {
+            if (!wasStatusPopupShown)
+            {
+                Navigation.ShowPopup(new StatusPopup("Logging in...", "Please wait while we are logging you in..."));
+                wasStatusPopupShown = true;
+            }
+
+            StatusPopup.Instance.Status = name;
+            StatusPopup.Instance.StatusPercent = (float) stepIndex / stepCount;
         });
 
         if (auth != null && auth.IsSuccess)

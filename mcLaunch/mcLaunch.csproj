@@ -125,6 +125,8 @@
       <AvaloniaResource Include="resources\logo_big.png" />
       <None Remove="resources\icons\settings.png" />
       <AvaloniaResource Include="resources\icons\settings.png" />
+      <None Remove="resources\credentials\tokens.txt" />
+      <AvaloniaResource Include="resources\credentials\tokens.txt" />
     </ItemGroup>
 
     <ItemGroup>
