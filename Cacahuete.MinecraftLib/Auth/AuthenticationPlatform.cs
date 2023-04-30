@@ -69,4 +69,13 @@ public class MinecraftAuthenticationResult
 
         IsSuccess = true;
     }
+
+    public bool Validate()
+    {
+        JwtToken<MinecraftSessionJWTBody> jwt = Jwt.Decode<MinecraftSessionJWTBody>(AccessToken);
+
+        bool expired = DateTime.Now > jwt.Body.ExpirationTime;
+
+        return !expired;
+    }
 }

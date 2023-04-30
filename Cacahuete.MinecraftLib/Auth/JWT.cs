@@ -55,6 +55,8 @@ public class JwtBody
     [JsonPropertyName("exp")] public int Expiration { get; set; }
     [JsonPropertyName("iat")] public int IssuedAt { get; set; }
     [JsonPropertyName("nbf")] public int Nbf { get; set; }
+
+    [JsonIgnore] public DateTime ExpirationTime => DateTimeOffset.FromUnixTimeSeconds(Expiration).DateTime;
 }
 
 public class MinecraftSessionJWTBody : JwtBody

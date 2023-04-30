@@ -55,6 +55,14 @@ public partial class MainWindow : Window
                 await Task.Delay(1);
         });
 
+        if (App.Args.Contains("from-guard"))
+        {
+            if (!int.TryParse(App.Args.Get("exit-code"), out int exitCode)) 
+                return;
+            
+            Navigation.ShowPopup(new CrashPopup(exitCode, App.Args.Get("box-id")));
+        }
+
         MinecraftAuthenticationResult? authResult;
 
         if (App.Args.Contains("fast"))
@@ -69,6 +77,12 @@ public partial class MainWindow : Window
 
         if (authResult != null && authResult.IsSuccess)
         {
+            if (!authResult.Validate())
+            {
+                MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
+                return;
+            }
+            
             AuthenticationManager.SetAccount(authResult);
             
             if (!await AuthenticationManager.HasMinecraftAsync())
@@ -89,14 +103,6 @@ public partial class MainWindow : Window
         else
         {
             MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
-        }
-
-        if (App.Args.Contains("from-guard"))
-        {
-            if (!int.TryParse(App.Args.Get("exit-code"), out int exitCode)) 
-                return;
-            
-            Navigation.ShowPopup(new CrashPopup(exitCode, App.Args.Get("box-id")));
         }
     }
 }
