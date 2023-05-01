@@ -34,7 +34,7 @@ public class ModrinthModificationPack : ModificationPack
         manifest = JsonSerializer.Deserialize<ModelModrinthIndex>(manifestStream)!;
 
         overridesEntries = zip.Entries
-            .Where(e => e.FullName.StartsWith("overrides"))
+            .Where(e => e.FullName.StartsWith("overrides") || e.FullName.StartsWith("client-overrides"))
             .ToArray();
 
         Name = manifest.Name;
@@ -145,7 +145,7 @@ public class ModrinthModificationPack : ModificationPack
         AdditionalFiles = overridesEntries.Where(entry => entry.FullName.Contains('.')).Select(entry =>
             new AdditionalFile
             {
-                Path = entry.FullName.Replace("overrides/", ""),
+                Path = entry.FullName.Replace("overrides/", "").Replace("client-overrides/", ""),
                 Data = entry.Open().ReadToEndAndClose(entry.Length),
             }).ToArray();
     }
