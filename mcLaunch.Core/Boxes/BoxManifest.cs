@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
@@ -17,6 +18,7 @@ public class BoxManifest : ReactiveObject
     Bitmap? background;
     MinecraftVersion setUpVersion;
 
+    public int? ManifestVersion { get; set; }
     public string Name { get; set; }
     public string Id { get; set; }
     public string Description { get; set; }
@@ -96,12 +98,12 @@ public class BoxManifest : ReactiveObject
         });
     }
 
-    public void RemoveModification(string id)
+    public void RemoveModification(string id, Box box)
     {
         BoxStoredModification? mod = GetModification(id);
         if (mod == null) return;
 
-        mod.Delete();
+        mod.Delete(box.Folder.CompletePath);
         Modifications.Remove(mod);
     }
 
@@ -117,6 +119,27 @@ public class BoxManifest : ReactiveObject
 
         foreach (BoxStoredModification mod in Modifications)
         {
+            if (!ManifestVersion.HasValue || ManifestVersion < 2)
+            {
+                string[] newArray = mod.Filenames;
+                Regex relativePathRegex = new Regex("(?!\\/minecraft\\/)mods\\/.+");
+
+                for (int i = 0; i < newArray.Length; i++)
+                {
+                    string filename = newArray[i];
+
+                    if (!filename.StartsWith("mods/"))
+                    {
+                        filename = relativePathRegex.Match(filename).Value;
+                        hadChange = true;
+                    }
+
+                    newArray[i] = filename;
+                }
+
+                mod.Filenames = newArray;
+            }
+            
             if (!string.IsNullOrWhiteSpace(mod.Name) && !string.IsNullOrWhiteSpace(mod.Author)) continue;
 
             Modification dlMod = await ModPlatformManager.Platform.GetModAsync(mod.Id);
@@ -125,6 +148,8 @@ public class BoxManifest : ReactiveObject
 
             hadChange = true;
         }
+        
+        if (hadChange) ManifestVersion = 2;
 
         return hadChange;
     }
@@ -172,15 +197,20 @@ public class BoxStoredModification
     public string Id { get; init; }
     public string VersionId { get; init; }
     public string PlatformId { get; init; }
-    public string[] Filenames { get; init; }
+    public string[] Filenames { get; set; }
     public string Name { get; set; }
     public string Author { get; set; }
 
-    public void Delete()
+    public void Delete(string boxRootPath)
     {
         foreach (string file in Filenames)
         {
-            if (File.Exists(file)) File.Delete(file);
+            if (Path.IsPathFullyQualified(file))
+                throw new Exception("Mod filename is absolute : was the manifest updated to Manifest Version 2 ?");
+            
+            string path = $"{boxRootPath}/{file.TrimStart('/')}";
+            
+            if (File.Exists(path)) File.Delete(path);
         }
     }
 }

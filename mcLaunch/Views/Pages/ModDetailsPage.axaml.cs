@@ -150,7 +150,7 @@ public partial class ModDetailsPage : UserControl
         UninstallButton.IsVisible = false;
         UninstallButton.IsEnabled = false;
 
-        TargetBox.Manifest.RemoveModification(Mod.Id);
+        TargetBox.Manifest.RemoveModification(Mod.Id, TargetBox);
 
         TargetBox.SaveManifest();
         
@@ -190,7 +190,7 @@ public partial class ModDetailsPage : UserControl
         {
             Navigation.ShowPopup(new ChangelogPopup(Mod, versions[0], async () =>
             {
-                TargetBox.Manifest.RemoveModification(Mod.Id);
+                TargetBox.Manifest.RemoveModification(Mod.Id, TargetBox);
                 InstallButtonClicked(sender, e);
 
                 await Task.Run(async () =>
@@ -215,7 +215,7 @@ public partial class ModDetailsPage : UserControl
             return;
         }
 
-        TargetBox.Manifest.RemoveModification(Mod.Id);
+        TargetBox.Manifest.RemoveModification(Mod.Id, TargetBox);
         InstallButtonClicked(sender, e);
 
         await Task.Run(async () =>

@@ -62,7 +62,7 @@
                                 </TextBlock>
                             </StackPanel>
                         </DockPanel>
-                        <Panel Margin="0 10 0 10" Background="{DynamicResource BackgroundMiddle}">
+                        <Panel x:Name="SubControlButtons" Margin="0 10 0 10" Background="{DynamicResource BackgroundMiddle}">
                             <StackPanel Orientation="Vertical">
                                 <StackPanel Margin="38 5 38 5" Spacing="10" Orientation="Horizontal">
                                     <Button Classes="secondary" Click="SubControlModButtonClicked" ToolTip.Tip="Manage mods">
@@ -87,6 +87,13 @@
                                 <TextBlock x:Name="SubControlNameText" Opacity="0.7" Margin="38 0 38 5">MODS</TextBlock>
                             </StackPanel>
                         </Panel>
+                        <DockPanel x:Name="WarningStripe" IsVisible="False" Margin="0 0 0 10" Background="#AF3400">
+                            <TextBlock x:Name="WarningText" Padding="10" DockPanel.Dock="Left" TextAlignment="Left"></TextBlock>
+                            <Button DockPanel.Dock="Right" Classes="transparent" Margin="0 0 10 0" Click="WarningStripeCloseButtonClicked">
+                                <Image Source="/resources/icons/close.png" Width="16" Height="16"></Image>
+                            </Button>
+                            <Panel></Panel>
+                        </DockPanel>
                         <Panel x:Name="SubControlContainer" Margin="38 0 38 38">
                             
                         </Panel>

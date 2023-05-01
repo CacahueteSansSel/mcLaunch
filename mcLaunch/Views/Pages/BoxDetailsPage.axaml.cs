@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -42,10 +43,37 @@ public partial class BoxDetailsPage : UserControl
         DataContext = box;
 
         box.LoadBackground();
+        
+        RunBoxChecks();
+    }
 
+    async void RunBoxChecks()
+    {
+        SubControlButtons.IsEnabled = false;
+
+        string[] changes = await Box.RunIntegrityChecks();
+        if (changes.Length > 0)
+        {
+            Box.SaveManifest();
+            
+            ShowWarning($"Some changes have been applied to your box: \n{string.Join('\n', changes.Select(c => $"    - {c}"))}");
+        }
+        
+        SubControlButtons.IsEnabled = true;
         SetSubControl(new ModListSubControl());
     }
 
+    public void ShowWarning(string text)
+    {
+        WarningStripe.IsVisible = true;
+        WarningText.Text = text;
+    }
+
+    public void HideWarning()
+    {
+        WarningStripe.IsVisible = false;
+    }
+    
     public void SetSubControl(ISubControl control)
     {
         SubControl = control;
@@ -262,5 +290,10 @@ public partial class BoxDetailsPage : UserControl
     private void SubControlSettingsClicked(object? sender, RoutedEventArgs e)
     {
         SetSubControl(new GameSettingsSubControl());
+    }
+
+    private void WarningStripeCloseButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        HideWarning();
     }
 }

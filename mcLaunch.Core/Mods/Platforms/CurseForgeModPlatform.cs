@@ -214,7 +214,7 @@ public class CurseForgeModPlatform : ModPlatform
         // TODO: This may break things
         if (!System.IO.File.Exists(path)) DownloadManager.Add(url, path, EntryAction.Download);
 
-        filenames.Add(path);
+        filenames.Add($"mods/{file.FileName}");
 
         targetBox.Manifest.AddModification(file.ModId.ToString(), file.Id.ToString(), Name,
             filenames.ToArray());

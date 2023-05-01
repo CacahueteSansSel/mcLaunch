@@ -74,7 +74,7 @@ public class ModrinthModPlatform : ModPlatform
 
         return await Task.Run(() =>
         {
-            return version.Dependencies.Select(dep => new ModDependency
+            return version.Dependencies.Where(dep => dep.ProjectId != null).Select(dep => new ModDependency
             {
                 Mod = GetModAsync(dep.ProjectId).GetAwaiter().GetResult(),
                 Type = (DependencyRelationType) dep.DependencyType
@@ -186,7 +186,7 @@ public class ModrinthModPlatform : ModPlatform
             if (System.IO.File.Exists(path)) continue;
 
             DownloadManager.Add(url, path, EntryAction.Download);
-            filenames.Add(path);
+            filenames.Add($"mods/{file.FileName}");
         }
 
         targetBox.Manifest.AddModification(version.ProjectId, version.Id, Name,

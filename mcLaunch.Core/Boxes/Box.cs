@@ -4,6 +4,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Models;
+using DynamicData;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Mods;
@@ -61,6 +62,37 @@ public class Box
         {
             Options = new MinecraftOptions($"{Folder.CompletePath}/options.txt");
         }
+    }
+
+    public async Task<string[]> RunIntegrityChecks()
+    {
+        List<string> changes = new();
+        List<BoxStoredModification> modsToRemove = new();
+
+        foreach (BoxStoredModification mod in Manifest.Modifications)
+        {
+            bool exists = false;
+            foreach (string filename in mod.Filenames)
+            {
+                string path = $"{Folder.CompletePath}/{filename}";
+
+                if (File.Exists(path))
+                {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists)
+            {
+                modsToRemove.Add(mod);
+                changes.Add($"Mod {mod.Name} has been removed because it is not present on disk anymore");
+            }
+        }
+        
+        Manifest.Modifications.RemoveMany(modsToRemove);
+
+        return changes.ToArray();
     }
 
     async void RunPostDeserializationChecks()
