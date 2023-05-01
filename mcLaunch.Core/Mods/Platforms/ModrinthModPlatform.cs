@@ -120,7 +120,7 @@ public class ModrinthModPlatform : ModPlatform
         }
     }
 
-    public override async Task<string[]> GetVersionsForMinecraftVersionAsync(string modId, string modLoaderId,
+    public override async Task<string[]> GetModVersionList(string modId, string modLoaderId,
         string minecraftVersionId)
     {
         Version[] versions = await client.Version.GetProjectVersionListAsync(modId, new[] {modLoaderId},
@@ -195,7 +195,7 @@ public class ModrinthModPlatform : ModPlatform
         DownloadManager.End();
     }
 
-    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId,
+    public override async Task<bool> InstallModAsync(Box targetBox, Modification mod, string versionId,
         bool installOptional)
     {
         Version version = await client.Version.GetAsync(versionId);
@@ -209,7 +209,7 @@ public class ModrinthModPlatform : ModPlatform
         return false;
     }
 
-    public override async Task<Modification> DownloadAdditionalInfosAsync(Modification mod)
+    public override async Task<Modification> DownloadModInfosAsync(Modification mod)
     {
         if (mod.LongDescriptionBody != null && mod.Changelog != null) return mod;
 

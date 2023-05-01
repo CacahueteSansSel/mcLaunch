@@ -60,7 +60,7 @@ public partial class ModListSubControl : UserControl, ISubControl
 
         foreach (Modification mod in mods)
         {
-            string[] versions = await ModPlatformManager.Platform.GetVersionsForMinecraftVersionAsync(mod.Id,
+            string[] versions = await ModPlatformManager.Platform.GetModVersionList(mod.Id,
                 Box.Manifest.ModLoaderId, Box.Manifest.Version);
 
             mod.IsInvalid = versions.Length == 0;

@@ -124,7 +124,7 @@ public class CurseForgeModPlatform : ModPlatform
         }
     }
 
-    public override async Task<string[]> GetVersionsForMinecraftVersionAsync(string modId, string modLoaderId,
+    public override async Task<string[]> GetModVersionList(string modId, string modLoaderId,
         string minecraftVersionId)
     {
         //Mod cfMod = (await client.GetMod(uint.Parse(modId))).Data;
@@ -222,7 +222,7 @@ public class CurseForgeModPlatform : ModPlatform
         DownloadManager.End();
     }
 
-    public override async Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId,
+    public override async Task<bool> InstallModAsync(Box targetBox, Modification mod, string versionId,
         bool installOptional)
     {
         var version = await client.GetModFile(uint.Parse(mod.Id), uint.Parse(versionId));
@@ -236,7 +236,7 @@ public class CurseForgeModPlatform : ModPlatform
         return true;
     }
 
-    public override async Task<Modification> DownloadAdditionalInfosAsync(Modification mod)
+    public override async Task<Modification> DownloadModInfosAsync(Modification mod)
     {
         Mod cfMod = (await client.GetMod(uint.Parse(mod.Id))).Data;
 

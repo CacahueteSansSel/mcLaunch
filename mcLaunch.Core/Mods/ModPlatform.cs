@@ -11,11 +11,11 @@ public abstract class ModPlatform
     public abstract Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId, string minecraftVersionId);
 
     public abstract Task<Modification> GetModAsync(string id);
-    public abstract Task<string[]> GetVersionsForMinecraftVersionAsync(string modId, string modLoaderId, string minecraftVersionId);
+    public abstract Task<string[]> GetModVersionList(string modId, string modLoaderId, string minecraftVersionId);
 
-    public abstract Task<bool> InstallModificationAsync(Box targetBox, Modification mod, string versionId, bool installOptional);
+    public abstract Task<bool> InstallModAsync(Box targetBox, Modification mod, string versionId, bool installOptional);
 
-    public abstract Task<Modification> DownloadAdditionalInfosAsync(Modification mod);
+    public abstract Task<Modification> DownloadModInfosAsync(Modification mod);
     public abstract ModPlatform GetModPlatform(string id);
 
     public class ModDependency

@@ -216,14 +216,14 @@ public class Modification : ReactiveObject
         // TODO: Version selection
 
         string[] versions =
-            await ModPlatformManager.Platform.GetVersionsForMinecraftVersionAsync(Id,
+            await ModPlatformManager.Platform.GetModVersionList(Id,
                 target.Manifest.ModLoaderId,
                 target.Manifest.Version);
 
         // TODO: maybe tell the user when the installation failed
         if (versions.Length == 0) return;
 
-        await ModPlatformManager.Platform.InstallModificationAsync(target, this, versions[0], false);
+        await ModPlatformManager.Platform.InstallModAsync(target, this, versions[0], false);
 
         IsInstalledOnCurrentBox = true;
     }

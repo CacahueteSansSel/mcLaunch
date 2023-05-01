@@ -48,7 +48,7 @@ public partial class ModDetailsPage : UserControl
         LoadCircle.IsVisible = true;
 
         await Mod.DownloadBackgroundAsync();
-        await ModPlatformManager.Platform.DownloadAdditionalInfosAsync(Mod);
+        await ModPlatformManager.Platform.DownloadModInfosAsync(Mod);
 
         if (Mod.Background == null)
             Mod.Background = TargetBox.Manifest.Background;
@@ -80,7 +80,7 @@ public partial class ModDetailsPage : UserControl
         // TODO: Version selection
 
         string[] versions =
-            await ModPlatformManager.Platform.GetVersionsForMinecraftVersionAsync(Mod.Id,
+            await ModPlatformManager.Platform.GetModVersionList(Mod.Id,
                 TargetBox.Manifest.ModLoaderId,
                 TargetBox.Manifest.Version);
 
@@ -109,7 +109,7 @@ public partial class ModDetailsPage : UserControl
         {
             Navigation.ShowPopup(new OptionalModsPopup(TargetBox, Mod, optionalDeps, async () =>
             {
-                await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, version, true);
+                await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version, true);
 
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
@@ -119,7 +119,7 @@ public partial class ModDetailsPage : UserControl
                 isInstalling = false;
             }, async () =>
             {
-                await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, version, false);
+                await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version, false);
 
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
@@ -132,7 +132,7 @@ public partial class ModDetailsPage : UserControl
             return;
         }
 
-        await ModPlatformManager.Platform.InstallModificationAsync(TargetBox, Mod, version, false);
+        await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version, false);
 
         LoadingButtonFrame.IsVisible = false;
         SetInstalled(true);
@@ -171,7 +171,7 @@ public partial class ModDetailsPage : UserControl
         UpdateButton.IsEnabled = false;
 
         string[] versions =
-            await ModPlatformManager.Platform.GetVersionsForMinecraftVersionAsync(Mod.Id,
+            await ModPlatformManager.Platform.GetModVersionList(Mod.Id,
                 TargetBox.Manifest.ModLoaderId,
                 TargetBox.Manifest.Version);
 

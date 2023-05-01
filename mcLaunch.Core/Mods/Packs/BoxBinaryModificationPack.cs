@@ -56,7 +56,7 @@ public class BoxBinaryModificationPack : ModificationPack
     
     public override async Task InstallModificationAsync(Box targetBox, SerializedModification mod)
     {
-        await ModPlatformManager.Platform.InstallModificationAsync(targetBox, new Modification
+        await ModPlatformManager.Platform.InstallModAsync(targetBox, new Modification
         {
             Id = mod.ModId,
             ModPlatformId = mod.PlatformId

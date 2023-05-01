@@ -146,7 +146,7 @@ public class ModrinthModificationPack : ModificationPack
 
     public override async Task InstallModificationAsync(Box targetBox, SerializedModification mod)
     {
-        await ModrinthModPlatform.Instance.InstallModificationAsync(targetBox, new Modification
+        await ModrinthModPlatform.Instance.InstallModAsync(targetBox, new Modification
         {
             Id = mod.ModId,
             Platform = ModrinthModPlatform.Instance

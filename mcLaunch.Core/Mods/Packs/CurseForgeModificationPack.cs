@@ -58,7 +58,7 @@ public class CurseForgeModificationPack : ModificationPack
     
     public override async Task InstallModificationAsync(Box targetBox, SerializedModification mod)
     {
-        await CurseForgeModPlatform.Instance.InstallModificationAsync(targetBox, new Modification
+        await CurseForgeModPlatform.Instance.InstallModAsync(targetBox, new Modification
         {
             Id = mod.ModId
         }, mod.VersionId, false);

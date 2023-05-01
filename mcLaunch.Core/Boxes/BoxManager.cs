@@ -6,6 +6,7 @@ using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
+using mcLaunch.Core.Mods.Platforms;
 
 namespace mcLaunch.Core.Boxes;
 
@@ -41,6 +42,30 @@ public static class BoxManager
         return boxes.ToArray();
     }
 
+    static async Task PostProcessBoxAsync(Box box, BoxManifest manifest)
+    {
+        if (manifest.ModLoaderId == "fabric")
+        {
+            // Install Fabric API automatically from Modrinth
+
+            try
+            {
+                string fabricApiId = "P7dR8mSH";
+                Modification fabricApi = await ModrinthModPlatform.Instance.GetModAsync(fabricApiId);
+
+                string[] versions = await ModrinthModPlatform.Instance.GetModVersionList(
+                    fabricApiId, "fabric", manifest.Version);
+
+                await ModrinthModPlatform.Instance.InstallModAsync(box, fabricApi, versions[0],
+                    false);
+            }
+            catch (Exception e)
+            {
+                
+            }
+        }
+    }
+
     public static async Task<string> Create(BoxManifest manifest)
     {
         string path = $"{BoxesPath}/{manifest.Id}";
@@ -56,6 +81,8 @@ public static class BoxManager
         await manifest.Setup();
 
         Directory.CreateDirectory($"{path}/minecraft");
+
+        await PostProcessBoxAsync(new Box(path), manifest);
 
         return path;
     }
