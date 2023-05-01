@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using mcLaunch.Core;
 using mcLaunch.Core.Mods.Platforms;
 using mcLaunch.Models;
@@ -101,11 +104,16 @@ public partial class ModificationList : UserControl
 
         Data ctx = (Data) DataContext;
         List<Modification> newList = new List<Modification>(ctx.Modifications);
+        
+        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+        Bitmap bmp = new Bitmap(assets.Open(new Uri($"avares://mcLaunch/resources/default_mod_logo.png")));
 
         foreach (Modification mod in newList)
         {
             mod.IsInstalledOnCurrentBox = lastBox.HasModificationSoft(mod);
             mod.IsInstalledOnCurrentBoxUi = !HideInstalledBadges && mod.IsInstalledOnCurrentBox;
+
+            if (mod.Icon == null) mod.Icon = bmp;
         }
 
         ctx.Modifications = newList.ToArray();
