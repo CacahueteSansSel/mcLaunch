@@ -47,9 +47,15 @@ public class ModrinthModificationPack : ModificationPack
         {
             ModloaderId = "fabric";
             ModloaderVersion = manifest.Dependencies.FabricLoader;
+        } else if (!string.IsNullOrEmpty(manifest.Dependencies.Forge))
+        {
+            ModloaderId = "forge";
+            ModloaderVersion = manifest.Dependencies.Forge;
+        } else if (!string.IsNullOrEmpty(manifest.Dependencies.QuiltLoader))
+        {
+            ModloaderId = "quilt";
+            ModloaderVersion = manifest.Dependencies.QuiltLoader;
         }
-
-        // TODO: Forge
     }
 
     public async Task SetupAsync()
@@ -171,7 +177,9 @@ public class ModrinthModificationPack : ModificationPack
         public class ModelDependencies
         {
             [JsonPropertyName("minecraft")] public string Minecraft { get; set; }
+            [JsonPropertyName("forge")] public string Forge { get; set; }
             [JsonPropertyName("fabric-loader")] public string FabricLoader { get; set; }
+            [JsonPropertyName("quilt-loader")] public string QuiltLoader { get; set; }
         }
 
         public class ModelFile
