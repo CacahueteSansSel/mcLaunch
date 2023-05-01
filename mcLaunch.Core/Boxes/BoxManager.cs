@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.RegularExpressions;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
@@ -114,11 +115,14 @@ public static class BoxManager
 
             index++;
         }
+
+        Regex driveLetterRegex = new Regex("[A-Z]:[\\/\\\\]");
         
         index = 0;
         foreach (var additionalFile in pack.AdditionalFiles)
         {
-            if (additionalFile.Path.EndsWith('/')) continue;
+            if (additionalFile.Path.EndsWith('/') || additionalFile.Path.Contains("..")
+                || driveLetterRegex.IsMatch(additionalFile.Path)) continue;
             
             progressCallback?.Invoke($"Writing file override {index}/{pack.AdditionalFiles.Length}", 
                 0.5f + (float)index / pack.AdditionalFiles.Length / 2);
