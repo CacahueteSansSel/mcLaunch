@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading.Tasks;
@@ -63,24 +64,30 @@ public partial class MainWindow : Window
             Navigation.ShowPopup(new CrashPopup(exitCode, App.Args.Get("box-id")));
         }
 
-        MinecraftAuthenticationResult? authResult;
-
-        if (App.Args.Contains("fast"))
-        {
-            authResult = AuthenticationManager.Cache.Get<MinecraftAuthenticationResult>("msaCacheFast") 
-                         ?? await AuthenticationManager.TryLoginAsync();
-        }
-        else
-        {
-            authResult = await AuthenticationManager.TryLoginAsync();
-        }
+        MinecraftAuthenticationResult? authResult = await AuthenticationManager.TryLoginAsync();
 
         if (authResult != null && authResult.IsSuccess)
         {
             if (!authResult.Validate())
             {
-                MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
-                return;
+                try
+                {
+                    // Try to re-login with the Microsoft token
+                    authResult = await AuthenticationManager.TryLoginAsync();
+
+                    if (authResult == null)
+                    {
+                        MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
+                        return;
+                    }
+                
+                    Debug.WriteLine("Successfully relogged-in");
+                }
+                catch (Exception e)
+                {
+                    MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
+                    return;
+                }
             }
             
             AuthenticationManager.SetAccount(authResult);
@@ -91,11 +98,6 @@ public partial class MainWindow : Window
 
                 await AuthenticationManager.DisconnectAsync();
                 return;
-            }
-
-            if (App.Args.Contains("fast"))
-            {
-                AuthenticationManager.Cache.Set("msaCacheFast", authResult);
             }
             
             MainWindowDataContext.Instance.Push<MainPage>();

@@ -58,6 +58,21 @@ public class CredentialsCache
         File.WriteAllBytes($"{RootPath}/{ivFilename}", result.iv);
     }
 
+    public void ClearAll()
+    {
+        foreach (string filename in Directory.GetFiles(RootPath))
+        {
+            try
+            {
+                File.Delete(filename);
+            }
+            catch (Exception e)
+            {
+                
+            }
+        }
+    }
+
     public bool Clear(string name)
     {
         using SHA256 sha = SHA256.Create();

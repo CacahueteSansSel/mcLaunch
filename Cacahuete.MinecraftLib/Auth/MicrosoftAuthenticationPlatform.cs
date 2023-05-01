@@ -4,6 +4,7 @@ using Cacahuete.MinecraftLib.Http;
 using Cacahuete.MinecraftLib.Models;
 using Cacahuete.MinecraftLib.Models.Auth;
 using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.Extensions.Msal;
 
 namespace Cacahuete.MinecraftLib.Auth;
 
@@ -15,36 +16,51 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
     public override bool IsLoggedIn { get; }
     private IPublicClientApplication app;
     private CredentialsCache? cache;
+    private StorageCreationProperties storage;
 
     public MicrosoftAuthenticationPlatform(string clientId, CredentialsCache? cache)
     {
         ClientId = clientId;
         this.cache = cache;
 
+        storage =
+            new StorageCreationPropertiesBuilder(AuthConfig.CacheFileName, Path.GetFullPath(cache.RootPath))
+                .WithLinuxKeyring(
+                    AuthConfig.LinuxKeyRingSchema,
+                    AuthConfig.LinuxKeyRingCollection,
+                    AuthConfig.LinuxKeyRingLabel,
+                    AuthConfig.LinuxKeyRingAttr1,
+                    AuthConfig.LinuxKeyRingAttr2)
+                .WithMacKeyChain(
+                    AuthConfig.KeyChainServiceName,
+                    AuthConfig.KeyChainAccountName)
+                .Build();
+
         app = PublicClientApplicationBuilder.Create(clientId)
             .WithTenantId("consumers")
             .WithClientName("mcLaunch")
             .WithClientVersion("1.0.0")
             .Build();
+        
+        RegisterCache();
     }
 
+    async void RegisterCache()
+    {
+        var cacheHelper = await MsalCacheHelper.CreateAsync(storage);
+        cacheHelper.RegisterCache(app.UserTokenCache);
+    }
+    
     public override async Task<MinecraftAuthenticationResult?> TryLoginAsync()
     {
         var accounts = await app.GetAccountsAsync();
 
         try
         {
-            string? token = cache?.Get<string>("msaMinecraftTokens");
+            AuthenticationResult result = await app.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+                .ExecuteAsync();
 
-            if (token == null)
-            {
-                AuthenticationResult result = await app.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
-                    .ExecuteAsync();
-
-                token = result.AccessToken;
-                
-                cache?.Set("msaMinecraftTokens", token);
-            }
+            string token = result.AccessToken;
 
             return await LoginXboxLive(token, null);
         }
@@ -56,8 +72,11 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
 
     async Task<MinecraftAuthenticationResult?> LoginXboxLive(string accessToken, ProgressCallback? callback)
     {
-        // https://wiki.vg/Microsoft_Authentication_Scheme
+        MinecraftAuthenticationResult? cachedAuth = cache?.Get<MinecraftAuthenticationResult>("mcAuth");
+        if (cachedAuth != null && cachedAuth.Validate()) return cachedAuth;
         
+        // https://wiki.vg/Microsoft_Authentication_Scheme
+
         callback?.Invoke("Logging in to Xbox Live... (step 1)", 1, 4);
 
         // Authenticate with Xbox Live
@@ -68,7 +87,7 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
         {
             return new MinecraftAuthenticationResult("Failed to login to Xbox Live (step 1)");
         }
-        
+
         callback?.Invoke("Logging in to Xbox Live... (step 2)", 2, 4);
 
         string xblToken = resp.Token;
@@ -88,7 +107,7 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
             return new MinecraftAuthenticationResult(
                 $"Failed to login to Xbox Live (step 2: failed to get XSTS token) error code {xstsResp.XErr} {xstsResp.Message}");
         }
-        
+
         callback?.Invoke("Logging in to Minecraft... (step 1)", 3, 4);
 
         MinecraftLoginResponse? mcResp = await Api.PostAsync<MinecraftLoginRequest, MinecraftLoginResponse>(
@@ -101,7 +120,7 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
         }
 
         string mcToken = mcResp.AccessToken;
-        
+
         callback?.Invoke("Logging in to Minecraft... (step 2: fetching profile)", 4, 4);
 
         MinecraftProfile? profile = await Api.GetAsyncAuthBearer<MinecraftProfile>(
@@ -110,10 +129,15 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
 
         if (profile == null || string.IsNullOrEmpty(profile.Uuid))
         {
-            return new MinecraftAuthenticationResult("Failed to login to Minecraft (step 2: fetching Minecraft profile) : Do you really own Minecraft ?");
+            return new MinecraftAuthenticationResult(
+                "Failed to login to Minecraft (step 2: fetching Minecraft profile) : Do you really own Minecraft ?");
         }
+
+        MinecraftAuthenticationResult authResult = new MinecraftAuthenticationResult(mcToken, profile);
         
-        return new MinecraftAuthenticationResult(mcToken, profile);
+        cache?.Set("mcAuth", authResult);
+
+        return authResult;
     }
 
     public override async Task<MinecraftAuthenticationResult?> AuthenticateAsync(ProgressCallback? callback)
@@ -128,8 +152,6 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
                 ExpiresAt = result.ExpiresOn.ToString()
             });
         }).ExecuteAsync();
-                
-        cache?.Set("msaMinecraftTokens", result.AccessToken);
 
         if (result != null) return await LoginXboxLive(result.AccessToken, callback);
 
@@ -138,8 +160,7 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
 
     public override async Task<bool> DisconnectAsync()
     {
-        cache?.Clear("msaMinecraftTokens");
-        cache?.Clear("msaCacheFast");
+        cache?.ClearAll();
         
         return false;
     }
