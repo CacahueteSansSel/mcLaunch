@@ -235,9 +235,16 @@ public class ModrinthModPlatform : ModPlatform
 
     public override async Task<ModVersion?> GetModVersionFromSha1(string hash)
     {
-        Version version = await client.VersionFile.GetVersionByHashAsync(hash);
-        if (version == null) return null;
+        try
+        {
+            Version version = await client.VersionFile.GetVersionByHashAsync(hash);
+            if (version == null) return null;
 
-        return new ModVersion(await GetModAsync(version.ProjectId), version.Id);
+            return new ModVersion(await GetModAsync(version.ProjectId), version.Id);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 }
