@@ -159,6 +159,27 @@ public partial class ModDetailsPage : UserControl
         SetInstalled(false);
     }
 
+    async Task FinishInstallAsync()
+    {
+        bool success = await TargetBox.UpdateModAsync(Mod, false);
+        
+        if (!success)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
+                $"Unable to install {Mod.Name} : no compatible version found " +
+                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}"));
+
+            LoadingButtonFrame.IsVisible = false;
+            SetInstalled(false);
+            return;
+        }
+
+        Mod.IsUpdateRequired = false;
+
+        UninstallButton.IsVisible = true;
+        UninstallButton.IsEnabled = true;
+    }
+
     private async void UpdateButtonClicked(object? sender, RoutedEventArgs e)
     {
         InstallButton.IsVisible = false;
@@ -170,63 +191,28 @@ public partial class ModDetailsPage : UserControl
         UpdateButton.IsVisible = false;
         UpdateButton.IsEnabled = false;
 
-        string[] versions =
-            await ModPlatformManager.Platform.GetModVersionList(Mod.Id,
-                TargetBox.Manifest.ModLoaderId,
-                TargetBox.Manifest.Version);
-
-        if (versions.Length == 0)
-        {
-            Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
-                $"Unable to install {Mod.Name} : no compatible version found " +
-                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}"));
-
-            LoadingButtonFrame.IsVisible = false;
-            SetInstalled(false);
-            return;
-        }
-
         if (!string.IsNullOrWhiteSpace(Mod.Changelog))
         {
-            Navigation.ShowPopup(new ChangelogPopup(Mod, versions[0], async () =>
+            Navigation.ShowPopup(new ChangelogPopup(Mod, async () =>
             {
-                TargetBox.Manifest.RemoveModification(Mod.Id, TargetBox);
-                InstallButtonClicked(sender, e);
-
-                await Task.Run(async () =>
-                {
-                    while (isInstalling)
-                        await Task.Delay(1);
-                });
-
-                Mod.IsUpdateRequired = false;
-
-                UninstallButton.IsVisible = true;
-                UninstallButton.IsEnabled = true;
+                await FinishInstallAsync();
             }, () =>
             {
+                LoadingButtonFrame.IsVisible = false;
+
                 UpdateButton.IsVisible = true;
                 UpdateButton.IsEnabled = true;
-
+                
+                InstallButton.IsVisible = false;
+                InstallButton.IsEnabled = false;
+                
                 UninstallButton.IsVisible = true;
                 UninstallButton.IsEnabled = true;
             }));
 
             return;
         }
-
-        TargetBox.Manifest.RemoveModification(Mod.Id, TargetBox);
-        InstallButtonClicked(sender, e);
-
-        await Task.Run(async () =>
-        {
-            while (isInstalling)
-                await Task.Delay(1);
-        });
-
-        Mod.IsUpdateRequired = false;
-
-        UninstallButton.IsVisible = true;
-        UninstallButton.IsEnabled = true;
+        
+        await FinishInstallAsync();
     }
 }

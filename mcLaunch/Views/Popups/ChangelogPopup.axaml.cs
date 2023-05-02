@@ -20,16 +20,15 @@ public partial class ChangelogPopup : UserControl
         InitializeComponent();
     }
 
-    public ChangelogPopup(Modification mod, string latestVersion, Action confirm, Action cancel)
+    public ChangelogPopup(Modification mod, Action confirm, Action cancel)
     {
         InitializeComponent();
         
         confirmCallback = confirm;
         cancelCallback = cancel;
-        
+
         TitleText.Text = TitleText.Text
-            .Replace("$MOD", mod.Name)
-            .Replace("$VERSION", latestVersion);
+            .Replace("$MOD", mod.Name);
 
         Regex isHtmlRegex = new Regex("<\\/\\w+>");
         if (isHtmlRegex.IsMatch(mod.Changelog))

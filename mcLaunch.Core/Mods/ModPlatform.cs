@@ -34,6 +34,7 @@ public abstract class ModPlatform
     public class ModDependency
     {
         public Modification Mod { get; init; }
+        public string VersionId { get; init; }
         public DependencyRelationType Type { get; init; }
     }
 

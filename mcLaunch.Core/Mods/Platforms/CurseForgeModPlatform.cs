@@ -151,6 +151,7 @@ public class CurseForgeModPlatform : ModPlatform
             return file.Dependencies.Select(dep => new ModDependency
             {
                 Mod = GetModAsync(dep.ModId.ToString()).GetAwaiter().GetResult(),
+                VersionId = GetModAsync(dep.ModId.ToString()).GetAwaiter().GetResult().LatestVersion,
                 Type = ToRelationType(dep.RelationType)
             }).ToArray();
         });

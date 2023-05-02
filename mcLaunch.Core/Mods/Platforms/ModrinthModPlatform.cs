@@ -77,6 +77,7 @@ public class ModrinthModPlatform : ModPlatform
             return version.Dependencies.Where(dep => dep.ProjectId != null).Select(dep => new ModDependency
             {
                 Mod = GetModAsync(dep.ProjectId).GetAwaiter().GetResult(),
+                VersionId = dep.VersionId,
                 Type = (DependencyRelationType) dep.DependencyType
             }).ToArray();
         });
@@ -206,7 +207,7 @@ public class ModrinthModPlatform : ModPlatform
         await DownloadManager.DownloadAll();
 
         targetBox.SaveManifest();
-        return false;
+        return true;
     }
 
     public override async Task<Modification> DownloadModInfosAsync(Modification mod)
