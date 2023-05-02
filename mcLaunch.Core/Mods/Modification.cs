@@ -37,6 +37,7 @@ public class Modification : ReactiveObject
     public string? LatestMinecraftVersion { get; set; }
     public string? InstalledVersion { get; set; }
     public bool IsUpdateRequired { get; set; }
+    public string? Filename { get; set; }
 
     public bool IsInstalledOnCurrentBox
     {

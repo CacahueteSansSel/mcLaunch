@@ -1,4 +1,7 @@
-﻿using Cacahuete.MinecraftLib.Core.ModLoaders;
+﻿using Avalonia;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
+using Cacahuete.MinecraftLib.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
 
 namespace mcLaunch.Core.Mods;
@@ -6,6 +9,7 @@ namespace mcLaunch.Core.Mods;
 public abstract class ModPlatform
 {
     public abstract string Name { get; }
+    public Bitmap Icon { get; private set; }
 
     public abstract Task<Modification[]> GetModsAsync(int page, Box box, string searchQuery);
     public abstract Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId, string minecraftVersionId);
@@ -17,6 +21,15 @@ public abstract class ModPlatform
 
     public abstract Task<Modification> DownloadModInfosAsync(Modification mod);
     public abstract ModPlatform GetModPlatform(string id);
+    public abstract Task<Modification?> GetModFromSha1(string hash);
+
+    public ModPlatform WithIcon(string name)
+    {
+        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+        Icon = new Bitmap(assets.Open(new Uri($"avares://mcLaunch/resources/icons/{name}.png")));
+
+        return this;
+    }
 
     public class ModDependency
     {

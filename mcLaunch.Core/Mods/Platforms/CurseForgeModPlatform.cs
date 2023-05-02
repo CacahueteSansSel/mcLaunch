@@ -178,7 +178,7 @@ public class CurseForgeModPlatform : ModPlatform
             Debug.WriteLine($"Mod {file.DisplayName} is incompatible ! Skipping");
             return;
         }
-
+        
         if (file.Dependencies != null && file.Dependencies.Count > 0)
         {
             foreach (FileDependency dep in file.Dependencies)
@@ -228,7 +228,7 @@ public class CurseForgeModPlatform : ModPlatform
         var version = await client.GetModFile(uint.Parse(mod.Id), uint.Parse(versionId));
         if (version == null) return false;
 
-        await InstallFile(targetBox, version.Data, installOptional);
+        if (!targetBox.HasModificationSoft(mod)) await InstallFile(targetBox, version.Data, installOptional);
 
         await DownloadManager.DownloadAll();
 
@@ -255,5 +255,10 @@ public class CurseForgeModPlatform : ModPlatform
         if (id == Name) return this;
 
         return null;
+    }
+
+    public override async Task<Modification?> GetModFromSha1(string hash)
+    {
+        throw new NotImplementedException();
     }
 }

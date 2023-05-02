@@ -129,6 +129,12 @@
       <AvaloniaResource Include="resources\credentials\tokens.txt" />
       <None Remove="resources\default_mod_logo.png" />
       <AvaloniaResource Include="resources\default_mod_logo.png" />
+      <None Remove="resources\icons\refresh.png" />
+      <AvaloniaResource Include="resources\icons\refresh.png" />
+      <None Remove="resources\icons\modrinth.png" />
+      <AvaloniaResource Include="resources\icons\modrinth.png" />
+      <None Remove="resources\icons\curseforge.png" />
+      <AvaloniaResource Include="resources\icons\curseforge.png" />
     </ItemGroup>
 
     <ItemGroup>

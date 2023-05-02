@@ -90,4 +90,9 @@ public class MultiplexerModPlatform : ModPlatform
 
         return null;
     }
+
+    public override async Task<Modification?> GetModFromSha1(string hash)
+    {
+        throw new NotImplementedException();
+    }
 }

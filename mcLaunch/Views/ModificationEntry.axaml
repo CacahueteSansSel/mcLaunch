@@ -1,0 +1,47 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="800"
+             x:Class="mcLaunch.Views.ModificationEntry">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <DockPanel>
+        <Image Source="{Binding Icon}" DockPanel.Dock="Left" Width="40" Height="40"></Image>
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center" DockPanel.Dock="Right" Margin="0 0 10 0">
+            <StackPanel Orientation="Horizontal" Height="20" Spacing="5">
+                <Image Source="/resources/icons/download.png" Height="14"></Image>
+                <TextBlock Classes="title" Text="5.04 M"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="20" Spacing="5">
+                <Image Source="/resources/icons/refresh.png" Height="14"></Image>
+                <TextBlock Classes="title" Text="yesterday"></TextBlock>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Margin="10 0 10 0" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Classes="title" Text="{Binding Name}"></TextBlock>
+                <Image Source="{Binding Platform.Icon}" Margin="5 0 0 0" ToolTip.Tip="{Binding Platform.Name}" Height="18"></Image>
+                <StackPanel Orientation="Horizontal" Margin="5 2 0 0" Opacity="0.5">
+                    <TextBlock Classes="light" FontSize="12">by</TextBlock>
+                    <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{Binding Author}"></TextBlock>
+                </StackPanel>
+                <views:Badge IsVisible="{Binding IsInvalid}" Margin="0 -2 0 0" Text="Invalid"
+                             Icon="/resources/icons/delete.png">
+                </views:Badge>
+                <views:Badge IsVisible="{Binding IsInstalledOnCurrentBoxUi}" Margin="10 -2 0 0" Text="Installed"
+                             Icon="/resources/icons/checkmark.png">
+                </views:Badge>
+                <views:Badge x:Name="UpdateBadge" IsVisible="{Binding IsUpdateRequired}" Margin="10 -2 0 0" Text="Update available"
+                             Icon="/resources/icons/download.png">
+                </views:Badge>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Opacity="0.5">
+                <TextBlock Classes="light" FontSize="12" Text="{Binding Filename}"></TextBlock>
+            </StackPanel>
+            <TextBlock Classes="light" Text="{Binding ShortDescription}" Opacity="0.7"></TextBlock>
+        </StackPanel>
+    </DockPanel>
+</UserControl>

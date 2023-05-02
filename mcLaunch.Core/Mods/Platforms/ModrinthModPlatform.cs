@@ -201,7 +201,7 @@ public class ModrinthModPlatform : ModPlatform
         Version version = await client.Version.GetAsync(versionId);
         if (version == null) return false;
 
-        if (!targetBox.HasModification(mod)) await InstallVersionAsync(targetBox, version, installOptional);
+        if (!targetBox.HasModificationSoft(mod)) await InstallVersionAsync(targetBox, version, installOptional);
 
         await DownloadManager.DownloadAll();
 
@@ -230,5 +230,10 @@ public class ModrinthModPlatform : ModPlatform
         if (id == Name) return this;
 
         return null;
+    }
+
+    public override async Task<Modification?> GetModFromSha1(string hash)
+    {
+        throw new NotImplementedException();
     }
 }

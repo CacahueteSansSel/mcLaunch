@@ -41,41 +41,6 @@ public partial class ModificationList : UserControl
         LoadMoreButton.IsVisible = false;
 
         DataContext = new Data();
-        
-        /*
-        DataContext = new Data()
-        {
-            Modifications = new Modification[]
-            {
-                new Modification
-                {
-                    Author = "Cacahuète",
-                    Name = "Example Fabric Mod",
-                    Id = "ex-fabric",
-                    IsUpdateRequired = true,
-                    ShortDescription = "An example mod for Fabric",
-                    Platform = new ModrinthModPlatform()
-                },
-                new Modification
-                {
-                    Author = "Cacahuète",
-                    Name = "Example Forge Mod",
-                    Id = "ex-forge",
-                    IsInvalid = true,
-                    ShortDescription = "An example mod for Forge",
-                    Platform = new ModrinthModPlatform()
-                },
-                new Modification
-                {
-                    Author = "Cacahuète",
-                    Name = "Example Quilt Mod",
-                    Id = "ex-quilt",
-                    ShortDescription = "An example mod for Quilt",
-                    Platform = new ModrinthModPlatform()
-                }
-            }
-        };
-        */
     }
 
     public void SetBox(Box box)

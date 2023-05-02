@@ -32,8 +32,8 @@ public partial class App : Application
         await MinecraftManager.InitAsync();
         ModLoaderManager.Init();
         ModPlatformManager.Init(new MultiplexerModPlatform(
-            new ModrinthModPlatform(),
-            new CurseForgeModPlatform(Credentials.Get("curseforge"))
+            new ModrinthModPlatform().WithIcon("modrinth"),
+            new CurseForgeModPlatform(Credentials.Get("curseforge")).WithIcon("curseforge")
         ));
         CacheManager.Init();
         AuthenticationManager.Init(Credentials.Get("azure"), Credentials.Get("tokens"));
