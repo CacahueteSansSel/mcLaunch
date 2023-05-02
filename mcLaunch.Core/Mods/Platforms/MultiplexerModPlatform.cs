@@ -91,8 +91,14 @@ public class MultiplexerModPlatform : ModPlatform
         return null;
     }
 
-    public override async Task<Modification?> GetModFromSha1(string hash)
+    public override async Task<ModVersion?> GetModVersionFromSha1(string hash)
     {
-        throw new NotImplementedException();
+        foreach (ModPlatform platform in _platforms)
+        {
+            ModVersion? ver = await platform.GetModVersionFromSha1(hash);
+            if (ver != null) return ver;
+        }
+
+        return null;
     }
 }

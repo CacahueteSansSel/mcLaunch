@@ -258,8 +258,8 @@ public class CurseForgeModPlatform : ModPlatform
         return null;
     }
 
-    public override async Task<Modification?> GetModFromSha1(string hash)
+    public override async Task<ModVersion?> GetModVersionFromSha1(string hash)
     {
-        throw new NotImplementedException();
+        return null;
     }
 }
