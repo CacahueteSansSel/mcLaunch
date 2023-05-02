@@ -173,5 +173,9 @@
         <DependentUpon>GameSettingElement.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\Popups\ModsPopup.axaml.cs">
+        <DependentUpon>ModsPopup.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>

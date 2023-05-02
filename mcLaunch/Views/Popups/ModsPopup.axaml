@@ -1,0 +1,25 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             Width="800" Height="450"
+             x:Class="mcLaunch.Views.Popups.ModsPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <DockPanel Margin="38">
+            <TextBlock x:Name="TitleText" DockPanel.Dock="Top" Classes="title" FontSize="25">Mods!</TextBlock>
+            <TextBlock x:Name="DescriptionText" DockPanel.Dock="Top" TextWrapping="Wrap" Classes="light">mods</TextBlock>
+            <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
+                <Button DockPanel.Dock="Right" Classes="primary" Click="OKButtonClicked">Ok</Button>
+                <Panel></Panel>
+            </DockPanel>
+            <ScrollViewer>
+                <views:ModificationList x:Name="ModList" IsHitTestVisible="False"></views:ModificationList>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</UserControl>

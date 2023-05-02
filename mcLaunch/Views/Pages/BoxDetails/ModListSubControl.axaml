@@ -14,6 +14,9 @@
                 <Button DockPanel.Dock="Left" Classes="secondary square" Click="AddModsButtonClicked" ToolTip.Tip="Add mods">
                     <Image Source="/resources/icons/plus.png"></Image>
                 </Button>
+                <Button x:Name="MigrateToModrinthButton" DockPanel.Dock="Left" Margin="5 0 0 0" Classes="secondary square" Click="MigrateToModrinthButtonClicked" ToolTip.Tip="Migrate all mods to Modrinth" BorderBrush="MediumPurple">
+                    <Image Source="/resources/icons/modrinth.png" RenderTransform="scale(1.5)"></Image>
+                </Button>
                 <StackPanel Height="15" x:Name="SearchingForUpdates" DockPanel.Dock="Left" IsVisible="False" Orientation="Horizontal">
                     <views:LoadingCircle RenderTransform="scale(0.7)"></views:LoadingCircle>
                     <TextBlock Height="20" Classes="light">Searching for updates...</TextBlock>

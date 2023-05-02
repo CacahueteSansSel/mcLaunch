@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Security.Cryptography;
 using System.Text.Json;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -8,6 +9,7 @@ using DynamicData;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Mods;
+using mcLaunch.Core.Mods.Platforms;
 using SharpNBT;
 
 namespace mcLaunch.Core.Boxes;
@@ -247,6 +249,43 @@ public class Box
         await CreateMinecraftAsync();
 
         await BoxManager.SetupVersionAsync(Version);
+    }
+
+    public async Task<Modification[]> MigrateToModrinthAsync(Action<BoxStoredModification, int, int> statusCallback)
+    {
+        int cur = 0;
+        List<Modification> migratedMods = new();
+
+        BoxStoredModification[] modsToMigrate = Manifest.Modifications.Where(m =>
+            m.PlatformId.ToLower() == "curseforge").ToArray();
+
+        foreach (BoxStoredModification mod in modsToMigrate)
+        {
+            statusCallback?.Invoke(mod, cur, Manifest.Modifications.Count);
+            cur++;
+            
+            SHA1 sha = SHA1.Create();
+
+            foreach (string filename in mod.Filenames)
+            {
+                string realFilename = $"{Folder.Path}/{filename}";
+                
+                FileStream fs = new FileStream(realFilename, FileMode.Open);
+                string hash = Convert.ToHexString(await sha.ComputeHashAsync(fs)).ToLower();
+                fs.Close();
+
+                ModVersion? modVersion = await ModrinthModPlatform.Instance.GetModVersionFromSha1(hash);
+                if (modVersion == null) continue;
+                
+                Manifest.RemoveModification(mod.Id, this);
+                bool success = await ModrinthModPlatform.Instance.InstallModAsync(this, modVersion.Mod, 
+                    modVersion.VersionId, false);
+                
+                if (success) migratedMods.Add(modVersion.Mod);
+            }
+        }
+
+        return migratedMods.ToArray();
     }
 
     public bool HasModification(Modification mod)
