@@ -87,7 +87,7 @@
                                 <TextBlock x:Name="SubControlNameText" Opacity="0.7" Margin="38 0 38 5">MODS</TextBlock>
                             </StackPanel>
                         </Panel>
-                        <DockPanel x:Name="WarningStripe" IsVisible="False" Margin="0 0 0 10" Background="#AF3400">
+                        <DockPanel x:Name="WarningStripe" IsVisible="False" Margin="0 0 0 10" Background="{DynamicResource WarningAccent}">
                             <TextBlock x:Name="WarningText" Padding="10" DockPanel.Dock="Left" TextAlignment="Left"></TextBlock>
                             <Button DockPanel.Dock="Right" Classes="transparent" Margin="0 0 10 0" Click="WarningStripeCloseButtonClicked">
                                 <Image Source="/resources/icons/close.png" Width="16" Height="16"></Image>

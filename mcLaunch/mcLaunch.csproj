@@ -135,6 +135,8 @@
       <AvaloniaResource Include="resources\icons\modrinth.png" />
       <None Remove="resources\icons\curseforge.png" />
       <AvaloniaResource Include="resources\icons\curseforge.png" />
+      <None Remove="resources\icons\dot.png" />
+      <AvaloniaResource Include="resources\icons\dot.png" />
     </ItemGroup>
 
     <ItemGroup>

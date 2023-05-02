@@ -15,5 +15,6 @@
         <SolidColorBrush x:Key="DefaultAccent">#008F58</SolidColorBrush>
         <SolidColorBrush x:Key="MiddleAccent">#007A42</SolidColorBrush>
         <SolidColorBrush x:Key="DarkerAccent">#006035</SolidColorBrush>
+        <SolidColorBrush x:Key="WarningAccent">#AF3400</SolidColorBrush>
     </Application.Resources>
 </Application>

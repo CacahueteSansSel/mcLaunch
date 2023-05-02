@@ -57,6 +57,8 @@ public partial class ModListSubControl : UserControl, ISubControl
         ModsList.SetModifications(mods.ToArray());
         ModsList.SetLoadingCircle(false);
 
+        SearchingForUpdates.IsVisible = true;
+
         List<Modification> updateMods = new();
         bool isChanges = false;
 
@@ -81,6 +83,8 @@ public partial class ModListSubControl : UserControl, ISubControl
         }
         
         if (isChanges) ModsList.SetModifications(updateMods.ToArray());
+
+        SearchingForUpdates.IsVisible = false;
     }
 
     private void AddModsButtonClicked(object? sender, RoutedEventArgs e)

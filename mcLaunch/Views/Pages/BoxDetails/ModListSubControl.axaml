@@ -14,6 +14,10 @@
                 <Button DockPanel.Dock="Left" Classes="secondary square" Click="AddModsButtonClicked" ToolTip.Tip="Add mods">
                     <Image Source="/resources/icons/plus.png"></Image>
                 </Button>
+                <StackPanel Height="15" x:Name="SearchingForUpdates" DockPanel.Dock="Left" IsVisible="False" Orientation="Horizontal">
+                    <views:LoadingCircle RenderTransform="scale(0.7)"></views:LoadingCircle>
+                    <TextBlock Height="20" Classes="light">Searching for updates...</TextBlock>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
                     <TextBlock Classes="light" Opacity="0.25" 
                                HorizontalAlignment="Right" Text="{Binding Manifest.ModificationCount}">

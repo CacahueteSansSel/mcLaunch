@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
+using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Mods.Platforms;
 
@@ -24,5 +25,18 @@ public partial class ModificationEntry : UserControl
     public ModificationEntry()
     {
         InitializeComponent();
+
+        if (Design.IsDesignMode)
+        {
+            CacheManager.Init();
+            Mod = new Modification
+            {
+                Name = "truc",
+                Author = "dev",
+                ShortDescription = "da string",
+                IsUpdateRequired = true,
+                Platform = new ModrinthModPlatform()
+            };
+        }
     }
 }
