@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
@@ -35,6 +36,8 @@ public partial class ModificationEntry : UserControl
                 Author = "dev",
                 ShortDescription = "da string",
                 IsUpdateRequired = true,
+                LastUpdated = DateTime.Today,
+                DownloadCount = 2800,
                 Platform = new ModrinthModPlatform()
             };
         }

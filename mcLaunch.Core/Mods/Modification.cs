@@ -38,6 +38,8 @@ public class Modification : ReactiveObject
     public string? InstalledVersion { get; set; }
     public bool IsUpdateRequired { get; set; }
     public string? Filename { get; set; }
+    public int? DownloadCount { get; set; }
+    public DateTime? LastUpdated { get; set; }
 
     public bool IsInstalledOnCurrentBox
     {
@@ -74,6 +76,12 @@ public class Modification : ReactiveObject
         get => platform;
         set => platform = value;
     }
+
+    public string DownloadCountFormatted => !IsDownloadCountValid ? "-" : DownloadCount.Value.ToDisplay();
+    public TimeSpan LastUpdatedSpan => !IsLastUpdatedValid ? TimeSpan.Zero : DateTime.Now - LastUpdated.Value;
+    public string LastUpdatedFormatted => !IsLastUpdatedValid ? "-" : LastUpdatedSpan.ToDisplay();
+    public bool IsDownloadCountValid => DownloadCount.HasValue;
+    public bool IsLastUpdatedValid => LastUpdated.HasValue;
 
     public void TransformLongDescriptionToMarkdown()
     {

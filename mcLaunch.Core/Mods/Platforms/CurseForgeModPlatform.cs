@@ -61,6 +61,8 @@ public class CurseForgeModPlatform : ModPlatform
                 MinecraftVersions = minecraftVersions.ToArray(),
                 LatestMinecraftVersion = minecraftVersions.Last(),
                 BackgroundPath = mod.Screnshots?.FirstOrDefault()?.Url,
+                DownloadCount = (int)mod.DownloadCount,
+                LastUpdated = mod.DateModified.DateTime,
                 Platform = this
             };
 
@@ -109,6 +111,8 @@ public class CurseForgeModPlatform : ModPlatform
                 Versions = cfMod.LatestFiles.Select(f => f.Id.ToString()).ToArray(),
                 LatestVersion = cfMod.LatestFiles?.FirstOrDefault().Id.ToString(),
                 LongDescriptionBody = (await client.GetModDescription(cfMod.Id)).Data,
+                DownloadCount = (int)cfMod.DownloadCount,
+                LastUpdated = cfMod.DateModified.DateTime,
                 Platform = this
             };
 

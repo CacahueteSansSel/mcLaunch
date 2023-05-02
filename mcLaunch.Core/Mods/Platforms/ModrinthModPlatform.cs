@@ -56,6 +56,8 @@ public class ModrinthModPlatform : ModPlatform
             MinecraftVersions = hit.Versions,
             BackgroundPath = hit.Gallery?.FirstOrDefault(),
             LatestMinecraftVersion = hit.LatestVersion,
+            DownloadCount = hit.Downloads,
+            LastUpdated = hit.DateModified,
             Platform = this
         }).ToArray();
 
@@ -108,6 +110,8 @@ public class ModrinthModPlatform : ModPlatform
                 Versions = project.Versions,
                 LatestVersion = project.Versions.Last(),
                 LongDescriptionBody = project.Body,
+                DownloadCount = project.Downloads,
+                LastUpdated = project.Updated,
                 Platform = this
             };
 

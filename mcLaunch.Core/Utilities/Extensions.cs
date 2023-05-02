@@ -62,4 +62,32 @@ public static class Extensions
 
         return data;
     }
+    
+    public static string ToDisplay(this int i)
+    {
+        if (i < 1000) return i.ToString();
+        if (i < 1000000) return $"{(int)MathF.Round(i / 1000f)}k";
+
+        return $"{(int)MathF.Round(i / 1000000f)}M";
+    }
+    
+    public static string ToDisplay(this TimeSpan span)
+    {
+        int days = (int) Math.Round(span.TotalDays);
+        int weeks = (int) Math.Round(span.TotalDays / 7);
+        int months = (int) Math.Round(span.TotalDays / 30);
+        int years = (int) Math.Round(span.TotalDays / 365);
+        
+        if (days == 1) return "a day ago";
+        if (weeks == 1) return "a week ago";
+        if (months == 1) return "a month ago";
+        if (years == 1) return "a year ago";
+        
+        if (span.TotalDays < 1) return $"{span.Hours}h ago";
+        if (span.TotalDays < 7) return $"{days} days ago";
+        if (span.TotalDays < 30) return $"{weeks} weeks ago";
+        if (span.TotalDays < 365) return $"{months} months ago";
+        
+        return $"{span.Days / 365} years ago";
+    }
 }
