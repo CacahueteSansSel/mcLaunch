@@ -49,6 +49,7 @@ public partial class ModListSubControl : UserControl, ISubControl
         foreach (BoxStoredModification storedMod in Box.Manifest.Modifications)
         {
             Modification mod = await ModPlatformManager.Platform.GetModAsync(storedMod.Id);
+            if (mod == null) continue;
 
             mod.Filename = storedMod.Filenames[0].Replace("mods/", "").Trim();
             mod.InstalledVersion = storedMod.VersionId;

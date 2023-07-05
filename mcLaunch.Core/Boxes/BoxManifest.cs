@@ -143,10 +143,13 @@ public class BoxManifest : ReactiveObject
             if (!string.IsNullOrWhiteSpace(mod.Name) && !string.IsNullOrWhiteSpace(mod.Author)) continue;
 
             Modification dlMod = await ModPlatformManager.Platform.GetModAsync(mod.Id);
-            mod.Name = dlMod.Name;
-            mod.Author = dlMod.Author;
-
-            hadChange = true;
+            if (dlMod != null)
+            {
+                mod.Name = dlMod.Name;
+                mod.Author = dlMod.Author;
+                
+                hadChange = true;
+            }
         }
         
         if (hadChange) ManifestVersion = 2;
@@ -168,7 +171,8 @@ public class BoxManifest : ReactiveObject
         {
             ModLoaderVersion[]? versions = await modLoader.GetVersionsAsync(Version);
             ModLoaderVersion version = versions.FirstOrDefault(v => v.Name == ModLoaderVersion);
-
+            if (version == null) version = versions[0];
+            
             MinecraftVersion? mlMcVersion = await version.GetMinecraftVersionAsync(Version);
 
             // Merging

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="500"
-             Width="450" Height="250"
+             Width="450" MaxHeight="400"
              x:Class="mcLaunch.Views.Popups.StatusPopup">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
