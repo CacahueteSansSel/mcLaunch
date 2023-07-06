@@ -155,7 +155,16 @@ public class Box
         List<MinecraftWorld> worlds = new();
 
         foreach (string folder in Directory.GetDirectories($"{Folder.Path}/saves"))
-            worlds.Add(new MinecraftWorld(System.IO.Path.GetFullPath(folder)));
+        {
+            try
+            {
+                worlds.Add(new MinecraftWorld(System.IO.Path.GetFullPath(folder)));
+            }
+            catch (Exception e)
+            {
+                
+            }
+        }
 
         return worlds.ToArray();
     }
