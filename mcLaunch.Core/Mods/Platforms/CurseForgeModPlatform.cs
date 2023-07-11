@@ -33,6 +33,7 @@ public class CurseForgeModPlatform : ModPlatform
             gameVersion: box.Manifest.Version,
             modLoaderType: Enum.Parse<ModLoaderType>(box.Manifest.ModLoaderId, true),
             sortField: ModsSearchSortField.Popularity,
+            sortOrder: SortOrder.Descending,
             pageSize: 10,
             searchFilter: searchQuery,
             index: (uint) (page * 10)
