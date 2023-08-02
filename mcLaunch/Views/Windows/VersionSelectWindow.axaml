@@ -1,0 +1,47 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="400"
+        Width="300" Height="400" CanResize="False"
+        x:Class="mcLaunch.Views.Windows.VersionSelectWindow"
+        WindowStartupLocation="CenterScreen"
+        Title="Select a Minecraft version"
+        Icon="/resources/icon.ico"
+        Background="{DynamicResource BackgroundDarker}">
+    <Window.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </Window.Styles>
+    <Border Classes="frame">
+        <DockPanel Margin="5">
+            <DockPanel DockPanel.Dock="Top">
+                <Button IsDefault="True" Click="SearchButtonClicked" DockPanel.Dock="Right" Classes="secondary">Search</Button>
+                <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" Watermark="Search version" TextInput="SearchVersionTextBoxInput"></TextBox>
+            </DockPanel>
+            <Button DockPanel.Dock="Bottom" x:Name="SelectButton" HorizontalAlignment="Right" Margin="0 20 0 0" Classes="primary"
+                    Click="SelectVersionButtonClicked" IsVisible="False">
+                Select
+            </Button>
+            <ListBox x:Name="ModList" SelectionMode="Single" Items="{Binding .}"
+                     SelectionChanged="VersionSelectionChanged">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="CornerRadius" Value="4"></Setter>
+                        <Setter Property="Margin" Value="4"></Setter>
+                    </Style>
+                </ListBox.Styles>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <TextBlock>Minecraft</TextBlock>
+                                <TextBlock Text="{Binding Id}"></TextBlock>
+                            </StackPanel>
+                            <TextBlock Classes="light" Opacity="0.5" Text="{Binding Type}"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+    </Border>
+</Window>

@@ -8,11 +8,13 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Auth;
+using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
+using mcLaunch.Views.Windows;
 using ReactiveUI;
 
 namespace mcLaunch.Views;
@@ -122,5 +124,10 @@ public partial class ToolButtonsBar : UserControl
     private void SettingsButtonClicked(object? sender, RoutedEventArgs e)
     {
         MainWindowDataContext.Instance.Push<SettingsPage>();
+    }
+
+    private async void ManageMinecraftVersionClicked(object? sender, RoutedEventArgs e)
+    {
+        
     }
 }

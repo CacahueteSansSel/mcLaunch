@@ -36,6 +36,11 @@ public partial class NewBoxPopup : UserControl
             AuthorNameTb.Text = AuthenticationManager.Account.Username;
         }
 
+        VersionSelector.OnVersionChanged += version =>
+        {
+            FetchModLoadersLatestVersions(version.Id);
+        };
+
         FetchModLoadersLatestVersions(ctx.Versions[0].Id);
     }
 
@@ -62,7 +67,7 @@ public partial class NewBoxPopup : UserControl
     {
         string boxName = BoxNameTb.Text;
         string boxAuthor = AuthorNameTb.Text;
-        ManifestMinecraftVersion minecraftVersion = ((Data) DataContext).SelectedVersion;
+        ManifestMinecraftVersion minecraftVersion = VersionSelector.Version;
         ModLoaderSupport modloader = ((Data) DataContext).SelectedModLoader;
 
         if (string.IsNullOrWhiteSpace(boxName)
@@ -114,7 +119,6 @@ public partial class NewBoxPopup : UserControl
     {
         private NewBoxPopup popup;
         ModLoaderVersion latestVersion;
-        ManifestMinecraftVersion selectedVersion;
         ModLoaderSupport selectedModLoader;
         private ModLoaderSupport[] modLoaders;
 
@@ -124,17 +128,6 @@ public partial class NewBoxPopup : UserControl
         {
             get => modLoaders;
             set => this.RaiseAndSetIfChanged(ref modLoaders, value);
-        }
-
-        public ManifestMinecraftVersion SelectedVersion
-        {
-            get => selectedVersion;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref selectedVersion, value);
-                
-                popup.FetchModLoadersLatestVersions(selectedVersion.Id);
-            }
         }
 
         public ModLoaderSupport SelectedModLoader
@@ -157,7 +150,6 @@ public partial class NewBoxPopup : UserControl
                 : MinecraftManager.ManifestVersions;
             ModLoaders = ModLoaderManager.All.ToArray();
 
-            selectedVersion = Versions[0];
             selectedModLoader = ModLoaders[0];
         }
     }

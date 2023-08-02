@@ -2,8 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="400"
-             Width="400" Height="450"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="600"
+             Width="600" Height="450"
              x:Class="mcLaunch.Views.Popups.NewBoxPopup">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
@@ -23,16 +24,7 @@
                     <TextBlock Classes="light" Margin="0 20 0 0">Author Name</TextBlock>
                     <TextBox x:Name="AuthorNameTb" Watermark="Author" UseFloatingWatermark="False"></TextBox>
                     <TextBlock Classes="light" Margin="0 20 0 0">Minecraft version</TextBlock>
-                    <ComboBox x:Name="MinecraftVersionCbox" SelectedItem="{Binding SelectedVersion}" SelectionChanged="NewMinecraftVersionSelectedCallback" Items="{Binding Versions}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Id}"></TextBlock>
-                                    <TextBlock Margin="7 0 0 0" Opacity="0.5" Text="{Binding Type}"></TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                    <views:MinecraftVersionSelector x:Name="VersionSelector"></views:MinecraftVersionSelector>
                     <TextBlock Classes="light" Margin="0 20 0 0">Modding framework</TextBlock>
                     <ComboBox x:Name="ModloaderCbox" SelectedItem="{Binding SelectedModLoader}" Items="{Binding ModLoaders}">
                         <ComboBox.ItemTemplate>
