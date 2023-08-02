@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -117,6 +118,16 @@ public partial class BoxDetailsPage : UserControl
 
         if (serverAddress != null) java = Box.Run(serverAddress, serverPort ?? "25565");
         else java = Box.Run();
+
+        await Task.Delay(500);
+
+        if (java.HasExited)
+        {
+            Navigation.ShowPopup(new CrashPopup(java.ExitCode, Box.Manifest.Id)
+                .WithCustomLog(java.StandardError.ReadToEnd()));
+            
+            return;
+        }
 
         // TODO: crash report parser
         // RegExp for mod dependencies error (Forge) : /(Failure message): .+/g

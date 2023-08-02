@@ -13,6 +13,7 @@ namespace mcLaunch.Views.Popups;
 public partial class CrashPopup : UserControl
 {
     private Box? box;
+    
     public CrashPopup(int exitCode, string boxId)
     {
         InitializeComponent();
@@ -43,6 +44,13 @@ public partial class CrashPopup : UserControl
     public CrashPopup()
     {
         InitializeComponent();
+    }
+
+    public CrashPopup WithCustomLog(string log)
+    {
+        BodyText.Text = log;
+
+        return this;
     }
 
     private void ClosePopupButtonClicked(object? sender, RoutedEventArgs e)
