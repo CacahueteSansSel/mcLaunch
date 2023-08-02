@@ -201,7 +201,7 @@ public class MinecraftVersion
             {
                 [JsonPropertyName("natives-linux")] public FileArtifact NativesLinux { get; set; }
 
-                [JsonPropertyName("natives-macos")] public FileArtifact NativesMacOS { get; set; }
+                [JsonPropertyName("natives-osx")] public FileArtifact NativesOSX { get; set; }
 
                 [JsonPropertyName("natives-windows")] public FileArtifact NativesWindows { get; set; }
 

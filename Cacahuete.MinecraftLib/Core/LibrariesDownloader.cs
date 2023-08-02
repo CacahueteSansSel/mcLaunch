@@ -105,11 +105,14 @@ public class LibrariesDownloader
         int cur = 0;
 
         ClassPath.Clear();
-        
-        // Try to force the latest LWJGL version
-        string? latestLwjglVersion = GetLatestLwjglVersion(version);
-        if (latestLwjglVersion != null) 
-            WithLibrary("lwjgl", latestLwjglVersion);
+
+        if (version.Assets != "pre-1.6")
+        {
+            // Try to force the latest LWJGL version
+            string? latestLwjglVersion = GetLatestLwjglVersion(version);
+            if (latestLwjglVersion != null) 
+                WithLibrary("lwjgl", latestLwjglVersion);
+        }
 
         foreach (var lib in version.Libraries)
         {
@@ -158,9 +161,9 @@ public class LibrariesDownloader
                         if (!string.IsNullOrEmpty(path)) nativeJars.Add(path);
                     }
 
-                    if (lib.Downloads.Classifiers.NativesMacOS != null && OperatingSystem.IsMacOS())
+                    if (lib.Downloads.Classifiers.NativesOSX != null && OperatingSystem.IsMacOS())
                     {
-                        string path = await DownloadArtifactAsync(lib.Downloads.Classifiers.NativesMacOS, force);
+                        string path = await DownloadArtifactAsync(lib.Downloads.Classifiers.NativesOSX, force);
                         if (!string.IsNullOrEmpty(path)) nativeJars.Add(path);
                     }
 

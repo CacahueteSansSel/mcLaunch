@@ -5,6 +5,7 @@ namespace Cacahuete.MinecraftLib.Models;
 
 public class AssetIndex
 {
+    [JsonPropertyName("map_to_resources")] public bool MapToResources { get; set; }
     [JsonPropertyName("objects")] public JsonElement Objects { get; set; }
 
     public Asset[] ParseAll()

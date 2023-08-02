@@ -101,7 +101,7 @@ public class Minecraft
     
     public Minecraft WithDownloaders(AssetsDownloader assets, LibrariesDownloader libraries, JVMDownloader jvm)
     {
-        assetsRoot = Path.GetFullPath(assets.Path);
+        assetsRoot = Path.GetFullPath(assets.VirtualPath ?? assets.Path);
         classPath = string.Join(classPathSeparator, libraries.ClassPath) + classPathSeparator;
         nativesPath = Path.GetFullPath(libraries.NativesPath);
         jvmPath = jvm.GetJVMPath(Utilities.GetJavaPlatformIdentifier(), Version.JavaVersion?.Component ?? "jre-legacy")
@@ -134,7 +134,7 @@ public class Minecraft
             {"auth_player_name", username},
             {"auth_session", $"token:{accessToken}:{uuid}"},
             {"version_name", Version.Id},
-            {"game_assets", $"{sysFolder.CompletePath}/assets/virtual"},
+            {"game_assets", $"{assetsRoot}"},
             {"game_directory", Folder.CompletePath},
             {"assets_root", assetsRoot},
             {"assets_index_name", Version.AssetIndex.Id},
