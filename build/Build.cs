@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI;
@@ -11,6 +13,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
+using Serilog;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
@@ -20,13 +23,14 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [ShutdownDotNetAfterServerBuild]
 class Build : NukeBuild
 {
+    const string FrameworkVersion = "net7.0";
+
     /// Support plugins are available for:
     ///   - JetBrains ReSharper        https://nuke.build/resharper
     ///   - JetBrains Rider            https://nuke.build/rider
     ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
     ///   - Microsoft VSCode           https://nuke.build/vscode
-
-    public static int Main () => Execute<Build>(x => x.Compile);
+    public static int Main() => Execute<Build>(x => x.Compile);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -52,16 +56,16 @@ class Build : NukeBuild
             DotNetRestore(s => s
                 .SetProjectFile(Solution));
         });
-    
+
     Target KillPreviewerProcesses => _ => _
         .Executes(() =>
         {
             // WARNING: this kills every other instance of dotnet running
             // this should be used with caution
-            
+
             Process[] previewers = Process.GetProcessesByName("dotnet")
                 .Where(p => p.Id != Process.GetCurrentProcess().Id).ToArray();
-            
+
             foreach (Process p in previewers) p.Kill();
         });
 
@@ -72,16 +76,68 @@ class Build : NukeBuild
             Process.Start(new ProcessStartInfo
             {
                 FileName = "dotnet",
-                WorkingDirectory = Solution.GetProject("mcLaunch").Directory,
-                Arguments = "publish -r win-x64"
+                WorkingDirectory = Solution.GetProject("mcLaunch.MinecraftGuard").Directory,
+                Arguments = "publish -c Release -r win-x64"
             }).WaitForExit();
-            
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = Solution.GetProject("mcLaunch.MinecraftGuard").Directory,
+                Arguments = "publish -c Release -r linux-x64"
+            }).WaitForExit();
+
             Process.Start(new ProcessStartInfo
             {
                 FileName = "dotnet",
                 WorkingDirectory = Solution.GetProject("mcLaunch").Directory,
-                Arguments = "publish -r linux-x64"
+                Arguments = "publish -c Release -r win-x64"
             }).WaitForExit();
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = Solution.GetProject("mcLaunch").Directory,
+                Arguments = "publish -c Release -r linux-x64"
+            }).WaitForExit();
+
+            string outputDirPath = Solution.Directory / "output";
+            if (!Directory.Exists(outputDirPath + "/windows")) Directory.CreateDirectory(outputDirPath + "/windows");
+            if (!Directory.Exists(outputDirPath + "/linux")) Directory.CreateDirectory(outputDirPath + "/linux");
+
+            CopyDirectoryRecursively(
+                $"{Solution.GetProject("mcLaunch").Directory}/bin/Release/{FrameworkVersion}/win-x64/publish",
+                $"{outputDirPath}/windows", 
+                DirectoryExistsPolicy.Merge,
+                FileExistsPolicy.OverwriteIfNewer
+            );
+            
+            CopyDirectoryRecursively(
+                $"{Solution.GetProject("mcLaunch").Directory}/bin/Release/{FrameworkVersion}/linux-x64/publish",
+                $"{outputDirPath}/linux", 
+                DirectoryExistsPolicy.Merge,
+                FileExistsPolicy.OverwriteIfNewer
+            );
+            
+            CopyDirectoryRecursively(
+                $"{Solution.GetProject("mcLaunch.MinecraftGuard").Directory}/bin/Release/{FrameworkVersion}/win-x64/publish",
+                $"{outputDirPath}/windows", 
+                DirectoryExistsPolicy.Merge,
+                FileExistsPolicy.OverwriteIfNewer
+            );
+            
+            CopyDirectoryRecursively(
+                $"{Solution.GetProject("mcLaunch.MinecraftGuard").Directory}/bin/Release/{FrameworkVersion}/linux-x64/publish",
+                $"{outputDirPath}/linux", 
+                DirectoryExistsPolicy.Merge,
+                FileExistsPolicy.OverwriteIfNewer
+            );
+            
+            Log.Information("Zipping windows build...");
+            ZipFile.CreateFromDirectory($"{outputDirPath}/windows", $"{outputDirPath}/mcLaunch-windows.zip");
+            
+            Log.Information("Zipping linux build...");
+            ZipFile.CreateFromDirectory($"{outputDirPath}/linux", $"{outputDirPath}/mcLaunch-linux.zip");
         });
 
     Target Compile => _ => _
@@ -96,5 +152,4 @@ class Build : NukeBuild
                 .SetInformationalVersion(GitVersion.InformationalVersion)
                 .EnableNoRestore());
         });
-
 }
