@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -23,7 +24,8 @@ public partial class MainPage : UserControl
     {
         BoxContainer.Children.Clear();
 
-        Box[] boxes = await Task.Run(BoxManager.LoadLocalBoxes);
+        List<Box> boxes = new List<Box>(await Task.Run(BoxManager.LoadLocalBoxes));
+        boxes.Sort((l, r) => -l.Manifest.LastLaunchTime.CompareTo(r.Manifest.LastLaunchTime));
         
         foreach (Box box in boxes)
         {

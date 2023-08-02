@@ -60,6 +60,8 @@ public class AssetsDownloader
             return;
         }
 
+        VirtualPath = null;
+
         if (!Directory.Exists(objectsFolder)) Directory.CreateDirectory(objectsFolder);
         if (!Directory.Exists(indexesFolder)) Directory.CreateDirectory(indexesFolder);
 

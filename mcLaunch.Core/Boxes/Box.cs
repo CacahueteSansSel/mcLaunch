@@ -310,6 +310,9 @@ public class Box
 
     public Process Run()
     {
+        Manifest.LastLaunchTime = DateTime.Now;
+        SaveManifest();
+        
         return Minecraft.Run();
     }
 

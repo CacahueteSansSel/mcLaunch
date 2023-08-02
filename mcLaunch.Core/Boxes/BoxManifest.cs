@@ -29,6 +29,7 @@ public class BoxManifest : ReactiveObject
     public string DescriptionLine => $"{ModLoaderId.ToUpper()} {Version}";
     public string ModificationCount => Modifications.Count.ToString();
     public List<BoxStoredModification> Modifications { get; set; } = new();
+    public DateTime LastLaunchTime { get; set; }
 
     [JsonIgnore]
     public Bitmap Icon
@@ -60,6 +61,7 @@ public class BoxManifest : ReactiveObject
         ModLoaderVersion = modLoaderVersion;
         Id = IdGenerator.Generate();
         Icon = icon;
+        LastLaunchTime = DateTime.Now;
 
         this.version = version;
         Version = version.Id;
