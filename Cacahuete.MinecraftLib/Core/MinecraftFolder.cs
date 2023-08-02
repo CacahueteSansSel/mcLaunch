@@ -14,7 +14,7 @@ public class MinecraftFolder
     }
 
     public bool HasVersion(string id)
-        => Directory.Exists($"{Path}/versions/{id}");
+        => Directory.Exists($"{Path}/versions/{id}") && File.Exists($"{Path}/versions/{id}/{id}.jar");
 
     public MinecraftVersion? GetVersion(string id)
         => JsonSerializer.Deserialize<MinecraftVersion>(File.ReadAllText($"{Path}/versions/{id}/{id}.json"));
