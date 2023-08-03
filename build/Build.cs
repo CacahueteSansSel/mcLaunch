@@ -140,6 +140,18 @@ class Build : NukeBuild
             ZipFile.CreateFromDirectory($"{outputDirPath}/linux", $"{outputDirPath}/mcLaunch-linux.zip");
         });
 
+    Target BuildInstaller => _ => _
+        .DependsOn(Restore, KillPreviewerProcesses)
+        .Executes(() =>
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = Solution.GetProject("mcLaunch.Installer").Directory,
+                Arguments = "publish -c Release -r win-x64 --self-contained"
+            }).WaitForExit();
+        });
+
     Target Compile => _ => _
         .DependsOn(Restore, KillPreviewerProcesses)
         .Executes(() =>

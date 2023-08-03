@@ -6,6 +6,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>resources\icon.ico</ApplicationIcon>
+        <PublishSingleFile>true</PublishSingleFile>
     </PropertyGroup>
     <ItemGroup>
         <None Remove=".gitignore" />
