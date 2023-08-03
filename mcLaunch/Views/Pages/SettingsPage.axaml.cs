@@ -16,6 +16,8 @@ public partial class SettingsPage : UserControl
         
         Utilities.Settings.Load();
         SetSettings(Utilities.Settings.Instance.GetAllGroups());
+
+        VersionText.Text = BuildStatic.BuildVersion.ToString();
     }
 
     public void SetSettings(SettingsGroup[] groups)

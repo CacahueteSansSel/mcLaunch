@@ -18,6 +18,7 @@ public class Box
 {
     private string manifestPath;
     private bool exposeLauncher = false;
+    private string launcherVersion = "0.0.0";
     public string Path { get; }
     public MinecraftFolder Folder { get; }
     public Minecraft Minecraft { get; private set; }
@@ -197,7 +198,7 @@ public class Box
         await SetupVersionAsync();
 
         Minecraft = new Minecraft(Version, Folder)
-            .WithCustomLauncherDetails("mcLaunch", "1.0.0", exposeLauncher)
+            .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher)
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
             .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader)
             .WithSystemFolder(BoxManager.SystemFolder);
@@ -206,6 +207,11 @@ public class Box
     public void SetExposeLauncher(bool exposeLauncher)
     {
         this.exposeLauncher = exposeLauncher;
+    }
+
+    public void SetLauncherVersion(string version)
+    {
+        this.launcherVersion = version;
     }
 
     public List<string> GetAdditionalFiles()

@@ -22,7 +22,10 @@
                     
                 </StackPanel>
                 <StackPanel Margin="0 20 0 0" Spacing="5" Width="888" Orientation="Vertical">
-                    <Image Source="/resources/logo.png" Height="40" HorizontalAlignment="Left"></Image>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="10" HorizontalAlignment="Left">
+                        <Image Source="/resources/logo_big.png" Height="20" HorizontalAlignment="Left"></Image>
+                        <TextBlock x:Name="VersionText" Opacity="0.5" Margin="0 5 0 0">1.0.0</TextBlock>
+                    </StackPanel>
                     <TextBlock>mcLaunch, Copyright (c) Cacahuète Dev and Contributors, 2023</TextBlock>
                     <TextBlock>Licensed under the GNU General Public License v3.0</TextBlock>
                     <TextBlock>Minecraft is the property of Mojang Studios, and they are not affiliated with this project</TextBlock>
