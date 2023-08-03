@@ -9,9 +9,17 @@ namespace Cacahuete.MinecraftLib.Http;
 
 public static class Api
 {
+    static ProductInfoHeaderValue? userAgent;
+
+    public static void SetUserAgent(ProductInfoHeaderValue ua)
+    {
+        userAgent = ua;
+    }
+    
     public static async Task<T?> GetAsync<T>(string url, bool patchDateTimes = false)
     {
         HttpClient client = new HttpClient();
+        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
 
         HttpResponseMessage resp = await client.GetAsync(url);
         Console.WriteLine($"{url} => {(int)resp.StatusCode} {resp.StatusCode}");

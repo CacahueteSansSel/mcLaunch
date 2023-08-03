@@ -1,7 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.IO.Compression;
+using System.Net.Http.Headers;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Cacahuete.MinecraftLib.Http;
+using Cacahuete.MinecraftLib.Models.GitHub;
 using mcLaunch.Installer.Core;
 using mcLaunch.Installer.Pages;
 
@@ -21,15 +25,33 @@ public partial class MainWindow : Window
         Instance = this;
         InitializeComponent();
         
+        Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch.Installer", "1.0.0"));
+        
         Parameters.SetDefaultTargetDirectory();
+
+        FetchLatestVersion();
+    }
+
+    async void FetchLatestVersion()
+    {
+        GitHubRelease? release = await GitHubRepository.GetLatestReleaseAsync();
+        if (release == null)
+        {
+            Environment.Exit(1);
+            return;
+        }
+        
+        Parameters.ReleaseToDownload = release;
         
         pages = new Control[]
         {
             new WelcomePage(),
-            new SelectFolderPage()
+            new SelectFolderPage(),
+            new CheckboxesSettingsPage()
         };
-        
         SetupPageContainer.Content = pages[0];
+
+        Title = $"mcLaunch Installer (for mcLaunch {release.Name})";
     }
 
     public void Previous()

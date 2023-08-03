@@ -17,7 +17,7 @@
                 <DockPanel VerticalAlignment="Center" Margin="5">
                     <TextBlock VerticalAlignment="Center" Margin="10 0 20 0" DockPanel.Dock="Left">Installation Directory</TextBlock>
                     <Button x:Name="SelectFolderButton" Margin="5 0 0 0" Click="SelectFolderButtonClicked" DockPanel.Dock="Right" Classes="secondary">Select</Button>
-                    <TextBox x:Name="TargetPathInput"></TextBox>
+                    <TextBox x:Name="TargetPathInput" VerticalContentAlignment="Center"></TextBox>
                 </DockPanel>
             </Border>
         </StackPanel>

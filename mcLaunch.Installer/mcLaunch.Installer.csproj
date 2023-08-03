@@ -57,4 +57,8 @@
       <None Remove="resources\sidebar.png" />
       <AvaloniaResource Include="resources\sidebar.png" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj" />
+    </ItemGroup>
 </Project>
