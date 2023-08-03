@@ -15,7 +15,7 @@ public partial class MainWindow : Window
 {
     public static MainWindow Instance { get; private set; }
 
-    Control[] pages;
+    InstallerPage[] pages;
     int pageCounter = 0;
 
     public InstallerParameters Parameters { get; set; } = new();
@@ -43,38 +43,67 @@ public partial class MainWindow : Window
         
         Parameters.ReleaseToDownload = release;
         
-        pages = new Control[]
+        pages = new InstallerPage[]
         {
             new WelcomePage(),
             new SelectFolderPage(),
-            new CheckboxesSettingsPage()
+            new CheckboxesSettingsPage(),
+            new InstallationPage(),
+            new InstalledPage()
         };
         SetupPageContainer.Content = pages[0];
+        pages[0].OnShow();
 
         Title = $"mcLaunch Installer (for mcLaunch {release.Name})";
+    }
+
+    public void HideBottomButtons()
+    {
+        PreviousButton.IsVisible = false;
+        NextButton.IsVisible = false;
+    }
+
+    public void HidePreviousButtons()
+    {
+        PreviousButton.IsVisible = false;
+        NextButton.IsVisible = true;
     }
 
     public void Previous()
     {
         if (pageCounter <= 0) return;
+        
+        pages[pageCounter].OnHide();
 
         pageCounter--;
-        Control page = pages[pageCounter];
+        InstallerPage page = pages[pageCounter];
         SetupPageContainer.Content = page;
         page.IsVisible = true;
-
+        
         PreviousButton.IsVisible = pageCounter > 0;
+        
+        page.OnShow();
     }
 
     public void Next()
     {
-        if (pageCounter + 1 >= pages.Length) return;
+        if (pageCounter + 1 >= pages.Length)
+        {
+            pages[pageCounter].OnHide();
+            Environment.Exit(0);
+            return;
+        }
+        
+        pages[pageCounter].OnHide();
 
         pageCounter++;
-        Control page = pages[pageCounter];
+        InstallerPage page = pages[pageCounter];
         SetupPageContainer.Content = page;
-
+        
         PreviousButton.IsVisible = true;
+        NextButton.Content = pageCounter + 1 >= pages.Length ? "Finish" : "Next";
+        
+        page.OnShow();
     }
 
     private void NextButtonClicked(object? sender, RoutedEventArgs e)

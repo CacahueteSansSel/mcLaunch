@@ -5,7 +5,7 @@ using Avalonia.Markup.Xaml;
 
 namespace mcLaunch.Installer.Pages;
 
-public partial class CheckboxesSettingsPage : UserControl
+public partial class CheckboxesSettingsPage : InstallerPage
 {
     public CheckboxesSettingsPage()
     {

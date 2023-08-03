@@ -5,7 +5,7 @@ using Cacahuete.MinecraftLib.Models.GitHub;
 
 namespace mcLaunch.Installer.Pages;
 
-public partial class WelcomePage : UserControl
+public partial class WelcomePage : InstallerPage
 {
     public WelcomePage()
     {

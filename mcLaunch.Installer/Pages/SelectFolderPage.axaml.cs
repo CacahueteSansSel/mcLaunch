@@ -5,7 +5,7 @@ using Avalonia.Markup.Xaml;
 
 namespace mcLaunch.Installer.Pages;
 
-public partial class SelectFolderPage : UserControl
+public partial class SelectFolderPage : InstallerPage
 {
     public SelectFolderPage()
     {
