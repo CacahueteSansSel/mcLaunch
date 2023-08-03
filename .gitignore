@@ -13,3 +13,5 @@ Tester
 mcLaunch/resources/credentials
 .nuke/temp
 output
+mcLaunch.Installer/bin
+mcLaunch.Installer/obj

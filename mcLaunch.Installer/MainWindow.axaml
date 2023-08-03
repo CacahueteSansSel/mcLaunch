@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="800" Height="450"
+        x:Class="mcLaunch.Installer.MainWindow"
+        Title="mcLaunch Installer"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        Icon="/resources/icon.ico"
+        Background="{DynamicResource BackgroundDarker}">
+    <Window.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </Window.Styles>
+    <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+        <Image DockPanel.Dock="Left" Source="resources/sidebar.png"></Image>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="10" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <Button x:Name="PreviousButton" IsVisible="False" Click="PreviousButtonClicked" Classes="secondary">Previous</Button>
+            <Button x:Name="NextButton" Click="NextButtonClicked" Classes="primary">Next</Button>
+        </StackPanel>
+        <ContentControl Margin="10" Width="600" x:Name="SetupPageContainer">
+            
+        </ContentControl>
+    </DockPanel>
+</Window>
