@@ -29,7 +29,11 @@ public partial class InstalledPage : InstallerPage
             string launcherExecutablePath =
                 $"{MainWindow.Instance.Parameters.TargetDirectory}{Path.DirectorySeparatorChar}mcLaunch.exe";
 
-            Process.Start(launcherExecutablePath);
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = launcherExecutablePath,
+                WorkingDirectory = MainWindow.Instance.Parameters.TargetDirectory
+            });
         }
     }
 }
