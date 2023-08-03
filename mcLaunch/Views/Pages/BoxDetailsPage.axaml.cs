@@ -82,7 +82,7 @@ public partial class BoxDetailsPage : UserControl
         SubControlContainer.Children.Add(SubControl);
 
         SubControlNameText.Text = control.Title;
-        
+
         PopulateSubControl();
     }
 

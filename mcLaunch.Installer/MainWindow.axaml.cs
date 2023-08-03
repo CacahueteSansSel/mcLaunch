@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO.Compression;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Installer.Core;
