@@ -8,6 +8,7 @@ using Cacahuete.MinecraftLib.Http;
 using Cacahuete.MinecraftLib.Models.GitHub;
 using mcLaunch.Installer.Core;
 using mcLaunch.Installer.Pages;
+using mcLaunch.Installer.Win32;
 
 namespace mcLaunch.Installer;
 
