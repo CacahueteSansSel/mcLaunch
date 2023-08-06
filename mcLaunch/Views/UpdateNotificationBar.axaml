@@ -12,7 +12,7 @@
         <DockPanel VerticalAlignment="Center" Margin="10 0 10 0">
             <StackPanel VerticalAlignment="Center" DockPanel.Dock="Left" Orientation="Vertical">
                 <TextBlock DockPanel.Dock="Left">An update for mcLaunch is available</TextBlock>
-                <TextBlock DockPanel.Dock="Left" Classes="title">mcLaunch v1.0.1</TextBlock>
+                <TextBlock x:Name="VersionNameText" DockPanel.Dock="Left" Classes="title">mcLaunch v1.0.1</TextBlock>
             </StackPanel>
             <StackPanel DockPanel.Dock="Right" Spacing="5" Orientation="Horizontal">
                 <Button Classes="secondary" Click="IgnoreButtonClicked">Ignore</Button>

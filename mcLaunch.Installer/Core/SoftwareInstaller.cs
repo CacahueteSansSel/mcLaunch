@@ -12,6 +12,7 @@ namespace mcLaunch.Installer.Core;
 public class SoftwareInstaller
 {
     public InstallerParameters Parameters { get; private set; }
+    public bool CopyInstaller { get; set; } = true;
     public event Action? OnExtractionStarted;
 
     public SoftwareInstaller(InstallerParameters parameters)
@@ -22,20 +23,21 @@ public class SoftwareInstaller
     async Task RunPostInstallTasks()
     {
         string appPath = $"{Parameters.TargetDirectory}/mcLaunch.exe";
-        
+
         if (Parameters.PlaceShortcutOnDesktop)
         {
             string shortcutPath =
                 $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}{Path.DirectorySeparatorChar}mcLaunch.lnk";
-            
-            Shortcut.Create(shortcutPath, appPath, "", Parameters.TargetDirectory, "mcLaunch Minecraft Launcher", "", appPath);
+
+            Shortcut.Create(shortcutPath, appPath, "", Parameters.TargetDirectory, "mcLaunch Minecraft Launcher", "",
+                appPath);
         }
 
         if (Parameters.RegisterInApplicationList)
         {
             // Source code from : https://stackoverflow.com/questions/68230927/how-do-i-make-my-program-show-up-in-apps-and-features
             // 1st answer
-            
+
             RegistryKey regKey = Registry.LocalMachine
                 .OpenSubKey("SOFTWARE")
                 .OpenSubKey("Microsoft")
@@ -47,10 +49,10 @@ public class SoftwareInstaller
             regKey.SetValue("DisplayIcon", appPath);
             regKey.SetValue("DisplayName", "mcLaunch");
             regKey.SetValue("DisplayVersion", Parameters.ReleaseToDownload.Name);
-            regKey.SetValue("Publisher", "Cacahuète Dev & Contributors"); 
+            regKey.SetValue("Publisher", "Cacahuète Dev & Contributors");
             regKey.SetValue("UninstallString", $"{Parameters.TargetDirectory}/uninstall.exe");
 
-            regKey.Close();  
+            regKey.Close();
         }
     }
 
@@ -63,18 +65,23 @@ public class SoftwareInstaller
         GitHubReleaseAsset platformAsset = Parameters.ReleaseToDownload.Assets
             .First(asset => asset.Name.ToLower() == $"mclaunch-{platform}.zip");
 
-        using MemoryStream archiveStream = await Downloader.DownloadToMemoryAsync(platformAsset.DownloadUrl, (long)platformAsset.Size);
-        
+        using MemoryStream archiveStream =
+            await Downloader.DownloadToMemoryAsync(platformAsset.DownloadUrl, (long) platformAsset.Size);
+
         OnExtractionStarted?.Invoke();
 
         if (!Directory.Exists(Parameters.TargetDirectory))
             Directory.CreateDirectory(Parameters.TargetDirectory);
 
         using ZipArchive archive = new(archiveStream, ZipArchiveMode.Read, false);
-        archive.ExtractToDirectory(Parameters.TargetDirectory);
-        
-        File.Copy(Environment.GetCommandLineArgs()[0], $"{Parameters.TargetDirectory}/installer.exe");
-        
+        archive.ExtractToDirectory(Parameters.TargetDirectory, true);
+
+        if (CopyInstaller)
+        {
+            Directory.CreateDirectory($"{Parameters.TargetDirectory}/installer");
+            File.Copy(Environment.GetCommandLineArgs()[0], $"{Parameters.TargetDirectory}/installer/installer.exe");
+        }
+
         MainWindow.Instance.Next();
 
         await RunPostInstallTasks();

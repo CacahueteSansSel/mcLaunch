@@ -1,10 +1,14 @@
 using System;
 using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Cacahuete.MinecraftLib.Auth;
+using Cacahuete.MinecraftLib.Http;
 using mcLaunch.Core.Managers;
+using mcLaunch.GitHub;
+using mcLaunch.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
@@ -20,6 +24,9 @@ public partial class MainWindow : Window
     {
         Instance = this;
         InitializeComponent();
+        
+        UpdateBar.IsVisible = false;
+        Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch", BuildStatic.BuildVersion.ToString()));
 
         DataContext = new MainWindowDataContext(null, false);
 
@@ -105,6 +112,13 @@ public partial class MainWindow : Window
         else
         {
             MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
+        }
+        
+        // Check for updates
+        if (await UpdateManager.IsUpdateAvailableAsync())
+        {
+            UpdateBar.IsVisible = true;
+            UpdateBar.SetUpdateDetails(await GitHubRepository.GetLatestReleaseAsync());
         }
     }
 }

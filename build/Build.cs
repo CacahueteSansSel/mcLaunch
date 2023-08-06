@@ -134,9 +134,11 @@ class Build : NukeBuild
             );
             
             Log.Information("Zipping windows build...");
+            if (File.Exists($"{outputDirPath}/mcLaunch-windows.zip")) File.Delete($"{outputDirPath}/mcLaunch-windows.zip");
             ZipFile.CreateFromDirectory($"{outputDirPath}/windows", $"{outputDirPath}/mcLaunch-windows.zip");
             
             Log.Information("Zipping linux build...");
+            if (File.Exists($"{outputDirPath}/mcLaunch-linux.zip")) File.Delete($"{outputDirPath}/mcLaunch-linux.zip");
             ZipFile.CreateFromDirectory($"{outputDirPath}/linux", $"{outputDirPath}/mcLaunch-linux.zip");
         });
 

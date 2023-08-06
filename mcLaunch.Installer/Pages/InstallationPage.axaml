@@ -10,7 +10,7 @@
     
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Vertical" Spacing="3">
-            <TextBlock Classes="title" FontSize="25" Margin="0 0 0 10">Installing mcLaunch</TextBlock>
+            <TextBlock x:Name="TitleText" Classes="title" FontSize="25" Margin="0 0 0 10">Installing mcLaunch</TextBlock>
             <TextBlock>Please wait while mcLaunch is being installed...</TextBlock>
             <Border Margin="0 15 0 0" Classes="frame">
                 <StackPanel Margin="10" Spacing="5" Orientation="Vertical">

@@ -21,6 +21,14 @@ public partial class InstallationPage : InstallerPage
         installer.OnExtractionStarted += OnExtractionStarted;
     }
 
+    public InstallationPage SetUpdate()
+    {
+        TitleText.Text = "Updating mcLaunch";
+        installer.CopyInstaller = false;
+        
+        return this;
+    }
+
     private void OnExtractionStarted()
     {
         StatusText.Text = "Extracting...";
@@ -38,6 +46,15 @@ public partial class InstallationPage : InstallerPage
         base.OnShow();
 
         MainWindow.Instance.HideBottomButtons();
-        await installer.InstallAsync();
+
+        try
+        {
+            await installer.InstallAsync();
+        }
+        catch (Exception e)
+        {
+            File.WriteAllText("error.log", e.ToString());
+            Environment.Exit(1);
+        }
     }
 }

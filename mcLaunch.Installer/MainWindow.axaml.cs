@@ -44,6 +44,26 @@ public partial class MainWindow : Window
         }
         
         Parameters.ReleaseToDownload = release;
+
+        if (Environment.GetCommandLineArgs().Length == 2)
+        {
+            string updateDirectory = Environment.GetCommandLineArgs()[1];
+
+            Parameters.RegisterInApplicationList = false;
+            Parameters.PlaceShortcutOnDesktop = false;
+            Parameters.TargetDirectory = updateDirectory;
+
+            pages = new InstallerPage[]
+            {
+                new InstallationPage().SetUpdate(),
+                new InstalledPage()
+            };
+            
+            SetupPageContainer.Content = pages[0];
+            pages[0].OnShow();
+            
+            return;
+        }
         
         pages = new InstallerPage[]
         {

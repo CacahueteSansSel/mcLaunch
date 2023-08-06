@@ -20,7 +20,7 @@
         <DockPanel>
             <views:HeaderBar x:Name="TopHeaderBar" ZIndex="10" IsHitTestVisible="False" DockPanel.Dock="Top"></views:HeaderBar>
             <views:ToolButtonsBar x:Name="TopBar" ZIndex="10" IsVisible="{Binding ShowDecorations}" IsEnabled="{Binding ShowDecorations}" DockPanel.Dock="Top"></views:ToolButtonsBar>
-            <views:UpdateNotificationBar></views:UpdateNotificationBar>
+            <views:UpdateNotificationBar x:Name="UpdateBar" IsVisible="False" DockPanel.Dock="Top"></views:UpdateNotificationBar>
             <views:BottomStatusBar x:Name="BottomBar" ZIndex="10" IsVisible="False" IsEnabled="{Binding ShowDecorations}" DockPanel.Dock="Bottom"></views:BottomStatusBar>
             <ContentControl Content="{Binding CurrentPage}">
                 
