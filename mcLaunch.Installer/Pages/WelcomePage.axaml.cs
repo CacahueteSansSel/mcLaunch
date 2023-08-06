@@ -1,7 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Cacahuete.MinecraftLib.Models.GitHub;
 
 namespace mcLaunch.Installer.Pages;
 

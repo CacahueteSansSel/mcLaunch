@@ -60,6 +60,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj" />
+      <ProjectReference Include="..\mcLaunch.GitHub\mcLaunch.GitHub.csproj" />
     </ItemGroup>
 </Project>

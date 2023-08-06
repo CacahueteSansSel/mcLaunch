@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Cacahuete.MinecraftLib.Models.GitHub;
+namespace mcLaunch.GitHub.Models;
 
 public class GitHubReleaseAsset
 {

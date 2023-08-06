@@ -142,6 +142,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj" />
       <ProjectReference Include="..\mcLaunch.Core\mcLaunch.Core.csproj" />
+      <ProjectReference Include="..\mcLaunch.GitHub\mcLaunch.GitHub.csproj" />
     </ItemGroup>
 
     <ItemGroup>

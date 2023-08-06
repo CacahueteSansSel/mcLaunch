@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Cacahuete.MinecraftLib.Http;
-using Cacahuete.MinecraftLib.Models.GitHub;
+using mcLaunch.GitHub.Models;
 
-namespace mcLaunch.Installer.Core;
+namespace mcLaunch.GitHub;
 
 public static class GitHubRepository
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Cacahuete.MinecraftLib.Models.GitHub;
+using mcLaunch.GitHub.Models;
 
 namespace mcLaunch.Installer.Core;
 

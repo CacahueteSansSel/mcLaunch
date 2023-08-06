@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
-using Cacahuete.MinecraftLib.Models.GitHub;
+using mcLaunch.GitHub.Models;
 using mcLaunch.Installer.Win32;
 using Microsoft.Win32;
 

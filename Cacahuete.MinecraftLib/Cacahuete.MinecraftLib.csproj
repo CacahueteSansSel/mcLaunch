@@ -11,4 +11,8 @@
       <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.29.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\GitHub\" />
+    </ItemGroup>
+
 </Project>
