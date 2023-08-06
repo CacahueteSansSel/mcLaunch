@@ -106,7 +106,7 @@ public class LibrariesDownloader
 
         ClassPath.Clear();
 
-        if (version.Assets != "pre-1.6")
+        if (version.Assets != "pre-1.6" && version.Assets != "legacy")
         {
             // Try to force the latest LWJGL version
             string? latestLwjglVersion = GetLatestLwjglVersion(version);
