@@ -146,10 +146,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Managers" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Update="Views\Popups\LoadingPopup.axaml.cs">
         <DependentUpon>LoadingPopup.axaml</DependentUpon>
         <SubType>Code</SubType>

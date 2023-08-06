@@ -73,6 +73,8 @@ public class SoftwareInstaller
         using ZipArchive archive = new(archiveStream, ZipArchiveMode.Read, false);
         archive.ExtractToDirectory(Parameters.TargetDirectory);
         
+        File.Copy(Environment.GetCommandLineArgs()[0], $"{Parameters.TargetDirectory}/installer.exe");
+        
         MainWindow.Instance.Next();
 
         await RunPostInstallTasks();

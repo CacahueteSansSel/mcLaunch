@@ -15,3 +15,5 @@ mcLaunch/resources/credentials
 output
 mcLaunch.Installer/bin
 mcLaunch.Installer/obj
+mcLaunch.GitHub/bin
+mcLaunch.GitHub/obj
