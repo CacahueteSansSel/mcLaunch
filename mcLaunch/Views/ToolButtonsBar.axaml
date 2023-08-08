@@ -18,7 +18,7 @@
         <Button DockPanel.Dock="Right" Margin="0 0 20 0" Classes="secondary square" ToolTip.Tip="Manage settings" Click="SettingsButtonClicked">
             <Image Source="/resources/icons/cog.png" Width="16" Height="16"></Image>
         </Button>
-        <Border Classes="frame" Margin="10 10 10 10" BoxShadow="" Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
+        <Border Classes="frame-without-shadow" Margin="10 10 10 10" BoxShadow="" Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
             <StackPanel Orientation="Horizontal">
                 <Image Source="{Binding HeadIcon}" Margin="10 7 7 7"></Image>
                 <StackPanel Margin="5 0 0 0" VerticalAlignment="Center">

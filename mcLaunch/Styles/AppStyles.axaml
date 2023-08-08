@@ -91,6 +91,13 @@
         <Setter Property="BoxShadow" Value="0 3 10 1 #AA000000"></Setter>
     </Style>
     
+    <Style Selector="Border.frame-without-shadow">
+        <Setter Property="Background" Value="{DynamicResource Background}"></Setter>
+        <Setter Property="CornerRadius" Value="4"></Setter>
+        <Setter Property="BorderThickness" Value="1"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+    </Style>
+    
     <Style Selector="Border.frame-light">
         <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"></Setter>
         <Setter Property="CornerRadius" Value="4"></Setter>
