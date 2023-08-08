@@ -41,6 +41,8 @@ public class ForgeModLoaderVersion : ModLoaderVersion
             await File.WriteAllBytesAsync(fullPath, await resp.Content.ReadAsByteArrayAsync());
         }
 
+        // TODO: Implement a new way for installing Forge
+        
         string wrapperJarPath = Path.GetFullPath("forge/target/wrapper.jar");
 
         string args =
@@ -52,7 +54,9 @@ public class ForgeModLoaderVersion : ModLoaderVersion
         {
             Arguments = args,
             FileName = JvmExecutablePath,
-            WorkingDirectory = SystemFolderPath
+            WorkingDirectory = SystemFolderPath,
+            UseShellExecute = true,
+            CreateNoWindow = true
         });
 
         await forgeInstaller.WaitForExitAsync();

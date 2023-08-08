@@ -1,6 +1,8 @@
-﻿using System.Text.Json;
+﻿using System.IO.Compression;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
@@ -77,6 +79,24 @@ public static class BoxManager
         if (manifest.Icon is Bitmap bmp)
         {
             bmp.Save($"{path}/icon.png");
+        }
+        
+        if (!Directory.Exists("forge"))
+        {
+            // Extract the forge wrapper from resources
+            // This is a copy of portablemc's old wrapper code for the forge installer, along with license
+            // & source code
+            // We might want to find a new way for installing Forge in the future
+            // TODO: Implement a new way for installing Forge
+
+            await using Stream zipStream = AssetLoader.Open(new Uri("avares://mcLaunch/resources/internal/forge_wrapper.zip"));
+            await using MemoryStream tmpStream = new();
+            string forgeWrapperPath = Path.GetFullPath("forge");
+
+            await zipStream.CopyToAsync(tmpStream);
+
+            using ZipArchive zip = new ZipArchive(tmpStream);
+            zip.ExtractToDirectory(forgeWrapperPath, true);
         }
 
         await manifest.Setup();

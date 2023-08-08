@@ -138,6 +138,8 @@
       <AvaloniaResource Include="resources\icons\curseforge.png" />
       <None Remove="resources\icons\dot.png" />
       <AvaloniaResource Include="resources\icons\dot.png" />
+      <None Remove="resources\internal\forge_wrapper.zip" />
+      <AvaloniaResource Include="resources\internal\forge_wrapper.zip" />
     </ItemGroup>
 
     <ItemGroup>
