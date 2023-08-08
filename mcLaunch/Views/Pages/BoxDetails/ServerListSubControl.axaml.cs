@@ -7,18 +7,14 @@ using mcLaunch.Core.MinecraftFormats;
 
 namespace mcLaunch.Views.Pages.BoxDetails;
 
-public partial class ServerListSubControl : UserControl, ISubControl
+public partial class ServerListSubControl : SubControl
 {
     public ServerListSubControl()
     {
         InitializeComponent();
     }
-
-    public BoxDetailsPage ParentPage { get; set; }
-    public Box Box { get; set; }
-    public string Title { get; } = "SERVERS";
     
-    public async Task PopulateAsync()
+    public override async Task PopulateAsync()
     {
         ServersList.SetBox(Box);
         ServersList.SetLaunchPage(ParentPage);

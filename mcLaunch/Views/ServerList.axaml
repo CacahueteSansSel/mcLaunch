@@ -14,7 +14,7 @@
     </UserControl.Styles>
     <Panel>
         <StackPanel Orientation="Vertical">
-            <ListBox x:Name="ServersList" SelectionMode="Single" Items="{Binding Servers}"
+            <ListBox x:Name="ServersList" SelectionMode="Single" ItemsSource="{Binding Servers}"
                      SelectionChanged="WorldSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">

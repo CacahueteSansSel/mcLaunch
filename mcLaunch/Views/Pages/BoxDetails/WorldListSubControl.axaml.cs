@@ -7,18 +7,14 @@ using mcLaunch.Core.MinecraftFormats;
 
 namespace mcLaunch.Views.Pages.BoxDetails;
 
-public partial class WorldListSubControl : UserControl, ISubControl
+public partial class WorldListSubControl : SubControl
 {
     public WorldListSubControl()
     {
         InitializeComponent();
     }
-
-    public BoxDetailsPage ParentPage { get; set; }
-    public Box Box { get; set; }
-    public string Title { get; } = "WORLDS";
     
-    public async Task PopulateAsync()
+    public override async Task PopulateAsync()
     {
         WorldsList.SetLoadingCircle(true);
         

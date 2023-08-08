@@ -28,7 +28,7 @@ public partial class BoxDetailsPage : UserControl
     public static BoxDetailsPage? LastOpened { get; private set; }
     
     public Box Box { get; }
-    public ISubControl SubControl { get; private set; }
+    public SubControl SubControl { get; private set; }
 
     public BoxDetailsPage()
     {
@@ -75,7 +75,7 @@ public partial class BoxDetailsPage : UserControl
         WarningStripe.IsVisible = false;
     }
     
-    public void SetSubControl(ISubControl control)
+    public void SetSubControl(SubControl control)
     {
         SubControl = control;
         SubControlContainer.Children.Clear();

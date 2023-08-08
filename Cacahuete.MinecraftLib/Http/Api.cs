@@ -68,7 +68,8 @@ public static class Api
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         string inputJson = JsonSerializer.Serialize(data);
-        HttpContent content = new StringContent(inputJson, new MediaTypeHeaderValue("application/json"));
+        HttpContent content = new StringContent(inputJson);
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         HttpResponseMessage resp = await client.PostAsync(url, content);
         resp.EnsureSuccessStatusCode();
 

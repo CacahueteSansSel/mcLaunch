@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
-using Avalonia.Visuals.Media.Imaging;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;

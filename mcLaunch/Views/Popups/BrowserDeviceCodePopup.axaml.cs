@@ -26,7 +26,7 @@ public partial class BrowserDeviceCodePopup : UserControl
 
     private async void CopyAndOpenButtonClicked(object? sender, RoutedEventArgs e)
     {
-        await Application.Current.Clipboard.SetTextAsync(parameters.Code);
+        await MainWindow.Instance.Clipboard!.SetTextAsync(parameters.Code);
 
         CopyAndOpenButton.IsEnabled = false;
         CancelButton.IsEnabled = false;

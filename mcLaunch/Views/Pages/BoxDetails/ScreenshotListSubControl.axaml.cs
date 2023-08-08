@@ -6,18 +6,14 @@ using mcLaunch.Core.Boxes;
 
 namespace mcLaunch.Views.Pages.BoxDetails;
 
-public partial class ScreenshotListSubControl : UserControl, ISubControl
+public partial class ScreenshotListSubControl : SubControl
 {
     public ScreenshotListSubControl()
     {
         InitializeComponent();
     }
-
-    public BoxDetailsPage ParentPage { get; set; }
-    public Box Box { get; set; }
-    public string Title { get; } = "SCREENSHOTS";
     
-    public async Task PopulateAsync()
+    public override async Task PopulateAsync()
     {
         Container.Children.Clear();
         

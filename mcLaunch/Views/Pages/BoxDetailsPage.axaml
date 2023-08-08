@@ -34,8 +34,8 @@
                     <StackPanel Margin="1" Orientation="Vertical">
                         <DockPanel Margin="38 38 38 0" LastChildFill="True">
                             <Panel>
-                                <Image PointerEnter="BoxIconCursorEntered" PointerLeave="BoxIconCursorLeft" DockPanel.Dock="Left" Source="{Binding Manifest.Icon}" Height="155"></Image>
-                                <Button IsVisible="False" IsEnabled="False" PointerEnter="BoxIconCursorEntered" x:Name="EditIconButton" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 5 5" Classes="transparent" Click="EditIconButtonClicked">
+                                <Image PointerEntered="BoxIconCursorEntered" PointerExited="BoxIconCursorLeft" DockPanel.Dock="Left" Source="{Binding Manifest.Icon}" Height="155"></Image>
+                                <Button IsVisible="False" IsEnabled="False" PointerEntered="BoxIconCursorEntered" x:Name="EditIconButton" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 5 5" Classes="transparent" Click="EditIconButtonClicked">
                                     <Image Source="/resources/icons/edit.png" Width="18" Height="18"></Image>
                                 </Button>
                             </Panel>

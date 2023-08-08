@@ -11,8 +11,7 @@ public static class Credentials
     {
         try
         {
-            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            using var stream = assets.Open(new Uri($"avares://mcLaunch/resources/credentials/{name}.txt"));
+            using var stream = AssetLoader.Open(new Uri($"avares://mcLaunch/resources/credentials/{name}.txt"));
 
             return new StreamReader(stream).ReadToEnd();
         }

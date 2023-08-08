@@ -22,7 +22,7 @@
                     Click="SelectVersionButtonClicked" IsVisible="False">
                 Select
             </Button>
-            <ListBox x:Name="ModList" SelectionMode="Single" Items="{Binding .}"
+            <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{Binding .}"
                      SelectionChanged="VersionSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">

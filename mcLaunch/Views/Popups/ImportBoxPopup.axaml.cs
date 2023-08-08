@@ -109,8 +109,7 @@ public partial class ImportBoxPopup : UserControl
         
         Navigation.HidePopup();
         
-        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-        Bitmap bmp = new Bitmap(assets.Open(new Uri($"avares://mcLaunch/resources/default_cf_modpack_logo.png")));
+        Bitmap bmp = new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/default_cf_modpack_logo.png")));
         box.SetAndSaveIcon(bmp);
         
         Navigation.Push(new BoxDetailsPage(box));
@@ -160,8 +159,7 @@ public partial class ImportBoxPopup : UserControl
         }
         else
         {
-            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            Bitmap bmp = new Bitmap(assets.Open(new Uri($"avares://mcLaunch/resources/default_box_logo.png")));
+            Bitmap bmp = new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/default_box_logo.png")));
             box.SetAndSaveIcon(bmp);
         }
 

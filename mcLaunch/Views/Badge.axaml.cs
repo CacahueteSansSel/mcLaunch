@@ -64,8 +64,7 @@ public partial class Badge : UserControl
         {
             Text = text;
 
-            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            Icon = new Bitmap(assets.Open(new Uri($"avares:resources/icons/{iconName}.png")));
+            Icon = new Bitmap(AssetLoader.Open(new Uri($"avares:resources/icons/{iconName}.png")));
         }
     }
 }

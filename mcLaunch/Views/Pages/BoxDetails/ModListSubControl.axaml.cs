@@ -14,18 +14,14 @@ using mcLaunch.Views.Popups;
 
 namespace mcLaunch.Views.Pages.BoxDetails;
 
-public partial class ModListSubControl : UserControl, ISubControl
+public partial class ModListSubControl : SubControl
 {
     public ModListSubControl()
     {
         InitializeComponent();
     }
 
-    public BoxDetailsPage ParentPage { get; set; }
-    public Box Box { get; set; }
-    public string Title { get; } = "MODS";
-
-    public async Task PopulateAsync()
+    public override async Task PopulateAsync()
     {
         if (Box.Manifest.ModLoader is VanillaModLoaderSupport)
         {

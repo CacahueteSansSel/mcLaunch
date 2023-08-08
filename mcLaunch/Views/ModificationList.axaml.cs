@@ -70,8 +70,7 @@ public partial class ModificationList : UserControl
         Data ctx = (Data) DataContext;
         List<Modification> newList = new List<Modification>(ctx.Modifications);
         
-        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-        Bitmap bmp = new Bitmap(assets.Open(new Uri($"avares://mcLaunch/resources/default_mod_logo.png")));
+        Bitmap bmp = new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/default_mod_logo.png")));
 
         foreach (Modification mod in newList)
         {

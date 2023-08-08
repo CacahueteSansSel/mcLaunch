@@ -72,15 +72,15 @@ public class MinecraftOptions : Dictionary<string, object>
             return input.Trim('"');
         }
             
-        if (int.TryParse(input, CultureInfo.InvariantCulture, out int intValue))
+        if (int.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out int intValue))
         {
             return intValue;
         }
-        if (float.TryParse(input, CultureInfo.InvariantCulture, out float floatValue))
+        if (float.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out float floatValue))
         {
             return floatValue;
         }
-        if (double.TryParse(input, CultureInfo.InvariantCulture, out double doubleValue))
+        if (double.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleValue))
         {
             return doubleValue;
         }

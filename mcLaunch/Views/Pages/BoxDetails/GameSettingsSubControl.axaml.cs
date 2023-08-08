@@ -8,18 +8,14 @@ using mcLaunch.Views.Pages.Settings;
 
 namespace mcLaunch.Views.Pages.BoxDetails;
 
-public partial class GameSettingsSubControl : UserControl, ISubControl
+public partial class GameSettingsSubControl : SubControl
 {
-    public BoxDetailsPage ParentPage { get; set; }
-    public Box Box { get; set; }
-    public string Title { get; } = "GAME SETTINGS";
-
     public GameSettingsSubControl()
     {
         InitializeComponent();
     }
 
-    public async Task PopulateAsync()
+    public override async Task PopulateAsync()
     {
         Container.Children.Clear();
 

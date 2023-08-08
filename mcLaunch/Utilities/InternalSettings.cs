@@ -11,8 +11,7 @@ public static class InternalSettings
     {
         try
         {
-            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            using var stream = assets.Open(new Uri($"avares://mcLaunch/resources/settings/{filename}"));
+            using var stream = AssetLoader.Open(new Uri($"avares://mcLaunch/resources/settings/{filename}"));
 
             return new StreamReader(stream).ReadToEnd();
         }

@@ -10,8 +10,8 @@
     </UserControl.Styles>
     <Border Classes="frame">
         <Panel Margin="10">
-            <Image x:Name="Picture" Source="/resources/default_screenshot.png" PointerEnter="EnterScreenshot" PointerLeave="LeaveScreenshot"></Image>
-            <DockPanel x:Name="Overlay" IsVisible="False"  PointerEnter="EnterScreenshot" PointerLeave="LeaveScreenshot">
+            <Image x:Name="Picture" Source="/resources/default_screenshot.png" PointerEntered="EnterScreenshot" PointerExited="LeaveScreenshot"></Image>
+            <DockPanel x:Name="Overlay" IsVisible="False"  PointerEntered="EnterScreenshot" PointerExited="LeaveScreenshot">
                 <StackPanel Margin="10" DockPanel.Dock="Right">
                     <Button Classes="transparent" Click="CloseButtonClicked">
                         <Image Source="/resources/icons/close.png" Width="15"></Image>

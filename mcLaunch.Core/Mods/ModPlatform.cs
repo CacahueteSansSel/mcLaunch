@@ -25,8 +25,7 @@ public abstract class ModPlatform
 
     public ModPlatform WithIcon(string name)
     {
-        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-        Icon = new Bitmap(assets.Open(new Uri($"avares://mcLaunch/resources/icons/{name}.png")));
+        Icon = new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{name}.png")));
 
         return this;
     }
