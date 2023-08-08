@@ -11,7 +11,8 @@
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaTitleBarHeightHint="50"
         Icon="/resources/icon.ico"
-        Background="{DynamicResource BackgroundDarker}">
+        Background="{DynamicResource BackgroundDarker}"
+        RenderOptions.BitmapInterpolationMode="HighQuality">
     <Window.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </Window.Styles>

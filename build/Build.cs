@@ -23,7 +23,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [ShutdownDotNetAfterServerBuild]
 class Build : NukeBuild
 {
-    const string FrameworkVersion = "net7.0";
+    const string FrameworkVersion = "net6.0";
 
     /// Support plugins are available for:
     ///   - JetBrains ReSharper        https://nuke.build/resharper
