@@ -16,7 +16,7 @@
                 AlignmentX="Left"
                 AlignmentY="Top"
                 Source="/resources/bottom_bar_progress_background.png"
-                Opacity="0.5"
+                Opacity="0.35"
                 Stretch="None"
                 TileMode="Tile" />
         </Panel.Background>

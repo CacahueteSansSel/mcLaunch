@@ -33,8 +33,10 @@
                                         HorizontalContentAlignment="Center" Click="UninstallButtonClicked">
                                     Uninstall
                                 </Button>
-                                <Border x:Name="LoadingButtonFrame" IsVisible="False" Width="124" Height="40" Background="{DynamicResource BackgroundDarker}"
-                                        BorderBrush="{DynamicResource BackgroundLighter}" BorderThickness="1" CornerRadius="4">
+                                <Border x:Name="LoadingButtonFrame" IsVisible="False" Width="124" Height="40"
+                                        Background="{DynamicResource BackgroundDarker}"
+                                        BorderBrush="{DynamicResource BackgroundLighter}" BorderThickness="1"
+                                        CornerRadius="4">
                                     <views:LoadingCircle RenderTransform="scale(0.65)"></views:LoadingCircle>
                                 </Border>
                             </StackPanel>
@@ -50,7 +52,9 @@
                             </StackPanel>
                         </DockPanel>
                         <StackPanel Orientation="Vertical" Margin="38 0 38 38">
-                            <avalonia:MarkdownScrollViewer Margin="0 10 0 0" Markdown="{Binding LongDescriptionBody}" />
+                            <avalonia:MarkdownScrollViewer Margin="0 10 0 0" Markdown="{Binding LongDescriptionBody}">
+                                
+                            </avalonia:MarkdownScrollViewer>
                         </StackPanel>
                     </StackPanel>
                 </Border>
