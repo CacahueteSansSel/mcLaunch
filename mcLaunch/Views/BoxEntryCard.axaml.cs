@@ -1,8 +1,11 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using mcLaunch.Models;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
@@ -30,6 +33,14 @@ public partial class BoxEntryCard : UserControl
     {
         Box = box;
         DataContext = box.Manifest;
+
+        VersionBadge.Text = box.Manifest.Version;
+        ModLoaderBadge.Text = box.ModLoader?.Name ?? "Unknown";
+        if (box.ModLoader != null)
+        {
+            ModLoaderBadge.Icon =
+                new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{box.ModLoader.Id}.png")));
+        }
 
         Regex snapshotVersionRegex = new Regex("\\d.w\\d.a");
 

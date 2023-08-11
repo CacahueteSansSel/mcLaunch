@@ -140,6 +140,14 @@
       <AvaloniaResource Include="resources\icons\dot.png" />
       <None Remove="resources\internal\forge_wrapper.zip" />
       <AvaloniaResource Include="resources\internal\forge_wrapper.zip" />
+      <None Remove="resources\icons\quilt.png" />
+      <AvaloniaResource Include="resources\icons\quilt.png" />
+      <None Remove="resources\icons\forge.png" />
+      <AvaloniaResource Include="resources\icons\forge.png" />
+      <None Remove="resources\icons\fabric.png" />
+      <AvaloniaResource Include="resources\icons\fabric.png" />
+      <None Remove="resources\icons\vanilla.png" />
+      <AvaloniaResource Include="resources\icons\vanilla.png" />
     </ItemGroup>
 
     <ItemGroup>

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d" d:DesignWidth="600"
-             Width="600" Height="450"
+             Width="600" Height="460"
              x:Class="mcLaunch.Views.Popups.NewBoxPopup">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
@@ -14,18 +14,24 @@
             <TextBlock Classes="title" FontSize="25">Create a new box</TextBlock>
             <DockPanel Margin="0 20 0 0">
                 <StackPanel>
-                    <TextBlock Classes="light" Margin="0 0 0 0">Icon</TextBlock>
-                    <Image x:Name="BoxIconImage" Source="/resources/default_box_logo.png" Width="103"></Image>
-                    <Button Classes="secondary" Margin="0 20 0 0" Click="SelectFileButtonClicked">Select file</Button>
+                    <TextBlock Classes="light" Margin="0 0 0 5">Icon</TextBlock>
+                    <Border CornerRadius="5" ClipToBounds="True">
+                        <Panel>
+                            <Image x:Name="BoxIconImage" Source="/resources/default_box_logo.png" Width="103"></Image>
+                            <Button Classes="transparent" ToolTip.Tip="Edit icon" Margin="0 0 5 5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="SelectFileButtonClicked">
+                                <Image Source="/resources/icons/edit.png" Width="18" Height="18"></Image>
+                            </Button>
+                        </Panel>
+                    </Border>
                 </StackPanel>
                 <StackPanel Margin="20 0 0 0" Orientation="Vertical">
-                    <TextBlock Classes="light" Margin="0 0 0 0">Box Name</TextBlock>
+                    <TextBlock Classes="light" Margin="0 0 0 5">Box Name</TextBlock>
                     <TextBox x:Name="BoxNameTb" Watermark="Name" UseFloatingWatermark="False" KeyUp="BoxNameTextChanged"></TextBox>
-                    <TextBlock Classes="light" Margin="0 20 0 0">Author Name</TextBlock>
+                    <TextBlock Classes="light" Margin="0 20 0 5">Author Name</TextBlock>
                     <TextBox x:Name="AuthorNameTb" Watermark="Author" UseFloatingWatermark="False"></TextBox>
-                    <TextBlock Classes="light" Margin="0 20 0 0">Minecraft version</TextBlock>
+                    <TextBlock Classes="light" Margin="0 20 0 5">Minecraft version</TextBlock>
                     <views:MinecraftVersionSelector x:Name="VersionSelector"></views:MinecraftVersionSelector>
-                    <TextBlock Classes="light" Margin="0 20 0 0">Modding framework</TextBlock>
+                    <TextBlock Classes="light" Margin="0 20 0 5">Mod Loader</TextBlock>
                     <ComboBox x:Name="ModloaderCbox" SelectedItem="{Binding SelectedModLoader}" ItemsSource="{Binding ModLoaders}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>

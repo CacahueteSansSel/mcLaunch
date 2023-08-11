@@ -38,6 +38,7 @@ public class Modification : ReactiveObject
     public string? InstalledVersion { get; set; }
     public bool IsUpdateRequired { get; set; }
     public string? Filename { get; set; }
+    public bool IsFilenameEmpty => string.IsNullOrWhiteSpace(Filename);
     public int? DownloadCount { get; set; }
     public DateTime? LastUpdated { get; set; }
 

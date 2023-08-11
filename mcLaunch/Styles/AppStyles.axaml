@@ -29,9 +29,9 @@
         
     <Style Selector="StackPanel.smoothShowLeft">
         <Style.Animations>
-            <Animation Duration="0:0:.5" Easing="QuinticEaseInOut" IterationCount="1">
+            <Animation Duration="0:0:.25" Easing="QuinticEaseInOut" IterationCount="0" FillMode="Forward">
                 <KeyFrame Cue="0%">
-                    <Setter Property="TranslateTransform.X" Value="-10"/>
+                    <Setter Property="TranslateTransform.X" Value="-5"/>
                     <Setter Property="Opacity" Value="0"/>
                 </KeyFrame>
                 <KeyFrame Cue="100%">

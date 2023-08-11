@@ -4,6 +4,7 @@ using System.Text.Json;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core;
+using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using DynamicData;
 using mcLaunch.Core.Managers;
@@ -26,6 +27,7 @@ public class Box
     public MinecraftVersion Version { get; private set; }
     public MinecraftOptions Options { get; private set; }
     public BoxManifest Manifest { get; }
+    public ModLoaderSupport? ModLoader => ModLoaderManager.Get(Manifest.ModLoaderId);
 
     public bool IsRunning => MinecraftProcess != null && !MinecraftProcess.HasExited;
 

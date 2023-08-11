@@ -7,8 +7,15 @@
              x:Class="mcLaunch.Views.Badge">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        
+        <Style Selector="Border.badge">
+            <Setter Property="Background" Value="{DynamicResource BackgroundLightest}"></Setter>
+            <Setter Property="CornerRadius" Value="4"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+        </Style>
     </UserControl.Styles>
-    <Border Classes="frame-light" Padding="5 0 5 0">
+    <Border Classes="badge" Padding="5 0 5 0">
         <StackPanel Orientation="Horizontal">
             <Image x:Name="IconImage" VerticalAlignment="Center" Width="12" Height="12" Source="/resources/icons/edit.png"></Image>
             <TextBlock x:Name="Label" Margin="5 0 0 0" Classes="light">Editor</TextBlock>

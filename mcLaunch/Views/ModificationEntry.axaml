@@ -9,7 +9,9 @@
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <DockPanel>
-        <Image Source="{Binding Icon}" DockPanel.Dock="Left" Width="40" Height="40"></Image>
+        <Border DockPanel.Dock="Left" Width="40" Height="40" CornerRadius="4" ClipToBounds="True">
+            <Image Source="{Binding Icon}"></Image>
+        </Border>
         <StackPanel Orientation="Vertical" VerticalAlignment="Center" DockPanel.Dock="Right" Margin="0 0 10 0">
             <StackPanel Orientation="Horizontal" Height="20" HorizontalAlignment="Right" Spacing="5" IsVisible="{Binding IsDownloadCountValid}">
                 <Image Source="/resources/icons/download.png" Height="14"></Image>
@@ -23,7 +25,7 @@
         <StackPanel Margin="10 0 10 0" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Classes="title" Text="{Binding Name}"></TextBlock>
-                <Image Source="{Binding Platform.Icon}" Margin="5 0 0 0" ToolTip.Tip="{Binding Platform.Name}" Height="18"></Image>
+                <Image Margin="5 0 0 0" Height="18" Source="{Binding Platform.Icon}" ToolTip.Tip="{Binding Platform.Name}" ClipToBounds="True"></Image>
                 <StackPanel Orientation="Horizontal" Margin="5 2 0 0" Opacity="0.5">
                     <TextBlock Classes="light" FontSize="12">by</TextBlock>
                     <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{Binding Author}"></TextBlock>
@@ -36,7 +38,7 @@
                 </views:Badge>
                 <views:AttentionBadge Margin="5 0 0 0" IsVisible="{Binding IsUpdateRequired}" Text="New update available"></views:AttentionBadge>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Opacity="0.5">
+            <StackPanel IsVisible="{Binding !IsFilenameEmpty}" Orientation="Horizontal" Opacity="0.5">
                 <TextBlock Classes="light" FontSize="12" Text="{Binding Filename}"></TextBlock>
             </StackPanel>
             <TextBlock Classes="light" Text="{Binding ShortDescription}" Opacity="0.7"></TextBlock>

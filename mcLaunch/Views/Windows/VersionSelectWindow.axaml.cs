@@ -13,7 +13,7 @@ namespace mcLaunch.Views.Windows;
 public partial class VersionSelectWindow : Window
 {
     ManifestMinecraftVersion[] versions;
-    ManifestMinecraftVersion selectedVersion;
+    ManifestMinecraftVersion? selectedVersion;
     
     public VersionSelectWindow()
     {
@@ -63,5 +63,16 @@ public partial class VersionSelectWindow : Window
     private void SearchButtonClicked(object? sender, RoutedEventArgs e)
     {
         DataContext = RunSearch(SearchTextBox.Text);
+    }
+
+    private void SearchVersionTextBoxTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        DataContext = RunSearch(SearchTextBox.Text);
+    }
+
+    private void VersionListDoubleTapped(object? sender, TappedEventArgs e)
+    {
+        if (selectedVersion != null) 
+            Close(selectedVersion);
     }
 }

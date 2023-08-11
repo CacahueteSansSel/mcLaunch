@@ -15,15 +15,14 @@
     <Border Classes="frame">
         <DockPanel Margin="5">
             <DockPanel DockPanel.Dock="Top">
-                <Button IsDefault="True" Click="SearchButtonClicked" DockPanel.Dock="Right" Classes="secondary">Search</Button>
-                <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" Watermark="Search version" TextInput="SearchVersionTextBoxInput"></TextBox>
+                <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" Watermark="Search version" TextChanged="SearchVersionTextBoxTextChanged"></TextBox>
             </DockPanel>
             <Button DockPanel.Dock="Bottom" x:Name="SelectButton" HorizontalAlignment="Right" Margin="0 20 0 0" Classes="primary"
                     Click="SelectVersionButtonClicked" IsVisible="False">
                 Select
             </Button>
             <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{Binding .}"
-                     SelectionChanged="VersionSelectionChanged">
+                     SelectionChanged="VersionSelectionChanged" DoubleTapped="VersionListDoubleTapped">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="CornerRadius" Value="4"></Setter>

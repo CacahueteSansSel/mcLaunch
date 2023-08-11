@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Mods.Platforms;
@@ -32,10 +33,11 @@ public partial class ModificationEntry : UserControl
             CacheManager.Init();
             Mod = new Modification
             {
-                Name = "truc",
-                Author = "dev",
-                ShortDescription = "da string",
-                IsUpdateRequired = true,
+                Name = "Sample Mod",
+                Icon = new Bitmap(AssetLoader.Open(new Uri($"avares:resources/default_mod_logo.png"))),
+                Author = "sample dev",
+                ShortDescription = "sample desc",
+                IsUpdateRequired = false,
                 LastUpdated = DateTime.Today,
                 DownloadCount = 2800,
                 Platform = new ModrinthModPlatform()
