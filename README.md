@@ -6,27 +6,29 @@
 
 <p align="center">The Minecraft launcher that puts your Minecraft in a box 📦</p>
 
+**mcLaunch** is a new and modern Minecraft launcher focused on design, compatibility, and ease of use.
+
 ![Main Screenshot](res/screenshot.png)
 ![Screenshot Collection](res/screenshots.png)
 
 # Features
 
-+ Launches Minecraft 1.7.10 up to 1.20.1 🚀
++ Launches every Minecraft version 🚀
 + Supports Fabric, Forge and Quilt 📜
-+ Installs mods from CurseForge and Modrinth 🧩
-+ Imports modpacks from CurseForge 🛬
-+ Exports modpacks to a really small file format 🛫
++ Installs mods, and import modpacks from both CurseForge and Modrinth 🧩
++ Exports modpacks to a custom really small file format 🛫
 
 # Install
 
-Work in progress
+## Windows x64
+Download the installer [here](https://github.com/CacahueteSansSel/mcLaunch/releases/download/v0.1.1/mcLaunch.Installer.win64.exe) and follow the instructions. If you have any warning about "Windows protected your PC", ignore it.
 
 # Build
 
 Make sure to have the **.NET 7.0 SDK** installed, then clone and build the project :
 
 ```shell
-$ cd ddLaunch
+$ cd mcLaunch
 $ dotnet build
 ```
 
@@ -47,5 +49,5 @@ Libraries used by the project :
 + Markdown.Avalonia (to render mod pages)
 + SharpNBT (for reading world's level.dat files)
 
-Projects that helped the development of this project
+This project takes huge inspiration of those other projects :
 + [portablemc](https://github.com/mindstorm38/portablemc) (general Minecraft launcher stuff + Forge installer wrapper code)
