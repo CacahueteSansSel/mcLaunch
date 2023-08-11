@@ -46,7 +46,7 @@ public partial class EditBoxPopup : UserControl
         };
 
         string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null) return;
+        if (files == null || files.Length == 0) return;
 
         BoxIconImage.Source = new Bitmap(files[0]);
     }

@@ -148,6 +148,8 @@
       <AvaloniaResource Include="resources\icons\fabric.png" />
       <None Remove="resources\icons\vanilla.png" />
       <AvaloniaResource Include="resources\icons\vanilla.png" />
+      <None Remove="resources\icons\import.png" />
+      <AvaloniaResource Include="resources\icons\import.png" />
     </ItemGroup>
 
     <ItemGroup>

@@ -12,6 +12,7 @@ using Avalonia.Interactivity;
 using Avalonia.Logging;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Utilities;
@@ -42,6 +43,11 @@ public partial class BoxDetailsPage : UserControl
 
         Box = box;
         DataContext = box;
+
+        VersionBadge.Text = box.Manifest.Version;
+        ModLoaderBadge.Icon =
+            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{box.ModLoader.Id}.png")));
+        ModLoaderBadge.Text = box.ModLoader?.Name ?? "Unknown";
 
         box.LoadBackground();
         
