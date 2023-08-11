@@ -20,6 +20,9 @@ public static class ModLoaderManager
         All.Add(new ForgeModLoaderSupport(
             BoxManager.JVMDownloader.GetJVMPath(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
                 "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
+
+        // Quilt
+        All.Add(new QuiltModLoaderSupport());
     }
 
     public static ModLoaderSupport? Get(string id) => All.FirstOrDefault(ml => ml.Id == id);
