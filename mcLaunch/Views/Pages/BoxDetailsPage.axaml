@@ -66,6 +66,9 @@
                         <Panel x:Name="SubControlButtons" Margin="0 10 0 10" Background="{DynamicResource BackgroundMiddle}">
                             <StackPanel Orientation="Vertical">
                                 <StackPanel Margin="38 5 38 5" Spacing="10" Orientation="Horizontal">
+                                    <Button x:Name="ReadmeButton" Classes="secondary" Click="SubControlReadmeButtonClicked" ToolTip.Tip="Readme">
+                                        <Image Source="/resources/icons/readme.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                                    </Button>
                                     <Button Classes="secondary" Click="SubControlModButtonClicked" ToolTip.Tip="Manage mods">
                                         <Image Source="/resources/icons/mod.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
                                     </Button>

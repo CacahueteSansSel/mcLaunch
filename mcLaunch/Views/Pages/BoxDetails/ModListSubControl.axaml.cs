@@ -47,7 +47,7 @@ public partial class ModListSubControl : SubControl
             Modification mod = await ModPlatformManager.Platform.GetModAsync(storedMod.Id);
             if (mod == null) continue;
 
-            mod.Filename = storedMod.Filenames[0].Replace("mods/", "").Trim();
+            mod.Filename = storedMod.Filenames.Length == 0 ? "" : storedMod.Filenames[0].Replace("mods/", "").Trim();
             mod.InstalledVersion = storedMod.VersionId;
 
             await mod.DownloadIconAsync();

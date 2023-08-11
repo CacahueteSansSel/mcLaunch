@@ -158,7 +158,7 @@ public static class BoxManager
         
         box.SaveManifest();
 
-        return box;
+        return new Box(manifest, path, false);
     }
 
     public static async Task SetupVersionAsync(MinecraftVersion version, string? customName = null,

@@ -67,7 +67,11 @@ public partial class BoxDetailsPage : UserControl
         }
         
         SubControlButtons.IsEnabled = true;
-        SetSubControl(new ModListSubControl());
+
+        if (Box.HasReadmeFile) SetSubControl(new ReadmeSubControl(Box.ReadReadmeFile()));
+        else SetSubControl(new ModListSubControl());
+
+        ReadmeButton.IsVisible = Box.HasReadmeFile;
     }
 
     public void ShowWarning(string text)
@@ -313,5 +317,10 @@ public partial class BoxDetailsPage : UserControl
     private void WarningStripeCloseButtonClicked(object? sender, RoutedEventArgs e)
     {
         HideWarning();
+    }
+
+    private void SubControlReadmeButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        SetSubControl(new ReadmeSubControl(Box.ReadReadmeFile()));
     }
 }

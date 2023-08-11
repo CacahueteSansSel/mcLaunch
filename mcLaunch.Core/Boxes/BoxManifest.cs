@@ -89,6 +89,7 @@ public class BoxManifest : ReactiveObject
 
     public void AddModification(string id, string versionId, string platformId, string[] filenames)
     {
+        if (filenames.Length == 0) return;
         if (HasModificationStrict(id, versionId, platformId)) return;
 
         Modifications.Add(new BoxStoredModification

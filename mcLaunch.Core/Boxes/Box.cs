@@ -30,6 +30,8 @@ public class Box
     public ModLoaderSupport? ModLoader => ModLoaderManager.Get(Manifest.ModLoaderId);
 
     public bool IsRunning => MinecraftProcess != null && !MinecraftProcess.HasExited;
+    public bool HasReadmeFile => File.Exists($"{Folder.Path}/README.md");
+    public bool HasLicenseFile => File.Exists($"{Folder.Path}/LICENSE.md");
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
@@ -68,6 +70,8 @@ public class Box
             Options = new MinecraftOptions($"{Folder.CompletePath}/options.txt");
         }
     }
+
+    public string? ReadReadmeFile() => HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
 
     public async Task<string[]> RunIntegrityChecks()
     {
