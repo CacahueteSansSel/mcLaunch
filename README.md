@@ -25,7 +25,7 @@ Download the installer [here](https://github.com/CacahueteSansSel/mcLaunch/relea
 
 # Build
 
-Make sure to have the **.NET 7.0 SDK** installed, then clone and build the project :
+Make sure to have the **.NET 6.0 SDK** (.NET 7 does not work anymore) installed, then clone and build the project :
 
 ```shell
 $ cd mcLaunch
