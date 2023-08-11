@@ -12,7 +12,7 @@
 # Features
 
 + Launches Minecraft 1.7.10 up to 1.20.1 🚀
-+ Supports Fabric and Forge (with Quilt planned) 📜
++ Supports Fabric, Forge and Quilt 📜
 + Installs mods from CurseForge and Modrinth 🧩
 + Imports modpacks from CurseForge 🛬
 + Exports modpacks to a really small file format 🛫
