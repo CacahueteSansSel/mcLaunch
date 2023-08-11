@@ -23,7 +23,8 @@ public static class Api
 
         HttpResponseMessage resp = await client.GetAsync(url);
         Console.WriteLine($"{url} => {(int)resp.StatusCode} {resp.StatusCode}");
-        resp.EnsureSuccessStatusCode();
+
+        if (!resp.IsSuccessStatusCode) return default;
 
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
 
@@ -39,7 +40,8 @@ public static class Api
 
         HttpResponseMessage resp = await client.GetAsync(url);
         Console.WriteLine($"{url} => {(int)resp.StatusCode} {resp.StatusCode}");
-        resp.EnsureSuccessStatusCode();
+
+        if (!resp.IsSuccessStatusCode) return default;
 
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
     
@@ -52,7 +54,8 @@ public static class Api
 
         HttpResponseMessage resp = await client.GetAsync(url);
         Console.WriteLine($"{url} => {(int)resp.StatusCode} {resp.StatusCode}");
-        resp.EnsureSuccessStatusCode();
+
+        if (!resp.IsSuccessStatusCode) return default;
 
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
 
@@ -71,7 +74,8 @@ public static class Api
         HttpContent content = new StringContent(inputJson);
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         HttpResponseMessage resp = await client.PostAsync(url, content);
-        resp.EnsureSuccessStatusCode();
+
+        if (!resp.IsSuccessStatusCode) return default;
 
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
     
