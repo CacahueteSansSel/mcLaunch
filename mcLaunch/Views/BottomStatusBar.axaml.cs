@@ -42,7 +42,7 @@ public partial class BottomStatusBar : UserControl
     {
         UIDataContext.Progress = 0;
         UIDataContext.ResourceName = sectionName;
-        UIDataContext.ResourceCount = $"{index}/{DownloadManager.PendingSectionCount}";
+        UIDataContext.ResourceCount = $"{index+1}/{DownloadManager.PendingSectionCount}";
     }
 
     private void OnDownloadPrepareStarting(string name)
