@@ -64,7 +64,6 @@ public static class BoxManager
             }
             catch (Exception e)
             {
-                
             }
         }
     }
@@ -80,7 +79,7 @@ public static class BoxManager
         {
             bmp.Save($"{path}/icon.png");
         }
-        
+
         if (!Directory.Exists("forge"))
         {
             // Extract the forge wrapper from resources
@@ -89,7 +88,8 @@ public static class BoxManager
             // We might want to find a new way for installing Forge in the future
             // TODO: Implement a new way for installing Forge
 
-            await using Stream zipStream = AssetLoader.Open(new Uri("avares://mcLaunch/resources/internal/forge_wrapper.zip"));
+            await using Stream zipStream =
+                AssetLoader.Open(new Uri("avares://mcLaunch/resources/internal/forge_wrapper.zip"));
             await using MemoryStream tmpStream = new();
             string forgeWrapperPath = Path.GetFullPath("forge");
 
@@ -108,7 +108,8 @@ public static class BoxManager
         return path;
     }
 
-    public static async Task<Box> CreateFromModificationPack(ModificationPack pack, Action<string, float> progressCallback)
+    public static async Task<Box> CreateFromModificationPack(ModificationPack pack,
+        Action<string, float> progressCallback)
     {
         BoxManifest manifest = new BoxManifest(pack.Name, pack.Description ?? "no description", pack.Author,
             pack.ModloaderId, pack.ModloaderVersion, null,
@@ -123,57 +124,94 @@ public static class BoxManager
         progressCallback?.Invoke($"Preparing Minecraft {pack.MinecraftVersion} ({pack.ModloaderId.Capitalize()})", 0f);
 
         await box.CreateMinecraftAsync();
-        
+
         int index = 0;
 
         foreach (var mod in pack.Modifications)
         {
-            progressCallback?.Invoke($"Installing modification {index}/{pack.Modifications.Length}", 
-                (float)index / pack.Modifications.Length / 2);
-            
+            progressCallback?.Invoke($"Installing modification {index}/{pack.Modifications.Length}",
+                (float) index / pack.Modifications.Length / 2);
+
             await pack.InstallModificationAsync(box, mod);
 
             index++;
         }
 
         Regex driveLetterRegex = new Regex("[A-Z]:[\\/\\\\]");
-        
+
         index = 0;
         foreach (var additionalFile in pack.AdditionalFiles)
         {
             if (additionalFile.Path.EndsWith('/') || additionalFile.Path.Contains("..")
-                || driveLetterRegex.IsMatch(additionalFile.Path)) continue;
-            
-            progressCallback?.Invoke($"Writing file override {index}/{pack.AdditionalFiles.Length}", 
-                0.5f + (float)index / pack.AdditionalFiles.Length / 2);
-            
+                                                  || driveLetterRegex.IsMatch(additionalFile.Path)) continue;
+
+            progressCallback?.Invoke($"Writing file override {index}/{pack.AdditionalFiles.Length}",
+                0.5f + (float) index / pack.AdditionalFiles.Length / 2);
+
             string filename = $"{box.Folder.Path}/{additionalFile.Path}";
             string folderPath = filename.Replace(Path.GetFileName(filename), "").Trim('/');
 
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
-            
+
             await File.WriteAllBytesAsync(filename, additionalFile.Data);
             index++;
         }
-        
+
         box.SaveManifest();
 
         return new Box(manifest, path, false);
     }
 
+    public static async Task<Box> CreateFromPlatformModpack(PlatformModpack pack,
+        PlatformModpack.ModpackVersion version,
+        Action<string, float> progressCallback)
+    {
+        // TODO: maybe use the modpack's own extension (.mrpack for Modrinth) instead of .zip
+        string modpackTempFilename = Path.GetFullPath($"temp/{pack.Id}.zip");
+        
+        DownloadManager.Begin($"{pack.Name} ({version.Name})");
+        DownloadManager.Add(version.ModLoaderFileUrl, modpackTempFilename, EntryAction.Download);
+        DownloadManager.End();
+
+        void ProgressUpdate(string status, float percent, int sectionIndex)
+        {
+            progressCallback?.Invoke($"Downloading {status}", percent / 2);
+        }
+        
+        DownloadManager.OnDownloadProgressUpdate += ProgressUpdate;
+
+        await DownloadManager.DownloadAll();
+        
+        DownloadManager.OnDownloadProgressUpdate -= ProgressUpdate;
+
+        ModificationPack modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
+
+        Box box = await CreateFromModificationPack(modpack, (status, percent) =>
+        {
+            progressCallback?.Invoke(status, 0.5f + percent);
+        });
+        
+        if (pack.Icon != null) box.SetAndSaveIcon(pack.Icon);
+        if (pack.Background != null) box.SetAndSaveBackground(pack.Background);
+        
+        box.SaveManifest();
+
+        return box;
+    }
+
     public static async Task SetupVersionAsync(MinecraftVersion version, string? customName = null,
         bool downloadAllAfter = true)
     {
-        if (!JVMDownloader.HasJVM(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(), 
+        if (!JVMDownloader.HasJVM(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
                 (version.JavaVersion?.Component ?? "jre-legacy")))
         {
             DownloadManager.Begin(customName ?? $"Java {version.JavaVersion.MajorVersion}");
             await JVMDownloader.DownloadForCurrentPlatformAsync(version.JavaVersion.Component);
             DownloadManager.End();
         }
-        
+
         DownloadManager.Begin(customName ?? $"Minecraft {version.Id}");
-        
+
         await systemFolder.InstallVersionAsync(version);
         await assetsDownloader.DownloadAsync(version, null);
         await librariesDownloader.DownloadAsync(version, null);

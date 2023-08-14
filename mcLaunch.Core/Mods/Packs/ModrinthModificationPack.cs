@@ -58,7 +58,7 @@ public class ModrinthModificationPack : ModificationPack
         }
     }
 
-    public async Task SetupAsync()
+    public async Task<ModrinthModificationPack> SetupAsync()
     {
         List<SerializedModification> mods = new();
         foreach (var file in manifest.Files)
@@ -148,6 +148,8 @@ public class ModrinthModificationPack : ModificationPack
                 Path = entry.FullName.Replace("overrides/", "").Replace("client-overrides/", ""),
                 Data = entry.Open().ReadToEndAndClose(entry.Length),
             }).ToArray();
+
+        return this;
     }
 
     public override async Task InstallModificationAsync(Box targetBox, SerializedModification mod)

@@ -15,11 +15,6 @@ public partial class BackButton : UserControl
         InitializeComponent();
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
-
     private void BackButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Navigation.Pop();

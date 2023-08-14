@@ -6,6 +6,7 @@ using CurseForge.Models.Mods;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
+using mcLaunch.Core.Mods.Packs;
 using CurseForgeClient = CurseForge.CurseForge;
 using File = CurseForge.Models.Files.File;
 
@@ -253,9 +254,9 @@ public class CurseForgeModPlatform : ModPlatform
         return true;
     }
 
-    public override async Task<bool> InstallModpackAsync(PlatformModpack modpack)
+    public override async Task<ModificationPack> LoadModpackFileAsync(string filename)
     {
-        return false;
+        return new CurseForgeModificationPack(filename);
     }
 
     public override async Task<Modification> DownloadModInfosAsync(Modification mod)

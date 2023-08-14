@@ -1,0 +1,56 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
+             x:Class="mcLaunch.Views.Pages.ModpackDetailsPage">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <Panel>
+        <Image Stretch="UniformToFill" Source="{Binding Background}"></Image>
+        <ScrollViewer>
+            <StackPanel>
+                <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
+                    <views:BackButton></views:BackButton>
+                </StackPanel>
+                <Border Classes="frame" Margin="0 10 0 100" Width="888">
+                    <StackPanel Margin="1" Orientation="Vertical">
+                        <DockPanel Margin="38 38 38 0" LastChildFill="True">
+                            <Image DockPanel.Dock="Left" Source="{Binding Icon}" Height="155"></Image>
+                            <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
+                                <Button x:Name="CloneButton" Classes="primary" Width="124"
+                                        HorizontalContentAlignment="Center" Click="CloneButtonClicked">
+                                    Clone
+                                </Button>
+                                <Border x:Name="LoadingButtonFrame" IsVisible="False" Width="124" Height="40"
+                                        Background="{DynamicResource BackgroundDarker}"
+                                        BorderBrush="{DynamicResource BackgroundLighter}" BorderThickness="1"
+                                        CornerRadius="4">
+                                    <views:LoadingCircle RenderTransform="scale(0.65)"></views:LoadingCircle>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Classes="smoothShowLeft" Margin="29 0 0 0" Orientation="Vertical">
+                                <TextBlock Classes="title" FontSize="32" Text="{Binding Name}"></TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Classes="light" FontSize="16">by</TextBlock>
+                                    <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16" Text="{Binding Author}"></TextBlock>
+                                </StackPanel>
+                                <TextBlock Classes="light" Margin="0 5 0 0" Opacity="0.25" FontSize="16"
+                                           Text="{Binding Platform.Name}">
+                                </TextBlock>
+                            </StackPanel>
+                        </DockPanel>
+                        <StackPanel Orientation="Vertical" Margin="38 0 38 38">
+                            <mdxaml:MarkdownScrollViewer Margin="0 10 0 0" Markdown="{Binding LongDescriptionBody}">
+                                
+                            </mdxaml:MarkdownScrollViewer>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Panel>
+</UserControl>

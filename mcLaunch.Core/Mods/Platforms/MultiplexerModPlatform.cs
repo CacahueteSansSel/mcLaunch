@@ -105,13 +105,9 @@ public class MultiplexerModPlatform : ModPlatform
         return await modPlatform.InstallModAsync(targetBox, mod, versionId, installOptional);
     }
 
-    public override async Task<bool> InstallModpackAsync(PlatformModpack modpack)
+    public override async Task<ModificationPack> LoadModpackFileAsync(string filename)
     {
-        ModPlatform? modPlatform = modpack.Platform ?? _platforms.FirstOrDefault(p => p.Name == modpack.ModPlatformId);
-
-        if (modPlatform == null || !_platforms.Contains(modPlatform)) return false;
-
-        return await modPlatform.InstallModpackAsync(modpack);
+        return null;
     }
 
     public override async Task<Modification> DownloadModInfosAsync(Modification mod)

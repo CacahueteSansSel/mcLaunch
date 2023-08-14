@@ -1,6 +1,7 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -8,6 +9,8 @@ using Avalonia.Platform;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Utilities;
+using mcLaunch.Utilities;
+using mcLaunch.Views.Pages;
 
 namespace mcLaunch.Views;
 
@@ -29,6 +32,13 @@ public partial class ModpackEntryCard : UserControl
         VersionBadge.Text = modpack.LatestMinecraftVersion ?? "Unknown";
         
         DownloadBackgroundAndApplyAsync();
+    }
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+        
+        Navigation.Push(new ModpackDetailsPage(modpack));
     }
 
     async void DownloadBackgroundAndApplyAsync()

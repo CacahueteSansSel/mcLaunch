@@ -1,5 +1,6 @@
 ﻿using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
+using mcLaunch.Core.Mods.Packs;
 using Modrinth;
 using Modrinth.Models;
 using Modrinth.Models.Enums.Project;
@@ -171,8 +172,10 @@ public class ModrinthModPlatform : ModPlatform
             PlatformModpack.ModpackVersion[] versions = projectVersions.Select(pv => new PlatformModpack.ModpackVersion
             {
                 Id = pv.Id,
+                Name = pv.Name,
                 MinecraftVersion = pv.GameVersions[0],
-                ModLoader = pv.Loaders[0]
+                ModLoader = pv.Loaders[0],
+                ModLoaderFileUrl = pv.Files[0].Url
             }).ToArray();
 
             PlatformModpack pack = new PlatformModpack
@@ -293,9 +296,9 @@ public class ModrinthModPlatform : ModPlatform
         return true;
     }
 
-    public override async Task<bool> InstallModpackAsync(PlatformModpack modpack)
+    public override async Task<ModificationPack> LoadModpackFileAsync(string filename)
     {
-        return false;
+        return await new ModrinthModificationPack(filename).SetupAsync();
     }
 
     public override async Task<Modification> DownloadModInfosAsync(Modification mod)

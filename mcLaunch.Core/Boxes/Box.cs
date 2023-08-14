@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Avalonia.Media;
@@ -11,7 +12,9 @@ using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Mods.Platforms;
+using Modrinth.Exceptions;
 using SharpNBT;
+using AuthenticationManager = mcLaunch.Core.Managers.AuthenticationManager;
 
 namespace mcLaunch.Core.Boxes;
 
@@ -147,8 +150,23 @@ public class Box
                 && Manifest.GetModification(dep.Mod.Id).VersionId != dep.VersionId)
             {
                 // The mod is installed on this box & the required version does not match the installed one
-                
-                await ModPlatformManager.Platform.InstallModAsync(this, dep.Mod, dep.VersionId, false);
+
+                string versionId = dep.VersionId ?? dep.Mod.LatestVersion;
+
+                try
+                {
+                    await ModPlatformManager.Platform.InstallModAsync(this, dep.Mod, versionId, false);
+                }
+                catch (ModrinthApiException e)
+                {
+                    if (e.Response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        // It seems that this version doesn't work anymore, so we ignore it
+                        continue;
+                    }
+
+                    throw e;
+                }
             }
         }
         
