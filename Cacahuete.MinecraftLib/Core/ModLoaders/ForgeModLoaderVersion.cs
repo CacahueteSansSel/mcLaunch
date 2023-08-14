@@ -12,11 +12,13 @@ public class ForgeModLoaderVersion : ModLoaderVersion
     public string JvmExecutablePath { get; set; }
     public string SystemFolderPath { get; init; }
 
-    public string InstallerUrl =>
-        $"https://maven.minecraftforge.net/net/minecraftforge/forge/{FullName}/forge-{FullName}-installer.jar";
-
     public override async Task<MinecraftVersion?> GetMinecraftVersionAsync(string minecraftVersionId)
     {
+        string[] installerUrls = new[]
+        {
+            $"https://maven.minecraftforge.net/net/minecraftforge/forge/{FullName}/forge-{FullName}-installer.jar",
+            $"https://maven.minecraftforge.net/net/minecraftforge/forge/{FullName}-{MinecraftVersion}/forge-{FullName}-{MinecraftVersion}-installer.jar",
+        };
         string versionName = $"{MinecraftVersion}-forge-{Name}";
 
         if (File.Exists($"{SystemFolderPath}/versions/{versionName}/{versionName}.jar") &&
@@ -35,10 +37,19 @@ public class ForgeModLoaderVersion : ModLoaderVersion
 
         if (!File.Exists(fullPath))
         {
-            HttpResponseMessage resp = await client.GetAsync(InstallerUrl);
-            resp.EnsureSuccessStatusCode();
+            bool success = false;
+            foreach (string installerUrl in installerUrls)
+            {
+                HttpResponseMessage resp = await client.GetAsync(installerUrl);
+                if (!resp.IsSuccessStatusCode) continue;
 
-            await File.WriteAllBytesAsync(fullPath, await resp.Content.ReadAsByteArrayAsync());
+                await File.WriteAllBytesAsync(fullPath, await resp.Content.ReadAsByteArrayAsync());
+                success = true;
+                
+                break;
+            }
+
+            if (!success) throw new Exception("unable to find the Forge installer URL");
         }
 
         // TODO: Implement a new way for installing Forge
