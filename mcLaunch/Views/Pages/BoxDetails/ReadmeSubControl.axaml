@@ -1,0 +1,14 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="mcLaunch.Views.Pages.BoxDetails.ReadmeSubControl">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <mdxaml:MarkdownScrollViewer x:Name="MarkdownArea" Margin="0 0 0 0" Markdown="{Binding .}">
+        
+    </mdxaml:MarkdownScrollViewer>
+</UserControl>

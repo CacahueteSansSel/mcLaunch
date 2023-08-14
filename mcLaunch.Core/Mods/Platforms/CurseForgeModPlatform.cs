@@ -78,6 +78,12 @@ public class CurseForgeModPlatform : ModPlatform
         return mods;
     }
 
+    public override async Task<PlatformModpack[]> GetModpacksAsync(int page, string searchQuery,
+        string minecraftVersion)
+    {
+        return Array.Empty<PlatformModpack>();
+    }
+
     public override async Task<Modification> GetModAsync(string id)
     {
         string cacheName = $"mod-{id}";
@@ -127,6 +133,11 @@ public class CurseForgeModPlatform : ModPlatform
         {
             return null;
         }
+    }
+
+    public override async Task<PlatformModpack> GetModpackAsync(string id)
+    {
+        return null;
     }
 
     public override async Task<string[]> GetModVersionList(string modId, string modLoaderId,
@@ -240,6 +251,11 @@ public class CurseForgeModPlatform : ModPlatform
 
         targetBox.SaveManifest();
         return true;
+    }
+
+    public override async Task<bool> InstallModpackAsync(PlatformModpack modpack)
+    {
+        return false;
     }
 
     public override async Task<Modification> DownloadModInfosAsync(Modification mod)

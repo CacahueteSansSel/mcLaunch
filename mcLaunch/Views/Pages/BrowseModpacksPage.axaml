@@ -1,0 +1,20 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             Background="{DynamicResource BackgroundDarker}"
+             x:Class="mcLaunch.Views.Pages.BrowseModpacksPage">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <ScrollViewer>
+        <StackPanel Margin="10 5 10 0">
+            <TextBlock Classes="title" Margin="28 20 0 0" FontSize="32">Browse modpacks</TextBlock>
+            <WrapPanel x:Name="BoxContainer" Margin="28">
+                
+            </WrapPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

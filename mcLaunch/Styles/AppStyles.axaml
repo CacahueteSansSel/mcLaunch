@@ -4,6 +4,9 @@
     <Design.PreviewWith>
         <Border Height="500" Padding="20"  Background="white">
             <StackPanel Orientation="Vertical">
+                <Border Classes="frame-light" Margin="0 10 0 0">
+                    <TextBlock Classes="title-shadow">hello</TextBlock>
+                </Border>
                 <Border Classes="frame">
                     <StackPanel Orientation="Horizontal">
                         <Button Classes="primary" Margin="5">Primary !</Button>

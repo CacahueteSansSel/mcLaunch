@@ -12,7 +12,7 @@ namespace mcLaunch.Core.Mods.Platforms;
 public class ModrinthModPlatform : ModPlatform
 {
     public static ModrinthModPlatform Instance { get; private set; }
-    
+
     ModrinthClient client;
     Dictionary<string, Modification> modCache = new();
 
@@ -22,11 +22,12 @@ public class ModrinthModPlatform : ModPlatform
     public ModrinthModPlatform()
     {
         Instance = this;
-        
+
         UserAgent ua = new UserAgent
         {
             ProjectName = "mcLaunch Minecraft Launcher",
-            ProjectVersion = "1.0.0"
+            ProjectVersion = "1.0.0",
+            Contact = "https://github.com/CacahueteSansSel/mcLaunch"
         };
 
         client = new ModrinthClient(new ModrinthClientConfig
@@ -62,9 +63,43 @@ public class ModrinthModPlatform : ModPlatform
         }).ToArray();
 
         // Download all mods images
+        // TODO: fix that causing slow loading process
         foreach (Modification mod in mods) await mod.DownloadIconAsync();
 
         return mods;
+    }
+
+    public override async Task<PlatformModpack[]> GetModpacksAsync(int page, string searchQuery,
+        string minecraftVersion)
+    {
+        FacetCollection collection = new();
+
+        collection.Add(Facet.ProjectType(ProjectType.Modpack));
+
+        SearchResponse search =
+            await client.Project.SearchAsync(searchQuery, facets: collection, limit: 10, offset: (ulong) (page * 10));
+
+        PlatformModpack[] modpacks = search.Hits.Select(hit => new PlatformModpack
+        {
+            Id = hit.ProjectId,
+            Name = hit.Title,
+            ShortDescription = hit.Description,
+            Author = hit.Author,
+            IconPath = hit.IconUrl,
+            MinecraftVersions = hit.Versions,
+            BackgroundPath = hit.Gallery?.FirstOrDefault(),
+            LatestMinecraftVersion = hit.LatestVersion,
+            DownloadCount = hit.Downloads,
+            LastUpdated = hit.DateModified,
+            Color = (uint) hit.Color.Value.ToArgb(),
+            Platform = this
+        }).ToArray();
+
+        // Download all modpack images
+        // TODO: fix that causing slow loading process
+        foreach (PlatformModpack pack in modpacks) await pack.DownloadIconAsync();
+
+        return modpacks;
     }
 
     public override async Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId,
@@ -118,6 +153,50 @@ public class ModrinthModPlatform : ModPlatform
             modCache.Add(id, mod);
             CacheManager.Store(mod, cacheName);
             return mod;
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    public override async Task<PlatformModpack> GetModpackAsync(string id)
+    {
+        try
+        {
+            Project project = await client.Project.GetAsync(id);
+            TeamMember[] team = await client.Team.GetAsync(project.Team);
+
+            Version[] projectVersions = await client.Version.GetProjectVersionListAsync(id);
+            PlatformModpack.ModpackVersion[] versions = projectVersions.Select(pv => new PlatformModpack.ModpackVersion
+            {
+                Id = pv.Id,
+                MinecraftVersion = pv.GameVersions[0],
+                ModLoader = pv.Loaders[0]
+            }).ToArray();
+
+            PlatformModpack pack = new PlatformModpack
+            {
+                Id = project.Id,
+                Name = project.Title,
+                ShortDescription = project.Description,
+                Author = team.Last().User.Username,
+                IconPath = project.IconUrl,
+                BackgroundPath = project.FeaturedGallery ?? (project.Gallery != null && project.Gallery.Length > 0
+                    ? project.Gallery[0].Url
+                    : null),
+                MinecraftVersions = project.GameVersions,
+                LatestMinecraftVersion = project.GameVersions.Last(),
+                Versions = versions,
+                LatestVersion = versions[0],
+                LongDescriptionBody = project.Body,
+                DownloadCount = project.Downloads,
+                LastUpdated = project.Updated,
+                Color = (uint) project.Color.Value.ToArgb(),
+                Platform = this
+            };
+
+            return pack;
         }
         catch (Exception e)
         {
@@ -183,7 +262,7 @@ public class ModrinthModPlatform : ModPlatform
         {
             // Ignore the sources jars to avoid problems
             if (file.FileName.Contains("-sources")) continue;
-            
+
             string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
             string url = file.Url;
 
@@ -212,6 +291,11 @@ public class ModrinthModPlatform : ModPlatform
 
         targetBox.SaveManifest();
         return true;
+    }
+
+    public override async Task<bool> InstallModpackAsync(PlatformModpack modpack)
+    {
+        return false;
     }
 
     public override async Task<Modification> DownloadModInfosAsync(Modification mod)

@@ -1,0 +1,58 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="261"
+             Margin="5"
+             Width="400" Height="261"
+             Background="{DynamicResource Background}"
+             Classes="smoothShow"
+             x:Class="mcLaunch.Views.ModpackEntryCard">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+
+        <Style Selector="views|ModpackEntryCard">
+            <Setter Property="ClipToBounds" Value="True"></Setter>
+            <Setter Property="CornerRadius" Value="4"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+        </Style>
+
+        <Style Selector="views|ModpackEntryCard:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"></Setter>
+        </Style>
+    </UserControl.Styles>
+    <Panel>
+        <StackPanel Margin="0">
+            <Border x:Name="Header" CornerRadius="4">
+                <Border.Background>
+                    <ImageBrush
+                        AlignmentX="Left"
+                        AlignmentY="Top"
+                        Source="{Binding Background}"
+                        Stretch="Fill" />
+                </Border.Background>
+                <Canvas Height="120">
+                    <Border Canvas.Left="40" Canvas.Top="60" ClipToBounds="True" CornerRadius="4">
+                        <Image Stretch="Fill" Width="80" Height="80" Source="{Binding Icon}"></Image>
+                    </Border>
+                    <StackPanel Canvas.Left="135" Canvas.Top="60" Width="250" ClipToBounds="True">
+                        <TextBlock Classes="title" FontSize="20" Text="{Binding Name}"></TextBlock>
+                        <StackPanel Orientation="Horizontal" Margin="0 0 0 3">
+                            <TextBlock FontSize="12" Classes="light" Margin="0 0 0 0">by</TextBlock>
+                            <TextBlock FontSize="12" Classes="title" Margin="5 0 0 0" Text="{Binding Author}"></TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </Canvas>
+            </Border>
+            <StackPanel Margin="20 30 20 20">
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                    <views:Badge x:Name="VersionBadge" Icon="/resources/icons/vanilla.png"></views:Badge>
+                    <views:Badge x:Name="ModLoaderBadge" Icon="/resources/icons/vanilla.png"></views:Badge>
+                </StackPanel>
+                <TextBlock Margin="0 5 0 0" Height="65" TextWrapping="Wrap" Text="{Binding ShortDescription}"></TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </Panel>
+</UserControl>

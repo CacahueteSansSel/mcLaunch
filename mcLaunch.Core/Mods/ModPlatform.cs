@@ -12,12 +12,15 @@ public abstract class ModPlatform
     public Bitmap Icon { get; private set; }
 
     public abstract Task<Modification[]> GetModsAsync(int page, Box box, string searchQuery);
+    public abstract Task<PlatformModpack[]> GetModpacksAsync(int page, string searchQuery, string minecraftVersion);
     public abstract Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId, string minecraftVersionId);
 
     public abstract Task<Modification> GetModAsync(string id);
+    public abstract Task<PlatformModpack> GetModpackAsync(string id);
     public abstract Task<string[]> GetModVersionList(string modId, string modLoaderId, string minecraftVersionId);
 
     public abstract Task<bool> InstallModAsync(Box targetBox, Modification mod, string versionId, bool installOptional);
+    public abstract Task<bool> InstallModpackAsync(PlatformModpack modpack);
 
     public abstract Task<Modification> DownloadModInfosAsync(Modification mod);
     public abstract ModPlatform GetModPlatform(string id);

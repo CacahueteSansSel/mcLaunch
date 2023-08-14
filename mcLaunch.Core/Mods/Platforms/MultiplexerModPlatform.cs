@@ -35,6 +35,29 @@ public class MultiplexerModPlatform : ModPlatform
         return mods.ToArray();
     }
 
+    public override async Task<PlatformModpack[]> GetModpacksAsync(int page, string searchQuery,
+        string minecraftVersion)
+    {
+        List<PlatformModpack> mods = new();
+
+        foreach (ModPlatform platform in _platforms)
+        {
+            PlatformModpack[] modpacksFromPlatform = await platform.GetModpacksAsync(page, searchQuery, minecraftVersion);
+
+            foreach (PlatformModpack mod in modpacksFromPlatform)
+            {
+                int similarModCount = mods.Count(m => m.IsSimilar(mod));
+                
+                // Avoid to add a modpack that we have got from another platform
+                // Ensure only one modpack per search query
+                // Spoiler: it doesn't work at all
+                if (similarModCount == 0) mods.Add(mod);
+            }
+        }
+        
+        return mods.ToArray();
+    }
+
     public override async Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId, string minecraftVersionId)
     {
         Modification mod = await GetModAsync(id);
@@ -49,6 +72,17 @@ public class MultiplexerModPlatform : ModPlatform
         {
             Modification mod = await platform.GetModAsync(id);
             if (mod != null) return mod;
+        }
+
+        return null;
+    }
+
+    public override async Task<PlatformModpack> GetModpackAsync(string id)
+    {
+        foreach (ModPlatform platform in _platforms)
+        {
+            PlatformModpack modpack = await platform.GetModpackAsync(id);
+            if (modpack != null) return modpack;
         }
 
         return null;
@@ -69,6 +103,15 @@ public class MultiplexerModPlatform : ModPlatform
         if (modPlatform == null || !_platforms.Contains(modPlatform)) return false;
 
         return await modPlatform.InstallModAsync(targetBox, mod, versionId, installOptional);
+    }
+
+    public override async Task<bool> InstallModpackAsync(PlatformModpack modpack)
+    {
+        ModPlatform? modPlatform = modpack.Platform ?? _platforms.FirstOrDefault(p => p.Name == modpack.ModPlatformId);
+
+        if (modPlatform == null || !_platforms.Contains(modPlatform)) return false;
+
+        return await modPlatform.InstallModpackAsync(modpack);
     }
 
     public override async Task<Modification> DownloadModInfosAsync(Modification mod)

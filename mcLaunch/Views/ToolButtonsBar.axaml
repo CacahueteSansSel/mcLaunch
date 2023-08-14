@@ -15,7 +15,7 @@
         <Button DockPanel.Dock="Left" Margin="10 0 0 0" ToolTip.Tip="Import a box/Minecraft instance" Classes="secondary square" Click="ImportBoxButtonClicked">
             <Image Source="/resources/icons/import.png" Width="13" Height="13"></Image>
         </Button>
-        <Button DockPanel.Dock="Left" Margin="10 0 0 0" ToolTip.Tip="Browse modpacks" Classes="secondary square" Click="ImportBoxButtonClicked">
+        <Button DockPanel.Dock="Left" Margin="10 0 0 0" ToolTip.Tip="Browse modpacks" Classes="secondary square" Click="BrowseModpacksButtonClicked">
             <Image Source="/resources/icons/search.png" Width="13" Height="13"></Image>
         </Button>
         <Button DockPanel.Dock="Right" Margin="0 0 20 0" Classes="secondary square" ToolTip.Tip="Manage settings" Click="SettingsButtonClicked">

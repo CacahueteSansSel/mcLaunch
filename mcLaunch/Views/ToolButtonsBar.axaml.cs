@@ -126,8 +126,8 @@ public partial class ToolButtonsBar : UserControl
         MainWindowDataContext.Instance.Push<SettingsPage>();
     }
 
-    private async void ManageMinecraftVersionClicked(object? sender, RoutedEventArgs e)
+    private void BrowseModpacksButtonClicked(object? sender, RoutedEventArgs e)
     {
-        
+        MainWindowDataContext.Instance.Push<BrowseModpacksPage>();
     }
 }
