@@ -152,6 +152,8 @@
       <AvaloniaResource Include="resources\icons\import.png" />
       <None Remove="resources\icons\readme.png" />
       <AvaloniaResource Include="resources\icons\readme.png" />
+      <None Remove="resources\icons\search.png" />
+      <AvaloniaResource Include="resources\icons\search.png" />
     </ItemGroup>
 
     <ItemGroup>
