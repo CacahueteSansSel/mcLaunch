@@ -55,9 +55,10 @@ public class ForgeModLoaderVersion : ModLoaderVersion
         // TODO: Implement a new way for installing Forge
         
         string wrapperJarPath = Path.GetFullPath("forge/target/wrapper.jar");
+        string classPathSeparator = OperatingSystem.IsWindows() ? ";" : ":";
 
         string args =
-            $"-cp {wrapperJarPath};{Path.GetFullPath(fullPath)} portablemc.wrapper.Main \"{SystemFolderPath}\" {versionName}";
+            $"-cp {wrapperJarPath}{classPathSeparator}{Path.GetFullPath(fullPath)} portablemc.wrapper.Main \"{SystemFolderPath}\" {versionName}";
 
         if (!File.Exists(JvmExecutablePath)) JvmExecutablePath = "java";
 
