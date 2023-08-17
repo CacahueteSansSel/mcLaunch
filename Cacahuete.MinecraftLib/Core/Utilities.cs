@@ -12,15 +12,20 @@ public static class Utilities
             case PlatformID.Win32Windows:
             case PlatformID.Win32NT:
             case PlatformID.WinCE:
+                Console.WriteLine("platform is windows");
+                
                 return "windows";
             case PlatformID.Unix:
                 if (OperatingSystem.IsMacOS()) 
                     return "osx";
+                Console.WriteLine("platform is linux");
                 
                 return "linux";
             case PlatformID.MacOSX:
+                Console.WriteLine("platform is macos");
                 return "osx";
             default:
+                Console.WriteLine("platform is unknown");
                 return "unknown";
         }
     }
