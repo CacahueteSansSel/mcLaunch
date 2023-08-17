@@ -10,12 +10,21 @@
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <ScrollViewer>
-        <StackPanel Margin="10 5 10 0">
-            <views:BackButton Margin="28 20 0 0"></views:BackButton>
-            <TextBlock Classes="title" Margin="28 5 0 0" FontSize="32">Browse modpacks</TextBlock>
-            <WrapPanel x:Name="BoxContainer" Margin="28">
+        <Panel>
+            <StackPanel Margin="10 5 10 0">
+                <views:BackButton Margin="28 20 0 0"></views:BackButton>
+                <TextBlock Classes="title" Margin="28 5 0 0" FontSize="32">Browse modpacks</TextBlock>
+                <DockPanel Margin="28 10 28 0">
+                    <Button DockPanel.Dock="Right" Margin="10 0 0 0" Classes="secondary" IsDefault="True" Click="SearchButtonClicked">
+                        <Image Width="16" Height="16" Source="/resources/icons/search.png"></Image>
+                    </Button>
+                    <TextBox x:Name="SearchTextboxInput" Watermark="Search" VerticalContentAlignment="Center"></TextBox>
+                </DockPanel>
+                <WrapPanel x:Name="BoxContainer" Margin="28">
                 
-            </WrapPanel>
-        </StackPanel>
+                </WrapPanel>
+            </StackPanel>
+            <views:LoadingCircle x:Name="LoadingCircleIcon" IsVisible="False"></views:LoadingCircle>
+        </Panel>
     </ScrollViewer>
 </UserControl>
