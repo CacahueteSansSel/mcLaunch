@@ -186,9 +186,18 @@ public class MinecraftVersion
                 [JsonPropertyName("name")] public string Name { get; set; }
                 [JsonPropertyName("arch")] public string Arch { get; set; }
 
-                [JsonIgnore]
-                public bool IsSatisfied => (Name == null || Name == Utilities.GetPlatformIdentifier())
-                                           || (Arch == null || Arch == Utilities.GetArchitecture());
+                public bool CheckIfSatisfied()
+                {
+                    if (!string.IsNullOrWhiteSpace(Name) && Name.ToLower() != Utilities.GetPlatformIdentifier().ToLower())
+                        return false;
+                    
+                    if (!string.IsNullOrWhiteSpace(Arch) && Arch.ToLower() != Utilities.GetArchitecture().ToLower())
+                        return false;
+                    
+                    // TODO: Implement more rules
+
+                    return true;
+                }
             }
         }
 

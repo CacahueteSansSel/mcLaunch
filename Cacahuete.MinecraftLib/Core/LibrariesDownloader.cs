@@ -136,7 +136,7 @@ public class LibrariesDownloader
                 bool abort = false;
                 foreach (var rule in lib.Rules)
                 {
-                    if (rule.Os != null && !rule.Os.IsSatisfied)
+                    if (rule.Os != null && !rule.Os.CheckIfSatisfied())
                     {
                         abort = true;
                         break;
