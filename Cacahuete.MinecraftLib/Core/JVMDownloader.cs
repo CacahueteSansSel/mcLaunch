@@ -24,6 +24,9 @@ public class JVMDownloader
     public string GetJVMPath(string platform, string name)
         => $"{BasePath}/{name}/{platform}";
 
+    public string GetJVMExecutablePath(string platform, string name)
+        => $"{BasePath}/{name}/{platform}/bin/{(OperatingSystem.IsWindows() ? "javaw.exe" : "java")}";
+
     public bool HasJVM(string platform, string name)
         => Directory.Exists(GetJVMPath(platform, name));
 
