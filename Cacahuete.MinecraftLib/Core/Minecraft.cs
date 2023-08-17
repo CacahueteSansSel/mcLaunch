@@ -160,6 +160,8 @@ public class Minecraft
             args += " --server " + serverAddress;
             args += " --port " + serverPort;
         }
+        
+        Console.WriteLine($"Launching Minecraft with args {args}");
 
         ProcessStartInfo info = new()
         {
