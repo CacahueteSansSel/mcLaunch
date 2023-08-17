@@ -38,6 +38,15 @@ public class Minecraft
         Folder = folder;
         sysFolder = folder;
         versionType = version.Type;
+
+        if (OperatingSystem.IsWindows())
+        {
+            classPathSeparator = ";";
+        }
+        else
+        {
+            classPathSeparator = ":";
+        }
     }
 
     public Minecraft WithSystemFolder(MinecraftFolder systemFolder)

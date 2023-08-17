@@ -136,7 +136,12 @@ public class LibrariesDownloader
                 bool abort = false;
                 foreach (var rule in lib.Rules)
                 {
-                    if (rule.Os != null && !rule.Os.IsSatisfied)
+                    bool satisfied = rule.Os == null || rule.Os.CheckIfSatisfied();
+                    
+                    // Invert the boolean value if it's a "disallow" rule
+                    if (rule.Action == "disallow") satisfied = !satisfied;
+                    
+                    if (!satisfied)
                     {
                         abort = true;
                         break;

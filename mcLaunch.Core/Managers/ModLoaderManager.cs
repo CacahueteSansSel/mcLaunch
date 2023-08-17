@@ -18,7 +18,7 @@ public static class ModLoaderManager
         // Forge
         // TODO: avoid to hardcode the jvm to use for Forge's installer
         All.Add(new ForgeModLoaderSupport(
-            BoxManager.JVMDownloader.GetJVMPath(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
+            BoxManager.JVMDownloader.GetJVMExecutablePath(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
                 "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
 
         // Quilt
