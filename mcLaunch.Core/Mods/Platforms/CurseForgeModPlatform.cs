@@ -74,7 +74,7 @@ public class CurseForgeModPlatform : ModPlatform
         }).ToArray();
 
         // Download all mods images
-        foreach (Modification mod in mods) await mod.DownloadIconAsync();
+        foreach (Modification mod in mods) mod.DownloadIconAsync();
 
         return mods;
     }

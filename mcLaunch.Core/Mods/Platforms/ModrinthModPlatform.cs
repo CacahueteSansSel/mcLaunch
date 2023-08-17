@@ -65,7 +65,7 @@ public class ModrinthModPlatform : ModPlatform
 
         // Download all mods images
         // TODO: fix that causing slow loading process
-        foreach (Modification mod in mods) await mod.DownloadIconAsync();
+        foreach (Modification mod in mods) mod.DownloadIconAsync();
 
         return mods;
     }

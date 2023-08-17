@@ -50,7 +50,7 @@ public partial class ModListSubControl : SubControl
             mod.Filename = storedMod.Filenames.Length == 0 ? "" : storedMod.Filenames[0].Replace("mods/", "").Trim();
             mod.InstalledVersion = storedMod.VersionId;
 
-            await mod.DownloadIconAsync();
+            mod.DownloadIconAsync();
 
             mods.Add(mod);
         }
