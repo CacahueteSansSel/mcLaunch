@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
@@ -35,6 +38,10 @@ public partial class ModDetailsPage : UserControl
         Mod = mod;
         TargetBox = targetBox;
         DataContext = mod;
+
+        ModPlatformBadge.Text = mod.Platform.Name;
+        ModPlatformBadge.Icon =
+            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{mod.Platform.Name.ToLower()}.png")));
 
         SetInstalled(targetBox.HasModificationSoft(mod));
         GetModAdditionalInfos();
