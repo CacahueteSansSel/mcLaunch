@@ -88,7 +88,7 @@ public static class DownloadManager
         foreach (DownloadSection section in sections)
         {
             CurrentSection = section;
-            OnDownloadSectionStarting?.Invoke(section.Name, sectionIndex);
+            OnDownloadSectionStarting?.Invoke(section.Name, sectionIndex + 1);
 
             int progress = 0;
             foreach (DownloadEntry entry in section.Entries)
@@ -126,7 +126,7 @@ public static class DownloadManager
 
                                 OnDownloadProgressUpdate?.Invoke(entry.Source,
                                     (float) progress / section.Entries.Count + (float) byteProgress,
-                                    sectionIndex);
+                                    sectionIndex + 1);
 
                                 b += 25;
                             }
@@ -155,7 +155,7 @@ public static class DownloadManager
 
                 progress++;
                 OnDownloadProgressUpdate?.Invoke(entry.Source, (float) progress / section.Entries.Count,
-                    sectionIndex);
+                    sectionIndex + 1);
             }
 
             sectionIndex++;

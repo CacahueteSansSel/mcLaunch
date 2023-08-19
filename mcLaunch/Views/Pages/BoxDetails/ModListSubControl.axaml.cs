@@ -16,6 +16,9 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 
 public partial class ModListSubControl : SubControl
 {
+    bool isAnyUpdate = false;
+    List<Modification> updatableModsList = new();
+
     public ModListSubControl()
     {
         InitializeComponent();
@@ -31,6 +34,9 @@ public partial class ModListSubControl : SubControl
 
             return;
         }
+
+        UpdateAllButton.IsVisible = false;
+        updatableModsList.Clear();
 
         MigrateToModrinthButton.IsVisible = Box.Manifest.Modifications
             .Count(mod => mod.PlatformId.ToLower() == "curseforge") > 0;
@@ -61,6 +67,8 @@ public partial class ModListSubControl : SubControl
 
         SearchingForUpdates.IsVisible = true;
 
+        isAnyUpdate = false;
+
         List<Modification> updateMods = new();
         bool isChanges = false;
 
@@ -79,7 +87,13 @@ public partial class ModListSubControl : SubControl
             }
 
             mod.IsUpdateRequired = versions[0] != mod.InstalledVersion;
-            if (mod.IsUpdateRequired) isChanges = true;
+            if (mod.IsUpdateRequired)
+            {
+                isChanges = true;
+                isAnyUpdate = true;
+                
+                updatableModsList.Add(mod);
+            }
 
             updateMods.Add(mod);
         }
@@ -87,6 +101,8 @@ public partial class ModListSubControl : SubControl
         if (isChanges) ModsList.SetModifications(updateMods.ToArray());
 
         SearchingForUpdates.IsVisible = false;
+
+        UpdateAllButton.IsVisible = isAnyUpdate;
     }
 
     private void AddModsButtonClicked(object? sender, RoutedEventArgs e)
@@ -117,5 +133,41 @@ public partial class ModListSubControl : SubControl
                 Navigation.ShowPopup(new ModsPopup($"{mods.Length} mod(s) migrated",
                     $"The following mods have been successfully migrated to their Modrinth equivalent", Box, mods));
             }));
+    }
+
+    private async void UpdateAllButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        if (updatableModsList.Count == 0)
+        {
+            UpdateAllButton.IsVisible = false;
+            return;
+        }
+
+        Navigation.ShowPopup(new StatusPopup("Updating mods", $"Please wait while we update mods from {Box.Manifest.Name}..."));
+        
+        int failedModUpdates = 0;
+        int index = 1;
+        
+        foreach (Modification mod in updatableModsList)
+        {
+            StatusPopup.Instance.Status = $"Updating {mod.Name} ({index}/{updatableModsList.Count})";
+            StatusPopup.Instance.StatusPercent = (float) index / updatableModsList.Count;
+            
+            if (!await Box.UpdateModAsync(mod, false))
+            {
+                failedModUpdates++;
+            }
+
+            index++;
+        }
+        
+        Navigation.HidePopup();
+
+        if (failedModUpdates > 0)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Warning", $"{failedModUpdates} mod{(failedModUpdates > 1 ? "s" : "")} failed to update"));
+        }
+        
+        UpdateAllButton.IsVisible = false;
     }
 }
