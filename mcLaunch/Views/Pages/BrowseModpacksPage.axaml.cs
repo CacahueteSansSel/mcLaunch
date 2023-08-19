@@ -9,6 +9,10 @@ namespace mcLaunch.Views.Pages;
 
 public partial class BrowseModpacksPage : UserControl
 {
+    public int PageIndex { get; private set; }
+    string lastQuery = string.Empty;
+    string lastMinecraftVersion = string.Empty;
+    
     public BrowseModpacksPage()
     {
         InitializeComponent();
@@ -20,6 +24,10 @@ public partial class BrowseModpacksPage : UserControl
     {
         BoxContainer.Children.Clear();
         LoadingCircleIcon.IsVisible = true;
+
+        PageIndex = 0;
+        lastQuery = query;
+        lastMinecraftVersion = minecraftVersion;
 
         PlatformModpack[] packs = await ModPlatformManager.Platform.GetModpacksAsync(page, query, minecraftVersion);
 
@@ -36,5 +44,16 @@ public partial class BrowseModpacksPage : UserControl
     private void SearchButtonClicked(object? sender, RoutedEventArgs e)
     {
         Search(0, SearchTextboxInput.Text ?? string.Empty, "");
+    }
+
+    private async void LoadMoreButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        PageIndex++;
+        
+        PlatformModpack[] additionalPacks = await ModPlatformManager.Platform.GetModpacksAsync(PageIndex, 
+            lastQuery, lastMinecraftVersion);
+
+        foreach (PlatformModpack modpack in additionalPacks)
+            BoxContainer.Children.Add(new ModpackEntryCard(modpack));
     }
 }
