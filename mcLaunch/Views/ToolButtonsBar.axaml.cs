@@ -130,4 +130,9 @@ public partial class ToolButtonsBar : UserControl
     {
         MainWindowDataContext.Instance.Push<BrowseModpacksPage>();
     }
+
+    private void DefaultsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        
+    }
 }
