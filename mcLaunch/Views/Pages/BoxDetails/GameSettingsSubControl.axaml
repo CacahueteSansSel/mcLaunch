@@ -8,8 +8,16 @@
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <ScrollViewer>
-        <StackPanel x:Name="Container">
+        <StackPanel>
+            <Border Padding="15" Classes="frame-without-shadow">
+                <DockPanel>
+                    <Button Classes="primary" DockPanel.Dock="Right" Click="SetAsDefaultButtonClicked">Set as default</Button>
+                    <TextBlock VerticalAlignment="Center">Liking these options ? Set these options as default for your new boxes in the future</TextBlock>
+                </DockPanel>
+            </Border>
+            <StackPanel Margin="0 15 0 0" x:Name="Container">
             
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

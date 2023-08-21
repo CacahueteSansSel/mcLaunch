@@ -37,6 +37,7 @@ public partial class App : Application
         ));
         CacheManager.Init();
         AuthenticationManager.Init(Credentials.Get("azure"), Credentials.Get("tokens"));
+        DefaultsManager.Init();
         MinecraftVersion.ModelArguments.Default =
             JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(InternalSettings.Get("default_args.json"))!;
     }

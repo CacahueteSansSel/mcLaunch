@@ -2,9 +2,13 @@
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Managers;
+using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.Settings;
+using mcLaunch.Views.Popups;
 
 namespace mcLaunch.Views.Pages.BoxDetails;
 
@@ -25,5 +29,12 @@ public partial class GameSettingsSubControl : SubControl
 
             Container.Children.Add(element);
         }
+    }
+
+    private void SetAsDefaultButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        DefaultsManager.SetDefaultMinecraftOptions(Box.Options);
+        
+        Navigation.ShowPopup(new MessageBoxPopup("Successful", "These options have been set to default"));
     }
 }

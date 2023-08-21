@@ -45,6 +45,11 @@ public class MinecraftOptions : Dictionary<string, object>
         File.WriteAllText(Filename, Build());
     }
 
+    public void SaveTo(string filename)
+    {
+        File.WriteAllText(filename, Build());
+    }
+
     string ObjectToString(object obj)
     {
         if (obj is double d) return d.ToString(CultureInfo.InvariantCulture).Replace(',', '.');

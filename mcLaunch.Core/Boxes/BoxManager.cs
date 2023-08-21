@@ -8,6 +8,7 @@ using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Managers;
+using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Mods.Platforms;
 
@@ -102,6 +103,9 @@ public static class BoxManager
         await manifest.Setup();
 
         Directory.CreateDirectory($"{path}/minecraft");
+
+        MinecraftOptions? defaultOptions = DefaultsManager.LoadDefaultMinecraftOptions();
+        if (defaultOptions != null) defaultOptions.SaveTo($"{path}/minecraft/options.txt");
 
         await PostProcessBoxAsync(new Box(path), manifest);
 
