@@ -21,6 +21,7 @@ public class PlatformModpack : ReactiveObject
     public string Author { get; set; }
     public string? ShortDescription { get; set; }
     public string? Changelog { get; set; }
+    public string? Url { get; set; }
 
     public string? LongDescriptionBody
     {

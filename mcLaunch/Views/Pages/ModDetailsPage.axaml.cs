@@ -48,6 +48,8 @@ public partial class ModDetailsPage : UserControl
 
         UpdateButton.IsEnabled = mod.IsUpdateRequired;
         UpdateButton.IsVisible = mod.IsUpdateRequired;
+
+        OpenInBrowserButton.IsVisible = mod.Url != null;
     }
 
     async void GetModAdditionalInfos()
@@ -221,5 +223,10 @@ public partial class ModDetailsPage : UserControl
         }
         
         await FinishInstallAsync();
+    }
+
+    private void OpenButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        PlatformSpecific.OpenUrl(Mod.Url);
     }
 }

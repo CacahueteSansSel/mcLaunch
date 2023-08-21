@@ -2,6 +2,7 @@
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods.Packs;
 using Modrinth;
+using Modrinth.Helpers;
 using Modrinth.Models;
 using Modrinth.Models.Enums.Project;
 using Modrinth.Models.Enums.Version;
@@ -54,6 +55,7 @@ public class ModrinthModPlatform : ModPlatform
             Name = hit.Title,
             ShortDescription = hit.Description,
             Author = hit.Author,
+            Url = hit.GetDirectUrl(),
             IconPath = hit.IconUrl,
             MinecraftVersions = hit.Versions,
             BackgroundPath = hit.Gallery?.FirstOrDefault(),
@@ -86,6 +88,7 @@ public class ModrinthModPlatform : ModPlatform
             Name = hit.Title,
             ShortDescription = hit.Description,
             Author = hit.Author,
+            Url = hit.GetDirectUrl(),
             IconPath = hit.IconUrl,
             MinecraftVersions = hit.Versions,
             BackgroundPath = hit.Gallery?.FirstOrDefault(),
@@ -139,6 +142,7 @@ public class ModrinthModPlatform : ModPlatform
                 Name = project.Title,
                 ShortDescription = project.Description,
                 Author = team.Last().User.Username,
+                Url = project.GetDirectUrl(),
                 IconPath = project.IconUrl,
                 BackgroundPath = project.FeaturedGallery,
                 MinecraftVersions = project.GameVersions,
@@ -184,6 +188,7 @@ public class ModrinthModPlatform : ModPlatform
                 Name = project.Title,
                 ShortDescription = project.Description,
                 Author = team.Last().User.Username,
+                Url = project.GetDirectUrl(),
                 IconPath = project.IconUrl,
                 BackgroundPath = project.FeaturedGallery ?? (project.Gallery != null && project.Gallery.Length > 0
                     ? project.Gallery[0].Url
