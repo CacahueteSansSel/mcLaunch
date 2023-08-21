@@ -26,6 +26,7 @@ public partial class ModpackDetailsPage : UserControl
 
         this.modpack = modpack;
         DataContext = modpack;
+        OpenInBrowserButton.IsVisible = modpack.Url != null;
     }
 
     private void CloneButtonClicked(object? sender, RoutedEventArgs e)
@@ -51,5 +52,10 @@ public partial class ModpackDetailsPage : UserControl
 
         Navigation.Push(new BoxDetailsPage(box));
         MainPage.Instance.PopulateBoxList();
+    }
+
+    private void OpenButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        PlatformSpecific.OpenUrl(modpack.Url);
     }
 }
