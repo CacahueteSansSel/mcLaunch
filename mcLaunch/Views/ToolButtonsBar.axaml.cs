@@ -133,6 +133,6 @@ public partial class ToolButtonsBar : UserControl
 
     private void DefaultsButtonClicked(object? sender, RoutedEventArgs e)
     {
-        
+        MainWindowDataContext.Instance.Push<DefaultsPage>();
     }
 }

@@ -17,16 +17,16 @@
                     <views:BackButton></views:BackButton>
                     <TextBlock Classes="title" Margin="15 0 0 0" FontSize="30">Defaults</TextBlock>
                 </StackPanel>
-                <Border Margin="67 10 67 0" Classes="frame">
-                    <StackPanel x:Name="SettingsRoot" Margin="20" Spacing="10" Width="888">
+                <Border Width="888" Margin="0 10 0 0" Classes="frame">
+                    <StackPanel x:Name="SettingsRoot" Margin="20" Spacing="10" >
                         <Border Padding="10" Classes="frame-without-shadow">
                             <DockPanel>
-                                <Button DockPanel.Dock="Right" Classes="secondary">
+                                <Button x:Name="DefaultOptionsDeleteButton" DockPanel.Dock="Right" Classes="secondary" Click="DeleteButtonClicked">
                                     Delete
                                 </Button>
                                 <StackPanel>
-                                    <TextBlock>Default options</TextBlock>
-                                    <TextBlock Classes="title">Status</TextBlock>
+                                    <TextBlock Classes="title">Default options</TextBlock>
+                                    <TextBlock x:Name="DefaultOptionsStatusText">Status</TextBlock>
                                 </StackPanel>
                             </DockPanel>
                         </Border>

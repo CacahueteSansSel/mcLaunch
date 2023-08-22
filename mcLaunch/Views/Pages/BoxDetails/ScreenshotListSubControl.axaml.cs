@@ -8,6 +8,8 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 
 public partial class ScreenshotListSubControl : SubControl
 {
+    public override string Title => "README";
+    
     public ScreenshotListSubControl()
     {
         InitializeComponent();

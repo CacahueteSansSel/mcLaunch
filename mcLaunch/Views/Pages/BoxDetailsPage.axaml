@@ -85,10 +85,10 @@
                                         <Image Source="/resources/icons/screenshot.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
                                     </Button>
                                     <Button Classes="secondary" Click="SubControlSettingsClicked" ToolTip.Tip="Game Settings">
-                                        <Image Source="/resources/icons/settings.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                                        <Image Source="/resources/icons/game_settings.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
                                     </Button>
                                 </StackPanel>
-                                <TextBlock x:Name="SubControlNameText" Opacity="0.7" Margin="38 0 38 5">MODS</TextBlock>
+                                <TextBlock x:Name="SubControlTitleText" IsVisible="True" FontSize="13" Classes="light" Margin="38 0 38 5">MODS</TextBlock>
                             </StackPanel>
                         </Panel>
                         <DockPanel x:Name="WarningStripe" IsVisible="False" Margin="0 0 0 10" Background="{DynamicResource WarningAccent}">

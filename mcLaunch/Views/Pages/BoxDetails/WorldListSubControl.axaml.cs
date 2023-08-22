@@ -9,6 +9,8 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 
 public partial class WorldListSubControl : SubControl
 {
+    public override string Title => "WORLDS";
+    
     public WorldListSubControl()
     {
         InitializeComponent();

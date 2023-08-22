@@ -14,6 +14,8 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 
 public partial class GameSettingsSubControl : SubControl
 {
+    public override string Title => "SETTINGS";
+    
     public GameSettingsSubControl()
     {
         InitializeComponent();

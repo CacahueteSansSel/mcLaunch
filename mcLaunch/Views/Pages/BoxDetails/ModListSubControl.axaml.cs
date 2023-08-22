@@ -19,6 +19,8 @@ public partial class ModListSubControl : SubControl
     bool isAnyUpdate = false;
     List<Modification> updatableModsList = new();
 
+    public override string Title => "MODS";
+
     public ModListSubControl()
     {
         InitializeComponent();

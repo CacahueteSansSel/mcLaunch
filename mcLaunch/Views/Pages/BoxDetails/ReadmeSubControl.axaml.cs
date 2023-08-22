@@ -7,6 +7,8 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 
 public partial class ReadmeSubControl : SubControl
 {
+    public override string Title => "README";
+    
     public ReadmeSubControl()
     {
         InitializeComponent();

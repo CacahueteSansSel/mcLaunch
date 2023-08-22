@@ -154,6 +154,8 @@
       <AvaloniaResource Include="resources\icons\readme.png" />
       <None Remove="resources\icons\search.png" />
       <AvaloniaResource Include="resources\icons\search.png" />
+      <None Remove="resources\icons\game_settings.png" />
+      <AvaloniaResource Include="resources\icons\game_settings.png" />
     </ItemGroup>
 
     <ItemGroup>

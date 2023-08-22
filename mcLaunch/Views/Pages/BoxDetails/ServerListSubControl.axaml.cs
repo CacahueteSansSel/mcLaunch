@@ -9,6 +9,8 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 
 public partial class ServerListSubControl : SubControl
 {
+    public override string Title => "SERVERS";
+    
     public ServerListSubControl()
     {
         InitializeComponent();

@@ -91,7 +91,7 @@ public partial class BoxDetailsPage : UserControl
         SubControlContainer.Children.Clear();
         SubControlContainer.Children.Add(SubControl);
 
-        SubControlNameText.Text = control.Title;
+        SubControlTitleText.Text = control.Title;
 
         PopulateSubControl();
     }
