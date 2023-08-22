@@ -31,7 +31,7 @@
                         AlignmentX="Left"
                         AlignmentY="Top"
                         Source="{Binding Background}"
-                        Stretch="Fill" />
+                        Stretch="UniformToFill" />
                 </Border.Background>
                 <Canvas Height="120">
                     <Border Canvas.Left="40" Canvas.Top="60" ClipToBounds="True" CornerRadius="4">

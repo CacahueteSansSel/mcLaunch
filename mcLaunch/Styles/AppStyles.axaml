@@ -12,6 +12,7 @@
                         <Button Classes="primary" Margin="5">Primary !</Button>
                         <Button Classes="secondary" Margin="5">Secondary !</Button>
                         <Button Classes="transparent" Margin="5">Transparent !</Button>
+                        <Button Classes="transparent-green" Margin="5">Tr Green</Button>
                         <ProgressBar Value="70"></ProgressBar>
                     </StackPanel>
                 </Border>
@@ -217,6 +218,28 @@
     
     <Style Selector="Button.transparent:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="#AA3C3C3C"></Setter>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.transparent-green">
+        <Setter Property="Background" Value="{DynamicResource MiddleAccent}"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}"></Setter>
+        <Setter Property="Padding" Value="10"></Setter>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+    
+    <Style Selector="Button.transparent-green:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource DefaultAccent}"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}"></Setter>
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.2"/>

@@ -14,20 +14,20 @@
         <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}"></Image>
         <TextBlock Classes="id" Opacity="0.4" Margin="20 10 0 0" Text="{Binding Manifest.Id}"></TextBlock>
         <Button Margin="0 10 15 0" ZIndex="10" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Right" Classes="transparent" Click="EditBackgroundButtonClicked"  ToolTip.Tip="Select background image">
-            <Image Source="/resources/icons/edit.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+            <Image Source="/resources/icons/edit.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
         </Button>
         <ScrollViewer>
             <StackPanel>
                 <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
                     <views:BackButton></views:BackButton>
                     <Button Margin="10 0 0 0" Classes="transparent" Click="EditButtonClicked" ToolTip.Tip="Edit box informations">
-                        <Image Source="/resources/icons/edit.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                        <Image Source="/resources/icons/edit.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                     </Button>
                     <Button Margin="5 0 0 0" Classes="transparent" Click="DeleteBoxButtonClicked" ToolTip.Tip="Delete box">
-                        <Image Source="/resources/icons/delete.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                        <Image Source="/resources/icons/delete.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                     </Button>
                     <Button Margin="5 0 0 0" Classes="transparent" Click="OpenFolderButtonClicked" ToolTip.Tip="Open box folder">
-                        <Image Source="/resources/icons/folder.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                        <Image Source="/resources/icons/folder.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                     </Button>
                 </StackPanel>
                 <Border Classes="frame" Margin="0 10 0 100" Width="888">
@@ -36,7 +36,7 @@
                             <Panel>
                                 <Image PointerEntered="BoxIconCursorEntered" PointerExited="BoxIconCursorLeft" DockPanel.Dock="Left" Source="{Binding Manifest.Icon}" Height="155"></Image>
                                 <Button IsVisible="False" IsEnabled="False" PointerEntered="BoxIconCursorEntered" x:Name="EditIconButton" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 5 5" Classes="transparent" Click="EditIconButtonClicked">
-                                    <Image Source="/resources/icons/edit.png" Width="18" Height="18"></Image>
+                                    <Image Source="/resources/icons/edit.png" Width="13" Height="13"></Image>
                                 </Button>
                             </Panel>
                             <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
@@ -66,26 +66,26 @@
                         <Panel x:Name="SubControlButtons" Margin="0 10 0 10" Background="{DynamicResource BackgroundMiddle}">
                             <StackPanel Orientation="Vertical">
                                 <StackPanel Margin="38 5 38 5" Spacing="10" Orientation="Horizontal">
-                                    <Button x:Name="ReadmeButton" Classes="secondary" Click="SubControlReadmeButtonClicked" ToolTip.Tip="Readme">
-                                        <Image Source="/resources/icons/readme.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                                    <Button x:Name="ReadmeButton" Classes="transparent" Click="SubControlReadmeButtonClicked" ToolTip.Tip="Readme">
+                                        <Image Source="/resources/icons/readme.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>
-                                    <Button Classes="secondary" Click="SubControlModButtonClicked" ToolTip.Tip="Manage mods">
-                                        <Image Source="/resources/icons/mod.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                                    <Button Classes="transparent" Click="SubControlModButtonClicked" ToolTip.Tip="Manage mods">
+                                        <Image Source="/resources/icons/mod.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>
-                                    <Button Classes="secondary" Click="SubControlResourcePackButtonClicked" ToolTip.Tip="Manage resourcepacks">
-                                        <Image Source="/resources/icons/resource_pack.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                                    <Button Classes="transparent" Click="SubControlResourcePackButtonClicked" ToolTip.Tip="Manage resourcepacks">
+                                        <Image Source="/resources/icons/resource_pack.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>
-                                    <Button Classes="secondary" Click="SubControlServerButtonClicked" ToolTip.Tip="Servers">
-                                        <Image Source="/resources/icons/at.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                                    <Button Classes="transparent" Click="SubControlServerButtonClicked" ToolTip.Tip="Servers">
+                                        <Image Source="/resources/icons/at.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>
-                                    <Button Classes="secondary" Click="SubControlWorldButtonClicked" ToolTip.Tip="Worlds">
-                                        <Image Source="/resources/icons/world.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                                    <Button Classes="transparent" Click="SubControlWorldButtonClicked" ToolTip.Tip="Worlds">
+                                        <Image Source="/resources/icons/world.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>
-                                    <Button Classes="secondary" Click="SubControlScreenshotClicked" ToolTip.Tip="Screenshots">
-                                        <Image Source="/resources/icons/screenshot.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                                    <Button Classes="transparent" Click="SubControlScreenshotClicked" ToolTip.Tip="Screenshots">
+                                        <Image Source="/resources/icons/screenshot.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>
-                                    <Button Classes="secondary" Click="SubControlSettingsClicked" ToolTip.Tip="Game Settings">
-                                        <Image Source="/resources/icons/game_settings.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="18" Height="18"></Image>
+                                    <Button Classes="transparent" Click="SubControlSettingsClicked" ToolTip.Tip="Game Settings">
+                                        <Image Source="/resources/icons/game_settings.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>
                                 </StackPanel>
                                 <TextBlock x:Name="SubControlTitleText" IsVisible="True" FontSize="13" Classes="light" Margin="38 0 38 5">MODS</TextBlock>
@@ -94,7 +94,7 @@
                         <DockPanel x:Name="WarningStripe" IsVisible="False" Margin="0 0 0 10" Background="{DynamicResource WarningAccent}">
                             <TextBlock x:Name="WarningText" Padding="10" DockPanel.Dock="Left" TextAlignment="Left"></TextBlock>
                             <Button DockPanel.Dock="Right" Classes="transparent" Margin="0 0 10 0" Click="WarningStripeCloseButtonClicked">
-                                <Image Source="/resources/icons/close.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="16" Height="16"></Image>
+                                <Image Source="/resources/icons/close.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                             </Button>
                             <Panel></Panel>
                         </DockPanel>

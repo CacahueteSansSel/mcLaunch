@@ -22,7 +22,7 @@
             <Image Source="/resources/icons/cog.png" Width="16" Height="16"></Image>
         </Button>
         <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary square" ToolTip.Tip="Manage defaults" Click="DefaultsButtonClicked">
-            <Image Source="/resources/icons/game_settings.png" Width="16" Height="16"></Image>
+            <Image Source="/resources/icons/game_settings.png" Width="13" Height="13"></Image>
         </Button>
         <Border Classes="frame-without-shadow" Margin="10 10 10 10" BoxShadow="" Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
             <StackPanel Orientation="Horizontal">
@@ -31,7 +31,7 @@
                     <TextBlock Classes="light" Text="{Binding Account.Username}"></TextBlock>
                 </StackPanel>
                 <Button Margin="10 0 10 0" Classes="transparent square" ToolTip.Tip="Disconnect" Click="DisconnectButtonClicked">
-                    <Image Source="/resources/icons/logout.png"></Image>
+                    <Image Width="16" Height="16" Source="/resources/icons/logout.png"></Image>
                 </Button>
             </StackPanel>
         </Border>

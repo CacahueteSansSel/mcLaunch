@@ -158,6 +158,9 @@
       <AvaloniaResource Include="resources\icons\game_settings.png" />
       <None Remove="resources\icons\play.png" />
       <AvaloniaResource Include="resources\icons\play.png" />
+      <None Remove="resources\gradient.png" />
+      <None Remove="resources\icons\up_arrow.png" />
+      <AvaloniaResource Include="resources\icons\up_arrow.png" />
     </ItemGroup>
 
     <ItemGroup>

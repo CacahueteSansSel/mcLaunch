@@ -13,13 +13,16 @@
             <DockPanel>
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Button DockPanel.Dock="Left" Classes="secondary square" Click="AddModsButtonClicked" ToolTip.Tip="Add mods">
-                        <Image Source="/resources/icons/plus.png"></Image>
+                        <Image Width="13" Height="13" Source="/resources/icons/plus.png"></Image>
                     </Button>
-                    <Button x:Name="UpdateAllButton" IsVisible="False" DockPanel.Dock="Left" Classes="secondary square" Click="UpdateAllButtonClicked" ToolTip.Tip="Update all">
-                        <Image Source="/resources/icons/update.png"></Image>
+                    <Button x:Name="UpdateAllButton" DockPanel.Dock="Left" Padding="10" Height="39" Classes="secondary" Click="UpdateAllButtonClicked" ToolTip.Tip="Update all">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Image Width="13" Height="13" Source="/resources/icons/up_arrow.png"></Image>
+                            <TextBlock x:Name="UpdateButtonCountText">0</TextBlock>
+                        </StackPanel>
                     </Button>
                     <Button x:Name="MigrateToModrinthButton" DockPanel.Dock="Left" Classes="secondary square" Click="MigrateToModrinthButtonClicked" ToolTip.Tip="Migrate all mods to Modrinth" BorderBrush="#1bd96a">
-                        <Image Source="/resources/icons/modrinth.png"></Image>
+                        <Image Width="13" Height="13" Source="/resources/icons/modrinth.png"></Image>
                     </Button>
                 </StackPanel>
                 <StackPanel Height="15" x:Name="SearchingForUpdates" DockPanel.Dock="Left" IsVisible="False" Orientation="Horizontal">

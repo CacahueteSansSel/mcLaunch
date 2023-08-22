@@ -105,6 +105,7 @@ public partial class ModListSubControl : SubControl
         SearchingForUpdates.IsVisible = false;
 
         UpdateAllButton.IsVisible = isAnyUpdate;
+        UpdateButtonCountText.Text = updatableModsList.Count.ToString();
     }
 
     private void AddModsButtonClicked(object? sender, RoutedEventArgs e)

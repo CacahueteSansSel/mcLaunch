@@ -8,12 +8,12 @@
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
         
         <Style Selector="Border.badge">
-            <Setter Property="Background" Value="{DynamicResource BackgroundLightest}"></Setter>
+            <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"></Setter>
             <Setter Property="Padding" Value="5 0 5 0"></Setter>
             <Setter Property="Height" Value="20"></Setter>
-            <Setter Property="CornerRadius" Value="4"></Setter>
+            <Setter Property="CornerRadius" Value="2"></Setter>
             <Setter Property="BorderThickness" Value="1"></Setter>
-            <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+            <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLightest}"></Setter>
         </Style>
     </UserControl.Styles>
     <Border Classes="badge">
