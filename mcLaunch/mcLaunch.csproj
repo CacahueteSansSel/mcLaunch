@@ -156,6 +156,8 @@
       <AvaloniaResource Include="resources\icons\search.png" />
       <None Remove="resources\icons\game_settings.png" />
       <AvaloniaResource Include="resources\icons\game_settings.png" />
+      <None Remove="resources\icons\play.png" />
+      <AvaloniaResource Include="resources\icons\play.png" />
     </ItemGroup>
 
     <ItemGroup>

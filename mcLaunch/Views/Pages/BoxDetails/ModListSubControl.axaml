@@ -18,8 +18,8 @@
                     <Button x:Name="UpdateAllButton" IsVisible="False" DockPanel.Dock="Left" Classes="secondary square" Click="UpdateAllButtonClicked" ToolTip.Tip="Update all">
                         <Image Source="/resources/icons/update.png"></Image>
                     </Button>
-                    <Button x:Name="MigrateToModrinthButton" DockPanel.Dock="Left" Classes="secondary square" Click="MigrateToModrinthButtonClicked" ToolTip.Tip="Migrate all mods to Modrinth" BorderBrush="MediumPurple">
-                        <Image Source="/resources/icons/modrinth.png" RenderTransform="scale(1.5)"></Image>
+                    <Button x:Name="MigrateToModrinthButton" DockPanel.Dock="Left" Classes="secondary square" Click="MigrateToModrinthButtonClicked" ToolTip.Tip="Migrate all mods to Modrinth" BorderBrush="#1bd96a">
+                        <Image Source="/resources/icons/modrinth.png"></Image>
                     </Button>
                 </StackPanel>
                 <StackPanel Height="15" x:Name="SearchingForUpdates" DockPanel.Dock="Left" IsVisible="False" Orientation="Horizontal">

@@ -45,8 +45,7 @@ public partial class BoxDetailsPage : UserControl
         DataContext = box;
 
         VersionBadge.Text = box.Manifest.Version;
-        ModLoaderBadge.Icon =
-            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{box.ModLoader.Id}.png")));
+        ModLoaderBadge.Icon = Box.ModLoader?.LoadIcon();
         ModLoaderBadge.Text = box.ModLoader?.Name ?? "Unknown";
 
         box.LoadBackground();

@@ -44,7 +44,12 @@
     <Panel>
         <StackPanel Margin="20 20 20 20">
             <Border ClipToBounds="True" CornerRadius="4">
-                <Image Stretch="Fill" Width="155" Height="155" Source="{Binding Icon}"></Image>
+                <Panel Width="155" Height="155" >
+                    <Image Stretch="Fill" Source="{Binding Icon}"></Image>
+                    <Button x:Name="PlayButton" IsVisible="False" ToolTip.Tip="Launch box" Classes="transparent" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="PlayButtonClicked">
+                        <Image Source="/resources/icons/play.png" Width="14" Height="14"></Image>
+                    </Button>
+                </Panel>
             </Border>
             <TextBlock FontSize="20" Classes="title" Margin="0 5 0 0" Text="{Binding Name}"></TextBlock>
             <StackPanel Orientation="Horizontal" Margin="0 0 0 3">

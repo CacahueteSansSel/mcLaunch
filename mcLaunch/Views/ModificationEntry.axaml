@@ -25,7 +25,7 @@
         <StackPanel Margin="10 0 10 0" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Classes="title" Text="{Binding Name}"></TextBlock>
-                <Image Margin="5 0 0 0" Height="18" Source="{Binding Platform.Icon}" ToolTip.Tip="{Binding Platform.Name}" ClipToBounds="True"></Image>
+                <Image Margin="5 0 0 0" Height="14" Source="{Binding Platform.Icon}" ToolTip.Tip="{Binding Platform.Name}" ClipToBounds="True"></Image>
                 <StackPanel Orientation="Horizontal" Margin="5 2 0 0" Opacity="0.5">
                     <TextBlock Classes="light" FontSize="12">by</TextBlock>
                     <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{Binding Author}"></TextBlock>

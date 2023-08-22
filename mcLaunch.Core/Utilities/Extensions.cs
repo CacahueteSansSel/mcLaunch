@@ -1,4 +1,8 @@
-﻿namespace mcLaunch.Core.Utilities;
+﻿using Avalonia.Media.Imaging;
+using Avalonia.Platform;
+using Cacahuete.MinecraftLib.Core.ModLoaders;
+
+namespace mcLaunch.Core.Utilities;
 
 public static class Extensions
 {
@@ -89,5 +93,12 @@ public static class Extensions
         if (span.TotalDays < 365) return $"{months} months ago";
         
         return $"{span.Days / 365} years ago";
+    }
+
+    public static Bitmap? LoadIcon(this ModLoaderSupport? modLoader)
+    {
+        if (modLoader == null) return null;
+        
+        return new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{modLoader.Id}.png")));
     }
 }
