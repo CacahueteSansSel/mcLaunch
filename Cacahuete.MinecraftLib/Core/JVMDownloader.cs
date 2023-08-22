@@ -12,10 +12,14 @@ public class JVMDownloader
     public MinecraftFolder SystemFolder { get; private set; }
     public string BasePath { get; private set; }
     
-    public JVMDownloader(MinecraftFolder systemFolder)
+    public JVMDownloader(MinecraftFolder systemFolder) : this($"{systemFolder.CompletePath}/runtime")
     {
         SystemFolder = systemFolder;
-        BasePath = $"{SystemFolder.CompletePath}/runtime";
+    }
+
+    public JVMDownloader(string customPath)
+    {
+        BasePath = customPath;
     }
 
     public Task DownloadForCurrentPlatformAsync(string name)

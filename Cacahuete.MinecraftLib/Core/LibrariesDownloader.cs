@@ -12,9 +12,8 @@ public class LibrariesDownloader
 
     public List<string> ClassPath { get; private set; } = new();
 
-    public LibrariesDownloader(MinecraftFolder folder, string path = "libraries", string nativesPath = "bin")
+    public LibrariesDownloader(MinecraftFolder folder, string path = "libraries", string nativesPath = "bin") : this($"{folder.Path}/{path}")
     {
-        Path = $"{folder.Path}/{path}";
         NativesPath = $"{folder.Path}/{nativesPath}/{Guid.NewGuid().ToString().Replace("-", "")}";
     }
 

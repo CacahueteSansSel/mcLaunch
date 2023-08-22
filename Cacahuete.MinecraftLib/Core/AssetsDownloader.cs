@@ -8,9 +8,9 @@ public class AssetsDownloader
     public string Path { get; private set; }
     public string? VirtualPath { get; private set; }
 
-    public AssetsDownloader(MinecraftFolder folder, string path = "assets")
+    public AssetsDownloader(MinecraftFolder folder, string path = "assets") : this($"{folder.Path}/{path}")
     {
-        Path = $"{folder.Path}/{path}";
+        
     }
 
     public AssetsDownloader(string customPath)
