@@ -11,6 +11,7 @@ public class JVMDownloader
         "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
     public MinecraftFolder SystemFolder { get; private set; }
     public string BasePath { get; private set; }
+    public event Action<string, JsonNode, string, string> GotJVMManifest;
     
     public JVMDownloader(MinecraftFolder systemFolder) : this($"{systemFolder.CompletePath}/runtime")
     {
@@ -47,6 +48,7 @@ public class JVMDownloader
         JVMEntry jvm = jvmNode[0].Deserialize<JVMEntry>()!;
 
         JsonNode jvmManifest = await Api.GetNodeAsync(jvm.Manifest.Url);
+        GotJVMManifest?.Invoke(jvm.Manifest.Url, jvmManifest, platform, name);
 
         foreach (var (relPath, value) in jvmManifest["files"].AsObject())
         {
