@@ -30,6 +30,8 @@ public partial class ModpackEntryCard : UserControl
         DataContext = modpack;
 
         VersionBadge.Text = modpack.LatestMinecraftVersion ?? "Unknown";
+        PlatformBadge.Text = modpack.Platform.Name;
+        PlatformBadge.Icon = modpack.Platform.Icon;
         
         DownloadBackgroundAndApplyAsync();
     }
