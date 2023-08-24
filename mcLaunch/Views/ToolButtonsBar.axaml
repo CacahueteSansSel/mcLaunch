@@ -9,32 +9,42 @@
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <DockPanel>
-        <Button DockPanel.Dock="Left" Margin="20 0 0 0" ToolTip.Tip="New box" Classes="primary square" Click="NewBoxButtonClicked">
-            <Image Source="/resources/icons/plus.png" Width="13" Height="13"></Image>
-        </Button>
-        <Button DockPanel.Dock="Left" Margin="10 0 0 0" ToolTip.Tip="Import a box/Minecraft instance" Classes="secondary square" Click="ImportBoxButtonClicked">
-            <Image Source="/resources/icons/import.png" Width="13" Height="13"></Image>
-        </Button>
-        <Button DockPanel.Dock="Left" Margin="10 0 0 0" ToolTip.Tip="Browse modpacks" Classes="secondary square" Click="BrowseModpacksButtonClicked">
-            <Image Source="/resources/icons/search.png" Width="13" Height="13"></Image>
-        </Button>
-        <Button DockPanel.Dock="Right" Margin="0 0 20 0" Classes="secondary square" ToolTip.Tip="Manage settings" Click="SettingsButtonClicked">
-            <Image Source="/resources/icons/cog.png" Width="16" Height="16"></Image>
-        </Button>
-        <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary square" ToolTip.Tip="Manage defaults" Click="DefaultsButtonClicked">
-            <Image Source="/resources/icons/game_settings.png" Width="13" Height="13"></Image>
-        </Button>
-        <Border Classes="frame-without-shadow" Margin="10 10 10 10" BoxShadow="" Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="{Binding HeadIcon}" Margin="10 7 7 7"></Image>
-                <StackPanel Margin="5 0 0 0" VerticalAlignment="Center">
-                    <TextBlock Classes="light" Text="{Binding Account.Username}"></TextBlock>
+        <Panel DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource BackgroundLighter}"></Panel>
+        <DockPanel>
+            <Button DockPanel.Dock="Left" Margin="20 0 0 0" ToolTip.Tip="New box" Classes="primary square"
+                    Click="NewBoxButtonClicked">
+                <Image Source="/resources/icons/plus.png" Width="13" Height="13"></Image>
+            </Button>
+            <Button DockPanel.Dock="Left" Margin="10 0 0 0" ToolTip.Tip="Import a box/Minecraft instance"
+                    Classes="secondary square" Click="ImportBoxButtonClicked">
+                <Image Source="/resources/icons/import.png" Width="13" Height="13"></Image>
+            </Button>
+            <Button DockPanel.Dock="Left" Margin="10 0 0 0" ToolTip.Tip="Browse modpacks" Classes="secondary square"
+                    Click="BrowseModpacksButtonClicked">
+                <Image Source="/resources/icons/search.png" Width="13" Height="13"></Image>
+            </Button>
+            <Button DockPanel.Dock="Right" Margin="0 0 20 0" Classes="secondary square" ToolTip.Tip="Manage settings"
+                    Click="SettingsButtonClicked">
+                <Image Source="/resources/icons/cog.png" Width="16" Height="16"></Image>
+            </Button>
+            <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary square" ToolTip.Tip="Manage defaults"
+                    Click="DefaultsButtonClicked">
+                <Image Source="/resources/icons/game_settings.png" Width="13" Height="13"></Image>
+            </Button>
+            <Border Classes="frame-without-shadow" Margin="10 10 10 10" BoxShadow=""
+                    Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{Binding HeadIcon}" Margin="10 7 7 7"></Image>
+                    <StackPanel Margin="5 0 0 0" VerticalAlignment="Center">
+                        <TextBlock Classes="light" Text="{Binding Account.Username}"></TextBlock>
+                    </StackPanel>
+                    <Button Margin="10 0 10 0" Classes="transparent square" ToolTip.Tip="Disconnect"
+                            Click="DisconnectButtonClicked">
+                        <Image Width="16" Height="16" Source="/resources/icons/logout.png"></Image>
+                    </Button>
                 </StackPanel>
-                <Button Margin="10 0 10 0" Classes="transparent square" ToolTip.Tip="Disconnect" Click="DisconnectButtonClicked">
-                    <Image Width="16" Height="16" Source="/resources/icons/logout.png"></Image>
-                </Button>
-            </StackPanel>
-        </Border>
-        <Panel></Panel>
+            </Border>
+            <Panel></Panel>
+        </DockPanel>
     </DockPanel>
 </UserControl>
