@@ -116,7 +116,8 @@ public partial class ModificationList : UserControl
         SetModificationsAttributes();
 
         LoadCircle.IsVisible = false;
-        LoadMoreButton.IsEnabled = true;
+        LoadMoreButton.IsEnabled = ctx.Modifications.Length >= 10;
+        LoadMoreButton.IsVisible = ctx.Modifications.Length >= 10;
     }
 
     async Task<Modification[]> SearchModsAsync(Box box, string query)

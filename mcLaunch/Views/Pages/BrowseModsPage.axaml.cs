@@ -17,6 +17,5 @@ public partial class BrowseModsPage : UserControl
     private void SearchButtonClicked(object? sender, RoutedEventArgs e)
     {
         ModList.Search(null, SearchTextboxInput.Text);
-        ModList.ShowLoadMoreButton();
     }
 }
