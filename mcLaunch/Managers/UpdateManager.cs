@@ -30,6 +30,7 @@ public static class UpdateManager
             Process.Start(new ProcessStartInfo
             {
                 FileName = Path.GetFullPath("installer/installer.exe"),
+                WorkingDirectory = Path.GetFullPath("installer"),
                 Arguments = $"\"{Environment.CurrentDirectory}\"",
                 UseShellExecute = true,
                 Verb = "runas"

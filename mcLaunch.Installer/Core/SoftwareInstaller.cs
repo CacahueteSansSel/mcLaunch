@@ -74,12 +74,30 @@ public class SoftwareInstaller
             Directory.CreateDirectory(Parameters.TargetDirectory);
 
         using ZipArchive archive = new(archiveStream, ZipArchiveMode.Read, false);
+
+        foreach (ZipArchiveEntry entry in archive.Entries)
+        {
+            string filename = $"{Parameters.TargetDirectory}/{entry.FullName}";
+
+            if (File.Exists(filename))
+            {
+                try
+                {
+                    File.Delete(filename);
+                }
+                catch (Exception e)
+                {
+                    
+                }
+            }
+        }
+        
         archive.ExtractToDirectory(Parameters.TargetDirectory, true);
 
         if (CopyInstaller)
         {
             Directory.CreateDirectory($"{Parameters.TargetDirectory}/installer");
-            File.Copy(Environment.GetCommandLineArgs()[0], $"{Parameters.TargetDirectory}/installer/installer.exe");
+            File.Copy(Environment.GetCommandLineArgs()[0], $"{Parameters.TargetDirectory}/installer/installer.exe", true);
         }
 
         MainWindow.Instance.Next();
