@@ -42,8 +42,12 @@ public class ModrinthModPlatform : ModPlatform
     {
         FacetCollection collection = new();
 
-        collection.Add(Facet.Category(box.Manifest.ModLoaderId.ToLower()));
-        collection.Add(Facet.Version(box.Manifest.Version));
+        if (box != null)
+        {
+            collection.Add(Facet.Category(box.Manifest.ModLoaderId.ToLower()));
+            collection.Add(Facet.Version(box.Manifest.Version));
+        }
+        
         collection.Add(Facet.ProjectType(ProjectType.Mod));
 
         SearchResponse search =
@@ -66,7 +70,6 @@ public class ModrinthModPlatform : ModPlatform
         }).ToArray();
 
         // Download all mods images
-        // TODO: fix that causing slow loading process
         foreach (Modification mod in mods) mod.DownloadIconAsync();
 
         return mods;

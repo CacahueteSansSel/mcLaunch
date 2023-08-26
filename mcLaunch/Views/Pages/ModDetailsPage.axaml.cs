@@ -20,7 +20,7 @@ public partial class ModDetailsPage : UserControl
 {
     bool isInstalling = false;
     public Modification Mod { get; private set; }
-    public Box TargetBox { get; private set; }
+    public Box? TargetBox { get; private set; }
 
     public ModDetailsPage()
     {
@@ -31,7 +31,7 @@ public partial class ModDetailsPage : UserControl
         LoadingButtonFrame.IsVisible = false;
     }
 
-    public ModDetailsPage(Modification mod, Box targetBox)
+    public ModDetailsPage(Modification mod, Box? targetBox)
     {
         InitializeComponent();
 
@@ -43,13 +43,20 @@ public partial class ModDetailsPage : UserControl
         ModPlatformBadge.Icon =
             new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{mod.Platform.Name.ToLower()}.png")));
 
-        SetInstalled(targetBox.HasModificationSoft(mod));
+        SetInstalled(targetBox != null && targetBox.HasModificationSoft(mod));
         GetModAdditionalInfos();
 
         UpdateButton.IsEnabled = mod.IsUpdateRequired;
         UpdateButton.IsVisible = mod.IsUpdateRequired;
 
         OpenInBrowserButton.IsVisible = mod.Url != null;
+
+        if (TargetBox == null)
+        {
+            InstallButton.IsVisible = false;
+            UpdateButton.IsVisible = false;
+            UninstallButton.IsVisible = false;
+        }
     }
 
     async void GetModAdditionalInfos()
@@ -59,7 +66,7 @@ public partial class ModDetailsPage : UserControl
         await Mod.DownloadBackgroundAsync();
         await ModPlatformManager.Platform.DownloadModInfosAsync(Mod);
 
-        if (Mod.Background == null)
+        if (Mod.Background == null && TargetBox != null)
             Mod.Background = TargetBox.Manifest.Background;
 
         LoadCircle.IsVisible = false;
@@ -76,6 +83,8 @@ public partial class ModDetailsPage : UserControl
 
     private async void InstallButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (TargetBox == null) return;
+        
         isInstalling = true;
 
         InstallButton.IsVisible = false;
@@ -153,6 +162,8 @@ public partial class ModDetailsPage : UserControl
 
     private async void UninstallButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (TargetBox == null) return;
+        
         InstallButton.IsVisible = false;
         InstallButton.IsEnabled = false;
 
@@ -170,6 +181,8 @@ public partial class ModDetailsPage : UserControl
 
     async Task FinishInstallAsync()
     {
+        if (TargetBox == null) return;
+        
         bool success = await TargetBox.UpdateModAsync(Mod, false);
         
         if (!success)
@@ -191,6 +204,8 @@ public partial class ModDetailsPage : UserControl
 
     private async void UpdateButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (TargetBox == null) return;
+        
         InstallButton.IsVisible = false;
         InstallButton.IsEnabled = false;
 

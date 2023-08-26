@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="65"
              Height="65" Background="{DynamicResource Background}"
              x:Class="mcLaunch.Views.ToolButtonsBar">
@@ -11,18 +12,25 @@
     <DockPanel>
         <Panel DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource BackgroundLighter}"></Panel>
         <DockPanel>
-            <Button DockPanel.Dock="Left" Margin="20 0 0 0" ToolTip.Tip="New box" Classes="primary square"
-                    Click="NewBoxButtonClicked">
-                <Image Source="/resources/icons/plus.png" Width="13" Height="13"></Image>
-            </Button>
-            <Button DockPanel.Dock="Left" Margin="10 0 0 0" ToolTip.Tip="Import a box/Minecraft instance"
-                    Classes="secondary square" Click="ImportBoxButtonClicked">
-                <Image Source="/resources/icons/import.png" Width="13" Height="13"></Image>
-            </Button>
-            <Button DockPanel.Dock="Left" Margin="10 0 0 0" ToolTip.Tip="Browse modpacks" Classes="secondary square"
-                    Click="BrowseModpacksButtonClicked">
-                <Image Source="/resources/icons/search.png" Width="13" Height="13"></Image>
-            </Button>
+            <StackPanel Orientation="Horizontal" Margin="20 0 0 0" Spacing="10">
+                <Button DockPanel.Dock="Left" ToolTip.Tip="New box" Classes="primary square"
+                        Click="NewBoxButtonClicked">
+                    <Image Source="/resources/icons/plus.png" Width="13" Height="13"></Image>
+                </Button>
+                <Button DockPanel.Dock="Left" ToolTip.Tip="Import a box/Minecraft instance"
+                        Classes="secondary square" Click="ImportBoxButtonClicked">
+                    <Image Source="/resources/icons/import.png" Width="13" Height="13"></Image>
+                </Button>
+                <views:SeparatorLine></views:SeparatorLine>
+                <Button DockPanel.Dock="Left" ToolTip.Tip="Browse modpacks" Classes="secondary square"
+                        Click="BrowseModpacksButtonClicked">
+                    <Image Source="/resources/icons/vanilla.png" Width="13" Height="13"></Image>
+                </Button>
+                <Button DockPanel.Dock="Left" ToolTip.Tip="Browse mods" Classes="secondary square"
+                        Click="BrowseModsButtonClicked">
+                    <Image Source="/resources/icons/mod.png" Width="13" Height="13"></Image>
+                </Button>
+            </StackPanel>
             <Button DockPanel.Dock="Right" Margin="0 0 20 0" Classes="secondary square" ToolTip.Tip="Manage settings"
                     Click="SettingsButtonClicked">
                 <Image Source="/resources/icons/cog.png" Width="16" Height="16"></Image>

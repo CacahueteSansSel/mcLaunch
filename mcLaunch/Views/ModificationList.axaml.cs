@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using CurseForge.Models.Mods;
 using mcLaunch.Core;
 using mcLaunch.Core.Mods.Platforms;
 using mcLaunch.Models;
@@ -33,6 +34,7 @@ public partial class ModificationList : UserControl
     string lastQuery;
 
     public bool HideInstalledBadges { get; set; }
+    public Modification[] Mods => ((Data) DataContext).Modifications;
 
     public ModificationList()
     {
@@ -46,6 +48,12 @@ public partial class ModificationList : UserControl
     public void SetBox(Box box)
     {
         lastBox = box;
+    }
+
+    public void ShowLoadMoreButton()
+    {
+        LoadMoreButton.IsVisible = true;
+        LoadMoreButton.IsEnabled = true;
     }
 
     public void HideLoadMoreButton()
@@ -143,8 +151,6 @@ public partial class ModificationList : UserControl
 
     private async void LoadMoreButtonClicked(object? sender, RoutedEventArgs e)
     {
-        if (lastBox == null) return;
-
         Data ctx = (Data) DataContext;
 
         LoadMoreButton.IsEnabled = false;

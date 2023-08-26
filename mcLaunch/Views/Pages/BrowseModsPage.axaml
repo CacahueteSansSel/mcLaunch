@@ -1,0 +1,32 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="mcLaunch.Views.Pages.BrowseModsPage">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <ScrollViewer>
+        <StackPanel>
+            <StackPanel Margin="0 100 0 0" Width="896" Orientation="Horizontal">
+                <views:BackButton></views:BackButton>
+            </StackPanel>
+            <Border Classes="frame" Margin="0 10 0 100" Width="896">
+                <Panel>
+                    <StackPanel Margin="10 5 10 0">
+                        <TextBlock Classes="title" Margin="28 20 0 0" FontSize="32">Browse mods</TextBlock>
+                        <DockPanel Margin="28 10 28 0">
+                            <Button DockPanel.Dock="Right" Margin="10 0 0 0" Classes="secondary" IsDefault="True" Click="SearchButtonClicked">
+                                <Image Width="16" Height="16" Source="/resources/icons/search.png"></Image>
+                            </Button>
+                            <TextBox x:Name="SearchTextboxInput" Watermark="Search" VerticalContentAlignment="Center"></TextBox>
+                        </DockPanel>
+                        <views:ModificationList x:Name="ModList" Margin="28 10 28 0"></views:ModificationList>
+                    </StackPanel>
+                </Panel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

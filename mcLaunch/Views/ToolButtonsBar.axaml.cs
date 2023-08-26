@@ -135,4 +135,9 @@ public partial class ToolButtonsBar : UserControl
     {
         MainWindowDataContext.Instance.Push<DefaultsPage>();
     }
+
+    private void BrowseModsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        MainWindowDataContext.Instance.Push<BrowseModsPage>();
+    }
 }
