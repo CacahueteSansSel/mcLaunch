@@ -22,6 +22,8 @@ public static class UpdateManager
     
     public static async Task<bool> UpdateAsync()
     {
+        if (!OperatingSystem.IsWindows()) return false;
+        
         GitHubRelease? latestRelease = await GitHubRepository.GetLatestReleaseAsync();
         if (latestRelease == null) return false;
 
@@ -35,8 +37,8 @@ public static class UpdateManager
                 UseShellExecute = true,
                 Verb = "runas"
             });
-            Environment.Exit(0);
             
+            Environment.Exit(0);
             return true;
         }
         
