@@ -23,6 +23,13 @@ public class Settings
         Instance = this;
     }
 
+    public Settings WithDefaults()
+    {
+        ExposeLauncherNameToMinecraft = true;
+        
+        return this;
+    }
+
     public Setting[] GetAll()
     {
         List<Setting> settings = new();
@@ -76,7 +83,7 @@ public class Settings
     {
         if (!File.Exists("settings.json"))
         {
-            Instance = new Settings();
+            Instance = new Settings().WithDefaults();
             return;
         }
         
