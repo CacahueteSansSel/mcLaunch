@@ -208,6 +208,8 @@ public class ModrinthModPlatform : ModPlatform
                 Color = (uint) project.Color.Value.ToArgb(),
                 Platform = this
             };
+            
+            pack.TransformLongDescriptionToHtml();
 
             return pack;
         }

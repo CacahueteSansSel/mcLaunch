@@ -26,6 +26,7 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.2" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.2" />
         <PackageReference Include="Markdown.Avalonia" Version="11.0.1" />
+        <PackageReference Include="ReverseMarkdown" Version="3.25.0" />
     </ItemGroup>
 
     <ItemGroup>

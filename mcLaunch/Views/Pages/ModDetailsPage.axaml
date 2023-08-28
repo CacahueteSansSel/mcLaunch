@@ -54,7 +54,7 @@
                             </StackPanel>
                         </DockPanel>
                         <StackPanel Orientation="Vertical" Margin="38 0 38 38">
-                            <avalonia1:HtmlPanel x:Name="DescHtmlPanel" Margin="0 10 0 0" BaseStylesheet="* { color: white; }" Text="{Binding LongDescriptionBody}">
+                            <avalonia1:HtmlPanel x:Name="DescHtmlPanel" Margin="0 10 0 0" Text="{Binding LongDescriptionBody}">
                                 
                             </avalonia1:HtmlPanel>
                         </StackPanel>

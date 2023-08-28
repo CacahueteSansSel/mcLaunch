@@ -2,6 +2,7 @@
 using System.Web;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Markdig;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Utilities;
 using ReactiveUI;
@@ -206,12 +207,12 @@ public class PlatformModpack : ReactiveObject
         public string ModLoader { get; set; }
     }
 
-    public void TransformLongDescriptionToMarkdown()
+    public void TransformLongDescriptionToHtml()
     {
         if (string.IsNullOrWhiteSpace(LongDescriptionBody)) 
             return;
-        
-        var converter = new ReverseMarkdown.Converter();
-        LongDescriptionBody = HttpUtility.HtmlDecode(converter.Convert(LongDescriptionBody));
+
+        LongDescriptionBody = Markdown.ToHtml(LongDescriptionBody, 
+            new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
     }
 }

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:avalonia="clr-namespace:TheArtOfDev.HtmlRenderer.Avalonia;assembly=Avalonia.HtmlRenderer"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.ModpackDetailsPage">
     <UserControl.Styles>
@@ -47,9 +48,9 @@
                             </StackPanel>
                         </DockPanel>
                         <StackPanel Orientation="Vertical" Margin="38 0 38 38">
-                            <mdxaml:MarkdownScrollViewer Margin="0 10 0 0" Markdown="{Binding LongDescriptionBody}">
+                            <avalonia:HtmlPanel x:Name="DescHtmlPanel" Margin="0 10 0 0" Text="{Binding LongDescriptionBody}">
                                 
-                            </mdxaml:MarkdownScrollViewer>
+                            </avalonia:HtmlPanel>
                         </StackPanel>
                     </StackPanel>
                 </Border>

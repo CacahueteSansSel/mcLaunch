@@ -1,7 +1,10 @@
-﻿using Avalonia;
+﻿using System;
+using System.IO;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
@@ -23,6 +26,9 @@ public partial class ModpackDetailsPage : UserControl
     public ModpackDetailsPage(PlatformModpack modpack)
     {
         InitializeComponent();
+
+        using StreamReader rd = new(AssetLoader.Open(new Uri("avares://mcLaunch/resources/html/base.css")));
+        DescHtmlPanel.BaseStylesheet = rd.ReadToEnd();
 
         this.modpack = modpack;
         DataContext = modpack;
