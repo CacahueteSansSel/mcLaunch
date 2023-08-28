@@ -105,7 +105,25 @@ public class ModrinthModificationPack : ModificationPack
 
                     if (ver == null)
                     {
-                        ver = await ModrinthModPlatform.Instance.Client.Version.GetAsync(version);
+                        try
+                        {
+                            ver = await ModrinthModPlatform.Instance.Client.Version.GetAsync(version);
+                        }
+                        catch (Exception e)
+                        {
+                            try
+                            {
+                                string[] versions = await ModrinthModPlatform.Instance.GetModVersionList(id, ModloaderId,
+                                    MinecraftVersion);
+                            
+                                ver = await ModrinthModPlatform.Instance.Client.Version.GetAsync(versions[0]);
+                            }
+                            catch
+                            {
+                                // The mod failed to download
+                                continue;
+                            }
+                        }
                     }
 
                     Regex rootMcVerRegex = new Regex("\\d+\\.\\d+");
