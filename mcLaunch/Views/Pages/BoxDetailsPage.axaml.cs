@@ -122,7 +122,7 @@ public partial class BoxDetailsPage : UserControl
         Navigation.ShowPopup(new GameLaunchPopup());
         
         Box.SetExposeLauncher(Utilities.Settings.Instance.ExposeLauncherNameToMinecraft);
-        Box.SetLauncherVersion(BuildStatic.BuildVersion.ToString());
+        Box.SetLauncherVersion(CurrentBuild.Version.ToString());
 
         await Box.PrepareAsync();
         Process java;

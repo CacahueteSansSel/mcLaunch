@@ -77,7 +77,8 @@
               "Compile",
               "KillPreviewerProcesses",
               "Publish",
-              "Restore"
+              "Restore",
+              "WriteCommitId"
             ]
           }
         },
@@ -96,7 +97,8 @@
               "Compile",
               "KillPreviewerProcesses",
               "Publish",
-              "Restore"
+              "Restore",
+              "WriteCommitId"
             ]
           }
         },

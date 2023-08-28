@@ -17,7 +17,7 @@ public static class UpdateManager
         GitHubRelease? latestRelease = await GitHubRepository.GetLatestReleaseAsync();
         if (latestRelease == null) return false;
 
-        return latestRelease.Name.TrimStart('v') != BuildStatic.BuildVersion.ToString();
+        return latestRelease.Name.TrimStart('v') != CurrentBuild.Version.ToString();
     }
     
     public static async Task<bool> UpdateAsync()

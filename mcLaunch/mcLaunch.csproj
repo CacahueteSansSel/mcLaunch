@@ -165,6 +165,8 @@
       <AvaloniaResource Include="resources\icons\up_arrow.png" />
       <None Remove="resources\html\base.css" />
       <AvaloniaResource Include="resources\html\base.css" />
+      <None Remove="resources\commit" />
+      <AvaloniaResource Include="resources\commit" />
     </ItemGroup>
 
     <ItemGroup>

@@ -57,6 +57,14 @@ class Build : NukeBuild
                 .SetProjectFile(Solution));
         });
 
+    Target WriteCommitId => _ => _
+        .Executes(() =>
+        {
+            string filename = $"{Solution.GetProject("mcLaunch").Directory / "resources" / "commit"}";
+            
+            File.WriteAllText(filename, GitRepository.Commit[..7]);
+        });
+
     Target KillPreviewerProcesses => _ => _
         .Executes(() =>
         {
@@ -70,7 +78,7 @@ class Build : NukeBuild
         });
 
     Target Publish => _ => _
-        .DependsOn(Restore, KillPreviewerProcesses)
+        .DependsOn(Restore, KillPreviewerProcesses, WriteCommitId)
         .Executes(() =>
         {
             Process.Start(new ProcessStartInfo

@@ -26,7 +26,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         
         UpdateBar.IsVisible = false;
-        Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch", BuildStatic.BuildVersion.ToString()));
+        Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch", CurrentBuild.Version.ToString()));
 
         DataContext = new MainWindowDataContext(null, false);
 
