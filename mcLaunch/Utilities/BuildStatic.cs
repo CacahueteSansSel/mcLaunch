@@ -4,5 +4,5 @@ namespace mcLaunch.Utilities;
 
 public static class BuildStatic
 {
-    public static Version BuildVersion => new("0.1.2");
+    public static Version BuildVersion => new("0.1.3");
 }
