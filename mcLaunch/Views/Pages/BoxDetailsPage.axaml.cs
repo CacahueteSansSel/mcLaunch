@@ -17,6 +17,7 @@ using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Mods.Packs;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.BoxDetails;
@@ -108,7 +109,7 @@ public partial class BoxDetailsPage : UserControl
         await SubControl.PopulateAsync();
     }
 
-    public async void Run(string? serverAddress = null, string? serverPort = null)
+    public async void Run(string? serverAddress = null, string? serverPort = null, MinecraftWorld? world = null)
     {
         if (Box.Manifest.ModLoader == null)
         {
@@ -126,7 +127,8 @@ public partial class BoxDetailsPage : UserControl
         await Box.PrepareAsync();
         Process java;
 
-        if (serverAddress != null) java = Box.Run(serverAddress, serverPort ?? "25565");
+        if (world != null) java = Box.Run(world);
+        else if (serverAddress != null) java = Box.Run(serverAddress, serverPort ?? "25565");
         else java = Box.Run();
 
         await Task.Delay(500);

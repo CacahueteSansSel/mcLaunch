@@ -19,6 +19,7 @@ public partial class WorldListSubControl : SubControl
     public override async Task PopulateAsync()
     {
         WorldsList.SetLoadingCircle(true);
+        WorldsList.SetLaunchPage(ParentPage);
         
         MinecraftWorld[] worlds = await Task.Run(() => Box.LoadWorlds());
         

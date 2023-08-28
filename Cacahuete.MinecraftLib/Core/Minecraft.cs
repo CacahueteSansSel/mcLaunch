@@ -26,6 +26,9 @@ public class Minecraft
     string userType;
     string versionType;
     string? jvmPath;
+    QuickPlayWorldType? quickPlayMode;
+    string? quickPlayPath;
+    string? quickPlaySingleplayerWorldName;
     Process mc;
     MinecraftFolder sysFolder;
 
@@ -79,6 +82,15 @@ public class Minecraft
     public Minecraft WithMultiplayer(bool multiplayer)
     {
         disableMultiplayer = !multiplayer;
+
+        return this;
+    }
+
+    public Minecraft WithSingleplayerQuickPlay(string profilePath, string worldName)
+    {
+        quickPlayMode = QuickPlayWorldType.Singleplayer;
+        quickPlayPath = profilePath;
+        quickPlaySingleplayerWorldName = worldName;
 
         return this;
     }
@@ -168,6 +180,31 @@ public class Minecraft
         {
             args += " --server " + serverAddress;
             args += " --port " + serverPort;
+        }
+
+        if (quickPlayMode.HasValue)
+        {
+            if (quickPlayPath != null)
+                args += $" --quickPlayPath {quickPlayPath}";
+            
+            switch (quickPlayMode)
+            {
+                case QuickPlayWorldType.Singleplayer:
+                    args += " --quickPlaySingleplayer";
+
+                    if (quickPlaySingleplayerWorldName != null)
+                        args += $" \"{quickPlaySingleplayerWorldName}\"";
+                    
+                    break;
+                case QuickPlayWorldType.Multiplayer:
+                    // TODO: QuickPlay multiplayer & realms support
+                    args += " --quickPlayMultiplayer";
+                    break;
+                case QuickPlayWorldType.Realms:
+                    // TODO: QuickPlay multiplayer & realms support
+                    args += " --quickPlayRealms";
+                    break;
+            }
         }
 
         ProcessStartInfo info = new()

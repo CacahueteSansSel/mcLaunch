@@ -29,6 +29,7 @@ public class Box
     public Process MinecraftProcess { get; }
     public MinecraftVersion Version { get; private set; }
     public MinecraftOptions Options { get; private set; }
+    public QuickPlayManager QuickPlay { get; private set; }
     public BoxManifest Manifest { get; }
     public ModLoaderSupport? ModLoader => ModLoaderManager.Get(Manifest.ModLoaderId);
 
@@ -51,6 +52,8 @@ public class Box
         {
             Options = new MinecraftOptions($"{Folder.CompletePath}/options.txt");
         }
+
+        QuickPlay = new QuickPlayManager(Folder);
     }
 
     public Box(string path)
@@ -72,6 +75,8 @@ public class Box
         {
             Options = new MinecraftOptions($"{Folder.CompletePath}/options.txt");
         }
+
+        QuickPlay = new QuickPlayManager(Folder);
     }
 
     public string? ReadReadmeFile() => HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
@@ -338,6 +343,7 @@ public class Box
         File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
     }
 
+    // Launch Minecraft normally
     public Process Run()
     {
         Manifest.LastLaunchTime = DateTime.Now;
@@ -346,10 +352,22 @@ public class Box
         return Minecraft.Run();
     }
 
+    // Launch Minecraft and directly connect to a server 
     public Process Run(string serverAddress, string serverPort)
     {
         return Minecraft
             .WithServer(serverAddress, serverPort)
+            .Run();
+    }
+
+    // Launch a Minecraft world directly using QuickPlay
+    public Process Run(MinecraftWorld world)
+    {
+        string profilePath = QuickPlay.Create(QuickPlayWorldType.Singleplayer, 
+            (QuickPlayGameMode) world.GameMode, world.FolderName);
+
+        return Minecraft
+            .WithSingleplayerQuickPlay(profilePath, world.FolderName)
             .Run();
     }
 }

@@ -15,6 +15,7 @@ using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.MinecraftFormats;
+using mcLaunch.Views.Popups;
 using ReactiveUI;
 
 namespace mcLaunch.Views;
@@ -23,6 +24,7 @@ public partial class WorldList : UserControl
 {
     Box lastBox;
     string lastQuery;
+    private BoxDetailsPage launchPage;
 
     public bool HideInstalledBadges { get; set; }
 
@@ -51,6 +53,11 @@ public partial class WorldList : UserControl
     public void SetBox(Box box)
     {
         lastBox = box;
+    }
+
+    public void SetLaunchPage(BoxDetailsPage page)
+    {
+        launchPage = page;
     }
 
     public void SetWorlds(MinecraftWorld[] worlds)
@@ -85,6 +92,15 @@ public partial class WorldList : UserControl
 
     private void WorldSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        if (e.AddedItems.Count > 0 && launchPage != null)
+        {
+            MinecraftWorld world = (MinecraftWorld) e.AddedItems[0];
+
+            Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Launch world {world.Name} ?",
+                $"Minecraft will start and automatically launch the world {world.Name}",
+                () => { launchPage.Run(world: world); }));
+        }
+        
         WorldsList.UnselectAll();
     }
 }

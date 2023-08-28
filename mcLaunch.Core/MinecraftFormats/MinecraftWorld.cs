@@ -6,6 +6,7 @@ namespace mcLaunch.Core.MinecraftFormats;
 public class MinecraftWorld
 {
     public string Name { get; init; }
+    public string FolderName { get; init; }
     public Bitmap Icon { get; init; }
     public MinecraftGameMode GameMode { get; init; }
     public DateTime LastPlayed { get; init; }
@@ -21,6 +22,7 @@ public class MinecraftWorld
     {
         CompoundTag levelDat = (CompoundTag)NbtFile.Read($"{completePath}/level.dat", FormatOptions.Java)["Data"];
 
+        FolderName = Path.GetFileNameWithoutExtension(completePath);
         Name = ((StringTag) levelDat["LevelName"]).Value;
         GameMode = (MinecraftGameMode)((IntTag) levelDat["GameType"]).Value;
         long unix = ((LongTag) levelDat["LastPlayed"]).Value;
