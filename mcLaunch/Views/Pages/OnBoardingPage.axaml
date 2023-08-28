@@ -24,5 +24,6 @@
                 </Border>
             </StackPanel>
         </DockPanel>
+        <TextBlock x:Name="VersionText" Classes="id" Opacity="0.5" Margin="8">version</TextBlock>
     </Panel>
 </UserControl>

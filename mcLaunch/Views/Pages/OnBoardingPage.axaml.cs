@@ -18,6 +18,8 @@ public partial class OnBoardingPage : UserControl
     {
         InitializeComponent();
 
+        VersionText.Text = $"{CurrentBuild.Version} ({CurrentBuild.Commit})";
+
         try
         {
             MainWindowDataContext.Instance.ShowDecorations = false;
