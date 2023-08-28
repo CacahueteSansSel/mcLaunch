@@ -68,8 +68,6 @@ public class CurseForgeModPlatform : ModPlatform
                 Platform = this
             };
 
-            m.TransformLongDescriptionToMarkdown();
-
             return m;
         }).ToArray();
 
@@ -123,8 +121,6 @@ public class CurseForgeModPlatform : ModPlatform
                 LastUpdated = cfMod.DateModified.DateTime,
                 Platform = this
             };
-
-            mod.TransformLongDescriptionToMarkdown();
 
             modCache.Add(id, mod);
             CacheManager.Store(mod, cacheName);
@@ -267,8 +263,6 @@ public class CurseForgeModPlatform : ModPlatform
             ? string.Empty
             : (await client.GetModFileChangelog(cfMod.Id, cfMod.LatestFiles.FirstOrDefault().Id)).Data;
         mod.LongDescriptionBody = (await client.GetModDescription(uint.Parse(mod.Id))).Data;
-
-        mod.TransformLongDescriptionToMarkdown();
 
         return mod;
     }

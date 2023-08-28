@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
@@ -34,6 +35,9 @@ public partial class ModDetailsPage : UserControl
     public ModDetailsPage(Modification mod, Box? targetBox)
     {
         InitializeComponent();
+
+        using StreamReader rd = new(AssetLoader.Open(new Uri("avares://mcLaunch/resources/html/base.css")));
+        DescHtmlPanel.BaseStylesheet = rd.ReadToEnd();
 
         Mod = mod;
         TargetBox = targetBox;

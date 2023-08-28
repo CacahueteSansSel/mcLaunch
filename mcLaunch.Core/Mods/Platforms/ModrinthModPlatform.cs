@@ -157,6 +157,8 @@ public class ModrinthModPlatform : ModPlatform
                 LastUpdated = project.Updated,
                 Platform = this
             };
+            
+            mod.TransformLongDescriptionToHtml();
 
             modCache.Add(id, mod);
             CacheManager.Store(mod, cacheName);
@@ -321,6 +323,8 @@ public class ModrinthModPlatform : ModPlatform
         mod.LongDescriptionBody = project.Body;
         mod.BackgroundPath = project.FeaturedGallery;
         mod.Changelog = latest.Changelog;
+        
+        mod.TransformLongDescriptionToHtml();
 
         return mod;
     }

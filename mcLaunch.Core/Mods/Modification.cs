@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using System.Web;
 using System.Windows.Input;
 using Avalonia.Media.Imaging;
+using Markdig;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
@@ -85,13 +86,13 @@ public class Modification : ReactiveObject
     public bool IsDownloadCountValid => DownloadCount.HasValue;
     public bool IsLastUpdatedValid => LastUpdated.HasValue;
 
-    public void TransformLongDescriptionToMarkdown()
+    public void TransformLongDescriptionToHtml()
     {
         if (string.IsNullOrWhiteSpace(LongDescriptionBody)) 
             return;
-        
-        var converter = new ReverseMarkdown.Converter();
-        LongDescriptionBody = HttpUtility.HtmlDecode(converter.Convert(LongDescriptionBody));
+
+        LongDescriptionBody = Markdown.ToHtml(LongDescriptionBody, 
+            new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
     }
 
     public bool IsSimilar(string name, string author)
