@@ -92,7 +92,7 @@ public partial class WorldList : UserControl
 
     private void WorldSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems.Count > 0 && launchPage != null)
+        if (e.AddedItems.Count > 0 && launchPage != null && launchPage.Box.SupportsQuickPlay)
         {
             MinecraftWorld world = (MinecraftWorld) e.AddedItems[0];
 

@@ -18,6 +18,8 @@ public partial class WorldListSubControl : SubControl
     
     public override async Task PopulateAsync()
     {
+        QuickPlayBanner.IsVisible = Box.SupportsQuickPlay;
+        
         WorldsList.SetLoadingCircle(true);
         WorldsList.SetLaunchPage(ParentPage);
         

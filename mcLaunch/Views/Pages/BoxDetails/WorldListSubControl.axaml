@@ -21,6 +21,11 @@
             </StackPanel>
             <Panel></Panel>
         </DockPanel>
+        <Border x:Name="QuickPlayBanner" IsVisible="False" Padding="15" Classes="frame-without-shadow">
+            <DockPanel>
+                <TextBlock VerticalAlignment="Center">This version of Minecraft supports launching worlds directly : select a world to launch into it</TextBlock>
+            </DockPanel>
+        </Border>
         <views:WorldList x:Name="WorldsList" Margin="0 10 0 0"></views:WorldList>
     </StackPanel>
 </UserControl>

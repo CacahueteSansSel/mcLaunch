@@ -32,6 +32,8 @@ public class Box
     public QuickPlayManager QuickPlay { get; private set; }
     public BoxManifest Manifest { get; }
     public ModLoaderSupport? ModLoader => ModLoaderManager.Get(Manifest.ModLoaderId);
+    public Version MinecraftVersion => new(Manifest.Version);
+    public bool SupportsQuickPlay => MinecraftVersion >= new Version("1.20");
 
     public bool IsRunning => MinecraftProcess != null && !MinecraftProcess.HasExited;
     public bool HasReadmeFile => File.Exists($"{Folder.Path}/README.md");
