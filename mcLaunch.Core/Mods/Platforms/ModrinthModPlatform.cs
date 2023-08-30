@@ -275,14 +275,11 @@ public class ModrinthModPlatform : ModPlatform
         List<string> filenames = new();
         foreach (File file in version.Files)
         {
-            // Ignore the sources jars to avoid problems
-            if (file.FileName.Contains("-sources")) continue;
+            // Ignore any non-primary file(s)
+            if (!file.Primary) continue;
 
             string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
             string url = file.Url;
-
-            // TODO: This may break things
-            if (System.IO.File.Exists(path)) continue;
 
             DownloadManager.Add(url, path, EntryAction.Download);
             filenames.Add($"mods/{file.FileName}");
