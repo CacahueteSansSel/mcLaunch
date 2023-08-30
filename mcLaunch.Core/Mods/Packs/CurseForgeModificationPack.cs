@@ -69,9 +69,77 @@ public class CurseForgeModificationPack : ModificationPack
         }, mod.VersionId, false);
     }
 
-    public override Task ExportAsync(Box box, string filename)
+    public override async Task ExportAsync(Box box, string filename)
     {
-        throw new NotImplementedException();
+        using FileStream fs = new(filename, FileMode.Create);
+        using ZipArchive zip = new(fs, ZipArchiveMode.Create);
+
+        ModelManifest manifest = new ModelManifest
+        {
+            Name = box.Manifest.Name,
+            Author = box.Manifest.Author,
+            Version = "1.0.0",
+            ManifestType = "minecraftModpack",
+            ManifestVersion = 1,
+            Minecraft = new ModelManifest.ModelMinecraft
+            {
+                Version = box.Manifest.Version,
+                Modloaders = new[]
+                {
+                    new ModelManifest.ModelMinecraft.ModelModloader
+                    {
+                        Id = $"{box.Manifest.ModLoaderId}-{box.Manifest.ModLoaderVersion}",
+                        IsPrimary = true
+                    }
+                }
+            }
+        };
+
+        List<ModelManifest.ModelFile> files = new();
+        foreach (BoxStoredModification mod in box.Manifest.Modifications)
+        {
+            if (mod.PlatformId.ToLower() != "curseforge")
+            {
+                // Include any non-CurseForge mod to the overrides
+                ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{mod.Filenames[0]}");
+                await using Stream entryStream = overrideEntry.Open();
+                using FileStream modFileStream = new FileStream(box.Folder.CompletePath + $"/{mod.Filenames[0]}", FileMode.Open);
+
+                await modFileStream.CopyToAsync(entryStream);
+                
+                continue;
+            }
+
+            ModelManifest.ModelFile file = new ModelManifest.ModelFile
+            {
+                ProjectId = uint.Parse(mod.Id),
+                FileId = uint.Parse(mod.VersionId),
+                IsRequired = true
+            };
+
+            files.Add(file);
+        }
+        manifest.Files = files.ToArray();
+        
+        foreach (string file in box.GetAdditionalFiles())
+        {
+            string completePath = $"{box.Path}/minecraft/{file}";
+            ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
+            await using Stream entryStream = overrideEntry.Open();
+            using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
+
+            await modFileStream.CopyToAsync(entryStream);
+        }
+
+        JsonSerializerOptions options = new()
+        {
+            WriteIndented = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+        
+        ZipArchiveEntry entry = zip.CreateEntry("manifest.json");
+        await using Stream manifestStream = entry.Open();
+        await JsonSerializer.SerializeAsync(manifestStream, manifest, options);
     }
 
     public class ModelManifest
