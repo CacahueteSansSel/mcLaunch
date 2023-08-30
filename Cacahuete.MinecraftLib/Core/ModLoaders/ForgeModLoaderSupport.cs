@@ -27,30 +27,43 @@ public class ForgeModLoaderSupport : ModLoaderSupport
         ForgePromotionsManifest promos = await Api.GetAsync<ForgePromotionsManifest>(PromosUrl);
         string keyRecommended = $"{minecraftVersion}-recommended";
         string keyLatest = $"{minecraftVersion}-latest";
-        string key = keyRecommended;
 
-        if (!promos.Promos.TryGetProperty(key, out _))
+        string? forgeRecommendedVersion = null;
+        string? forgeLatestVersion = null;
+
+        try
         {
-            key = keyLatest;
-            
-            if (!promos.Promos.TryGetProperty(key, out _))
-            {
-                Debug.WriteLine($"Cannot find any Forge version for {minecraftVersion}");
-                return null;
-            }
-        }
+            forgeRecommendedVersion = promos.Promos.GetProperty(keyRecommended).GetString();
+        } catch {}
 
-        string forgeVersion = promos.Promos.GetProperty(key).GetString();
+        try
+        {
+            forgeLatestVersion = promos.Promos.GetProperty(keyLatest).GetString();
+        } catch {}
+
+        List<ForgeModLoaderVersion> versions = new();
         
-        return new []
+        if (forgeLatestVersion != null)
         {
-            new ForgeModLoaderVersion
+            versions.Add(new ForgeModLoaderVersion
             {
                 MinecraftVersion = minecraftVersion,
-                Name = forgeVersion,
+                Name = forgeLatestVersion,
                 JvmExecutablePath = JvmExecutablePath,
                 SystemFolderPath = SystemFolderPath
-            }
-        };
+            });
+        }
+        if (forgeRecommendedVersion != null)
+        {
+            versions.Add(new ForgeModLoaderVersion
+            {
+                MinecraftVersion = minecraftVersion,
+                Name = forgeRecommendedVersion,
+                JvmExecutablePath = JvmExecutablePath,
+                SystemFolderPath = SystemFolderPath
+            });
+        }
+
+        return versions.ToArray();
     }
 }
