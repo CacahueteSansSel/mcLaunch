@@ -84,6 +84,7 @@ Libraries used by the project :
 + ReverseMarkdown (to render mod pages)
 + Markdown.Avalonia (to render mod pages)
 + SharpNBT (for reading world's level.dat files)
++ Markdig (to render mod pages)
 
 This project takes huge inspiration of :
 + [portablemc](https://github.com/mindstorm38/portablemc) (general Minecraft launcher stuff + Forge installer wrapper code)
