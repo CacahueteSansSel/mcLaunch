@@ -6,7 +6,7 @@
 
 <p align="center">The Minecraft launcher that puts your Minecraft in a box 📦</p>
 
-**mcLaunch** is a new and modern Minecraft launcher focused on design, compatibility, and ease of use.
+**mcLaunch** (pronounced **m-c-launch**, **[ɛm si lɔntʃ]**) is a new and modern Minecraft launcher focused on design, compatibility, and ease of use.
 
 ![Main Screenshot](res/screenshot.png)
 ![Screenshot Collection](res/screenshots.png)
