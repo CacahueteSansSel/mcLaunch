@@ -7,14 +7,48 @@ namespace mcLaunch.Core.Mods.Packs;
 public class BoxBinaryModificationPack : ModificationPack
 {
     private SerializedBox boxBinary;
-    public override string Name => boxBinary.Name;
-    public override string Author => boxBinary.Author;
-    public override string Version => string.Empty;
-    public override string? Id => boxBinary.Id;
-    public override string? Description => boxBinary.Description;
-    public override string MinecraftVersion => boxBinary.Version;
-    public override string ModloaderId => boxBinary.ModLoaderId;
-    public override string ModloaderVersion => boxBinary.ModLoaderVersion;
+    
+    public override string Name
+    {
+        get => boxBinary.Name;
+        init => boxBinary.Name = value;
+    }
+    public override string Author
+    {
+        get => boxBinary.Author;
+        init => boxBinary.Author = value;
+    }
+    public override string Version
+    {
+        get => string.Empty;
+        init => throw new NotImplementedException();
+    }
+    public override string? Id
+    {
+        get => boxBinary.Id;
+        init => boxBinary.Id = value;
+    }
+    public override string? Description
+    {
+        get => boxBinary.Description;
+        init => boxBinary.Description = value;
+    }
+    public override string MinecraftVersion
+    {
+        get => boxBinary.Version;
+        init => boxBinary.Version = value;
+    }
+    public override string ModloaderId
+    {
+        get => boxBinary.ModLoaderId;
+        init => boxBinary.ModLoaderId = value;
+    }
+    public override string ModloaderVersion
+    {
+        get => boxBinary.ModLoaderVersion;
+        init => boxBinary.ModLoaderVersion = value;
+    }
+
     public override SerializedModification[] Modifications { get; set; }
     public override AdditionalFile[] AdditionalFiles { get; set; }
     public byte[] IconData => boxBinary.IconData;

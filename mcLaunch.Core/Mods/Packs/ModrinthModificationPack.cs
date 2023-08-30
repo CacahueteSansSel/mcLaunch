@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Web;
+using Cacahuete.MinecraftLib.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Mods.Platforms;
 using mcLaunch.Core.Utilities;
@@ -15,16 +16,21 @@ public class ModrinthModificationPack : ModificationPack
 {
     private ModelModrinthIndex manifest;
     private ZipArchiveEntry[] overridesEntries;
-    public override string Name { get; }
-    public override string Author { get; }
-    public override string Version { get; }
-    public override string? Id { get; }
-    public override string? Description { get; }
-    public override string MinecraftVersion { get; }
-    public override string ModloaderId { get; }
-    public override string ModloaderVersion { get; }
+    public override string Name { get; init; }
+    public override string Author { get; init; }
+    public override string Version { get; init; }
+    public override string? Id { get; init; }
+    public override string? Description { get; init; }
+    public override string MinecraftVersion { get; init; }
+    public override string ModloaderId { get; init; }
+    public override string ModloaderVersion { get; init; }
     public override SerializedModification[] Modifications { get; set; }
     public override AdditionalFile[] AdditionalFiles { get; set; }
+
+    public ModrinthModificationPack()
+    {
+        
+    }
 
     public ModrinthModificationPack(string filename)
     {
@@ -179,9 +185,99 @@ public class ModrinthModificationPack : ModificationPack
         }, mod.VersionId, false);
     }
 
-    public override Task ExportAsync(Box box, string filename)
+    public override async Task ExportAsync(Box box, string filename)
     {
-        throw new NotSupportedException();
+        using FileStream fs = new(filename, FileMode.Create);
+        using ZipArchive zip = new(fs, ZipArchiveMode.Create);
+
+        ModelModrinthIndex index = new()
+        {
+            FormatVersion = 1,
+            Game = "minecraft",
+            VersionId = "1.0.0",
+            Name = box.Manifest.Name,
+            Summary = box.Manifest.Description
+        };
+
+        if (box.ModLoader is ForgeModLoaderSupport)
+        {
+            index.Dependencies = new ModelModrinthIndex.ModelDependencies
+            {
+                Forge = box.Manifest.ModLoaderVersion
+            };
+        } else if (box.ModLoader is FabricModLoaderSupport)
+        {
+            index.Dependencies = new ModelModrinthIndex.ModelDependencies
+            {
+                FabricLoader = box.Manifest.ModLoaderVersion
+            };
+        } else if (box.ModLoader is QuiltModLoaderSupport)
+        {
+            index.Dependencies = new ModelModrinthIndex.ModelDependencies
+            {
+                QuiltLoader = box.Manifest.ModLoaderVersion
+            };
+        }
+        else
+        {
+            index.Dependencies = new ModelModrinthIndex.ModelDependencies();
+        }
+
+        index.Dependencies.Minecraft = box.Manifest.Version;
+
+        List<ModelModrinthIndex.ModelFile> files = new();
+        foreach (BoxStoredModification mod in box.Manifest.Modifications)
+        {
+            if (mod.PlatformId.ToLower() != "modrinth")
+            {
+                // Include any non-Modrinth mod to the overrides
+                ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{mod.Filenames[0]}");
+                await using Stream entryStream = overrideEntry.Open();
+                using FileStream modFileStream = new FileStream(box.Folder.CompletePath + $"/{mod.Filenames[0]}", FileMode.Open);
+
+                await modFileStream.CopyToAsync(entryStream);
+                
+                continue;
+            }
+            
+            Version modVersion = await ModrinthModPlatform.Instance.Client.Version.GetAsync(mod.VersionId);
+            var primaryVersionFile = modVersion.Files.First(f => f.Primary);
+
+            ModelModrinthIndex.ModelFile fileModel = new()
+            {
+                Path = mod.Filenames[0],
+                Downloads = new []{primaryVersionFile.Url},
+                Hashes = new ModelModrinthIndex.ModelFile.ModelHashes
+                {
+                    Sha1 = primaryVersionFile.Hashes.Sha1,
+                    Sha512 = primaryVersionFile.Hashes.Sha512
+                },
+                FileSize = (uint)primaryVersionFile.Size
+            };
+
+            files.Add(fileModel);
+        }
+        index.Files = files.ToArray();
+
+        foreach (string file in box.GetAdditionalFiles())
+        {
+            string completePath = $"{box.Path}/minecraft/{file}";
+            ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
+            await using Stream entryStream = overrideEntry.Open();
+            using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
+
+            await modFileStream.CopyToAsync(entryStream);
+        }
+
+        JsonSerializerOptions options = new()
+        {
+            WriteIndented = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+        
+        ZipArchiveEntry entry = zip.CreateEntry("modrinth.index.json");
+        await using Stream manifestStream = entry.Open();
+        await JsonSerializer.SerializeAsync(manifestStream, index, options);
     }
 
     public class ModelModrinthIndex

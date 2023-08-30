@@ -9,16 +9,21 @@ namespace mcLaunch.Core.Mods.Packs;
 
 public class CurseForgeModificationPack : ModificationPack
 {
-    public override string Name { get; }
-    public override string Author { get; }
-    public override string Version { get; }
-    public override string? Id { get; }
-    public override string? Description { get; }
-    public override string MinecraftVersion { get; }
-    public override string ModloaderId { get; }
-    public override string ModloaderVersion { get; }
+    public override string Name { get; init; }
+    public override string Author { get; init; }
+    public override string Version { get; init; }
+    public override string? Id { get; init; }
+    public override string? Description { get; init; }
+    public override string MinecraftVersion { get; init; }
+    public override string ModloaderId { get; init; }
+    public override string ModloaderVersion { get; init; }
     public override SerializedModification[] Modifications { get; set; }
     public override AdditionalFile[] AdditionalFiles { get; set; }
+
+    public CurseForgeModificationPack()
+    {
+        
+    }
 
     public CurseForgeModificationPack(string filename) : base(filename)
     {

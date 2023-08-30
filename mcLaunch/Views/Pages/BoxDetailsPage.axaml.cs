@@ -237,32 +237,7 @@ public partial class BoxDetailsPage : UserControl
 
     private async void ExportButtonClicked(object? sender, RoutedEventArgs e)
     {
-        SaveFileDialog sfd = new SaveFileDialog();
-        sfd.Title = $"Export {Box.Manifest.Name}";
-        sfd.Filters = new List<FileDialogFilter>()
-        {
-            new()
-            {
-                Extensions = new List<string>()
-                {
-                    "box"
-                },
-                Name = "mcLaunch Box Binary File"
-            }
-        };
-
-        string? filename = await sfd.ShowAsync(MainWindow.Instance);
-        if (filename == null) return;
-
-        Navigation.ShowPopup(new StatusPopup($"Exporting {Box.Manifest.Name}",
-            "Please wait while we package your box in a file..."));
-
-        BoxBinaryModificationPack bb = new();
-        await bb.ExportAsync(Box, filename);
-
-        Navigation.HidePopup();
-        Navigation.ShowPopup(new MessageBoxPopup("Success !",
-            $"The box {Box.Manifest.Name} have been exported successfully"));
+        Navigation.ShowPopup(new ExportBoxPopup(Box));
     }
 
     private void DeleteBoxButtonClicked(object? sender, RoutedEventArgs e)

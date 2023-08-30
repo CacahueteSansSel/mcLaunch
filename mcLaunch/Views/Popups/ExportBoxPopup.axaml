@@ -1,0 +1,42 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="500"
+             Width="450" Height="500"
+             x:Class="mcLaunch.Views.Popups.ExportBoxPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <DockPanel Margin="38">
+            <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25">Export a box</TextBlock>
+            <TextBlock DockPanel.Dock="Top" Margin="0 20 0 0" TextWrapping="WrapWithOverflow">Please select the format to export to</TextBlock>
+            <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
+                <Button DockPanel.Dock="Right" Classes="secondary" Click="ClosePopupButtonClicked">Close</Button>
+                <Panel></Panel>
+            </DockPanel>
+            <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Spacing="10" Margin="0 20 0 0">
+                <Button Classes="secondary" Width="370" Click="ExportBoxButtonClicked">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Classes="title">mcLaunch's Box</TextBlock>
+                        <TextBlock Classes="light">The mcLaunch modpack format, binary and small</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Classes="secondary" Width="370" Click="ExportCurseForgeModpackButtonClicked">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Classes="title">CurseForge's modpack profile</TextBlock>
+                        <TextBlock Classes="light">A modpack for CurseForge</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Classes="secondary" Width="370" Click="ExportModrinthModpackButtonClicked">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Classes="title">Modrinth modpack</TextBlock>
+                        <TextBlock Classes="light">A modpack for Modrinth</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

@@ -4,15 +4,15 @@ namespace mcLaunch.Core.Mods;
 
 public abstract class ModificationPack
 {
-    public abstract string Name { get; }
-    public abstract string Author { get; }
-    public abstract string Version { get; }
-    public abstract string? Id { get; }
-    public abstract string? Description { get; }
+    public abstract string Name { get; init; }
+    public abstract string Author { get; init; }
+    public abstract string Version { get; init; }
+    public abstract string? Id { get; init; }
+    public abstract string? Description { get; init; }
     
-    public abstract string MinecraftVersion { get; }
-    public abstract string ModloaderId { get; }
-    public abstract string ModloaderVersion { get; }
+    public abstract string MinecraftVersion { get; init; }
+    public abstract string ModloaderId { get; init; }
+    public abstract string ModloaderVersion { get; init; }
     
     public abstract SerializedModification[] Modifications { get; set; }
     
