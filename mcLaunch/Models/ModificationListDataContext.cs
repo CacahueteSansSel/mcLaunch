@@ -12,9 +12,9 @@ public class ModificationListDataContext
     {
         Modifications = new List<Modification>()
         {
-            new Modification {Author = "me", IconPath = "todo", Name = "fungus mod"},
-            new Modification {Author = "not me", IconPath = "todo", Name = "dzd mod"},
-            new Modification {Author = "your", IconPath = "todo", Name = "dzdahahaHAHAHA mod"}
+            new Modification {Author = "me", IconUrl = "todo", Name = "fungus mod"},
+            new Modification {Author = "not me", IconUrl = "todo", Name = "dzd mod"},
+            new Modification {Author = "your", IconUrl = "todo", Name = "dzdahahaHAHAHA mod"}
         };
     }
     

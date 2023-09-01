@@ -34,7 +34,7 @@ public partial class ModificationEntry : UserControl
             Mod = new Modification
             {
                 Name = "Sample Mod",
-                Icon = new Bitmap(AssetLoader.Open(new Uri($"avares:resources/default_mod_logo.png"))),
+                Icon = new(""),
                 Author = "sample dev",
                 ShortDescription = "sample desc",
                 IsUpdateRequired = false,

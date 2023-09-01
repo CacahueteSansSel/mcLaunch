@@ -6,6 +6,7 @@ using Avalonia.Media.Imaging;
 using Markdig;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using ReactiveUI;
 
@@ -31,7 +32,7 @@ public class Modification : ReactiveObject
         get => longDescriptionBody;
         set => this.RaiseAndSetIfChanged(ref longDescriptionBody, value);
     }
-    public string? IconPath { get; set; }
+    public string? IconUrl { get; set; }
     public string? BackgroundPath { get; set; }
     public string[] Versions { get; set; }
     public string[] MinecraftVersions { get; set; }
@@ -54,11 +55,7 @@ public class Modification : ReactiveObject
     public bool IsInvalid { get; set; }
 
     [JsonIgnore]
-    public Bitmap? Icon
-    {
-        get => icon;
-        set => this.RaiseAndSetIfChanged(ref icon, value);
-    }
+    public IconCollection Icon { get; set; }
 
     [JsonIgnore]
     public Bitmap? Background
@@ -115,58 +112,10 @@ public class Modification : ReactiveObject
     public bool IsSimilar(BoxStoredModification other)
         => IsSimilar(other.Name, other.Author);
 
-    async Task<Stream> LoadIconStreamAsync()
-    {
-        if (IconPath == null) return null;
-        
-        HttpClient client = new HttpClient();
-
-        try
-        {
-            HttpResponseMessage resp = await client.GetAsync(IconPath);
-            if (!resp.IsSuccessStatusCode) return null;
-
-            return await resp.Content.ReadAsStreamAsync();
-        }
-        catch (Exception e)
-        {
-            return null;
-        }
-    }
-
     public async Task DownloadIconAsync()
     {
-        string cacheName = $"icon-mod-{Platform.Name}-{Id}";
-        if (CacheManager.Has(cacheName))
-        {
-            await Task.Run(() =>
-            {
-                Icon = CacheManager.LoadBitmap(cacheName);
-            });
-
-            return;
-        }
-
-        if (IconPath == null) return;
-        
-        await using (var imageStream = await LoadIconStreamAsync())
-        {
-            if (imageStream == null) return;
-            
-            Icon = await Task.Run(() =>
-            {
-                try
-                {
-                    return Bitmap.DecodeToWidth(imageStream, 400);
-                }
-                catch (Exception e)
-                {
-                    return null;
-                }
-            });
-            
-            CacheManager.Store(Icon, cacheName);
-        }
+        Icon = new IconCollection(IconUrl);
+        await Icon.DownloadAllAsync();
     }
 
     async Task<Stream> LoadBackgroundStreamAsync()

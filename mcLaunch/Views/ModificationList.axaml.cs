@@ -77,15 +77,11 @@ public partial class ModificationList : UserControl
 
         Data ctx = (Data) DataContext;
         List<Modification> newList = new List<Modification>(ctx.Modifications);
-        
-        Bitmap bmp = new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/default_mod_logo.png")));
 
         foreach (Modification mod in newList)
         {
             mod.IsInstalledOnCurrentBox = lastBox.HasModificationSoft(mod);
             mod.IsInstalledOnCurrentBoxUi = !HideInstalledBadges && mod.IsInstalledOnCurrentBox;
-
-            if (mod.Icon == null) mod.Icon = bmp;
         }
 
         ctx.Modifications = newList.ToArray();
