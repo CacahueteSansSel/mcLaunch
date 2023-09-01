@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Mods.Platforms;
@@ -34,7 +35,7 @@ public partial class ModificationEntry : UserControl
             Mod = new Modification
             {
                 Name = "Sample Mod",
-                Icon = new(""),
+                Icon = IconCollection.Default(),
                 Author = "sample dev",
                 ShortDescription = "sample desc",
                 IsUpdateRequired = false,

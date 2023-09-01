@@ -112,7 +112,7 @@ public class BoxBinaryModificationPack : ModificationPack
 
         MemoryStream iconStream = new();
         MemoryStream backgroundStream = new();
-        box.Manifest.Icon?.Save(iconStream);
+        if (box.Manifest.Icon != null) box.Manifest.Icon?.IconLarge!.Save(iconStream);
         box.Manifest.Background?.Save(backgroundStream);
 
         bb.IconData = iconStream.ToArray();

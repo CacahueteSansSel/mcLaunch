@@ -4,6 +4,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Utilities;
@@ -14,7 +15,7 @@ namespace mcLaunch.Core.Boxes;
 public class BoxManifest : ReactiveObject
 {
     ManifestMinecraftVersion version;
-    Bitmap icon;
+    IconCollection? icon;
     Bitmap? background;
     MinecraftVersion setUpVersion;
 
@@ -32,7 +33,7 @@ public class BoxManifest : ReactiveObject
     public DateTime LastLaunchTime { get; set; }
 
     [JsonIgnore]
-    public Bitmap Icon
+    public IconCollection? Icon
     {
         get => icon;
         set => this.RaiseAndSetIfChanged(ref icon, value);
@@ -52,7 +53,7 @@ public class BoxManifest : ReactiveObject
     }
 
     public BoxManifest(string name, string description, string author, string modLoaderId, string modLoaderVersion,
-        Bitmap icon, ManifestMinecraftVersion version)
+        IconCollection icon, ManifestMinecraftVersion version)
     {
         Name = name;
         Description = description;

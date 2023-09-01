@@ -26,7 +26,7 @@ public partial class EditBoxPopup : UserControl
         this.box = box;
         BoxNameTb.Text = box.Manifest.Name;
         AuthorNameTb.Text = box.Manifest.Author;
-        BoxIconImage.Source = box.Manifest.Icon;
+        BoxIconImage.Source = box.Manifest.Icon.IconLarge;
     }
 
     private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)

@@ -10,6 +10,7 @@ using Avalonia.Platform;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
@@ -79,16 +80,16 @@ public partial class NewBoxPopup : UserControl
         Navigation.HidePopup();
         Navigation.ShowPopup(new StatusPopup($"Creating {boxName}", "We are creating the box... Please wait..."));
 
-        Bitmap bmp;
+        IconCollection icon;
         if (BoxIconImage.Source is Bitmap bitmap)
         {
-            bmp = bitmap;
+            icon = await IconCollection.FromBitmapAsync(bitmap);
         }
         else
         {
             Random rng = new Random(BoxNameTb.Text.GetHashCode());
-
-            bmp = new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
+            icon = IconCollection.FromStream(
+                AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
         }
 
         // We fetch automatically the latest version of the modloader for now
@@ -104,7 +105,7 @@ public partial class NewBoxPopup : UserControl
         }
 
         BoxManifest newBoxManifest = new BoxManifest(boxName, null, boxAuthor, modloader.Id, modloaderVersions[0].Name,
-            bmp, minecraftVersion);
+            icon, minecraftVersion);
 
         await BoxManager.Create(newBoxManifest);
 

@@ -6,6 +6,7 @@ using Avalonia.Platform;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
@@ -76,9 +77,12 @@ public static class BoxManager
 
         await File.WriteAllTextAsync($"{path}/box.json", JsonSerializer.Serialize(manifest));
 
-        if (manifest.Icon is Bitmap bmp)
+        if (manifest.Icon != null)
         {
-            bmp.Save($"{path}/icon.png");
+            Bitmap? icon = manifest.Icon.IconLarge ?? manifest.Icon.IconSmall;
+            icon!.Save($"{path}/icon.png");
+            
+            manifest.Icon = await IconCollection.FromFileAsync($"{path}/icon.png");
         }
 
         if (!Directory.Exists("forge"))

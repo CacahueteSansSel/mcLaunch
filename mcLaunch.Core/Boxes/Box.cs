@@ -8,6 +8,7 @@ using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using DynamicData;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Mods;
@@ -66,10 +67,7 @@ public class Box
         Manifest = JsonSerializer.Deserialize<BoxManifest>(File.ReadAllText(manifestPath))!;
         RunPostDeserializationChecks();
 
-        if (File.Exists($"{path}/icon.png"))
-        {
-            Manifest.Icon = new Bitmap($"{path}/icon.png");
-        }
+        if (File.Exists($"{path}/icon.png")) LoadIcon();
 
         Folder = new MinecraftFolder($"{path}/minecraft");
 
@@ -79,6 +77,11 @@ public class Box
         }
 
         QuickPlay = new QuickPlayManager(Folder);
+    }
+
+    async void LoadIcon()
+    {
+        Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png", 155);
     }
 
     public string? ReadReadmeFile() => HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
@@ -269,10 +272,10 @@ public class Box
         return files;
     }
 
-    public void SetAndSaveIcon(Bitmap icon)
+    public async void SetAndSaveIcon(Bitmap icon)
     {
         icon.Save($"{Path}/icon.png");
-        Manifest.Icon = icon;
+        Manifest.Icon = await IconCollection.FromBitmapAsync(icon);
     }
 
     public void SetAndSaveBackground(Bitmap background)

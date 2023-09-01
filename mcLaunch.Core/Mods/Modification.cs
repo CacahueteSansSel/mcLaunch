@@ -114,7 +114,7 @@ public class Modification : ReactiveObject
 
     public async Task DownloadIconAsync()
     {
-        Icon = new IconCollection(IconUrl);
+        Icon = IconCollection.FromUrl(IconUrl);
         await Icon.DownloadAllAsync();
     }
 
