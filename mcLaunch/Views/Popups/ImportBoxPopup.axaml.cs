@@ -48,7 +48,7 @@ public partial class ImportBoxPopup : UserControl
         };
 
         string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null) return;
+        if (files == null || files.Length == 0) return;
 
         BoxBinaryModificationPack bb = new(files[0]);
         
@@ -94,7 +94,7 @@ public partial class ImportBoxPopup : UserControl
         };
 
         string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null) return;
+        if (files == null || files.Length == 0) return;
 
         CurseForgeModificationPack modpack = new CurseForgeModificationPack(files[0]);
         
@@ -133,7 +133,7 @@ public partial class ImportBoxPopup : UserControl
         };
 
         string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null) return;
+        if (files == null || files.Length == 0) return;
 
         ModrinthModificationPack modpack = new ModrinthModificationPack(files[0]);
         
