@@ -276,7 +276,7 @@ public class ModrinthModPlatform : ModPlatform
         foreach (File file in version.Files)
         {
             // Ignore any non-primary file(s)
-            if (!file.Primary) continue;
+            if (!file.Primary && version.Files.Length > 1) continue;
 
             string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
             string url = file.Url;
