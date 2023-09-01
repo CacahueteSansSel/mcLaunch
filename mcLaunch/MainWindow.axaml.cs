@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -13,6 +15,7 @@ using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
+using mcLaunch.Views.Windows;
 
 namespace mcLaunch;
 
@@ -69,6 +72,16 @@ public partial class MainWindow : Window
                 return;
             
             Navigation.ShowPopup(new CrashPopup(exitCode, App.Args.Get("box-id")));
+        }
+        
+        if (App.Args.Contains("crash"))
+        {
+            string crashReportFilename = App.Args.Get("crash");
+
+            if (File.Exists(crashReportFilename))
+            {
+                await new CrashWindow(await File.ReadAllTextAsync(crashReportFilename)).ShowDialog(this);
+            }
         }
 
         MinecraftAuthenticationResult? authResult = await AuthenticationManager.TryLoginAsync();

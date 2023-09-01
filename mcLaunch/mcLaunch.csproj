@@ -167,6 +167,8 @@
       <AvaloniaResource Include="resources\html\base.css" />
       <None Remove="resources\commit" />
       <AvaloniaResource Include="resources\commit" />
+      <None Remove="resources\icon_crash.png" />
+      <AvaloniaResource Include="resources\icon_crash.png" />
     </ItemGroup>
 
     <ItemGroup>

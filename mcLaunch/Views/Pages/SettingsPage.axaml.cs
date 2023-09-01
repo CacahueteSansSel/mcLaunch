@@ -1,10 +1,12 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.Settings;
+using mcLaunch.Views.Windows;
 
 namespace mcLaunch.Views.Pages;
 
@@ -35,5 +37,10 @@ public partial class SettingsPage : UserControl
     private void OpenGithubRepoButtonClicked(object? sender, RoutedEventArgs e)
     {
         PlatformSpecific.OpenUrl("https://github.com/CacahueteSansSel/mcLaunch");
+    }
+
+    private void CrashLauncherButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        throw new System.Exception("That's an user-triggered exception");
     }
 }
