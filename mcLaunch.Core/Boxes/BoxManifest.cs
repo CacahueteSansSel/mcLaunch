@@ -31,6 +31,9 @@ public class BoxManifest : ReactiveObject
     public string ModificationCount => Modifications.Count.ToString();
     public List<BoxStoredModification> Modifications { get; set; } = new();
     public DateTime LastLaunchTime { get; set; }
+    
+    [JsonIgnore]
+    public string FileHash { get; set; }
 
     [JsonIgnore]
     public IconCollection? Icon

@@ -31,7 +31,7 @@ public class Box
     public MinecraftVersion Version { get; private set; }
     public MinecraftOptions Options { get; private set; }
     public QuickPlayManager QuickPlay { get; private set; }
-    public BoxManifest Manifest { get; }
+    public BoxManifest Manifest { get; private set; }
     public ModLoaderSupport? ModLoader => ModLoaderManager.Get(Manifest.ModLoaderId);
     public Version MinecraftVersion => new(Manifest.Version);
     public bool SupportsQuickPlay => MinecraftVersion >= new Version("1.20");
@@ -64,8 +64,7 @@ public class Box
         Path = path;
         manifestPath = $"{path}/box.json";
 
-        Manifest = JsonSerializer.Deserialize<BoxManifest>(File.ReadAllText(manifestPath))!;
-        RunPostDeserializationChecks();
+        ReloadManifest(true);
 
         if (File.Exists($"{path}/icon.png")) LoadIcon();
 
@@ -86,10 +85,43 @@ public class Box
 
     public string? ReadReadmeFile() => HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
 
+    public void ReloadManifest(bool force = false)
+    {
+        // Check if the manifest needs reloading
+        SHA1 sha = SHA1.Create();
+        string hash = Convert.ToHexString(sha.ComputeHash(File.ReadAllBytes(manifestPath)));
+        if (!force && Manifest != null && hash == Manifest.FileHash) return;
+
+        bool isReload = Manifest != null;
+
+        IconCollection icon = null;
+        Bitmap? background = null;
+
+        if (isReload)
+        {
+            // We backup the manifest's icon and background to avoid loading those every time
+            icon = Manifest.Icon;
+            background = Manifest.Background;
+        }
+        
+        Manifest = JsonSerializer.Deserialize<BoxManifest>(File.ReadAllText(manifestPath))!;
+        RunPostDeserializationChecks();
+        
+        Manifest.FileHash = hash;
+
+        if (isReload)
+        {
+            Manifest.Icon = icon;
+            Manifest.Background = background;
+        }
+    }
+
     public async Task<string[]> RunIntegrityChecks()
     {
         List<string> changes = new();
         List<BoxStoredModification> modsToRemove = new();
+        
+        ReloadManifest();
 
         foreach (BoxStoredModification mod in Manifest.Modifications)
         {
