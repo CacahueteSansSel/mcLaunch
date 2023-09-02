@@ -262,7 +262,20 @@ public class ModrinthModificationPack : ModificationPack
         foreach (string file in box.GetAdditionalFiles())
         {
             string completePath = $"{box.Path}/minecraft/{file}";
+            if (!File.Exists(completePath)) continue;
+            
             ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
+            await using Stream entryStream = overrideEntry.Open();
+            using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
+
+            await modFileStream.CopyToAsync(entryStream);
+        }
+        foreach (string modFile in box.GetUnlistedMods())
+        {
+            string completePath = $"{box.Path}/minecraft/{modFile}";
+            if (!File.Exists(completePath)) continue;
+            
+            ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{modFile}");
             await using Stream entryStream = overrideEntry.Open();
             using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
 

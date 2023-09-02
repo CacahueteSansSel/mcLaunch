@@ -248,6 +248,23 @@ public class Box
         this.launcherVersion = version;
     }
 
+    public List<string> GetUnlistedMods()
+    {
+        List<string> mods = new();
+        
+        foreach (string file in Directory.GetFiles($"{Path}/minecraft/mods", "*.jar"))
+        {
+            string absPath = file.Replace(Path, "").Replace('\\', '/')
+                .Replace("minecraft/", "").Replace(Path, "").Trim('/').Trim();
+            if (Manifest.Modifications.FirstOrDefault(mod => mod.Filenames.Contains(absPath)) != null)
+                continue;
+
+            mods.Add(absPath);
+        }
+
+        return mods;
+    }
+
     public List<string> GetAdditionalFiles()
     {
         List<string> files = new();

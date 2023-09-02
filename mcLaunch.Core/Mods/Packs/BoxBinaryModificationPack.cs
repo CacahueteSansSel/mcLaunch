@@ -135,11 +135,26 @@ public class BoxBinaryModificationPack : ModificationPack
         foreach (string file in box.GetAdditionalFiles())
         {
             string completePath = $"{box.Path}/minecraft/{file}";
+            if (!File.Exists(completePath)) continue;
+            
             byte[] data = await File.ReadAllBytesAsync(completePath);
             
             files.Add(new FSFile
             {
                 AbsFilename = file,
+                Data = data
+            });
+        }
+        foreach (string modFile in box.GetUnlistedMods())
+        {
+            string completePath = $"{box.Path}/minecraft/{modFile}";
+            if (!File.Exists(completePath)) continue;
+            
+            byte[] data = await File.ReadAllBytesAsync(completePath);
+            
+            files.Add(new FSFile
+            {
+                AbsFilename = modFile,
                 Data = data
             });
         }
