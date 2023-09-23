@@ -9,6 +9,7 @@ namespace Cacahuete.MinecraftLib.Http;
 
 public static class Api
 {
+    const int RetryCount = 3;
     static ProductInfoHeaderValue? userAgent;
 
     public static void SetUserAgent(ProductInfoHeaderValue ua)
@@ -21,8 +22,33 @@ public static class Api
         HttpClient client = new HttpClient();
         if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
 
-        HttpResponseMessage resp = await client.GetAsync(url);
-        Console.WriteLine($"{url} => {(int)resp.StatusCode} {resp.StatusCode}");
+        HttpResponseMessage resp = null;
+        int t = 0;
+        while (true)
+        {
+            if (t >= RetryCount)
+            {
+                resp = await client.GetAsync(url);
+                break;
+            }
+            
+            try
+            {
+                resp = await client.GetAsync(url);
+                if (resp != null && resp.IsSuccessStatusCode) break;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{url} => (Exception) {e}");
+            }
+
+            t++;
+        }
+
+        if (resp == null)
+        {
+            Console.WriteLine($"{url} => {(int)resp.StatusCode} {resp.StatusCode}");
+        }
 
         if (!resp.IsSuccessStatusCode) return default;
 

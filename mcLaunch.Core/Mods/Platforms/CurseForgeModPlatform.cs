@@ -276,6 +276,7 @@ public class CurseForgeModPlatform : ModPlatform
 
     public override async Task<ModVersion?> GetModVersionFromSha1(string hash)
     {
+        // TODO: Implement this with fingerprints and murmur hash
         return null;
     }
 }
