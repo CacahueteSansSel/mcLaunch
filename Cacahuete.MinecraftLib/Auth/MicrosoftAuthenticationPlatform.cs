@@ -172,6 +172,8 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
         MinecraftStore? store = await Api.GetAsyncAuthBearer<MinecraftStore>
             ("https://api.minecraftservices.com/entitlements/mcstore", token);
 
+        if (store == null) return true;
+
         return store.Items.Length > 0;
     }
 }

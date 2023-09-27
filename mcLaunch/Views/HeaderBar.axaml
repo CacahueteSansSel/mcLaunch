@@ -10,6 +10,7 @@
     <Panel>
         <DockPanel>
             <Image x:Name="Logo" DockPanel.Dock="Left" VerticalAlignment="Top" IsHitTestVisible="False" Source="/resources/logo_beta.png" Height="35" Margin="15 5 0 0"></Image>
+            <Image x:Name="OfflineBadge" DockPanel.Dock="Left" VerticalAlignment="Top" IsHitTestVisible="False" Source="/resources/header_bar_badge_offline.png" Height="17" Margin="15 13.5 0 0"></Image>
             <Panel></Panel>
         </DockPanel>
     </Panel>

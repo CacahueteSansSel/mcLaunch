@@ -169,6 +169,8 @@
       <AvaloniaResource Include="resources\commit" />
       <None Remove="resources\icon_crash.png" />
       <AvaloniaResource Include="resources\icon_crash.png" />
+      <None Remove="resources\header_bar_badge_offline.png" />
+      <AvaloniaResource Include="resources\header_bar_badge_offline.png" />
     </ItemGroup>
 
     <ItemGroup>

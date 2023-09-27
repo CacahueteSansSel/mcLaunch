@@ -9,8 +9,11 @@ namespace Cacahuete.MinecraftLib.Http;
 
 public static class Api
 {
-    const int RetryCount = 3;
+    const int RetryCount = 2;
     static ProductInfoHeaderValue? userAgent;
+
+    public static event Action OnNetworkError; 
+    public static event Action OnNetworkSuccess; 
 
     public static void SetUserAgent(ProductInfoHeaderValue ua)
     {
@@ -28,8 +31,8 @@ public static class Api
         {
             if (t >= RetryCount)
             {
-                resp = await client.GetAsync(url);
-                break;
+                OnNetworkError?.Invoke();
+                return default;
             }
             
             try
@@ -45,16 +48,12 @@ public static class Api
             t++;
         }
 
-        if (resp == null)
-        {
-            Console.WriteLine($"{url} => {(int)resp.StatusCode} {resp.StatusCode}");
-        }
-
         if (!resp.IsSuccessStatusCode) return default;
 
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
-
         if (patchDateTimes) json = json.Replace("+0000", "");
+        
+        OnNetworkSuccess?.Invoke();
     
         return JsonSerializer.Deserialize<T>(json);
     }
@@ -64,12 +63,33 @@ public static class Api
         HttpClient client = new HttpClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth);
 
-        HttpResponseMessage resp = await client.GetAsync(url);
-        Console.WriteLine($"{url} => {(int)resp.StatusCode} {resp.StatusCode}");
+        HttpResponseMessage resp = null;
+        int t = 0;
+        while (true)
+        {
+            if (t >= RetryCount)
+            {
+                OnNetworkError?.Invoke();
+                return default;
+            }
+            
+            try
+            {
+                resp = await client.GetAsync(url);
+                if (resp.IsSuccessStatusCode) break;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{url} => (Exception) {e}");
+            }
+
+            t++;
+        }
 
         if (!resp.IsSuccessStatusCode) return default;
-
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
+        
+        OnNetworkSuccess?.Invoke();
     
         return JsonSerializer.Deserialize<T>(json);
     }
@@ -78,14 +98,35 @@ public static class Api
     {
         HttpClient client = new HttpClient();
 
-        HttpResponseMessage resp = await client.GetAsync(url);
-        Console.WriteLine($"{url} => {(int)resp.StatusCode} {resp.StatusCode}");
+        HttpResponseMessage resp = null;
+        int t = 0;
+        while (true)
+        {
+            if (t >= RetryCount)
+            {
+                OnNetworkError?.Invoke();
+                return default;
+            }
+            
+            try
+            {
+                resp = await client.GetAsync(url);
+                if (resp.IsSuccessStatusCode) break;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{url} => (Exception) {e}");
+            }
+
+            t++;
+        }
 
         if (!resp.IsSuccessStatusCode) return default;
 
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
-
         if (patchDateTimes) json = json.Replace("+0000", "");
+        
+        OnNetworkSuccess?.Invoke();
 
         return JsonNode.Parse(json);
     }
@@ -99,11 +140,35 @@ public static class Api
         string inputJson = JsonSerializer.Serialize(data);
         HttpContent content = new StringContent(inputJson);
         content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-        HttpResponseMessage resp = await client.PostAsync(url, content);
+        
+        HttpResponseMessage resp = null;
+        int t = 0;
+        while (true)
+        {
+            if (t >= RetryCount)
+            {
+                OnNetworkError?.Invoke();
+                return default;
+            }
+            
+            try
+            {
+                resp = await client.PostAsync(url, content);
+                if (resp.IsSuccessStatusCode) break;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{url} => (Exception) {e}");
+            }
+
+            t++;
+        }
 
         if (!resp.IsSuccessStatusCode) return default;
 
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
+        
+        OnNetworkSuccess?.Invoke();
     
         return JsonSerializer.Deserialize<TResponse>(json);
     }
