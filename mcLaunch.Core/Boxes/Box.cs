@@ -361,20 +361,16 @@ public class Box
         {
             statusCallback?.Invoke(mod, cur, Manifest.Modifications.Count);
             cur++;
-            
-            SHA1 sha = SHA1.Create();
 
             foreach (string filename in mod.Filenames)
             {
                 string realFilename = $"{Folder.Path}/{filename}";
-                
-                FileStream fs = new FileStream(realFilename, FileMode.Open);
-                string hash = Convert.ToHexString(await sha.ComputeHashAsync(fs)).ToLower();
-                fs.Close();
 
-                ModVersion? modVersion = await ModrinthModPlatform.Instance.GetModVersionFromSha1(hash);
+                await using FileStream fs = new FileStream(realFilename, FileMode.Open);
+
+                ModVersion? modVersion = await ModrinthModPlatform.Instance.GetModVersionFromData(fs);
                 if (modVersion == null) continue;
-                
+
                 Manifest.RemoveModification(mod.Id, this);
                 bool success = await ModrinthModPlatform.Instance.InstallModAsync(this, modVersion.Mod, 
                     modVersion.VersionId, false);

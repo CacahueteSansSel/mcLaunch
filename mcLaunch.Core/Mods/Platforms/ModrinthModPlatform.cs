@@ -1,4 +1,5 @@
-﻿using mcLaunch.Core.Boxes;
+﻿using System.Security.Cryptography;
+using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods.Packs;
 using Modrinth;
@@ -335,8 +336,11 @@ public class ModrinthModPlatform : ModPlatform
         return null;
     }
 
-    public override async Task<ModVersion?> GetModVersionFromSha1(string hash)
+    public override async Task<ModVersion?> GetModVersionFromData(Stream stream)
     {
+        SHA1 sha = SHA1.Create();
+        string hash = Convert.ToHexString(await sha.ComputeHashAsync(stream));
+        
         try
         {
             Version version = await client.VersionFile.GetVersionByHashAsync(hash);

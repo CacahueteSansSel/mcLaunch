@@ -24,7 +24,7 @@ public abstract class ModPlatform
 
     public abstract Task<Modification> DownloadModInfosAsync(Modification mod);
     public abstract ModPlatform GetModPlatform(string id);
-    public abstract Task<ModVersion?> GetModVersionFromSha1(string hash);
+    public abstract Task<ModVersion?> GetModVersionFromData(Stream stream);
 
     public ModPlatform WithIcon(string name)
     {

@@ -10,6 +10,7 @@ using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Auth;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Managers;
+using mcLaunch.Core.Mods.Platforms;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
@@ -28,7 +29,7 @@ public partial class ToolButtonsBar : UserControl
         DataContext = new Data();
     }
 
-    private void NewBoxButtonClicked(object? sender, RoutedEventArgs e)
+    private async void NewBoxButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.ShowPopup(new NewBoxPopup());
     }

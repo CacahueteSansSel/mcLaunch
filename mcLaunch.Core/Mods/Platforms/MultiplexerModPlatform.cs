@@ -130,11 +130,11 @@ public class MultiplexerModPlatform : ModPlatform
         return null;
     }
 
-    public override async Task<ModVersion?> GetModVersionFromSha1(string hash)
+    public override async Task<ModVersion?> GetModVersionFromData(Stream stream)
     {
         foreach (ModPlatform platform in _platforms)
         {
-            ModVersion? ver = await platform.GetModVersionFromSha1(hash);
+            ModVersion? ver = await platform.GetModVersionFromData(stream);
             if (ver != null) return ver;
         }
 

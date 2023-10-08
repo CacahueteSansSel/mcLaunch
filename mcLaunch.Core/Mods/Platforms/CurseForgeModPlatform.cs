@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using CurseForge.Models;
 using CurseForge.Models.Files;
+using CurseForge.Models.Fingerprints;
 using CurseForge.Models.Games;
 using CurseForge.Models.Mods;
 using mcLaunch.Core.Utilities;
@@ -274,9 +275,22 @@ public class CurseForgeModPlatform : ModPlatform
         return null;
     }
 
-    public override async Task<ModVersion?> GetModVersionFromSha1(string hash)
+    public override async Task<ModVersion?> GetModVersionFromData(Stream stream)
     {
         // TODO: Implement this with fingerprints and murmur hash
-        return null;
+        byte[] data = stream.ReadToEndAndClose();
+        uint hash = MurmurHash2.HashNormal(data);
+
+        var resp = await client.GetFingerprintsMatches(new List<long>()
+        {
+            hash
+        });
+
+        if (resp.Data.ExactMatches.Count == 0) return null;
+
+        FingerprintMatch match = resp.Data.ExactMatches[0];
+        Modification mod = await GetModAsync(match.Id.ToString());
+
+        return new ModVersion(mod, match.File.Id.ToString());
     }
 }
