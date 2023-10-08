@@ -41,7 +41,9 @@ public partial class ModListSubControl : SubControl
         updatableModsList.Clear();
 
         MigrateToModrinthButton.IsVisible = Box.Manifest.Modifications
-            .Count(mod => mod.PlatformId.ToLower() == "curseforge") > 0;
+            .Count(mod => mod.PlatformId.ToLower() != "modrinth") > 0;
+        MigrateToCurseForgeButton.IsVisible = Box.Manifest.Modifications
+            .Count(mod => mod.PlatformId.ToLower() != "curseforge") > 0;
 
         VanillaDisclaimer.IsVisible = false;
 
@@ -172,5 +174,30 @@ public partial class ModListSubControl : SubControl
         }
         
         UpdateAllButton.IsVisible = false;
+    }
+
+    private void MigrateToCurseForgeButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new ConfirmMessageBoxPopup("Migrate all mods to CurseForge",
+            "Every mod will be migrated to CurseForge equivalents if possible. This action is irreversible",
+            async () =>
+            {
+                Navigation.ShowPopup(new StatusPopup("Migrating to CurseForge...",
+                    $"Migrating the box {Box.Manifest.Name}'s mods to CurseForge equivalent..."));
+
+                Modification[] mods = await Box.MigrateToCurseForgeAsync((mod, index, count) =>
+                {
+                    StatusPopup.Instance.Status = $"Verifying & installing equivalent (mod {index}/{count})";
+                });
+
+                if (mods.Length == 0)
+                {
+                    Navigation.ShowPopup(new MessageBoxPopup("Information", "No mod have been migrated"));
+                    return;
+                }
+
+                Navigation.ShowPopup(new ModsPopup($"{mods.Length} mod(s) migrated",
+                    $"The following mods have been successfully migrated to their CurseForge equivalent", Box, mods));
+            }));
     }
 }

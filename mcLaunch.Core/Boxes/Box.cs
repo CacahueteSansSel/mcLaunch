@@ -355,7 +355,7 @@ public class Box
         List<Modification> migratedMods = new();
 
         BoxStoredModification[] modsToMigrate = Manifest.Modifications.Where(m =>
-            m.PlatformId.ToLower() == "curseforge").ToArray();
+            m.PlatformId.ToLower() != "modrinth").ToArray();
 
         foreach (BoxStoredModification mod in modsToMigrate)
         {
@@ -373,6 +373,39 @@ public class Box
 
                 Manifest.RemoveModification(mod.Id, this);
                 bool success = await ModrinthModPlatform.Instance.InstallModAsync(this, modVersion.Mod, 
+                    modVersion.VersionId, false);
+                
+                if (success) migratedMods.Add(modVersion.Mod);
+            }
+        }
+
+        return migratedMods.ToArray();
+    }
+    
+    public async Task<Modification[]> MigrateToCurseForgeAsync(Action<BoxStoredModification, int, int> statusCallback)
+    {
+        int cur = 0;
+        List<Modification> migratedMods = new();
+
+        BoxStoredModification[] modsToMigrate = Manifest.Modifications.Where(m =>
+            m.PlatformId.ToLower() != "curseforge").ToArray();
+
+        foreach (BoxStoredModification mod in modsToMigrate)
+        {
+            statusCallback?.Invoke(mod, cur, Manifest.Modifications.Count);
+            cur++;
+
+            foreach (string filename in mod.Filenames)
+            {
+                string realFilename = $"{Folder.Path}/{filename}";
+
+                await using FileStream fs = new FileStream(realFilename, FileMode.Open);
+
+                ModVersion? modVersion = await CurseForgeModPlatform.Instance.GetModVersionFromData(fs);
+                if (modVersion == null) continue;
+
+                Manifest.RemoveModification(mod.Id, this);
+                bool success = await CurseForgeModPlatform.Instance.InstallModAsync(this, modVersion.Mod, 
                     modVersion.VersionId, false);
                 
                 if (success) migratedMods.Add(modVersion.Mod);

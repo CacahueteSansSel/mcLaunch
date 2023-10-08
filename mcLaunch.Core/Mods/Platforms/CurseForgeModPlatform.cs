@@ -186,12 +186,12 @@ public class CurseForgeModPlatform : ModPlatform
         }
     }
 
-    async Task InstallFile(Box targetBox, File file, bool installOptional)
+    async Task<bool> InstallFile(Box targetBox, File file, bool installOptional)
     {
         if (!file.GameVersions.Contains(targetBox.Manifest.Version))
         {
             Debug.WriteLine($"Mod {file.DisplayName} is incompatible ! Skipping");
-            return;
+            return false;
         }
         
         if (file.Dependencies != null && file.Dependencies.Count > 0)
@@ -216,7 +216,7 @@ public class CurseForgeModPlatform : ModPlatform
         if (targetBox.Manifest.HasModificationStrict(file.ModId.ToString(), Name))
         {
             Debug.WriteLine($"Mod {file.DisplayName} already installed in {targetBox.Manifest.Name}");
-            return;
+            return false;
         }
 
         DownloadManager.Begin(file.DisplayName);
@@ -225,6 +225,14 @@ public class CurseForgeModPlatform : ModPlatform
 
         string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
         string url = file.DownloadUrl;
+        
+        if (url == null) 
+        {
+            Debug.WriteLine($"Mod {file.DisplayName} cannot be downloaded !");
+            DownloadManager.End();
+            
+            return false;
+        }
 
         // TODO: This may break things
         if (!System.IO.File.Exists(path)) DownloadManager.Add(url, path, EntryAction.Download);
@@ -235,15 +243,28 @@ public class CurseForgeModPlatform : ModPlatform
             filenames.ToArray());
 
         DownloadManager.End();
+
+        return true;
     }
 
     public override async Task<bool> InstallModAsync(Box targetBox, Modification mod, string versionId,
         bool installOptional)
     {
+        if (mod == null) return false;
+        
         var version = await client.GetModFile(uint.Parse(mod.Id), uint.Parse(versionId));
         if (version == null) return false;
 
-        if (!targetBox.HasModificationSoft(mod)) await InstallFile(targetBox, version.Data, installOptional);
+        if (!targetBox.HasModificationSoft(mod))
+        {
+            if (!await InstallFile(targetBox, version.Data, installOptional))
+            {
+                await DownloadManager.DownloadAll();
+                targetBox.SaveManifest();
+                
+                return false;
+            }
+        }
 
         await DownloadManager.DownloadAll();
 
