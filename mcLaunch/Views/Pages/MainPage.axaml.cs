@@ -24,7 +24,7 @@ public partial class MainPage : UserControl
     {
         BoxContainer.Children.Clear();
 
-        List<Box> boxes = new List<Box>(await Task.Run(BoxManager.LoadLocalBoxes));
+        List<Box> boxes = new List<Box>(await Task.Run(() => BoxManager.LoadLocalBoxes()));
         boxes.Sort((l, r) => -l.Manifest.LastLaunchTime.CompareTo(r.Manifest.LastLaunchTime));
         
         foreach (Box box in boxes)

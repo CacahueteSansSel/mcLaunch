@@ -45,6 +45,13 @@ public partial class BoxDetailsPage : UserControl
         Box = box;
         DataContext = box;
 
+        if (box.Manifest.Type == BoxType.Temporary)
+        {
+            ContentsBox.IsVisible = false;
+            return;
+        }
+        ContentsBox.IsVisible = true;
+
         VersionBadge.Text = box.Manifest.Version;
         ModLoaderBadge.Icon = Box.ModLoader?.LoadIcon();
         ModLoaderBadge.Text = box.ModLoader?.Name ?? "Unknown";
@@ -110,6 +117,9 @@ public partial class BoxDetailsPage : UserControl
     }
 
     public async void Run(string? serverAddress = null, string? serverPort = null, MinecraftWorld? world = null)
+        => await RunAsync(serverAddress, serverPort, world);
+
+    public async Task RunAsync(string? serverAddress = null, string? serverPort = null, MinecraftWorld? world = null)
     {
         if (Box.Manifest.ModLoader == null)
         {
@@ -152,7 +162,7 @@ public partial class BoxDetailsPage : UserControl
             Process.Start(new ProcessStartInfo
             {
                 FileName = backgroundProcessFilename,
-                Arguments = $"{java.Id.ToString()} {Box.Manifest.Id}",
+                Arguments = $"{java.Id.ToString()} {Box.Manifest.Id} {Box.Manifest.Type.ToString().ToLower()}",
                 CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
                 UseShellExecute = false

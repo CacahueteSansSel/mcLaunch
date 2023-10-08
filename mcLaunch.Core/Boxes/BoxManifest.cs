@@ -31,6 +31,7 @@ public class BoxManifest : ReactiveObject
     public string ModificationCount => Modifications.Count.ToString();
     public List<BoxStoredModification> Modifications { get; set; } = new();
     public DateTime LastLaunchTime { get; set; }
+    public BoxType Type { get; set; }
     
     [JsonIgnore]
     public string FileHash { get; set; }
@@ -56,7 +57,7 @@ public class BoxManifest : ReactiveObject
     }
 
     public BoxManifest(string name, string description, string author, string modLoaderId, string modLoaderVersion,
-        IconCollection icon, ManifestMinecraftVersion version)
+        IconCollection icon, ManifestMinecraftVersion version, BoxType type = BoxType.Default)
     {
         Name = name;
         Description = description;
@@ -66,6 +67,7 @@ public class BoxManifest : ReactiveObject
         Id = IdGenerator.Generate();
         Icon = icon;
         LastLaunchTime = DateTime.Now;
+        Type = type;
 
         this.version = version;
         Version = version.Id;
@@ -224,4 +226,10 @@ public class BoxStoredModification
             if (File.Exists(path)) File.Delete(path);
         }
     }
+}
+
+public enum BoxType
+{
+    Default,
+    Temporary
 }

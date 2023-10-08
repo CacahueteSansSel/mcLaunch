@@ -1,0 +1,36 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="500" Width="500" Height="350"
+             x:Class="mcLaunch.Views.Popups.FastLaunchPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <DockPanel Margin="38">
+            <TextBlock x:Name="TitleText" DockPanel.Dock="Top" Classes="title" TextWrapping="Wrap" FontSize="25">Fast Launch</TextBlock>
+            <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
+                <Button DockPanel.Dock="Right" Margin="10 0 0 0" Classes="secondary" Click="CancelButtonClicked">Cancel</Button>
+                <Button DockPanel.Dock="Right" Classes="primary" Click="LaunchButtonClicked">Launch</Button>
+                <Panel></Panel>
+            </DockPanel>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Classes="light" Margin="0 20 0 5">Minecraft version</TextBlock>
+                <views:MinecraftVersionSelector x:Name="VersionSelector"></views:MinecraftVersionSelector>
+                <TextBlock Classes="light" Margin="0 20 0 5">Mod Loader</TextBlock>
+                <ComboBox x:Name="ModloaderCbox" SelectedItem="{Binding SelectedModLoader}" ItemsSource="{Binding ModLoaders}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Name}"></TextBlock>
+                                <TextBlock Margin="7 0 0 0" Opacity="0.5" Text="{Binding LatestVersion.Name}"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

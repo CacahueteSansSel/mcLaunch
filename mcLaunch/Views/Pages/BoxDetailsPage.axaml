@@ -16,7 +16,7 @@
         <Button Margin="0 10 15 0" ZIndex="10" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Right" Classes="transparent" Click="EditBackgroundButtonClicked"  ToolTip.Tip="Select background image">
             <Image Source="/resources/icons/edit.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
         </Button>
-        <ScrollViewer>
+        <ScrollViewer x:Name="ContentsBox">
             <StackPanel>
                 <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
                     <views:BackButton></views:BackButton>

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Cacahuete.MinecraftLib.Auth;
 using Cacahuete.MinecraftLib.Http;
+using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
 using mcLaunch.GitHub;
 using mcLaunch.Managers;
@@ -70,8 +72,39 @@ public partial class MainWindow : Window
         {
             if (!int.TryParse(App.Args.Get("exit-code"), out int exitCode)) 
                 return;
-            
-            Navigation.ShowPopup(new CrashPopup(exitCode, App.Args.Get("box-id")));
+
+            if (exitCode == 0)
+            {
+                // FastLaunch's temporary box ahead !
+                
+                string boxId = App.Args.Get("box-id");
+                Box? box = BoxManager.LoadLocalBoxes(true)
+                    .FirstOrDefault(b => b.Manifest.Id == boxId);
+                
+                Navigation.ShowPopup(new ConfirmMessageBoxPopup("Keep the FastLaunch instance ?", "Do you want to keep this FastLaunch instance ? If you delete it, it will be lost forever !",
+                    () =>
+                    {
+                        if (box == null) return;
+                        
+                        Navigation.ShowPopup(new EditBoxPopup(box, false));
+                    }, () =>
+                    {
+                        if (box == null) return;
+                        
+                        Directory.Delete(box.Path, true);
+                    })
+                );
+
+                await Task.Run(async () =>
+                {
+                    while (MainWindowDataContext.Instance.IsPopup) 
+                        await Task.Delay(100);
+                });
+            }
+            else
+            {
+                Navigation.ShowPopup(new CrashPopup(exitCode, App.Args.Get("box-id")));
+            }
         }
         
         if (App.Args.Contains("crash"))

@@ -21,6 +21,10 @@
                         Classes="secondary square" Click="ImportBoxButtonClicked">
                     <Image Source="/resources/icons/import.png" Width="13" Height="13"></Image>
                 </Button>
+                <Button DockPanel.Dock="Left" ToolTip.Tip="Fast launch"
+                        Classes="secondary square" Click="FastLaunchButtonClicked">
+                    <Image Source="/resources/icons/thunderbolt.png" Width="13" Height="13"></Image>
+                </Button>
                 <views:SeparatorLine></views:SeparatorLine>
                 <Button DockPanel.Dock="Left" ToolTip.Tip="Browse modpacks" Classes="secondary square"
                         Click="BrowseModpacksButtonClicked">

@@ -29,7 +29,7 @@ public static class BoxManager
     public static LibrariesDownloader LibrariesDownloader => librariesDownloader;
     public static JVMDownloader JVMDownloader => jvmDownloader;
 
-    public static Box[] LoadLocalBoxes()
+    public static Box[] LoadLocalBoxes(bool includeTemp = false)
     {
         if (!Directory.Exists(BoxesPath))
         {
@@ -41,7 +41,10 @@ public static class BoxManager
 
         foreach (string boxPath in Directory.GetDirectories(BoxesPath))
         {
-            boxes.Add(new Box(boxPath));
+            Box box = new Box(boxPath);
+            if (box.Manifest.Type == BoxType.Temporary && !includeTemp) continue;
+            
+            boxes.Add(box);
         }
 
         return boxes.ToArray();
@@ -77,7 +80,7 @@ public static class BoxManager
 
         await File.WriteAllTextAsync($"{path}/box.json", JsonSerializer.Serialize(manifest));
 
-        if (manifest.Icon != null)
+        if (manifest.Icon != null && manifest.Icon.IconLarge != null && manifest.Icon.IconSmall != null)
         {
             Bitmap? icon = manifest.Icon.IconLarge ?? manifest.Icon.IconSmall;
             icon!.Save($"{path}/icon.png");

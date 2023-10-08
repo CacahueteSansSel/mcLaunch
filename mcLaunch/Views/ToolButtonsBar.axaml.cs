@@ -141,4 +141,9 @@ public partial class ToolButtonsBar : UserControl
     {
         MainWindowDataContext.Instance.Push<BrowseModsPage>();
     }
+
+    private void FastLaunchButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new FastLaunchPopup());
+    }
 }

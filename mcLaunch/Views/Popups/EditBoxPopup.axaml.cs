@@ -19,14 +19,16 @@ public partial class EditBoxPopup : UserControl
         InitializeComponent();
     }
 
-    public EditBoxPopup(Box box)
+    public EditBoxPopup(Box box, bool cancelEnabled = true)
     {
         InitializeComponent();
 
         this.box = box;
         BoxNameTb.Text = box.Manifest.Name;
         AuthorNameTb.Text = box.Manifest.Author;
-        BoxIconImage.Source = box.Manifest.Icon.IconLarge;
+        BoxIconImage.Source = box.Manifest.Icon?.IconLarge;
+
+        CancelButton.IsVisible = cancelEnabled;
     }
 
     private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
@@ -60,7 +62,11 @@ public partial class EditBoxPopup : UserControl
     {
         box.Manifest.Name = BoxNameTb.Text;
         box.Manifest.Author = AuthorNameTb.Text;
-        box.SetAndSaveIcon((Bitmap)BoxIconImage.Source);
+        if (BoxIconImage.Source != null) 
+            box.SetAndSaveIcon((Bitmap)BoxIconImage.Source);
+
+        if (!CancelButton.IsVisible && box.Manifest.Type == BoxType.Temporary)
+            box.Manifest.Type = BoxType.Default;
         
         box.SaveManifest();
         

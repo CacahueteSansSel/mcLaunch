@@ -171,6 +171,8 @@
       <AvaloniaResource Include="resources\icon_crash.png" />
       <None Remove="resources\header_bar_badge_offline.png" />
       <AvaloniaResource Include="resources\header_bar_badge_offline.png" />
+      <None Remove="resources\icons\thunderbolt.png" />
+      <AvaloniaResource Include="resources\icons\thunderbolt.png" />
     </ItemGroup>
 
     <ItemGroup>
