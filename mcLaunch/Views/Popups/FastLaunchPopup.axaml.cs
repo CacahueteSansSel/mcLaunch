@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
@@ -61,10 +62,6 @@ public partial class FastLaunchPopup : UserControl
         Navigation.ShowPopup(new StatusPopup("Preparing launch", 
             $"Preparing launching Minecraft {minecraftVersion.Id}..."));
 
-        Random rng = new Random(minecraftVersion.Id.GetHashCode());
-        IconCollection icon = IconCollection.FromStream(
-            AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
-
         // We fetch automatically the latest version of the modloader for now
         // TODO: Allow the user to select a specific modloader version
         ModLoaderVersion[]? modloaderVersions = await modloader.GetVersionsAsync(minecraftVersion.Id);
@@ -77,12 +74,15 @@ public partial class FastLaunchPopup : UserControl
             return;
         }
 
-        BoxManifest newBoxManifest = new BoxManifest(name, null, "FastLaunch", modloader.Id, modloaderVersions[0].Name,
-            icon, minecraftVersion, BoxType.Temporary);
+        BoxManifest newBoxManifest = new BoxManifest(name, null, "FastLaunch", modloader.Id, modloaderVersions[0].Name, 
+            null, minecraftVersion, BoxType.Temporary);
 
         string path = await BoxManager.Create(newBoxManifest);
+        Box box = new Box(path);
+        box.SetAndSaveIcon(new Bitmap(AssetLoader.Open(
+            new Uri("avares://mcLaunch/resources/fastlaunch_box_logo.png"))));
 
-        BoxDetailsPage detailsPage = new BoxDetailsPage(new Box(path));
+        BoxDetailsPage detailsPage = new BoxDetailsPage(box);
         await detailsPage.RunAsync();
     }
     
@@ -117,7 +117,13 @@ public partial class FastLaunchPopup : UserControl
             Versions = Settings.Instance.EnableSnapshots
                 ? MinecraftManager.Manifest!.Versions
                 : MinecraftManager.ManifestVersions;
-            ModLoaders = ModLoaderManager.All.ToArray();
+            
+            // TODO: Allow all modloaders for FastLaunch
+            
+            ModLoaders = new[]
+            {
+                new VanillaModLoaderSupport()
+            };
 
             selectedModLoader = ModLoaders[0];
         }

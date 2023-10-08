@@ -173,6 +173,8 @@
       <AvaloniaResource Include="resources\header_bar_badge_offline.png" />
       <None Remove="resources\icons\thunderbolt.png" />
       <AvaloniaResource Include="resources\icons\thunderbolt.png" />
+      <None Remove="resources\fastlaunch_box_logo.png" />
+      <AvaloniaResource Include="resources\fastlaunch_box_logo.png" />
     </ItemGroup>
 
     <ItemGroup>

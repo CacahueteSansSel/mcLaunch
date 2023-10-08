@@ -94,17 +94,23 @@ public class IconCollection
     public async Task DownloadSmallAsync()
     {
         SHA1 sha = SHA1.Create();
-        string hash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(Url)));
-        string cacheName = $"is-{hash}";
-        
-        if (CacheManager.Has(cacheName) && !IsLocalFile)
+        string cacheName = string.Empty;
+        bool isStream = DirectStream != null;
+        if (!isStream)
         {
-            await Task.Run(() =>
+            string hash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(Url)));
+            
+            cacheName = $"is-{hash}";
+        
+            if (CacheManager.Has(cacheName) && !IsLocalFile)
             {
-                IconSmall = CacheManager.LoadBitmap(cacheName);
-            });
+                await Task.Run(() =>
+                {
+                    IconSmall = CacheManager.LoadBitmap(cacheName);
+                });
 
-            return;
+                return;
+            }
         }
 
         await using Stream imageStream = await LoadStreamAsync();
@@ -121,23 +127,29 @@ public class IconCollection
             }
         });
         
-        CacheManager.Store(IconSmall, cacheName);
+        if (!isStream) CacheManager.Store(IconSmall, cacheName);
     }
 
     public async Task DownloadLargeAsync()
     {
         SHA1 sha = SHA1.Create();
-        string hash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(Url)));
-        string cacheName = $"il-{hash}";
-        
-        if (CacheManager.Has(cacheName) && !IsLocalFile)
+        string cacheName = string.Empty;
+        bool isStream = DirectStream != null;
+        if (!isStream)
         {
-            await Task.Run(() =>
+            string hash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(Url)));
+            
+            cacheName = $"il-{hash}";
+        
+            if (CacheManager.Has(cacheName) && !IsLocalFile)
             {
-                IconLarge = CacheManager.LoadBitmap(cacheName);
-            });
+                await Task.Run(() =>
+                {
+                    IconLarge = CacheManager.LoadBitmap(cacheName);
+                });
 
-            return;
+                return;
+            }
         }
 
         await using Stream imageStream = await LoadStreamAsync();
@@ -154,7 +166,7 @@ public class IconCollection
             }
         });
         
-        CacheManager.Store(IconLarge, cacheName);
+        if (!isStream) CacheManager.Store(IconLarge, cacheName);
     }
 
     public async Task<IconCollection> DownloadAllAsync()
