@@ -64,10 +64,6 @@ public class Box
         Path = path;
         manifestPath = $"{path}/box.json";
 
-        ReloadManifest(true);
-
-        if (File.Exists($"{path}/icon.png")) LoadIcon();
-
         Folder = new MinecraftFolder($"{path}/minecraft");
 
         if (File.Exists($"{Folder.CompletePath}/options.txt"))
@@ -76,13 +72,16 @@ public class Box
         }
 
         QuickPlay = new QuickPlayManager(Folder);
+
+        ReloadManifest(true);
+        if (File.Exists($"{path}/icon.png")) LoadIcon();
     }
 
     async void LoadIcon()
     {
         Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png", 155);
     }
-
+ 
     public string? ReadReadmeFile() => HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
 
     public void ReloadManifest(bool force = false)
@@ -144,17 +143,39 @@ public class Box
             }
         }
 
+        await AddMissingModsToList();
+
         Manifest.Modifications.RemoveMany(modsToRemove);
 
         return changes.ToArray();
     }
 
+    public async Task<bool> AddMissingModsToList()
+    {
+        // Check for unknown mods to add to the list
+        List<string> unknownModsFilenames = GetUnlistedMods();
+        bool save = false;
+
+        foreach (string modFilename in unknownModsFilenames)
+        {
+            await using MemoryStream fs = new MemoryStream(await File.ReadAllBytesAsync($"{Folder.CompletePath}/{modFilename}"));
+            ModVersion? version = await ModPlatformManager.Platform.GetModVersionFromData(fs);
+            if (version == null || version.Mod == null) continue;
+            
+            // Add the mod to the list
+            Manifest.AddModification(version.Mod.Id, version.VersionId, 
+                version.Mod.ModPlatformId, new[] {modFilename});
+            
+            save = true;
+        }
+
+        return save;
+    }
+
     async void RunPostDeserializationChecks()
     {
-        if (await Manifest?.RunPostDeserializationChecks())
-        {
+        if (await Manifest?.RunPostDeserializationChecks()) 
             SaveManifest();
-        }
     }
 
     async Task SetupVersionAsync()
@@ -282,6 +303,9 @@ public class Box
 
     public List<string> GetUnlistedMods()
     {
+        if (!Directory.Exists($"{Path}/minecraft/mods")) 
+            return new List<string>();
+        
         List<string> mods = new();
         
         foreach (string file in Directory.GetFiles($"{Path}/minecraft/mods", "*.jar"))

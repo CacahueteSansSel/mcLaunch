@@ -49,8 +49,19 @@ public static class Extensions
 
     public static byte[] ReadToEndAndClose(this Stream stream, long? size = null)
     {
+        if (stream.Position != 0 && stream.CanSeek) 
+            stream.Seek(0, SeekOrigin.Begin);
+        
         MemoryStream arrayStream = new();
         stream.CopyTo(arrayStream);
+
+        if (arrayStream.Length == 0)
+        {
+            byte[] buffer = new byte[stream.Length];
+            stream.Read(buffer);
+            
+            arrayStream.Write(buffer);
+        }
 
         try
         {
