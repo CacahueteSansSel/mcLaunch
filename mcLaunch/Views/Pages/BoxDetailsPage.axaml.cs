@@ -44,6 +44,8 @@ public partial class BoxDetailsPage : UserControl
 
         Box = box;
         DataContext = box;
+        
+        Box.SetWatching(true);
 
         if (box.Manifest.Type == BoxType.Temporary)
         {
@@ -79,6 +81,18 @@ public partial class BoxDetailsPage : UserControl
         else SetSubControl(new ModListSubControl());
 
         ReadmeButton.IsVisible = Box.HasReadmeFile;
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        Box.SetWatching(true);
+        base.OnLoaded(e);
+    }
+
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        Box.SetWatching(false);
+        base.OnUnloaded(e);
     }
 
     public void ShowWarning(string text)

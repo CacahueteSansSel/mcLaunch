@@ -41,7 +41,6 @@ public partial class OptionalModsPopup : UserControl
             dep.Mod.DownloadIconAsync();
 
         ModList.SetLoadingCircle(false);
-        ModList.SetBox(box);
         ModList.SetModifications(dependencies.Select(dep => dep.Mod).ToArray());
     }
 

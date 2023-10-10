@@ -24,6 +24,7 @@ public class Box
     private string manifestPath;
     private bool exposeLauncher = false;
     private string launcherVersion = "0.0.0";
+    FileSystemWatcher watcher;
     public string Path { get; }
     public MinecraftFolder Folder { get; }
     public Minecraft Minecraft { get; private set; }
@@ -35,6 +36,7 @@ public class Box
     public ModLoaderSupport? ModLoader => ModLoaderManager.Get(Manifest.ModLoaderId);
     public Version MinecraftVersion => new(Manifest.Version);
     public bool SupportsQuickPlay => MinecraftVersion >= new Version("1.20");
+    public IBoxEventListener? EventListener { get; set; }
 
     public bool IsRunning => MinecraftProcess != null && !MinecraftProcess.HasExited;
     public bool HasReadmeFile => File.Exists($"{Folder.Path}/README.md");
@@ -50,6 +52,7 @@ public class Box
 
         Folder = new MinecraftFolder($"{path}/minecraft");
         if (createMinecraft) CreateMinecraftAsync();
+        CreateWatcher();
 
         if (File.Exists($"{Folder.CompletePath}/options.txt"))
         {
@@ -65,6 +68,7 @@ public class Box
         manifestPath = $"{path}/box.json";
 
         Folder = new MinecraftFolder($"{path}/minecraft");
+        CreateWatcher();
 
         if (File.Exists($"{Folder.CompletePath}/options.txt"))
         {
@@ -77,9 +81,73 @@ public class Box
         if (File.Exists($"{path}/icon.png")) LoadIcon();
     }
 
+    void CreateWatcher()
+    {
+        watcher = new FileSystemWatcher(Folder.CompletePath);
+        watcher.IncludeSubdirectories = true;
+        watcher.Created += OnFileCreated;
+        watcher.Deleted += OnFileDeleted;
+    }
+
+    private async void OnFileDeleted(object sender, FileSystemEventArgs e)
+    {
+        string relativePath = e.FullPath.Replace(Folder.CompletePath, "")
+            .Trim('\\').Trim('/')
+            .Replace('\\', '/');
+
+        if (relativePath.StartsWith("mods"))
+        {
+            // A mod was removed
+
+            foreach (BoxStoredModification mod in Manifest.Modifications)
+            {
+                if (!mod.Filenames.Contains(relativePath)) continue;
+                
+                Manifest.RemoveModification(mod.Id, this);
+                EventListener?.OnModRemoved(mod.Id);
+                
+                break;
+            }
+        }
+    }
+
+    private async void OnFileCreated(object sender, FileSystemEventArgs e)
+    {
+        string relativePath = e.FullPath.Replace(Folder.CompletePath, "")
+            .Trim('\\').Trim('/')
+            .Replace('\\', '/');
+
+        if (relativePath.StartsWith("mods"))
+        {
+            // A mod was added
+
+            try
+            {
+                await using MemoryStream fs = new MemoryStream(await File.ReadAllBytesAsync(e.FullPath));
+                ModVersion? version = await ModPlatformManager.Platform.GetModVersionFromData(fs);
+                if (version == null || version.Mod == null) return;
+            
+                // Add the mod to the list
+                Manifest.AddModification(version.Mod.Id, version.VersionId, 
+                    version.Mod.ModPlatformId, new[] {relativePath});
+            
+                EventListener?.OnModAdded(version.Mod);
+            }
+            catch (Exception exception)
+            {
+                Console.Write(exception);
+            }
+        }
+    }
+
     async void LoadIcon()
     {
         Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png", 155);
+    }
+
+    public void SetWatching(bool isWatching)
+    {
+        watcher.EnableRaisingEvents = isWatching;
     }
  
     public string? ReadReadmeFile() => HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
@@ -143,7 +211,7 @@ public class Box
             }
         }
 
-        await AddMissingModsToList();
+        if (await AddMissingModsToList()) SaveManifest();
 
         Manifest.Modifications.RemoveMany(modsToRemove);
 

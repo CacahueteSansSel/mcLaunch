@@ -35,7 +35,6 @@ public partial class ModsPopup : UserControl
             await mod.DownloadIconAsync();
 
         ModList.SetLoadingCircle(false);
-        ModList.SetBox(box);
         ModList.SetModifications(mods);
     }
 

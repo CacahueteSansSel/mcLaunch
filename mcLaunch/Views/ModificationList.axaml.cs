@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -8,7 +9,9 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Threading;
 using CurseForge.Models.Mods;
+using DynamicData;
 using mcLaunch.Core;
 using mcLaunch.Core.Mods.Platforms;
 using mcLaunch.Models;
@@ -21,7 +24,7 @@ using ReactiveUI;
 
 namespace mcLaunch.Views;
 
-public partial class ModificationList : UserControl
+public partial class ModificationList : UserControl, IBoxEventListener
 {
     public static AttachedProperty<bool> HideInstalledBadgesProperty
         = AvaloniaProperty.RegisterAttached<ModificationList, UserControl, bool>(
@@ -48,6 +51,7 @@ public partial class ModificationList : UserControl
     public void SetBox(Box box)
     {
         lastBox = box;
+        box.EventListener = this;
     }
 
     public void ShowLoadMoreButton()
@@ -173,5 +177,35 @@ public partial class ModificationList : UserControl
 
             ModList.UnselectAll();
         }
+    }
+
+    public void OnModAdded(Modification mod)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            Data ctx = (Data) DataContext;
+
+            List<Modification> mods = new List<Modification>(ctx.Modifications);
+            mods.Add(mod);
+            ctx.Modifications = mods.ToArray();
+        });
+    }
+
+    public void OnModRemoved(string modId)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            Data ctx = (Data) DataContext;
+
+            ctx.Modifications = ctx.Modifications.Where(mod => mod.Id != modId).ToArray();
+        });
+    }
+
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        if (lastBox != null && lastBox.EventListener == this)
+            lastBox.EventListener = null;
+        
+        base.OnUnloaded(e);
     }
 }
