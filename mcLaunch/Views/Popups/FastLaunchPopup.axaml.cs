@@ -35,6 +35,7 @@ public partial class FastLaunchPopup : UserControl
 
     async void FetchModLoadersLatestVersions(string versionId)
     {
+        LaunchButton.IsEnabled = false;
         Data ctx = (Data) DataContext;
         List<ModLoaderSupport> all = new();
 
@@ -45,6 +46,8 @@ public partial class FastLaunchPopup : UserControl
         }
 
         ctx.ModLoaders = all.ToArray();
+        ctx.SelectedModLoader = ctx.ModLoaders[0];
+        LaunchButton.IsEnabled = true;
     }
 
     private void CancelButtonClicked(object? sender, RoutedEventArgs e)

@@ -46,6 +46,7 @@ public partial class NewBoxPopup : UserControl
 
     async void FetchModLoadersLatestVersions(string versionId)
     {
+        CreateButton.IsEnabled = false;
         Data ctx = (Data) DataContext;
         List<ModLoaderSupport> all = new();
 
@@ -56,6 +57,8 @@ public partial class NewBoxPopup : UserControl
         }
 
         ctx.ModLoaders = all.ToArray();
+        ctx.SelectedModLoader = ctx.ModLoaders[0];
+        CreateButton.IsEnabled = true;
     }
 
     private void CloseButtonClicked(object? sender, RoutedEventArgs e)
