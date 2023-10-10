@@ -160,13 +160,13 @@ public partial class MainWindow : Window
             MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
         }
         
-        #if !DEBUG
+        //#if !DEBUG
         // Check for updates
         if (await UpdateManager.IsUpdateAvailableAsync())
         {
             UpdateBar.IsVisible = true;
             UpdateBar.SetUpdateDetails(await GitHubRepository.GetLatestReleaseAsync());
         }
-        #endif
+        //#endif
     }
 }
