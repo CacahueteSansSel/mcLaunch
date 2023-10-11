@@ -59,11 +59,11 @@ public partial class FastLaunchPopup : UserControl
     {
         ManifestMinecraftVersion minecraftVersion = VersionSelector.Version;
         ModLoaderSupport modloader = ((Data) DataContext).SelectedModLoader;
-        string name = $"fastlaunch_{Guid.NewGuid()}";
+        string name = $"Minecraft {minecraftVersion.Id}";
 
         Navigation.HidePopup();
         Navigation.ShowPopup(new StatusPopup("Preparing launch", 
-            $"Preparing launching Minecraft {minecraftVersion.Id}..."));
+            $"Preparing launching {name}..."));
 
         // We fetch automatically the latest version of the modloader for now
         // TODO: Allow the user to select a specific modloader version
