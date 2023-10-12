@@ -11,10 +11,10 @@
     </UserControl.Styles>
     <ScrollViewer>
         <StackPanel>
-            <StackPanel Margin="0 100 0 0" Width="896" Orientation="Horizontal">
+            <StackPanel Margin="0 100 0 0" Width="940" Orientation="Horizontal">
                 <views:BackButton></views:BackButton>
             </StackPanel>
-            <Border Classes="frame" Margin="0 10 0 100" Width="896">
+            <Border Classes="frame" Margin="0 10 0 100" Width="940">
                 <Panel>
                     <StackPanel Margin="10 5 10 0">
                         <TextBlock Classes="title" Margin="28 20 0 0" FontSize="32">Browse modpacks</TextBlock>
@@ -24,14 +24,16 @@
                             </Button>
                             <TextBox x:Name="SearchTextboxInput" Watermark="Search" VerticalContentAlignment="Center"></TextBox>
                         </DockPanel>
-                        <WrapPanel x:Name="BoxContainer" HorizontalAlignment="Left" Margin="28 10 28 0">
-                            <views:ModpackEntryCard></views:ModpackEntryCard>
-                            <views:ModpackEntryCard></views:ModpackEntryCard>
-                            <views:ModpackEntryCard></views:ModpackEntryCard>
-                        </WrapPanel>
+                        <Panel>
+                            <WrapPanel x:Name="BoxContainer" HorizontalAlignment="Center" Margin="28 10 28 0">
+                                <views:ModpackEntryCard></views:ModpackEntryCard>
+                                <views:ModpackEntryCard></views:ModpackEntryCard>
+                                <views:ModpackEntryCard></views:ModpackEntryCard>
+                            </WrapPanel>
+                            <views:LoadingCircle x:Name="LoadingCircleIcon" IsVisible="False"></views:LoadingCircle>
+                        </Panel>
                         <Button Classes="secondary" HorizontalAlignment="Center" Click="LoadMoreButtonClicked" Margin="0 10 0 20">Load more</Button>
                     </StackPanel>
-                    <views:LoadingCircle x:Name="LoadingCircleIcon" IsVisible="False"></views:LoadingCircle>
                 </Panel>
             </Border>
         </StackPanel>

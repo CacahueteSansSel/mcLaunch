@@ -26,6 +26,19 @@ public partial class StatusPopup : UserControl
     public StatusPopup()
     {
         InitializeComponent();
+
+        if (Design.IsDesignMode)
+        {
+            dctx = new Data
+            {
+                Title = "Sample Title",
+                Text = "Sample Text",
+                StatusText = "Please wait...",
+                StatusPercent = 50
+            };
+
+            DataContext = dctx;
+        }
     }
     
     public StatusPopup(string title, string text)

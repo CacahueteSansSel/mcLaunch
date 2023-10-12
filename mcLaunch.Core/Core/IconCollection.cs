@@ -70,9 +70,29 @@ public class IconCollection
         
         if (Url == null)
             return AssetLoader.Open(new Uri($"avares://mcLaunch/resources/default_mod_logo.png"));
-        
+
         if (IsLocalFile)
-            return new FileStream(Url, FileMode.Open);
+        {
+            int times = 0;
+            Exception exception = null;
+            
+            while (times < 4)
+            {
+                try
+                {
+                    return new FileStream(Url, FileMode.Open);
+                }
+                catch (Exception e)
+                {
+                    exception = e;
+                    await Task.Delay(10);
+                }
+
+                times++;
+            }
+
+            throw new Exception($"Failed to load the icon: {exception}");
+        }
         
         HttpClient client = new HttpClient();
 

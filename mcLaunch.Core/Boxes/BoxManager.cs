@@ -83,7 +83,7 @@ public static class BoxManager
         if (manifest.Icon != null && manifest.Icon.IconLarge != null && manifest.Icon.IconSmall != null)
         {
             Bitmap? icon = manifest.Icon.IconLarge ?? manifest.Icon.IconSmall;
-            icon!.Save($"{path}/icon.png");
+            await Task.Run(() => icon!.Save($"{path}/icon.png"));
             
             manifest.Icon = await IconCollection.FromFileAsync($"{path}/icon.png");
         }

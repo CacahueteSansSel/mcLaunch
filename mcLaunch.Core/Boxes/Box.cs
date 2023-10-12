@@ -78,7 +78,8 @@ public class Box
         QuickPlay = new QuickPlayManager(Folder);
 
         ReloadManifest(true);
-        if (File.Exists($"{path}/icon.png")) LoadIcon();
+        if (File.Exists($"{path}/icon.png") && Manifest.Icon == null) 
+            LoadIcon();
     }
 
     void CreateWatcher()
@@ -142,7 +143,14 @@ public class Box
 
     async void LoadIcon()
     {
-        Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png", 155);
+        try
+        {
+            Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png", 155);
+        }
+        catch (Exception e)
+        {
+            // TODO: Set the manifest icon to default
+        }
     }
 
     public void SetWatching(bool isWatching)

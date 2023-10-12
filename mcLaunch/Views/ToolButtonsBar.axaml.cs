@@ -146,4 +146,10 @@ public partial class ToolButtonsBar : UserControl
     {
         Navigation.ShowPopup(new FastLaunchPopup());
     }
+
+    private void ViewBoxesButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        MainWindowDataContext.Instance.Reset();
+        MainWindowDataContext.Instance.Push<MainPage>();
+    }
 }

@@ -175,6 +175,10 @@
       <AvaloniaResource Include="resources\icons\thunderbolt.png" />
       <None Remove="resources\fastlaunch_box_logo.png" />
       <AvaloniaResource Include="resources\fastlaunch_box_logo.png" />
+      <None Remove="resources\icons\browse_modpacks.png" />
+      <AvaloniaResource Include="resources\icons\browse_modpacks.png" />
+      <None Remove="resources\icons\browse_mods.png" />
+      <AvaloniaResource Include="resources\icons\browse_mods.png" />
     </ItemGroup>
 
     <ItemGroup>
