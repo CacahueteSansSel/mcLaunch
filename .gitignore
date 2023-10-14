@@ -17,4 +17,6 @@ mcLaunch.Installer/bin
 mcLaunch.Installer/obj
 mcLaunch.GitHub/bin
 mcLaunch.GitHub/obj
+mcLaunch.Server/bin
+mcLaunch.Server/obj
 mcLaunch.sln.DotSettings.user

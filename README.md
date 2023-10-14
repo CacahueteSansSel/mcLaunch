@@ -85,6 +85,7 @@ Libraries used by the project :
 + Markdown.Avalonia (to render mod pages)
 + SharpNBT (for reading world's level.dat files)
 + Markdig (to render mod pages)
++ Spectre.Console (used by mcLaunch.Server)
 
 This project takes huge inspiration of :
 + [portablemc](https://github.com/mindstorm38/portablemc) (general Minecraft launcher stuff + Forge installer wrapper code)
