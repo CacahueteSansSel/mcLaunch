@@ -50,7 +50,12 @@
                                     <TextBlock Classes="light" FontSize="16">by</TextBlock>
                                     <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16" Text="{Binding Author}"></TextBlock>
                                 </StackPanel>
-                                <views:Badge x:Name="ModPlatformBadge" Margin="0 10 0 0" HorizontalAlignment="Left"></views:Badge>
+                                <StackPanel Orientation="Horizontal" Margin="0 10 0 0" Spacing="5">
+                                    <views:Badge x:Name="ModPlatformBadge" HorizontalAlignment="Left"></views:Badge>
+                                    <views:Badge x:Name="ModLicenseBadge" Icon="/resources/icons/license.png" HorizontalAlignment="Left"></views:Badge>
+                                    <views:Badge x:Name="ModOpenSource" Icon="/resources/icons/open_source.png" Text="Open Source" HorizontalAlignment="Left"></views:Badge>
+                                    <views:Badge x:Name="ModClosedSource" Icon="/resources/icons/lock.png" Text="Closed Source" HorizontalAlignment="Left"></views:Badge>
+                                </StackPanel>
                             </StackPanel>
                         </DockPanel>
                         <StackPanel Orientation="Vertical" Margin="38 0 38 38">

@@ -179,6 +179,12 @@
       <AvaloniaResource Include="resources\icons\browse_modpacks.png" />
       <None Remove="resources\icons\browse_mods.png" />
       <AvaloniaResource Include="resources\icons\browse_mods.png" />
+      <None Remove="resources\icons\license.png" />
+      <AvaloniaResource Include="resources\icons\license.png" />
+      <None Remove="resources\icons\open_source.png" />
+      <AvaloniaResource Include="resources\icons\open_source.png" />
+      <None Remove="resources\icons\lock.png" />
+      <AvaloniaResource Include="resources\icons\lock.png" />
     </ItemGroup>
 
     <ItemGroup>

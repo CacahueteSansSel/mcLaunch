@@ -58,6 +58,7 @@ public class ModrinthModPlatform : ModPlatform
         {
             Id = hit.ProjectId,
             Name = hit.Title,
+            License = hit.License,
             ShortDescription = hit.Description,
             Author = hit.Author,
             Url = hit.GetDirectUrl(),
@@ -146,6 +147,7 @@ public class ModrinthModPlatform : ModPlatform
                 Name = project.Title,
                 ShortDescription = project.Description,
                 Author = team.Last().User.Username,
+                License = project.License?.Name,
                 Url = project.GetDirectUrl(),
                 IconUrl = project.IconUrl,
                 BackgroundPath = project.FeaturedGallery,

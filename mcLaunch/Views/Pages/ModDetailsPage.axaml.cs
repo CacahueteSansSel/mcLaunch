@@ -46,7 +46,15 @@ public partial class ModDetailsPage : UserControl
         ModPlatformBadge.Text = mod.Platform.Name;
         ModPlatformBadge.Icon =
             new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{mod.Platform.Name.ToLower()}.png")));
-
+        if (mod.License != null)
+        {
+            ModLicenseBadge.Text = mod.GetLicenseDisplayName();
+            ModLicenseBadge.IsVisible = true;
+        }
+        else ModLicenseBadge.IsVisible = false;
+        ModOpenSource.IsVisible = mod.IsOpenSource;
+        ModClosedSource.IsVisible = !mod.IsOpenSource;
+        
         SetInstalled(targetBox != null && targetBox.HasModificationSoft(mod));
         GetModAdditionalInfos();
 

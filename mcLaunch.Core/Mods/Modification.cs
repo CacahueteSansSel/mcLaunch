@@ -15,11 +15,11 @@ namespace mcLaunch.Core.Mods;
 public class Modification : ReactiveObject
 {
     string? longDescriptionBody;
-    Bitmap? icon;
+    IconCollection icon;
     Bitmap? background;
     ModPlatform? platform;
     bool isInstalledOnCurrentBox;
-    
+
     public string? Name { get; set; }
     public string Id { get; set; }
     public string Author { get; set; }
@@ -32,6 +32,7 @@ public class Modification : ReactiveObject
         get => longDescriptionBody;
         set => this.RaiseAndSetIfChanged(ref longDescriptionBody, value);
     }
+
     public string? IconUrl { get; set; }
     public string? BackgroundPath { get; set; }
     public string[] Versions { get; set; }
@@ -44,18 +45,30 @@ public class Modification : ReactiveObject
     public bool IsFilenameEmpty => string.IsNullOrWhiteSpace(Filename);
     public int? DownloadCount { get; set; }
     public DateTime? LastUpdated { get; set; }
+    public string? License { get; set; }
 
+    [JsonIgnore]
+    public bool IsOpenSource => License != null
+                                && License.ToLower() != "all rights reserved"
+                                && License.ToLower() != "arr"
+                                && License != "LicenseRef-All-Rights-Reserved";
+
+    [JsonIgnore]
     public bool IsInstalledOnCurrentBox
     {
         get => isInstalledOnCurrentBox;
         set => this.RaiseAndSetIfChanged(ref isInstalledOnCurrentBox, value);
     }
-    
+
     public bool IsInstalledOnCurrentBoxUi { get; set; }
     public bool IsInvalid { get; set; }
 
     [JsonIgnore]
-    public IconCollection Icon { get; set; }
+    public IconCollection Icon
+    {
+        get => icon;
+        set => this.RaiseAndSetIfChanged(ref icon, value);
+    }
 
     [JsonIgnore]
     public Bitmap? Background
@@ -85,18 +98,18 @@ public class Modification : ReactiveObject
 
     public void TransformLongDescriptionToHtml()
     {
-        if (string.IsNullOrWhiteSpace(LongDescriptionBody)) 
+        if (string.IsNullOrWhiteSpace(LongDescriptionBody))
             return;
 
-        LongDescriptionBody = Markdown.ToHtml(LongDescriptionBody, 
+        LongDescriptionBody = Markdown.ToHtml(LongDescriptionBody,
             new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
     }
 
     public bool IsSimilar(string name, string author)
     {
-        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(author)) 
+        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(author))
             return false;
-        
+
         string nameNormalized = Name.NormalizeTitle();
         string authorNormalized = Author.NormalizeUsername();
         string otherNameNormalized = name.NormalizeTitle();
@@ -112,6 +125,13 @@ public class Modification : ReactiveObject
     public bool IsSimilar(BoxStoredModification other)
         => IsSimilar(other.Name, other.Author);
 
+    public string GetLicenseDisplayName()
+    {
+        if (!IsOpenSource) return "All Rights Reserved";
+
+        return License;
+    }
+
     public async Task DownloadIconAsync()
     {
         Icon = IconCollection.FromUrl(IconUrl);
@@ -121,7 +141,7 @@ public class Modification : ReactiveObject
     async Task<Stream> LoadBackgroundStreamAsync()
     {
         if (BackgroundPath == null) return null;
-        
+
         HttpClient client = new HttpClient();
 
         try
@@ -142,20 +162,17 @@ public class Modification : ReactiveObject
         string cacheName = $"bkg-mod-{Platform.Name}-{Id}";
         if (CacheManager.Has(cacheName))
         {
-            await Task.Run(() =>
-            {
-                Background = CacheManager.LoadBitmap(cacheName);
-            });
+            await Task.Run(() => { Background = CacheManager.LoadBitmap(cacheName); });
 
             return;
         }
 
         if (BackgroundPath == null) return;
-        
+
         await using (var imageStream = await LoadBackgroundStreamAsync())
         {
             if (imageStream == null) return;
-            
+
             Background = await Task.Run(() =>
             {
                 try
@@ -167,7 +184,7 @@ public class Modification : ReactiveObject
                     return null;
                 }
             });
-            
+
             CacheManager.Store(Background, cacheName);
         }
     }
