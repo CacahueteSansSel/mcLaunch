@@ -9,8 +9,11 @@
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <ScrollViewer>
-        <WrapPanel x:Name="Container">
+        <Panel>
+            <WrapPanel x:Name="Container">
             
-        </WrapPanel>
+            </WrapPanel>
+            <views:NothingToShowBanner x:Name="NtsBanner" Footer="Your in-game screenshots will show here" IsVisible="False"></views:NothingToShowBanner>
+        </Panel>
     </ScrollViewer>
 </UserControl>

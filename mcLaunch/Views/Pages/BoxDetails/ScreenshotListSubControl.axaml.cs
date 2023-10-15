@@ -21,5 +21,7 @@ public partial class ScreenshotListSubControl : SubControl
         
         foreach (string path in Box.GetScreenshotPaths())
             Container.Children.Add(new PictureFrame(path, Box));
+
+        NtsBanner.IsVisible = Container.Children.Count == 0;
     }
 }

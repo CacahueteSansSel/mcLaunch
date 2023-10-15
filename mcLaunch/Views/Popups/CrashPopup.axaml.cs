@@ -25,12 +25,25 @@ public partial class CrashPopup : UserControl
         
         BoxCard.SetBox(box);
 
+        PopulateCrashReportTextAsync(exitCode);
+    }
+
+    public CrashPopup()
+    {
+        InitializeComponent();
+    }
+
+    async void PopulateCrashReportTextAsync(int exitCode)
+    {
+        LoadingIcon.IsVisible = true;
+        BodyText.IsVisible = false;
+
         string bodyText;
         string latestLogsPath = $"{box.Folder.CompletePath}/logs/latest.log";
 
         if (File.Exists(latestLogsPath))
         {
-            bodyText = File.ReadAllText(latestLogsPath) + $"\n\nMinecraft exited with code {exitCode}";
+            bodyText = await File.ReadAllTextAsync(latestLogsPath) + $"\n\nMinecraft exited with code {exitCode}";
         }
         else
         {
@@ -39,11 +52,8 @@ public partial class CrashPopup : UserControl
         }
 
         BodyText.Text = bodyText;
-    }
-
-    public CrashPopup()
-    {
-        InitializeComponent();
+        LoadingIcon.IsVisible = false;
+        BodyText.IsVisible = true;
     }
 
     public CrashPopup WithCustomLog(string log)

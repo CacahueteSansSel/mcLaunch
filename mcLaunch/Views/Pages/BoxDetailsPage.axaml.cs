@@ -54,9 +54,9 @@ public partial class BoxDetailsPage : UserControl
         }
         ContentsBox.IsVisible = true;
 
-        VersionBadge.Text = box.Manifest.Version;
+        VersionBadge.Text = $"Minecraft {box.Manifest.Version}";
         ModLoaderBadge.Icon = Box.ModLoader?.LoadIcon();
-        ModLoaderBadge.Text = box.ModLoader?.Name ?? "Unknown";
+        ModLoaderBadge.Text = $"{box.ModLoader?.Name ?? "Unknown"} {box.Manifest.ModLoaderVersion}";
 
         box.LoadBackground();
         

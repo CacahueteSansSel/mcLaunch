@@ -20,7 +20,10 @@
             </DockPanel>
             <DockPanel>
                 <views:BoxEntryCard x:Name="BoxCard" DockPanel.Dock="Left" IsHitTestVisible="False" ></views:BoxEntryCard>
-                <TextBox x:Name="BodyText" DockPanel.Dock="Right" Margin="20 36 10 35" Focusable="False">This is the error message</TextBox>
+                <Panel DockPanel.Dock="Right" Margin="20 36 10 35">
+                    <TextBox x:Name="BodyText" IsVisible="False" Focusable="False">This is the error message</TextBox>
+                    <views:LoadingCircle x:Name="LoadingIcon"></views:LoadingCircle>
+                </Panel>
             </DockPanel>
         </DockPanel>
     </Border>
