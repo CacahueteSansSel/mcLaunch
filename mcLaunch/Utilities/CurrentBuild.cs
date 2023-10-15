@@ -6,7 +6,7 @@ namespace mcLaunch.Utilities;
 
 public static class CurrentBuild
 {
-    public static Version Version => new("0.1.6");
+    public static Version Version => new("0.1.7");
 
     public static string? Commit
     {
