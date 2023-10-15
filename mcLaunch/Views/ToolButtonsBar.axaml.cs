@@ -22,11 +22,68 @@ namespace mcLaunch.Views;
 
 public partial class ToolButtonsBar : UserControl
 {
+    public Data UIDataContext => (Data) DataContext;
+    
     public ToolButtonsBar()
     {
         InitializeComponent();
 
         DataContext = new Data();
+        DownloadManager.OnDownloadPrepareStarting += OnDownloadPrepareStarting;
+        DownloadManager.OnDownloadPrepareEnding += OnDownloadFinished;
+        DownloadManager.OnDownloadProgressUpdate += OnDownloadProgressUpdate;
+        DownloadManager.OnDownloadFinished += OnDownloadFinished;
+        DownloadManager.OnDownloadSectionStarting += OnDownloadSectionStarting;
+        DownloadManager.OnDownloadError += OnDownloadError;
+
+        if (Design.IsDesignMode)
+        {
+            UIDataContext.Progress = 60;
+            UIDataContext.ResourceCount = "1/3";
+            UIDataContext.ResourceName = "Test";
+            UIDataContext.ResourceDetailsText = "file.txt";
+        }
+    }
+
+    private void OnDownloadError(string sectionName, string file)
+    {
+        Navigation.ShowPopup(new MessageBoxPopup($"Download failed for {sectionName}",
+            $"{sectionName} failed to download (file: {file}). Try restarting the download."));
+    }
+
+    private void OnDownloadSectionStarting(string sectionName, int index)
+    {
+        UIDataContext.Progress = 0;
+        UIDataContext.ResourceName = sectionName;
+        UIDataContext.ResourceCount = $"{index}/{DownloadManager.PendingSectionCount}";
+
+        DownloadBanner.IsVisible = true;
+    }
+
+    private void OnDownloadPrepareStarting(string name)
+    {
+        UIDataContext.Progress = 0;
+        UIDataContext.ResourceName = name;
+        UIDataContext.ResourceDetailsText = "Preparing";
+        
+        DownloadBanner.IsVisible = true;
+    }
+
+    private void OnDownloadFinished()
+    {
+        UIDataContext.Progress = 0;
+        UIDataContext.ResourceName = "No pending download";
+        UIDataContext.ResourceCount = string.Empty;
+
+        DownloadBanner.IsVisible = false;
+    }
+
+    private void OnDownloadProgressUpdate(string file, float percent, int currentSectionIndex)
+    {
+        UIDataContext.Progress = (int) MathF.Round(percent * 100);
+        UIDataContext.ResourceName = DownloadManager.DescriptionLine;
+        UIDataContext.ResourceDetailsText = $"{(int)MathF.Round(percent * 100)}%";
+        UIDataContext.ResourceCount = $"{currentSectionIndex}/{DownloadManager.PendingSectionCount}";
     }
 
     private async void NewBoxButtonClicked(object? sender, RoutedEventArgs e)
@@ -43,6 +100,47 @@ public partial class ToolButtonsBar : UserControl
     {
         private MinecraftAuthenticationResult? account;
         private Bitmap head;
+        
+        int progress;
+        string resourceName = "No pending download";
+        string resourceDetailsText = "-";
+        string resourceCount;
+
+        public int Progress
+        {
+            get => progress;
+            set => this.RaiseAndSetIfChanged(ref progress, value);
+        }
+
+        public string ResourceName
+        {
+            get => resourceName;
+            set => this.RaiseAndSetIfChanged(ref resourceName, value);
+        }
+
+        public string ResourceDetailsText
+        {
+            get => resourceDetailsText;
+            set => this.RaiseAndSetIfChanged(ref resourceDetailsText, value);
+        }
+
+        public string ResourceCount
+        {
+            get => resourceCount;
+            set => this.RaiseAndSetIfChanged(ref resourceCount, value);
+        }
+
+        public MinecraftAuthenticationResult? Account
+        {
+            get => account;
+            set => this.RaiseAndSetIfChanged(ref account, value);
+        }
+
+        public Bitmap? HeadIcon
+        {
+            get => head;
+            set => this.RaiseAndSetIfChanged(ref head, value);
+        }
 
         public Data()
         {
@@ -99,18 +197,6 @@ public partial class ToolButtonsBar : UserControl
             {
                 return null;
             }
-        }
-
-        public MinecraftAuthenticationResult? Account
-        {
-            get => account;
-            set => this.RaiseAndSetIfChanged(ref account, value);
-        }
-
-        public Bitmap? HeadIcon
-        {
-            get => head;
-            set => this.RaiseAndSetIfChanged(ref head, value);
         }
     }
 

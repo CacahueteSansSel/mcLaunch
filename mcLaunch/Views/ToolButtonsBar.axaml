@@ -48,7 +48,7 @@
                     Click="DefaultsButtonClicked">
                 <Image Source="/resources/icons/game_settings.png" Width="13" Height="13"></Image>
             </Button>
-            <Border Classes="frame-without-shadow" Margin="10 10 10 10" BoxShadow=""
+            <Border Classes="frame-without-shadow" Margin="5 10 10 10" BoxShadow=""
                     Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="{Binding HeadIcon}" Margin="10 7 7 7"></Image>
@@ -60,6 +60,28 @@
                         <Image Width="16" Height="16" Source="/resources/icons/logout.png"></Image>
                     </Button>
                 </StackPanel>
+            </Border>
+            <Border x:Name="DownloadBanner"
+                    Classes="frame-without-shadow" Margin="10 10 5 10" BoxShadow="" Width="200"
+                    Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right"
+                    ClipToBounds="True" IsVisible="False">
+                <Panel>
+                    <ProgressBar x:Name="DBBar" MinWidth="0" Height="43" Opacity="0.15" Value="{Binding Progress}"></ProgressBar>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <StackPanel Orientation="Vertical" Width="40" VerticalAlignment="Center" Spacing="4">
+                            <Image Width="16" Height="16" Source="/resources/icons/download.png"></Image>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding ResourceName}" Margin="0 0 15 0" FontSize="12">-</TextBlock>
+                            <TextBlock Text="{Binding ResourceDetailsText}" Margin="0 0 15 0" FontSize="10">-</TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock Text="{Binding ResourceCount}" TextAlignment="Right" VerticalAlignment="Bottom" Classes="title"
+                               FontSize="20"
+                               Margin="0 0 5 3" Opacity="0.2">
+                        
+                    </TextBlock>
+                </Panel>
             </Border>
             <Panel></Panel>
         </DockPanel>

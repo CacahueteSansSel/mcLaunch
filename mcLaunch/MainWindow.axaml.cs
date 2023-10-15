@@ -34,16 +34,6 @@ public partial class MainWindow : Window
         Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch", CurrentBuild.Version.ToString()));
 
         DataContext = new MainWindowDataContext(null, false);
-
-        DownloadManager.OnDownloadPrepareStarting += _ =>
-        {
-            SetBottomBarShown(true);
-        };
-
-        DownloadManager.OnDownloadFinished += () =>
-        {
-            SetBottomBarShown(false);
-        };
         
         MainWindowDataContext.Instance.ShowStartingPage();
         Authenticate();
@@ -53,11 +43,6 @@ public partial class MainWindow : Window
     {
         TopBar.IsVisible = showDecorations;
         TopHeaderBar.IsVisible = showDecorations;
-    }
-
-    public void SetBottomBarShown(bool show)
-    {
-        BottomBar.IsVisible = show;
     }
 
     async void Authenticate()

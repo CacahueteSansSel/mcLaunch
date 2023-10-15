@@ -7,7 +7,7 @@
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="450"
         x:Class="mcLaunch.MainWindow"
         Title="mcLaunch"
-        MinWidth="640" MinHeight="450"
+        MinWidth="800" MinHeight="450"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaTitleBarHeightHint="50"
         Icon="/resources/icon.ico"
@@ -22,7 +22,7 @@
             <views:HeaderBar x:Name="TopHeaderBar" ZIndex="10" IsHitTestVisible="False" DockPanel.Dock="Top"></views:HeaderBar>
             <views:ToolButtonsBar x:Name="TopBar" ZIndex="10" IsVisible="{Binding ShowDecorations}" IsEnabled="{Binding ShowDecorations}" DockPanel.Dock="Top"></views:ToolButtonsBar>
             <views:UpdateNotificationBar x:Name="UpdateBar" IsVisible="False" DockPanel.Dock="Top"></views:UpdateNotificationBar>
-            <views:BottomStatusBar x:Name="BottomBar" ZIndex="10" IsVisible="False" IsEnabled="{Binding ShowDecorations}" DockPanel.Dock="Bottom"></views:BottomStatusBar>
+            <!-- <views:BottomStatusBar x:Name="BottomBar" ZIndex="10" IsVisible="False" IsEnabled="{Binding ShowDecorations}" DockPanel.Dock="Bottom"></views:BottomStatusBar> -->
             <ContentControl Content="{Binding CurrentPage}">
                 
             </ContentControl>
