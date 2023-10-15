@@ -30,10 +30,10 @@ public class ForgeModLoaderVersion : ModLoaderVersion
         client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("mcLaunch", "1.0.0"));
 
         string filename = $"forge-{FullName}-installer.jar";
-        string fullPath = $"temp/{filename}";
+        string fullPath = $"{SystemFolderPath}/temp/{filename}";
 
-        if (!Directory.Exists("temp"))
-            Directory.CreateDirectory("temp");
+        if (!Directory.Exists($"{SystemFolderPath}/temp"))
+            Directory.CreateDirectory($"{SystemFolderPath}/temp");
 
         if (!File.Exists(fullPath))
         {
@@ -54,7 +54,7 @@ public class ForgeModLoaderVersion : ModLoaderVersion
 
         // TODO: Implement a new way for installing Forge
         
-        string wrapperJarPath = Path.GetFullPath("forge/target/wrapper.jar");
+        string wrapperJarPath = Path.GetFullPath($"{SystemFolderPath}/forge/target/wrapper.jar");
         string classPathSeparator = OperatingSystem.IsWindows() ? ";" : ":";
 
         string args =

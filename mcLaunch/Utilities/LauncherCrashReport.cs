@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Avalonia.Controls;
+using mcLaunch.Core.Managers;
 
 namespace mcLaunch.Utilities;
 
@@ -24,7 +25,8 @@ public static class LauncherCrashReport
         if (!Directory.Exists("launcher_crashreports")) 
             Directory.CreateDirectory("launcher_crashreports");
         
-        string filename = $"launcher_crashreports/{DateTime.Now:yyyy MM dd - hh mm ss}.txt";
+        string filename = $"{AppdataFolderManager.GetValidPath("launcher_crashreports")}" +
+                          $"/{DateTime.Now:yyyy MM dd - hh mm ss}.txt";
         File.WriteAllText(filename, wr.ToString());
         
         return filename;

@@ -17,13 +17,13 @@ namespace mcLaunch.Core.Boxes;
 
 public static class BoxManager
 {
-    static MinecraftFolder systemFolder = new("system");
+    static MinecraftFolder systemFolder = new(AppdataFolderManager.GetValidPath("system"));
 
     static AssetsDownloader assetsDownloader = new(systemFolder);
     static LibrariesDownloader librariesDownloader = new(systemFolder);
     static JVMDownloader jvmDownloader = new(systemFolder);
 
-    public static string BoxesPath => Path.GetFullPath("boxes");
+    public static string BoxesPath => AppdataFolderManager.GetValidPath("boxes");
     public static MinecraftFolder SystemFolder => systemFolder;
     public static AssetsDownloader AssetsDownloader => assetsDownloader;
     public static LibrariesDownloader LibrariesDownloader => librariesDownloader;
@@ -88,7 +88,7 @@ public static class BoxManager
             manifest.Icon = await IconCollection.FromFileAsync($"{path}/icon.png");
         }
 
-        if (!Directory.Exists("forge"))
+        if (!Directory.Exists(AppdataFolderManager.GetPath("forge")))
         {
             // Extract the forge wrapper from resources
             // This is a copy of portablemc's old wrapper code for the forge installer, along with license
@@ -99,7 +99,7 @@ public static class BoxManager
             await using Stream zipStream =
                 AssetLoader.Open(new Uri("avares://mcLaunch/resources/internal/forge_wrapper.zip"));
             await using MemoryStream tmpStream = new();
-            string forgeWrapperPath = Path.GetFullPath("forge");
+            string forgeWrapperPath = AppdataFolderManager.GetValidPath("forge");
 
             await zipStream.CopyToAsync(tmpStream);
 

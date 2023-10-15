@@ -54,5 +54,6 @@
             </ListBox>
         </StackPanel>
         <views:LoadingCircle x:Name="LoadCircle" IsVisible="False" IsHitTestVisible="False" />
+        <views:NothingToShowBanner x:Name="NtsBanner" IsVisible="False" Footer="Your box's worlds will be shown here"></views:NothingToShowBanner>
     </Panel>
 </UserControl>

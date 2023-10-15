@@ -65,6 +65,8 @@ public partial class WorldList : UserControl
         Data ctx = (Data) DataContext;
 
         ctx.Worlds = worlds;
+
+        NtsBanner.IsVisible = worlds.Length == 0;
     }
 
     public void SetLoadingCircle(bool isLoading)

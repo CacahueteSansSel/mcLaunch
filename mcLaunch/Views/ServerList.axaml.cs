@@ -68,6 +68,8 @@ public partial class ServerList : UserControl
 
         Data ctx = (Data) DataContext;
         ctx.Servers = servers;
+
+        NtsBanner.IsVisible = servers.Length == 0;
     }
 
     async Task LoadServerIconsAsync(MinecraftServer[] servers)

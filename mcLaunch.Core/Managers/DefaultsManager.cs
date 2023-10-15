@@ -8,10 +8,7 @@ public static class DefaultsManager
 
     public static void Init()
     {
-        DefaultsPath = "system/defaults";
-
-        if (!Directory.Exists(DefaultsPath)) 
-            Directory.CreateDirectory(DefaultsPath);
+        DefaultsPath = AppdataFolderManager.GetValidPath("system/defaults");
     }
 
     public static void SetDefaultMinecraftOptions(MinecraftOptions options)

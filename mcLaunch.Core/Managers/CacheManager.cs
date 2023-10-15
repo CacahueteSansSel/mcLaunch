@@ -11,7 +11,7 @@ public static class CacheManager
     
     public static void Init()
     {
-        FolderPath = Path.GetFullPath("cache");
+        FolderPath = AppdataFolderManager.GetValidPath("cache");
 
         if (!Directory.Exists(FolderPath)) Directory.CreateDirectory(FolderPath);
     }

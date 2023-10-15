@@ -18,7 +18,7 @@ public static class AuthenticationManager
 
     public static void Init(string microsoftAppId, string credentialsKey)
     {
-        Cache = new CredentialsCache("system/balance", credentialsKey);
+        Cache = new CredentialsCache(AppdataFolderManager.GetValidPath("system/balance"), credentialsKey);
         Platform = new MicrosoftAuthenticationPlatform(microsoftAppId, Cache);
     }
 

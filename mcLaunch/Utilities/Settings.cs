@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using mcLaunch.Core.Managers;
 using mcLaunch.Utilities.Attributes;
 using mcLaunch.Views.Pages.Settings;
 
@@ -76,17 +77,18 @@ public class Settings
 
     public static void Save()
     {
-        File.WriteAllText("settings.json", JsonSerializer.Serialize(Instance));
+        File.WriteAllText(AppdataFolderManager.GetPath("settings.json"), JsonSerializer.Serialize(Instance));
     }
 
     public static void Load()
     {
-        if (!File.Exists("settings.json"))
+        if (!File.Exists(AppdataFolderManager.GetPath("settings.json")))
         {
             Instance = new Settings().WithDefaults();
             return;
         }
         
-        Instance = JsonSerializer.Deserialize<Settings>(File.ReadAllText("settings.json"))!;
+        Instance = JsonSerializer.Deserialize<Settings>(
+            File.ReadAllText(AppdataFolderManager.GetPath("settings.json")))!;
     }
 }

@@ -90,13 +90,14 @@ public partial class ModificationList : UserControl, IBoxEventListener
 
         ctx.Modifications = newList.ToArray();
 
-        LoadMoreButton.IsVisible = true;
+        NtsBanner.IsVisible = Mods == null || Mods.Length == 0;
+        LoadMoreButton.IsVisible = !NtsBanner.IsVisible;
     }
 
     public void SetLoadingCircle(bool isLoading)
     {
         LoadCircle.IsVisible = isLoading;
-        LoadMoreButton.IsVisible = !isLoading;
+        LoadMoreButton.IsVisible = !isLoading && !NtsBanner.IsVisible;
     }
 
     public async void Search(Box box, string query)

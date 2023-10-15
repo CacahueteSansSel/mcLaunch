@@ -68,6 +68,17 @@ public partial class MainWindow : Window
                 await Task.Delay(1);
         });
 
+        if (AppdataFolderManager.NeedsMigration)
+        {
+            Navigation.ShowPopup(new DataMigrationPopup());
+            
+            await Task.Run(async () =>
+            {
+                while (MainWindowDataContext.Instance.IsPopup || DataMigrationPopup.IsActive) 
+                    await Task.Delay(100);
+            });
+        }
+
         if (App.Args.Contains("from-guard"))
         {
             if (!int.TryParse(App.Args.Get("exit-code"), out int exitCode)) 

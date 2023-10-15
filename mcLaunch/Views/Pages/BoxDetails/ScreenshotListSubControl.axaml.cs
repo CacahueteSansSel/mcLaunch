@@ -8,7 +8,7 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 
 public partial class ScreenshotListSubControl : SubControl
 {
-    public override string Title => "README";
+    public override string Title => "SCREENSHOTS";
     
     public ScreenshotListSubControl()
     {

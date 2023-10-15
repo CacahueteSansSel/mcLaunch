@@ -1,0 +1,14 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="120" Height="120"
+             x:Class="mcLaunch.Views.NothingToShowBanner">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <StackPanel Opacity="0.7" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+        <TextBlock x:Name="TitleText" Classes="light" TextAlignment="Center">Nothing to show here</TextBlock>
+        <TextBlock x:Name="FooterText" IsVisible="False" Classes="light" TextAlignment="Center"></TextBlock>
+    </StackPanel>
+</UserControl>
