@@ -72,7 +72,7 @@ public partial class ToolButtonsBar : UserControl
     private void OnDownloadFinished()
     {
         UIDataContext.Progress = 0;
-        UIDataContext.ResourceName = "No pending download";
+        UIDataContext.ResourceName = string.Empty;
         UIDataContext.ResourceCount = string.Empty;
 
         DownloadBanner.IsVisible = false;
