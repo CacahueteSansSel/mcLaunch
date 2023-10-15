@@ -13,6 +13,7 @@ Tester
 mcLaunch/resources/credentials
 .nuke/temp
 output
+server
 mcLaunch.Installer/bin
 mcLaunch.Installer/obj
 mcLaunch.GitHub/bin
