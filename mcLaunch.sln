@@ -16,12 +16,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Installer", "mcLau
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.GitHub", "mcLaunch.GitHub\mcLaunch.GitHub.csproj", "{6FDBDAD8-4972-4D56-B4AB-D5953875961A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Server", "server\mcLaunch.Server\mcLaunch.Server.csproj", "{19A8CC83-1CD4-4C45-80B1-4CA5A326100C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mcLaunch Server", "mcLaunch Server", "{E2CC7094-4CFC-457F-8088-A2587D696235}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Server.DiscordBot", "server\plugins\mcLaunch.Server.DiscordBot\mcLaunch.Server.DiscordBot.csproj", "{883D520C-316D-4288-989B-FED7A1433F26}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
