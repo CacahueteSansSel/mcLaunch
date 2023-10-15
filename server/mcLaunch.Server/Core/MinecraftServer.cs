@@ -11,17 +11,18 @@ public class MinecraftServer
     public Settings ServerSettings { get; private set; }
     public Context ServerContext { get; private set; }
     public Process? JavaProcess { get; private set; }
-    
+    public List<ServerEventHandler> Handlers { get; } = new();
+
     Regex minecraftVersionRegex = RegularExpressions.MinecraftVersion();
     Regex versionRegex = RegularExpressions.SemanticVersionRegex();
     Regex modloaderRegex = RegularExpressions.ModLoaderRegex();
     Regex playerConnectRegex = RegularExpressions.PlayerConnectRegex();
     Regex playerDisconnectRegex = RegularExpressions.PlayerDisconnectRegex();
-    
+
     public MinecraftServer(Settings serverSettings)
     {
         Instance = this;
-        
+
         ServerSettings = serverSettings;
     }
 
@@ -29,56 +30,63 @@ public class MinecraftServer
     {
         if (minecraftVersionRegex.IsMatch(outputLine) && ServerContext.MinecraftVersion == null)
         {
-            ServerContext.MinecraftVersion = versionRegex.Match(minecraftVersionRegex.Match(outputLine).Value.Trim()).Value.Trim();
+            ServerContext.MinecraftVersion =
+                versionRegex.Match(minecraftVersionRegex.Match(outputLine).Value.Trim()).Value.Trim();
             ServerContext.ModLoader = outputLine.Contains("Forge Mod Loader")
                 ? "Forge"
                 : modloaderRegex.Match(outputLine).Value.Replace("with ", "").Trim();
-                
+
             return;
         }
-            
+
         if (playerConnectRegex.IsMatch(outputLine))
         {
             string username = playerConnectRegex.Match(outputLine).Value.Replace(" joined the game", "").Trim();
 
             // TODO: add username to a list
-            
+            foreach (ServerEventHandler handler in Handlers)
+                await handler.OnPlayerConnect(username);
+
             return;
         }
-            
+
         if (playerDisconnectRegex.IsMatch(outputLine))
         {
             string username = playerDisconnectRegex.Match(outputLine).Value.Replace(" left the game", "").Trim();
             string uuid = ServerContext.Uuids.GetUuid(username);
-                
+
             // TODO: remove username from list
-            
+            foreach (ServerEventHandler handler in Handlers)
+                await handler.OnPlayerDisconnect(username, uuid);
+
             return;
         }
-            
+
         if (ServerContext.Uuids.IsUuidLine(outputLine))
         {
             (string username, string uuid)? v = ServerContext.Uuids.Process(outputLine);
 
             if (v.HasValue)
             {
-                // TODO: process uuid
+                foreach (ServerEventHandler handler in Handlers)
+                    await handler.OnPlayerUuid(v.Value.username, v.Value.uuid);
             }
-                
+
             return;
         }
-            
+
         if (ServerContext.Chat.IsChatMessage(outputLine))
         {
             ChatMessage chatMessage = ServerContext.Chat.Parse(outputLine)!
                 .RemoveForbiddenCharacters();
 
-                
-                
+            foreach (ServerEventHandler handler in Handlers)
+                await handler.OnChatMessage(chatMessage);
+
             return;
         }
     }
- 
+
     public async Task LaunchAsync(StatusContext ctx)
     {
         JavaProcess = Process.Start(new ProcessStartInfo
@@ -107,7 +115,7 @@ public class MinecraftServer
             AnsiConsole.MarkupLineInterpolated($"[gray italic]{outputLine}[/]");
 
             await ProcessStandardOutLine(outputLine);
-            
+
             if (outputLine.Contains("Done") && outputLine.Contains("For help, type \"help\""))
             {
                 // The server started successfully
@@ -126,7 +134,7 @@ public class MinecraftServer
             if (outputLine == null) break;
 
             AnsiConsole.MarkupLineInterpolated($"[gray italic]{outputLine}[/]");
-            
+
             await ProcessStandardOutLine(outputLine);
         }
     }
