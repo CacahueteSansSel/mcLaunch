@@ -126,42 +126,49 @@ public class BoxManifest : ReactiveObject
             hadChange = true;
         }
 
-        foreach (BoxStoredModification mod in Modifications)
+        try
         {
-            if (!ManifestVersion.HasValue || ManifestVersion < 2)
+            foreach (BoxStoredModification mod in Modifications)
             {
-                string[] newArray = mod.Filenames;
-                Regex relativePathRegex = new Regex("(?!\\/minecraft\\/)mods\\/.+");
-
-                for (int i = 0; i < newArray.Length; i++)
+                if (!ManifestVersion.HasValue || ManifestVersion < 2)
                 {
-                    string filename = newArray[i];
+                    string[] newArray = mod.Filenames;
+                    Regex relativePathRegex = new Regex("(?!\\/minecraft\\/)mods\\/.+");
 
-                    if (!filename.StartsWith("mods/"))
+                    for (int i = 0; i < newArray.Length; i++)
                     {
-                        filename = relativePathRegex.Match(filename).Value;
-                        hadChange = true;
+                        string filename = newArray[i];
+
+                        if (!filename.StartsWith("mods/"))
+                        {
+                            filename = relativePathRegex.Match(filename).Value;
+                            hadChange = true;
+                        }
+
+                        newArray[i] = filename;
                     }
 
-                    newArray[i] = filename;
+                    mod.Filenames = newArray;
                 }
-
-                mod.Filenames = newArray;
-            }
             
-            if (!string.IsNullOrWhiteSpace(mod.Name) && !string.IsNullOrWhiteSpace(mod.Author)) continue;
+                if (!string.IsNullOrWhiteSpace(mod.Name) && !string.IsNullOrWhiteSpace(mod.Author)) continue;
 
-            Modification dlMod = await ModPlatformManager.Platform.GetModAsync(mod.Id);
-            if (dlMod != null)
-            {
-                mod.Name = dlMod.Name;
-                mod.Author = dlMod.Author;
+                Modification dlMod = await ModPlatformManager.Platform.GetModAsync(mod.Id);
+                if (dlMod != null)
+                {
+                    mod.Name = dlMod.Name;
+                    mod.Author = dlMod.Author;
                 
-                hadChange = true;
+                    hadChange = true;
+                }
             }
-        }
         
-        if (hadChange) ManifestVersion = 2;
+            if (hadChange) ManifestVersion = 2;
+        }
+        catch (Exception e)
+        {
+            
+        }
 
         return hadChange;
     }
