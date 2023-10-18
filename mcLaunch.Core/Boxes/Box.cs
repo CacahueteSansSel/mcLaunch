@@ -84,6 +84,9 @@ public class Box
 
     void CreateWatcher()
     {
+        if (!Directory.Exists(Folder.CompletePath)) 
+            Directory.CreateDirectory(Folder.CompletePath);
+        
         watcher = new FileSystemWatcher(Folder.CompletePath);
         watcher.IncludeSubdirectories = true;
         watcher.Created += OnFileCreated;
