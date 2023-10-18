@@ -203,7 +203,8 @@ public class PlatformModpack : ReactiveObject
         public string Id { get; set; }
         public string Name { get; set; }
         public string MinecraftVersion { get; set; }
-        public string ModLoaderFileUrl { get; set; }
+        public string ModpackFileUrl { get; set; }
+        public string? ModpackFileHash { get; set; }
         public string ModLoader { get; set; }
     }
 

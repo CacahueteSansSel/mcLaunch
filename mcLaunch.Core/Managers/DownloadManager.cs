@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Download;
 using System;
+using System.Security.Cryptography;
 using mcLaunch.Core.Utilities;
 
 namespace mcLaunch.Core.Managers;
@@ -20,7 +21,7 @@ public static class DownloadManager
     public static DownloadSection? CurrentSection { get; private set; }
     public static int PendingSectionCount => sections.Count;
     public static string DescriptionLine => CurrentSection == null ? "No pending download" : CurrentSection.Name;
-    public static bool IsDownloadInProgress { get; private set; }
+    public static bool IsProcessing { get; private set; }
 
     public static event Action<string, float, int> OnDownloadProgressUpdate;
     public static event Action OnDownloadFinished;
@@ -36,7 +37,7 @@ public static class DownloadManager
 
     public static void Begin(string name)
     {
-        if (IsDownloadInProgress) return;
+        if (IsProcessing) return;
         if (currentSectionName != null)
         {
             throw new InvalidOperationException($"Last download event '{currentSectionName}' is not finished");
@@ -53,7 +54,7 @@ public static class DownloadManager
 
     public static void End()
     {
-        if (IsDownloadInProgress) return;
+        if (IsProcessing) return;
         sections.Add(new DownloadSection
         {
             Entries = new List<DownloadEntry>(currentSectionEntries),
@@ -65,24 +66,116 @@ public static class DownloadManager
         OnDownloadPrepareEnding?.Invoke();
     }
 
-    public static async Task WaitForPendingDownloads()
+    public static async Task WaitForPendingProcesses()
     {
         await Task.Run(async () =>
         {
-            while (IsDownloadInProgress)
+            while (IsProcessing)
                 await Task.Delay(1);
         });
     }
 
-    public static void Add(string source, string target, EntryAction action)
+    public static void Add(string source, string target, string? hash, EntryAction action)
     {
-        currentSectionEntries.Add(new DownloadEntry {Source = source, Target = target, Action = action});
+        currentSectionEntries.Add(new DownloadEntry {Source = source, Target = target, Hash = hash, Action = action});
     }
 
-    public static async Task DownloadAll()
+    static async Task DownloadEntryAsync(DownloadEntry entry, DownloadSection section, int sectionIndex, int progress)
     {
-        if (IsDownloadInProgress) return;
-        IsDownloadInProgress = true;
+        try
+        {
+            // Some files can have empty source link, we ignore those
+            if (string.IsNullOrWhiteSpace(entry.Source)) return;
+            
+            if (File.Exists(entry.Target) && entry.Hash != null)
+            {
+                string localFileHash = Convert.ToHexString(
+                    SHA1.HashData(await File.ReadAllBytesAsync(entry.Target))).ToLower();
+
+                if (localFileHash == entry.Hash.ToLower())
+                    return;
+            }
+
+            if (entry.Hash == null && File.Exists(entry.Target)) return;
+
+            HttpResponseMessage resp = await client.GetAsync(entry.Source,
+                HttpCompletionOption.ResponseHeadersRead);
+            resp.EnsureSuccessStatusCode();
+
+            string folder = entry.Target.Replace(
+                Path.GetFileName(entry.Target), "").Trim('/');
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+
+            Stream downloadStream = await resp.Content.ReadAsStreamAsync();
+            long size = resp.Content.Headers.ContentLength ?? 0;
+            MemoryStream ramStream = new();
+            long b = 0;
+            long blockSize = 25;
+            long lastBytesInSecond = 0;
+            long bytesInSecond = 0;
+            DateTime lastSecond = DateTime.Now;
+
+            while (true)
+            {
+                float oneEntryMax = 1f / section.Entries.Count;
+                double byteProgress = (double) b / size * oneEntryMax;
+
+                byte[] buffer = new byte[25];
+                int input = await downloadStream.ReadAsync(buffer);
+                if (input == 0) break;
+
+                await ramStream.WriteAsync(buffer, 0, input);
+
+                OnDownloadProgressUpdate?.Invoke(entry.Source,
+                    (float) progress / section.Entries.Count + (float) byteProgress,
+                    sectionIndex + 1);
+
+                DateTime now = DateTime.Now;
+                if ((now - lastSecond).TotalSeconds > 0)
+                {
+                    long delta = bytesInSecond - lastBytesInSecond;
+                    
+                    if (delta > 0 && blockSize < size) blockSize += 10; // Faster, increase block size
+                    else if (blockSize > 25) blockSize -= 10; // Slower, decrease block size
+
+                    bytesInSecond = 0;
+                }
+                lastSecond = now;
+
+                b += input;
+                bytesInSecond += input;
+            }
+
+            byte[] data = ramStream.ToArray();
+            await File.WriteAllBytesAsync(entry.Target, data);
+
+            ramStream.Close();
+        }
+        catch (InvalidProgramException e)
+        {
+            OnDownloadError?.Invoke(section.Name, entry.Source);
+        }
+    }
+
+    static async Task ExtractEntryAsync(DownloadEntry entry)
+    {
+        if (!Directory.Exists(entry.Target)) Directory.CreateDirectory(entry.Target);
+
+        ZipFile.ExtractToDirectory(entry.Source, entry.Target, true);
+    }
+
+    static async Task ChmodEntryAsync(DownloadEntry entry)
+    {
+        string perms = entry.Source;
+        string file = entry.Target;
+
+        await Unix.ChmodAsync(file, perms);
+    }
+
+    public static async Task ProcessAll()
+    {
+        if (IsProcessing) return;
+        IsProcessing = true;
 
         int sectionIndex = 0;
         foreach (DownloadSection section in sections)
@@ -96,60 +189,13 @@ public static class DownloadManager
                 switch (entry.Action)
                 {
                     case EntryAction.Download:
-                        try
-                        {
-                            // Some files can have empty source link, we ignore those
-                            if (string.IsNullOrWhiteSpace(entry.Source)) continue;
-                            
-                            HttpResponseMessage resp = await client.GetAsync(entry.Source,
-                                HttpCompletionOption.ResponseHeadersRead);
-                            resp.EnsureSuccessStatusCode();
-
-                            string folder = entry.Target.Replace(Path.GetFileName(entry.Target), "").Trim('/');
-                            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
-
-                            Stream downloadStream = await resp.Content.ReadAsStreamAsync();
-                            long size = resp.Content.Headers.ContentLength ?? 0;
-                            FileStream fs = new FileStream(entry.Target, FileMode.Create, FileAccess.Write);
-                            long b = 0;
-
-                            while (true)
-                            {
-                                float oneEntryMax = 1f / section.Entries.Count;
-                                double byteProgress = (double) b / size * oneEntryMax;
-
-                                byte[] buffer = new byte[25];
-                                int input = await downloadStream.ReadAsync(buffer);
-                                if (input == 0) break;
-
-                                await fs.WriteAsync(buffer, 0, input);
-
-                                OnDownloadProgressUpdate?.Invoke(entry.Source,
-                                    (float) progress / section.Entries.Count + (float) byteProgress,
-                                    sectionIndex + 1);
-
-                                b += 25;
-                            }
-
-                            fs.Close();
-                        }
-                        catch (InvalidProgramException e)
-                        {
-                            OnDownloadError?.Invoke(section.Name, entry.Source);
-                        }
-
+                        await DownloadEntryAsync(entry, section, sectionIndex, progress);
                         break;
                     case EntryAction.Extract:
-                        if (!Directory.Exists(entry.Target)) Directory.CreateDirectory(entry.Target);
-
-                        ZipFile.ExtractToDirectory(entry.Source, entry.Target, true);
+                        await ExtractEntryAsync(entry);
                         break;
                     case EntryAction.Chmod:
-                        string perms = entry.Source;
-                        string file = entry.Target;
-
-                        await Unix.ChmodAsync(file, perms);
-                        
+                        await ChmodEntryAsync(entry);
                         break;
                 }
 
@@ -163,33 +209,31 @@ public static class DownloadManager
 
         CurrentSection = null;
 
-        IsDownloadInProgress = false;
+        IsProcessing = false;
         sections.Clear();
         currentSectionEntries.Clear();
         OnDownloadFinished?.Invoke();
-
-        Debug.WriteLine("Download Jobs Finished");
     }
 
     public class Downloader : ResourceDownloader
     {
-        public override async Task<bool> DownloadAsync(string url, string target)
+        public override async Task<bool> DownloadAsync(string url, string target, string? hash)
         {
-            Add(url, target, EntryAction.Download);
+            Add(url, target, hash, EntryAction.Download);
 
             return true;
         }
 
         public override async Task<bool> ExtractAsync(string sourceArchive, string targetDir)
         {
-            Add(sourceArchive, targetDir, EntryAction.Extract);
+            Add(sourceArchive, targetDir, null, EntryAction.Extract);
 
             return true;
         }
 
         public override async Task<bool> ChmodAsync(string target, string perms)
         {
-            Add(perms, target, EntryAction.Chmod);
+            Add(perms, target, null, EntryAction.Chmod);
 
             return true;
         }
@@ -200,6 +244,8 @@ public class DownloadEntry
 {
     public string Source { get; init; }
     public string Target { get; init; }
+    public string? Hash { get; init; }
+    public long? Size { get; init; }
     public EntryAction Action { get; init; }
 }
 

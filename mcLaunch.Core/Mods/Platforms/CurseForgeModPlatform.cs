@@ -235,7 +235,7 @@ public class CurseForgeModPlatform : ModPlatform
         }
 
         // TODO: This may break things
-        if (!System.IO.File.Exists(path)) DownloadManager.Add(url, path, EntryAction.Download);
+        if (!System.IO.File.Exists(path)) DownloadManager.Add(url, path, null, EntryAction.Download);
 
         filenames.Add($"mods/{file.FileName}");
 
@@ -259,14 +259,14 @@ public class CurseForgeModPlatform : ModPlatform
         {
             if (!await InstallFile(targetBox, version.Data, installOptional))
             {
-                await DownloadManager.DownloadAll();
+                await DownloadManager.ProcessAll();
                 targetBox.SaveManifest();
                 
                 return false;
             }
         }
 
-        await DownloadManager.DownloadAll();
+        await DownloadManager.ProcessAll();
 
         targetBox.SaveManifest();
         return true;

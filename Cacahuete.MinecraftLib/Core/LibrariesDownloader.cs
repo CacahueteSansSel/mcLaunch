@@ -29,8 +29,7 @@ public class LibrariesDownloader
         return this;
     }
 
-    async Task<string> DownloadAsync(MinecraftVersion.ModelLibrary library,
-        bool force)
+    async Task<string> DownloadAsync(MinecraftVersion.ModelLibrary library)
     {
         if (!library.NeedsToDeduceUrlFromName) return null;
 
@@ -44,17 +43,14 @@ public class LibrariesDownloader
         if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path))) 
             ClassPath.Add(System.IO.Path.GetFullPath(path));
 
-        if (File.Exists(path) && !force) return path;
-
         if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
-        await Context.Downloader.DownloadAsync(url, path);
+        await Context.Downloader.DownloadAsync(url, path, null);
 
         return path;
     }
 
-    async Task<string> DownloadArtifactAsync(FileArtifact artifact,
-        bool force)
+    async Task<string> DownloadArtifactAsync(FileArtifact artifact)
     {
         if (artifact == null) return null;
 
@@ -66,11 +62,9 @@ public class LibrariesDownloader
         if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path))) 
             ClassPath.Add(System.IO.Path.GetFullPath(path));
 
-        if (File.Exists(path) && !force) return path;
-
         if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
-        await Context.Downloader.DownloadAsync(url, path);
+        await Context.Downloader.DownloadAsync(url, path, artifact.Hash);
 
         return path;
     }
@@ -99,7 +93,7 @@ public class LibrariesDownloader
         return versionString;
     }
 
-    public async Task DownloadAsync(MinecraftVersion version, Action<float> percentCallback, bool force = false)
+    public async Task DownloadAsync(MinecraftVersion version, Action<float> percentCallback)
     {
         int cur = 0;
 
@@ -152,7 +146,7 @@ public class LibrariesDownloader
 
             if (lib.Downloads == null)
             {
-                if (lib.NeedsToDeduceUrlFromName) await DownloadAsync(lib, force);
+                if (lib.NeedsToDeduceUrlFromName) await DownloadAsync(lib);
             }
             else
             {
@@ -161,24 +155,24 @@ public class LibrariesDownloader
                 {
                     if (lib.Downloads.Classifiers.NativesLinux != null && OperatingSystem.IsLinux())
                     {
-                        string path = await DownloadArtifactAsync(lib.Downloads.Classifiers.NativesLinux, force);
+                        string path = await DownloadArtifactAsync(lib.Downloads.Classifiers.NativesLinux);
                         if (!string.IsNullOrEmpty(path)) nativeJars.Add(path);
                     }
 
                     if (lib.Downloads.Classifiers.NativesOSX != null && OperatingSystem.IsMacOS())
                     {
-                        string path = await DownloadArtifactAsync(lib.Downloads.Classifiers.NativesOSX, force);
+                        string path = await DownloadArtifactAsync(lib.Downloads.Classifiers.NativesOSX);
                         if (!string.IsNullOrEmpty(path)) nativeJars.Add(path);
                     }
 
                     if (lib.Downloads.Classifiers.NativesWindows != null && OperatingSystem.IsWindows())
                     {
-                        string path = await DownloadArtifactAsync(lib.Downloads.Classifiers.NativesWindows, force);
+                        string path = await DownloadArtifactAsync(lib.Downloads.Classifiers.NativesWindows);
                         if (!string.IsNullOrEmpty(path)) nativeJars.Add(path);
                     }
                 }
             
-                await DownloadArtifactAsync(lib.Downloads.Artifact, force);
+                await DownloadArtifactAsync(lib.Downloads.Artifact);
 
                 // extracting dlls
                 if (!Directory.Exists(NativesPath)) Directory.CreateDirectory(NativesPath);

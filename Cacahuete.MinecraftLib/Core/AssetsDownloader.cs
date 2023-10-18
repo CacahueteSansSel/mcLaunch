@@ -18,7 +18,7 @@ public class AssetsDownloader
         Path = customPath;
     }
 
-    async Task DownloadVirtualAsync(AssetIndex index, MinecraftVersion version, Action<float> percentCallback, bool force = false)
+    async Task DownloadVirtualAsync(AssetIndex index, MinecraftVersion version, Action<float> percentCallback)
     {
         VirtualPath = $"{Path}/virtual/{version.AssetIndex.Id}";
         if (!Directory.Exists(VirtualPath)) Directory.CreateDirectory(VirtualPath);
@@ -37,9 +37,7 @@ public class AssetsDownloader
 
             string assetPath = $"{VirtualPath}/{asset.Name}";
 
-            if (File.Exists(assetPath) && !force) continue;
-
-            await Context.Downloader.DownloadAsync(asset.Url, assetPath);
+            await Context.Downloader.DownloadAsync(asset.Url, assetPath, asset.Hash);
 
             cur++;
             percentCallback?.Invoke(percent);
@@ -48,7 +46,7 @@ public class AssetsDownloader
         percentCallback?.Invoke(1);
     }
 
-    public async Task DownloadAsync(MinecraftVersion version, Action<float> percentCallback, bool force = false)
+    public async Task DownloadAsync(MinecraftVersion version, Action<float> percentCallback)
     {
         AssetIndex? index = await version.GetAssetIndexAsync();
         string objectsFolder = $"{Path}/objects";
@@ -56,7 +54,7 @@ public class AssetsDownloader
 
         if (index != null && index.MapToResources)
         {
-            await DownloadVirtualAsync(index, version, percentCallback, force);
+            await DownloadVirtualAsync(index, version, percentCallback);
             return;
         }
 
@@ -79,9 +77,7 @@ public class AssetsDownloader
 
             string assetPath = $"{prefixFolder}/{asset.Hash}";
 
-            if (File.Exists(assetPath) && !force) continue;
-
-            await Context.Downloader.DownloadAsync(asset.Url, assetPath);
+            await Context.Downloader.DownloadAsync(asset.Url, assetPath, null);
 
             cur++;
             percentCallback?.Invoke(percent);

@@ -69,11 +69,16 @@ public class MinecraftVersion
     public async Task InstallToAsync(string targetDirectoryPath, bool force = false)
     {
         if (!Directory.Exists(targetDirectoryPath)) Directory.CreateDirectory(targetDirectoryPath);
-        if (File.Exists($"{targetDirectoryPath}/{Id}.json") && File.Exists($"{targetDirectoryPath}/{Id}.jar"))
+        if (!File.Exists($"{targetDirectoryPath}/{Id}.json"))
+        {
+            await File.WriteAllTextAsync($"{targetDirectoryPath}/{Id}.json", JsonSerializer.Serialize(this));
+        }
+
+        if (CustomClientUrl != null && File.Exists($"{targetDirectoryPath}/{Id}.jar")) 
             return;
 
-        await File.WriteAllTextAsync($"{targetDirectoryPath}/{Id}.json", JsonSerializer.Serialize(this));
-        await Context.Downloader.DownloadAsync(CustomClientUrl ?? Downloads.Client.Url, $"{targetDirectoryPath}/{Id}.jar");
+        await Context.Downloader.DownloadAsync(CustomClientUrl ?? Downloads.Client.Url, $"{targetDirectoryPath}/{Id}.jar", 
+            CustomClientUrl == null ? Downloads.Client.Hash : null);
     }
 
     public Task<AssetIndex?> GetAssetIndexAsync() => Api.GetAsync<AssetIndex>(AssetIndex.Url);

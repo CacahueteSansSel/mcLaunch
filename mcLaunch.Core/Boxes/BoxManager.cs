@@ -181,7 +181,7 @@ public static class BoxManager
         string modpackTempFilename = Path.GetFullPath($"temp/{pack.Id}.zip");
         
         DownloadManager.Begin($"{pack.Name} ({version.Name})");
-        DownloadManager.Add(version.ModLoaderFileUrl, modpackTempFilename, EntryAction.Download);
+        DownloadManager.Add(version.ModpackFileUrl, modpackTempFilename, version.ModpackFileHash, EntryAction.Download);
         DownloadManager.End();
 
         void ProgressUpdate(string status, float percent, int sectionIndex)
@@ -191,7 +191,7 @@ public static class BoxManager
         
         DownloadManager.OnDownloadProgressUpdate += ProgressUpdate;
 
-        await DownloadManager.DownloadAll();
+        await DownloadManager.ProcessAll();
         
         DownloadManager.OnDownloadProgressUpdate -= ProgressUpdate;
 
@@ -229,6 +229,6 @@ public static class BoxManager
 
         DownloadManager.End();
 
-        if (downloadAllAfter) await DownloadManager.DownloadAll();
+        if (downloadAllAfter) await DownloadManager.ProcessAll();
     }
 }

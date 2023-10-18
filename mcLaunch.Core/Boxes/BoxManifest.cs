@@ -206,7 +206,7 @@ public class BoxManifest : ReactiveObject
 
         setUpVersion = mcVersion;
 
-        await DownloadManager.DownloadAll();
+        await DownloadManager.ProcessAll();
 
         return mcVersion;
     }

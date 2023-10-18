@@ -61,7 +61,7 @@ public class JVMDownloader
                     Directory.CreateDirectory(fullPath);
                     break;
                 case "file":
-                    await Context.Downloader.DownloadAsync(file.Downloads.Raw.Url, fullPath);
+                    await Context.Downloader.DownloadAsync(file.Downloads.Raw.Url, fullPath, file.Downloads.Raw.Hash);
 
                     if (file.Executable) await Context.Downloader.ChmodAsync(fullPath, "+x");
                     break;

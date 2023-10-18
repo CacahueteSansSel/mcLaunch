@@ -187,7 +187,8 @@ public class ModrinthModPlatform : ModPlatform
                 Name = pv.Name,
                 MinecraftVersion = pv.GameVersions[0],
                 ModLoader = pv.Loaders[0],
-                ModLoaderFileUrl = pv.Files[0].Url
+                ModpackFileUrl = pv.Files[0].Url,
+                ModpackFileHash = pv.Files[0].Hashes.Sha1
             }).ToArray();
 
             PlatformModpack pack = new PlatformModpack
@@ -284,7 +285,7 @@ public class ModrinthModPlatform : ModPlatform
             string path = $"{targetBox.Folder.Path}/mods/{file.FileName}";
             string url = file.Url;
 
-            DownloadManager.Add(url, path, EntryAction.Download);
+            DownloadManager.Add(url, path, file.Hashes.Sha1, EntryAction.Download);
             filenames.Add($"mods/{file.FileName}");
         }
 
@@ -302,7 +303,7 @@ public class ModrinthModPlatform : ModPlatform
 
         if (!targetBox.HasModificationSoft(mod)) await InstallVersionAsync(targetBox, version, installOptional);
 
-        await DownloadManager.DownloadAll();
+        await DownloadManager.ProcessAll();
 
         targetBox.SaveManifest();
         return true;
