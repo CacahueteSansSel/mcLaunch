@@ -99,19 +99,17 @@ public class Box
             .Trim('\\').Trim('/')
             .Replace('\\', '/');
 
-        if (relativePath.StartsWith("mods"))
-        {
-            // A mod was removed
+        if (!relativePath.StartsWith("mods")) return;
+        // A mod was removed
 
-            foreach (BoxStoredModification mod in Manifest.Modifications)
-            {
-                if (!mod.Filenames.Contains(relativePath)) continue;
+        foreach (BoxStoredModification mod in Manifest.Modifications)
+        {
+            if (!mod.Filenames.Contains(relativePath)) continue;
                 
-                Manifest.RemoveModification(mod.Id, this);
-                EventListener?.OnModRemoved(mod.Id);
+            Manifest.RemoveModification(mod.Id, this);
+            EventListener?.OnModRemoved(mod.Id);
                 
-                break;
-            }
+            break;
         }
     }
 
@@ -121,26 +119,24 @@ public class Box
             .Trim('\\').Trim('/')
             .Replace('\\', '/');
 
-        if (relativePath.StartsWith("mods"))
-        {
-            // A mod was added
+        if (!relativePath.StartsWith("mods")) return;
+        // A mod was added
 
-            try
-            {
-                await using MemoryStream fs = new MemoryStream(await File.ReadAllBytesAsync(e.FullPath));
-                ModVersion? version = await ModPlatformManager.Platform.GetModVersionFromData(fs);
-                if (version == null || version.Mod == null) return;
+        try
+        {
+            await using MemoryStream fs = new MemoryStream(await File.ReadAllBytesAsync(e.FullPath));
+            ModVersion? version = await ModPlatformManager.Platform.GetModVersionFromData(fs);
+            if (version == null || version.Mod == null) return;
             
-                // Add the mod to the list
-                Manifest.AddModification(version.Mod.Id, version.VersionId, 
-                    version.Mod.ModPlatformId, new[] {relativePath});
+            // Add the mod to the list
+            Manifest.AddModification(version.Mod.Id, version.VersionId, 
+                version.Mod.ModPlatformId, new[] {relativePath});
             
-                EventListener?.OnModAdded(version.Mod);
-            }
-            catch (Exception exception)
-            {
-                Console.Write(exception);
-            }
+            EventListener?.OnModAdded(version.Mod);
+        }
+        catch (Exception exception)
+        {
+            Console.Write(exception);
         }
     }
 
@@ -207,19 +203,16 @@ public class Box
             foreach (string filename in mod.Filenames)
             {
                 string path = $"{Folder.CompletePath}/{filename}";
-
-                if (File.Exists(path))
-                {
-                    exists = true;
-                    break;
-                }
+                if (!File.Exists(path)) continue;
+                exists = true;
+                
+                break;
             }
 
-            if (!exists)
-            {
-                modsToRemove.Add(mod);
-                changes.Add($"Mod {mod.Name} has been removed because it is not present on disk anymore");
-            }
+            if (exists) continue;
+            
+            modsToRemove.Add(mod);
+            changes.Add($"Mod {mod.Name} has been removed because it is not present on disk anymore");
         }
 
         if (await AddMissingModsToList()) SaveManifest();
@@ -307,7 +300,7 @@ public class Box
                         continue;
                     }
 
-                    throw e;
+                    throw;
                 }
             }
         }
@@ -329,7 +322,7 @@ public class Box
             }
             catch (Exception e)
             {
-                
+                // ignored
             }
         }
 
@@ -345,16 +338,25 @@ public class Box
         ListTag serversTag = (ListTag) tag["servers"];
 
         foreach (CompoundTag server in serversTag)
-            servers.Add(new MinecraftServer(server));
+        {
+            try
+            {
+                servers.Add(new MinecraftServer(server));
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+        }
 
         return servers.ToArray();
     }
 
     public string[] GetScreenshotPaths()
     {
-        if (!Directory.Exists($"{Folder.Path}/screenshots")) return Array.Empty<string>();
-
-        return Directory.GetFiles($"{Folder.Path}/screenshots", "*.png");
+        return !Directory.Exists($"{Folder.Path}/screenshots") 
+            ? Array.Empty<string>() 
+            : Directory.GetFiles($"{Folder.Path}/screenshots", "*.png");
     }
 
     public async Task CreateMinecraftAsync()
@@ -377,7 +379,7 @@ public class Box
 
     public void SetLauncherVersion(string version)
     {
-        this.launcherVersion = version;
+        launcherVersion = version;
     }
 
     public List<string> GetUnlistedMods()
@@ -524,10 +526,8 @@ public class Box
     public bool HasModificationSoft(Modification mod)
         => Manifest.HasModificationSoft(mod);
 
-    public void SaveManifest()
-    {
-        File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
-    }
+    public void SaveManifest() 
+        => File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
 
     // Launch Minecraft normally
     public Process Run()
