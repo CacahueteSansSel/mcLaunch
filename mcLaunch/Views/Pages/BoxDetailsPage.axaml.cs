@@ -66,6 +66,7 @@ public partial class BoxDetailsPage : UserControl
     async void RunBoxChecks()
     {
         SubControlButtons.IsEnabled = false;
+        LoadingIcon.IsVisible = true;
 
         string[] changes = await Box.RunIntegrityChecks();
         if (changes.Length > 0)
@@ -75,6 +76,7 @@ public partial class BoxDetailsPage : UserControl
             ShowWarning($"Some changes have been applied to your box: \n{string.Join('\n', changes.Select(c => $"    - {c}"))}");
         }
         
+        LoadingIcon.IsVisible = false;
         SubControlButtons.IsEnabled = true;
 
         if (Box.HasReadmeFile) SetSubControl(new ReadmeSubControl(Box.ReadReadmeFile()));

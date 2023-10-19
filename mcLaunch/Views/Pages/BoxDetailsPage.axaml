@@ -105,5 +105,8 @@
                 </Border>
             </StackPanel>
         </ScrollViewer>
+        <Border x:Name="LoadingIcon" IsVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Classes="frame" Width="64" Height="64">
+            <views:LoadingCircle></views:LoadingCircle>
+        </Border>
     </Panel>
 </UserControl>
