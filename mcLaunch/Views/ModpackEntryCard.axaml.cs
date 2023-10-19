@@ -54,11 +54,20 @@ public partial class ModpackEntryCard : UserControl
         await modpack.DownloadBackgroundAsync();
 
         DataContext = modpack;
-        
-        ModLoaderBadge.Text = modpack.LatestVersion.ModLoader.Capitalize();
-        ModLoaderBadge.Icon =
-            new Bitmap(AssetLoader.Open(
-                new Uri($"avares://mcLaunch/resources/icons/{modpack.LatestVersion.ModLoader.ToLower()}.png")));
+
+        if (modpack.LatestVersion.ModLoader != null)
+        {
+            ModLoaderBadge.IsVisible = true;
+            
+            ModLoaderBadge.Text = modpack.LatestVersion.ModLoader.Capitalize();
+            ModLoaderBadge.Icon =
+                new Bitmap(AssetLoader.Open(
+                    new Uri($"avares://mcLaunch/resources/icons/{modpack.LatestVersion.ModLoader.ToLower()}.png")));
+        }
+        else
+        {
+            ModLoaderBadge.IsVisible = false;
+        }
 
         if (modpack.Background == null)
         {

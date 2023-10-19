@@ -17,6 +17,8 @@ public class CurseForgeModPlatform : ModPlatform
 {
     public static CurseForgeModPlatform Instance { get; private set; }
     public const int MinecraftGameId = 432;
+    public const int ModpacksClassId = 4471;
+    public const int ModsClassId = 6;
 
     CurseForgeClient client;
     Dictionary<string, Modification> modCache = new();
@@ -37,6 +39,7 @@ public class CurseForgeModPlatform : ModPlatform
             sortField: ModsSearchSortField.Popularity,
             sortOrder: SortOrder.Descending,
             pageSize: 10,
+            classId: ModsClassId,
             searchFilter: searchQuery,
             index: (uint) (page * 10)
         );
@@ -81,7 +84,37 @@ public class CurseForgeModPlatform : ModPlatform
     public override async Task<PlatformModpack[]> GetModpacksAsync(int page, string searchQuery,
         string minecraftVersion)
     {
-        return Array.Empty<PlatformModpack>();
+        CursePaginatedResponse<List<Mod>> resp = await client.SearchMods(MinecraftGameId,
+            gameVersion: minecraftVersion,
+            sortField: ModsSearchSortField.Popularity,
+            sortOrder: SortOrder.Descending,
+            pageSize: 10,
+            classId: ModpacksClassId,
+            searchFilter: searchQuery,
+            index: (uint) (page * 10)
+        );
+
+        PlatformModpack[] modpacks = resp.Data.Select(modpack => new PlatformModpack()
+        {
+            Id = modpack.Id.ToString(),
+            Name = modpack.Name,
+            ShortDescription = modpack.Summary,
+            Author = modpack.Authors[0].Name,
+            Url = null,
+            IconPath = modpack.Logo.Url,
+            MinecraftVersions = modpack.LatestFiles.SelectMany(f => f.GameVersions).ToArray(),
+            BackgroundPath = modpack.Screnshots?.FirstOrDefault()?.Url,
+            LatestMinecraftVersion = modpack.LatestFiles.Count == 0 ? null : modpack.LatestFiles[0].GameVersions[0],
+            DownloadCount = (int)modpack.DownloadCount,
+            LastUpdated = modpack.DateModified.DateTime,
+            Platform = this
+        }).ToArray();
+        
+        // Download all modpack images
+        // TODO: fix that causing slow loading process
+        foreach (PlatformModpack pack in modpacks) await pack.DownloadIconAsync();
+        
+        return modpacks;
     }
 
     public override async Task<Modification> GetModAsync(string id)
@@ -135,7 +168,47 @@ public class CurseForgeModPlatform : ModPlatform
 
     public override async Task<PlatformModpack> GetModpackAsync(string id)
     {
-        return null;
+        Mod cfMod = (await client.GetMod(uint.Parse(id))).Data;
+        List<string> minecraftVersions = new();
+
+        foreach (var file in cfMod.LatestFiles)
+        {
+            foreach (string ver in file.GameVersions)
+            {
+                if (!minecraftVersions.Contains(ver))
+                    minecraftVersions.Add(ver);
+            }
+        }
+
+        PlatformModpack.ModpackVersion[] versions = cfMod.LatestFiles.Select(pv => new PlatformModpack.ModpackVersion
+        {
+            Id = pv.Id.ToString(),
+            Name = pv.DisplayName,
+            MinecraftVersion = pv.GameVersions[0],
+            ModLoader = cfMod.LatestFileIndexes?.FirstOrDefault(i => i.FileId == pv.Id)?.ModLoader.ToString().ToLower(),
+            ModpackFileUrl = pv.DownloadUrl,
+            ModpackFileHash = pv.Hashes[0].Value
+        }).ToArray();
+
+        PlatformModpack mod = new PlatformModpack
+        {
+            Id = cfMod.Id.ToString(),
+            Name = cfMod.Name,
+            ShortDescription = cfMod.Summary,
+            Author = cfMod.Authors?.FirstOrDefault()?.Name,
+            IconPath = cfMod.Logo.Url,
+            BackgroundPath = cfMod.Screnshots?.FirstOrDefault()?.Url,
+            MinecraftVersions = minecraftVersions.ToArray(),
+            LatestMinecraftVersion = minecraftVersions.Last(),
+            Versions = versions,
+            LatestVersion = versions[0],
+            LongDescriptionBody = (await client.GetModDescription(cfMod.Id)).Data,
+            DownloadCount = (int)cfMod.DownloadCount,
+            LastUpdated = cfMod.DateModified.DateTime,
+            Platform = this
+        };
+
+        return mod;
     }
 
     public override async Task<string[]> GetModVersionList(string modId, string modLoaderId,
@@ -251,9 +324,18 @@ public class CurseForgeModPlatform : ModPlatform
         bool installOptional)
     {
         if (mod == null) return false;
-        
-        var version = await client.GetModFile(uint.Parse(mod.Id), uint.Parse(versionId));
-        if (version == null) return false;
+
+        CurseResponse<File>? version;
+
+        try
+        {
+            version = await client.GetModFile(uint.Parse(mod.Id), uint.Parse(versionId));
+            if (version == null) return false;
+        }
+        catch (HttpRequestException e)
+        {
+            return false;
+        }
 
         if (!targetBox.HasModificationSoft(mod))
         {

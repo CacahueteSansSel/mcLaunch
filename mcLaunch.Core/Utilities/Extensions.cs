@@ -7,7 +7,7 @@ namespace mcLaunch.Core.Utilities;
 public static class Extensions
 {
     public static string Capitalize(this string text)
-        => char.ToUpper(text[0]) + text[1..];
+        => string.IsNullOrWhiteSpace(text) ? text : char.ToUpper(text[0]) + text[1..];
 
     public static string NormalizeCase(this string text)
     {
