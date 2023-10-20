@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -33,6 +34,22 @@ public partial class ModpackDetailsPage : UserControl
         this.modpack = modpack;
         DataContext = modpack;
         OpenInBrowserButton.IsVisible = modpack.Url != null;
+
+        string[] supportedMinecraftVersions = this.modpack.FetchAndSortSupportedMinecraftVersions();
+        if (supportedMinecraftVersions.Length > 0)
+        {
+            bool firstAndLastAreSame = supportedMinecraftVersions.Length == 1 ||
+                                       supportedMinecraftVersions[0] == supportedMinecraftVersions.Last();
+            ModpackVersionsBadge.Text = firstAndLastAreSame
+                ? $"{supportedMinecraftVersions[0]}"
+                : $"{supportedMinecraftVersions[0]} - {supportedMinecraftVersions.Last()}";
+        }
+        else ModpackVersionsBadge.IsVisible = false;
+
+        string[] supportedModloaders = this.modpack.FetchModLoaders();
+        ModpackPlatformBadge.Text = string.Join(", ", supportedModloaders);
+
+        ModpackPlatformBadge.IsVisible = supportedModloaders.Length > 0;
     }
 
     private void CloneButtonClicked(object? sender, RoutedEventArgs e)

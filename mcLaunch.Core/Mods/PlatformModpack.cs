@@ -2,6 +2,7 @@
 using System.Web;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Cacahuete.MinecraftLib.Models;
 using Markdig;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Utilities;
@@ -196,6 +197,41 @@ public class PlatformModpack : ReactiveObject
             
             CacheManager.Store(Background, cacheName);
         }
+    }
+
+    public string[] FetchAndSortSupportedMinecraftVersions()
+    {
+        if (Versions == null) return Array.Empty<string>();
+        
+        List<Version> mcVersions = new();
+
+        foreach (ModpackVersion? modpackVersion in Versions)
+        {
+            if (modpackVersion == null || !Version.TryParse(modpackVersion.MinecraftVersion, out Version version)) 
+                continue;
+            
+            if (!mcVersions.Contains(version)) mcVersions.Add(version);
+        }
+        
+        mcVersions.Sort();
+        return mcVersions.Select(v => v.ToString()).ToArray();
+    }
+
+    public string[] FetchModLoaders()
+    {
+        List<string> modloadersNames = new();
+        
+        foreach (ModpackVersion? modpackVersion in Versions)
+        {
+            if (modpackVersion == null || string.IsNullOrEmpty(modpackVersion.ModLoader)) continue;
+
+            string capModLoaderName = modpackVersion.ModLoader.Capitalize();
+            
+            if (!modloadersNames.Contains(capModLoaderName))
+                modloadersNames.Add(capModLoaderName);
+        }
+
+        return modloadersNames.ToArray();
     }
 
     public class ModpackVersion

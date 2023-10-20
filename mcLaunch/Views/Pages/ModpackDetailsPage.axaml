@@ -42,9 +42,10 @@
                                     <TextBlock Classes="light" FontSize="16">by</TextBlock>
                                     <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16" Text="{Binding Author}"></TextBlock>
                                 </StackPanel>
-                                <TextBlock Classes="light" Margin="0 5 0 0" Opacity="0.25" FontSize="16"
-                                           Text="{Binding Platform.Name}">
-                                </TextBlock>
+                                <StackPanel Orientation="Horizontal" Margin="0 10 0 0" Spacing="5">
+                                    <views:Badge x:Name="ModpackVersionsBadge" Icon="/resources/icons/vanilla.png" HorizontalAlignment="Left"></views:Badge>
+                                    <views:Badge x:Name="ModpackPlatformBadge" Icon="/resources/icons/mod.png" HorizontalAlignment="Left"></views:Badge>
+                                </StackPanel>
                             </StackPanel>
                         </DockPanel>
                         <StackPanel Orientation="Vertical" Margin="38 0 38 38">
