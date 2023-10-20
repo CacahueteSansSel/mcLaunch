@@ -29,12 +29,6 @@ public partial class ToolButtonsBar : UserControl
         InitializeComponent();
 
         DataContext = new Data();
-        DownloadManager.OnDownloadPrepareStarting += OnDownloadPrepareStarting;
-        DownloadManager.OnDownloadPrepareEnding += OnDownloadFinished;
-        DownloadManager.OnDownloadProgressUpdate += OnDownloadProgressUpdate;
-        DownloadManager.OnDownloadFinished += OnDownloadFinished;
-        DownloadManager.OnDownloadSectionStarting += OnDownloadSectionStarting;
-        DownloadManager.OnDownloadError += OnDownloadError;
 
         if (Design.IsDesignMode)
         {
@@ -43,47 +37,6 @@ public partial class ToolButtonsBar : UserControl
             UIDataContext.ResourceName = "Test";
             UIDataContext.ResourceDetailsText = "file.txt";
         }
-    }
-
-    private void OnDownloadError(string sectionName, string file)
-    {
-        Navigation.ShowPopup(new MessageBoxPopup($"Download failed for {sectionName}",
-            $"{sectionName} failed to download (file: {file}). Try restarting the download."));
-    }
-
-    private void OnDownloadSectionStarting(string sectionName, int index)
-    {
-        UIDataContext.Progress = 0;
-        UIDataContext.ResourceName = sectionName;
-        UIDataContext.ResourceCount = $"{index}/{DownloadManager.PendingSectionCount}";
-
-        DownloadBanner.IsVisible = true;
-    }
-
-    private void OnDownloadPrepareStarting(string name)
-    {
-        UIDataContext.Progress = 0;
-        UIDataContext.ResourceName = name;
-        UIDataContext.ResourceDetailsText = "Preparing";
-        
-        DownloadBanner.IsVisible = true;
-    }
-
-    private void OnDownloadFinished()
-    {
-        UIDataContext.Progress = 0;
-        UIDataContext.ResourceName = string.Empty;
-        UIDataContext.ResourceCount = string.Empty;
-
-        DownloadBanner.IsVisible = false;
-    }
-
-    private void OnDownloadProgressUpdate(string file, float percent, int currentSectionIndex)
-    {
-        UIDataContext.Progress = (int) MathF.Round(percent * 100);
-        UIDataContext.ResourceName = DownloadManager.DescriptionLine;
-        UIDataContext.ResourceDetailsText = $"{(int)MathF.Round(percent * 100)}%";
-        UIDataContext.ResourceCount = $"{currentSectionIndex}/{DownloadManager.PendingSectionCount}";
     }
 
     private async void NewBoxButtonClicked(object? sender, RoutedEventArgs e)
