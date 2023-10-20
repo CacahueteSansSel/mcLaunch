@@ -18,7 +18,10 @@
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="{Binding ResourceName}" Margin="0 0 15 0" FontSize="12">-</TextBlock>
-                    <TextBlock Text="{Binding ResourceDetailsText}" Margin="0 0 15 0" FontSize="10">-</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding ResourceDetailsText}" Margin="0 0 15 0" FontSize="10">-</TextBlock>
+                        <TextBlock x:Name="FileNameText" IsVisible="False" Opacity="0.75" Text="{Binding ResourceFileText}" Margin="0 0 15 0" FontSize="10">-</TextBlock>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
             <TextBlock Text="{Binding ResourceCount}" TextAlignment="Right" VerticalAlignment="Bottom" Classes="title"

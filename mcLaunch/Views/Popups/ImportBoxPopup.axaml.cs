@@ -54,6 +54,7 @@ public partial class ImportBoxPopup : UserControl
         
         Navigation.HidePopup();
         Navigation.ShowPopup(new StatusPopup($"Importing {bb.Name}", "Please wait for the modpack to be imported"));
+        StatusPopup.Instance.ShowDownloadBanner = true;
         
         Box box = await BoxManager.CreateFromModificationPack(bb, (msg, percent) =>
         {
@@ -100,6 +101,7 @@ public partial class ImportBoxPopup : UserControl
         
         Navigation.HidePopup();
         Navigation.ShowPopup(new StatusPopup($"Importing {modpack.Name}", "Please wait for the modpack to be imported"));
+        StatusPopup.Instance.ShowDownloadBanner = true;
         
         Box box = await BoxManager.CreateFromModificationPack(modpack, (msg, percent) =>
         {
@@ -143,6 +145,8 @@ public partial class ImportBoxPopup : UserControl
         StatusPopup.Instance.Status = "Resolving modifications...";
 
         await modpack.SetupAsync();
+        
+        StatusPopup.Instance.ShowDownloadBanner = true;
         
         Box box = await BoxManager.CreateFromModificationPack(modpack, (msg, percent) =>
         {

@@ -64,6 +64,7 @@ public partial class FastLaunchPopup : UserControl
         Navigation.HidePopup();
         Navigation.ShowPopup(new StatusPopup("Preparing launch", 
             $"Preparing launching {name}..."));
+        StatusPopup.Instance.ShowDownloadBanner = true;
 
         // We fetch automatically the latest version of the modloader for now
         // TODO: Allow the user to select a specific modloader version

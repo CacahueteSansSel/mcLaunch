@@ -18,6 +18,9 @@
             <StackPanel DockPanel.Dock="Bottom"  Orientation="Vertical"  Spacing="10" Margin="0 20 0 0">
                 <TextBlock Classes="light" Text="{Binding StatusText}"></TextBlock>
                 <ProgressBar Value="{Binding StatusPercent}"></ProgressBar>
+                <Panel x:Name="DownloadBannerContainer" IsVisible="False">
+                    <views:DownloadBanner x:Name="DownloadBanner"></views:DownloadBanner>
+                </Panel>
             </StackPanel>
             <Panel>
                 <views:LoadingCircle/>

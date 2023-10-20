@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Managers;
@@ -13,12 +15,39 @@ namespace mcLaunch.Views;
 public partial class DownloadBanner : UserControl
 {
     private Data UIDataContext => (Data) DataContext;
+    public bool IsForcedToBeShown { get; set; }
     
     public DownloadBanner()
     {
         InitializeComponent();
 
         DataContext = new Data();
+    }
+
+    public void ForceToShow()
+    {
+        IsForcedToBeShown = true;
+        IsVisible = true;
+    }
+
+    public void ResetForceToShown()
+    {
+        IsForcedToBeShown = false;
+        IsVisible = false;
+    }
+
+    protected override void OnPointerEntered(PointerEventArgs e)
+    {
+        base.OnPointerEntered(e);
+
+        FileNameText.IsVisible = true;
+    }
+
+    protected override void OnPointerExited(PointerEventArgs e)
+    {
+        base.OnPointerExited(e);
+        
+        FileNameText.IsVisible = false;
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -32,7 +61,7 @@ public partial class DownloadBanner : UserControl
         DownloadManager.OnDownloadSectionStarting += OnDownloadSectionStarting;
         DownloadManager.OnDownloadError += OnDownloadError;
 
-        IsVisible = false;
+        if (!Design.IsDesignMode && !IsForcedToBeShown) IsVisible = false;
     }
 
     protected override void OnUnloaded(RoutedEventArgs e)
@@ -77,7 +106,7 @@ public partial class DownloadBanner : UserControl
         UIDataContext.ResourceName = string.Empty;
         UIDataContext.ResourceCount = string.Empty;
 
-        IsVisible = false;
+        if (!IsForcedToBeShown) IsVisible = false;
     }
 
     private void OnDownloadProgressUpdate(string file, float percent, int currentSectionIndex)
@@ -86,6 +115,7 @@ public partial class DownloadBanner : UserControl
         UIDataContext.ResourceName = DownloadManager.DescriptionLine;
         UIDataContext.ResourceDetailsText = $"{(int)MathF.Round(percent * 100)}%";
         UIDataContext.ResourceCount = $"{currentSectionIndex}/{DownloadManager.PendingSectionCount}";
+        FileNameText.Text = Path.GetFileName(file);
     }
 
     private class Data : ReactiveObject
@@ -93,6 +123,7 @@ public partial class DownloadBanner : UserControl
         int progress;
         string resourceName = "No pending download";
         string resourceDetailsText = "-";
+        string resourceFileText = "-";
         string resourceCount;
 
         public int Progress
@@ -111,6 +142,12 @@ public partial class DownloadBanner : UserControl
         {
             get => resourceDetailsText;
             set => this.RaiseAndSetIfChanged(ref resourceDetailsText, value);
+        }
+
+        public string ResourceFileText
+        {
+            get => resourceFileText;
+            set => this.RaiseAndSetIfChanged(ref resourceFileText, value);
         }
 
         public string ResourceCount

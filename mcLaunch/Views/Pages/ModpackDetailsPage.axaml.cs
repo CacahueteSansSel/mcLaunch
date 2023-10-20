@@ -47,12 +47,15 @@ public partial class ModpackDetailsPage : UserControl
         Navigation.HidePopup();
         Navigation.ShowPopup(new StatusPopup($"Cloning {modpack.Name}", "Please wait for the modpack to be cloned"));
         StatusPopup.Instance.Status = "Downloading...";
+        StatusPopup.Instance.ShowDownloadBanner = true;
 
         Box box = await BoxManager.CreateFromPlatformModpack(modpack, version, (msg, percent) =>
         {
             StatusPopup.Instance.Status = $"{msg}";
             StatusPopup.Instance.StatusPercent = percent;
         });
+        
+        StatusPopup.Instance.ShowDownloadBanner = false;
         
         Navigation.HidePopup();
 

@@ -23,6 +23,18 @@ public partial class StatusPopup : UserControl
         set => dctx.StatusPercent = (int)(value * 100);
     }
 
+    public bool ShowDownloadBanner
+    {
+        get => DownloadBannerContainer.IsVisible;
+        set
+        {
+            DownloadBannerContainer.IsVisible = value;
+            
+            if (value) DownloadBanner.ForceToShow();
+            else DownloadBanner.ResetForceToShown();
+        }
+    }
+
     public StatusPopup()
     {
         InitializeComponent();

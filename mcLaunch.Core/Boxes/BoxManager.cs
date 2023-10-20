@@ -156,7 +156,7 @@ public static class BoxManager
             if (additionalFile.Path.EndsWith('/') || additionalFile.Path.Contains("..")
                                                   || driveLetterRegex.IsMatch(additionalFile.Path)) continue;
 
-            progressCallback?.Invoke($"Writing file override {index}/{pack.AdditionalFiles.Length}",
+            progressCallback?.Invoke("Extracting files",
                 0.5f + (float) index / pack.AdditionalFiles.Length / 2);
 
             string filename = $"{box.Folder.Path}/{additionalFile.Path}";
@@ -186,7 +186,7 @@ public static class BoxManager
 
         void ProgressUpdate(string status, float percent, int sectionIndex)
         {
-            progressCallback?.Invoke($"Downloading {status}", percent / 2);
+            progressCallback?.Invoke($"Downloading modpack ({Path.GetFileName(status)})", percent / 2);
         }
         
         DownloadManager.OnDownloadProgressUpdate += ProgressUpdate;
@@ -194,6 +194,8 @@ public static class BoxManager
         await DownloadManager.ProcessAll();
         
         DownloadManager.OnDownloadProgressUpdate -= ProgressUpdate;
+        
+        progressCallback?.Invoke("Initializing Minecraft", 0.5f);
 
         ModificationPack modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
 
