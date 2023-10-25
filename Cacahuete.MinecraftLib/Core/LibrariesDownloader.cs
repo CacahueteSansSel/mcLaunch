@@ -20,6 +20,9 @@ public class LibrariesDownloader
     public LibrariesDownloader(string absolutePath)
     {
         Path = absolutePath;
+
+        if (!Directory.Exists(Path)) 
+            Directory.CreateDirectory(Path);
     }
 
     public LibrariesDownloader WithLibrary(string name, string version)
