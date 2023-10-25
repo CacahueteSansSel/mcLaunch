@@ -146,6 +146,11 @@ public static class DownloadManager
                 bytesInSecond += input;
             }
 
+            string pathFolders = entry.Target.Replace(Path.GetFileName(entry.Target), "")
+                .Trim('/').Trim('\\').Trim();
+
+            if (!Directory.Exists(pathFolders)) Directory.CreateDirectory(pathFolders);
+
             byte[] data = ramStream.ToArray();
             await File.WriteAllBytesAsync(entry.Target, data);
 
