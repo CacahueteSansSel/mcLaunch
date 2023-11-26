@@ -26,10 +26,13 @@ public partial class MinecraftVersionSelector : UserControl
     {
         VersionSelectWindow selectWindow = new();
 
-        Version = await selectWindow.ShowDialog<ManifestMinecraftVersion>(MainWindow.Instance) 
-                  ?? MinecraftManager.ManifestVersions[0];
-        DataContext = Version;
+        ManifestMinecraftVersion? newVersion = await selectWindow
+            .ShowDialog<ManifestMinecraftVersion?>(MainWindow.Instance);
+
+        if (newVersion == null) return;
         
+        Version = newVersion;
+        DataContext = Version;
         OnVersionChanged?.Invoke(Version);
     }
 
