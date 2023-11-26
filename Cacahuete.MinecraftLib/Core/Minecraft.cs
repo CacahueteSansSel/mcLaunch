@@ -211,9 +211,7 @@ public class Minecraft
         {
             Arguments = args,
             FileName = jvm,
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
+            UseShellExecute = true,
             WorkingDirectory = Folder.CompletePath
         };
         

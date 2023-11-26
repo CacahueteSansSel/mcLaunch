@@ -8,6 +8,7 @@ namespace Cacahuete.MinecraftLib.Core.ModLoaders;
 
 public class NeoForgeModLoaderVersion : ModLoaderVersion
 {
+    public bool IsNewerFormat { get; set; }
     public string FullName => $"{MinecraftVersion}-{Name}";
     public string JvmExecutablePath { get; set; }
     public string SystemFolderPath { get; init; }
@@ -16,7 +17,8 @@ public class NeoForgeModLoaderVersion : ModLoaderVersion
     {
         string[] installerUrls = new[]
         {
-            $"https://maven.neoforged.net/releases/net/neoforged/forge/{FullName}/forge-{FullName}-installer.jar",
+            IsNewerFormat ? $"https://maven.neoforged.net/releases/net/neoforged/neoforge/{Name}/neoforge-{Name}-installer.jar"
+            : $"https://maven.neoforged.net/releases/net/neoforged/forge/{FullName}/forge-{FullName}-installer.jar",
         };
         string versionName = $"{MinecraftVersion}-forge-{Name}";
 
@@ -28,7 +30,7 @@ public class NeoForgeModLoaderVersion : ModLoaderVersion
         HttpClient client = new HttpClient();
         client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("mcLaunch", "1.0.0"));
 
-        string filename = $"forge-{FullName}-installer.jar";
+        string filename = $"neoforge-{FullName}-installer.jar";
         string fullPath = $"{SystemFolderPath}/temp/{filename}";
 
         if (!Directory.Exists($"{SystemFolderPath}/temp"))
