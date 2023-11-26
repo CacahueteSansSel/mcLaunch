@@ -1,6 +1,6 @@
 ![The mcLaunch banner](mcLaunch/resources/banner.png)
 
-> This project is in a very early stage, some things just don't work or aren't implemented yet !
+> This project is in beta, some things just don't work or aren't implemented yet !
 
 <h3 align="center">mcLaunch</h3>
 
@@ -9,12 +9,11 @@
 **mcLaunch** (pronounced **m-c-launch**, **[ɛm si lɔntʃ]**) is a new and modern Minecraft launcher focused on design, compatibility, and ease of use.
 
 ![Main Screenshot](res/screenshot.png)
-![Screenshot Collection](res/screenshots.png)
 
 # Features
 
 + Launches every Minecraft version 🚀
-+ Supports Fabric, Forge and Quilt 📜
++ Supports Fabric, Forge, NeoForge and Quilt 📜
 + Installs mods, and import modpacks from both CurseForge and Modrinth 🧩
 + Exports modpacks to a custom really small file format 🛫
 
@@ -28,7 +27,7 @@ Download `mcLaunch-linux.zip` from [the latest release](https://github.com/Cacah
 
 # Build
 
-Make sure to have the **.NET 6.0 SDK** (.NET 7 does not work anymore) installed, then clone the project.
+Make sure to have the **.NET 6.0 SDK** installed, then clone the project.
 
 ## Set your own credentials keys
 
@@ -86,6 +85,7 @@ Libraries used by the project :
 + SharpNBT (for reading world's level.dat files)
 + Markdig (to render mod pages)
 + Spectre.Console (used by mcLaunch.Server)
++ Jdenticon-net (for generating anonymized box icons)
 
 This project takes huge inspiration of :
 + [portablemc](https://github.com/mindstorm38/portablemc) (general Minecraft launcher stuff + Forge installer wrapper code)
