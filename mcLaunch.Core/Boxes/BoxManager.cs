@@ -88,7 +88,7 @@ public static class BoxManager
             manifest.Icon = await IconCollection.FromFileAsync($"{path}/icon.png");
         }
 
-        if (!Directory.Exists(AppdataFolderManager.GetPath("forge")))
+        if (!Directory.Exists(AppdataFolderManager.GetPath("system/forge")))
         {
             // Extract the forge wrapper from resources
             // This is a copy of portablemc's old wrapper code for the forge installer, along with license
@@ -99,7 +99,7 @@ public static class BoxManager
             await using Stream zipStream =
                 AssetLoader.Open(new Uri("avares://mcLaunch/resources/internal/forge_wrapper.zip"));
             await using MemoryStream tmpStream = new();
-            string forgeWrapperPath = AppdataFolderManager.GetValidPath("forge");
+            string forgeWrapperPath = AppdataFolderManager.GetValidPath("system/forge");
 
             await zipStream.CopyToAsync(tmpStream);
 

@@ -20,6 +20,12 @@ public static class ModLoaderManager
         All.Add(new ForgeModLoaderSupport(
             BoxManager.JVMDownloader.GetJVMExecutablePath(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
                 "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
+        
+        // NeoForge
+        // TODO: avoid to hardcode the jvm to use for Forge's installer
+        All.Add(new NeoForgeModLoaderSupport(
+            BoxManager.JVMDownloader.GetJVMExecutablePath(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
+                "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
 
         // Quilt
         All.Add(new QuiltModLoaderSupport());

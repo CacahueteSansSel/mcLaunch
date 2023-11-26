@@ -185,6 +185,8 @@
       <AvaloniaResource Include="resources\icons\open_source.png" />
       <None Remove="resources\icons\lock.png" />
       <AvaloniaResource Include="resources\icons\lock.png" />
+      <None Remove="resources\icons\neoforge.png" />
+      <AvaloniaResource Include="resources\icons\neoforge.png" />
     </ItemGroup>
 
     <ItemGroup>
