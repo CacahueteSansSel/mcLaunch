@@ -18,7 +18,7 @@
                 <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" Watermark="Search version" TextChanged="SearchVersionTextBoxTextChanged"></TextBox>
             </DockPanel>
             <Button DockPanel.Dock="Bottom" x:Name="SelectButton" HorizontalAlignment="Right" Margin="0 20 0 0" Classes="primary"
-                    Click="SelectVersionButtonClicked" IsVisible="False">
+                    Click="SelectVersionButtonClicked" IsVisible="False" IsDefault="True">
                 Select
             </Button>
             <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{Binding .}"

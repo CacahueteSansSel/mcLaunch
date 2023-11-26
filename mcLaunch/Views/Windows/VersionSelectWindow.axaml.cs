@@ -14,15 +14,15 @@ public partial class VersionSelectWindow : Window
 {
     ManifestMinecraftVersion[] versions;
     ManifestMinecraftVersion? selectedVersion;
-    
+
     public VersionSelectWindow()
     {
         InitializeComponent();
-        
+
 #if DEBUG
         this.AttachDevTools();
 #endif
-        
+
         versions = Settings.Instance.EnableSnapshots
             ? MinecraftManager.Manifest!.Versions
             : MinecraftManager.ManifestVersions;
@@ -41,7 +41,7 @@ public partial class VersionSelectWindow : Window
             .Where(v => v.Id.Contains(trimmedQuery) || v.Type.Contains(trimmedQuery))
             .ToArray();
     }
-    
+
     private void VersionSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (e.AddedItems.Count > 0)
@@ -53,26 +53,41 @@ public partial class VersionSelectWindow : Window
 
     private void SelectVersionButtonClicked(object? sender, RoutedEventArgs e)
     {
-        Close(selectedVersion);
-    }
+        ManifestMinecraftVersion? exactMatch = versions
+            .FirstOrDefault(v => v.Id.Trim() == SearchTextBox.Text.Trim());
 
-    private void SearchVersionTextBoxInput(object? sender, TextInputEventArgs e)
-    {
-    }
+        if (exactMatch != null)
+        {
+            Close(exactMatch);
+            return;
+        }
 
-    private void SearchButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        DataContext = RunSearch(SearchTextBox.Text);
+        if (selectedVersion != null)
+            Close(selectedVersion);
     }
 
     private void SearchVersionTextBoxTextChanged(object? sender, TextChangedEventArgs e)
     {
+        ManifestMinecraftVersion? exactMatch = versions
+            .FirstOrDefault(v => v.Id.Trim() == SearchTextBox.Text.Trim());
+
+        if (exactMatch != null)
+        {
+            ModList.SelectedItem = exactMatch;
+            SelectButton.IsVisible = true;
+        }
+        else
+        {
+            ModList.UnselectAll();
+            SelectButton.IsVisible = false;
+        }
+
         DataContext = RunSearch(SearchTextBox.Text);
     }
 
     private void VersionListDoubleTapped(object? sender, TappedEventArgs e)
     {
-        if (selectedVersion != null) 
+        if (selectedVersion != null)
             Close(selectedVersion);
     }
 }
