@@ -36,6 +36,7 @@
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0 0 7 0"></Image>
                                     <TextBlock Text="{Binding Name}"></TextBlock>
                                     <TextBlock Margin="7 0 0 0" Opacity="0.5" Text="{Binding LatestVersion.Name}"></TextBlock>
                                 </StackPanel>

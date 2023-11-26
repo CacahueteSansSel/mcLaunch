@@ -19,8 +19,7 @@ public partial class MinecraftVersionSelector : UserControl
     {
         InitializeComponent();
         
-        Version = MinecraftManager.ManifestVersions[0];
-        DataContext = Version;
+        SetVersion(MinecraftManager.ManifestVersions[0]);
     }
 
     private async void ChangeMinecraftVersionButtonClicked(object? sender, RoutedEventArgs e)
@@ -31,6 +30,13 @@ public partial class MinecraftVersionSelector : UserControl
                   ?? MinecraftManager.ManifestVersions[0];
         DataContext = Version;
         
+        OnVersionChanged?.Invoke(Version);
+    }
+
+    public void SetVersion(ManifestMinecraftVersion version)
+    {
+        Version = version;
+        DataContext = version;
         OnVersionChanged?.Invoke(Version);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -12,6 +13,7 @@ using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
+using mcLaunch.Views.DataContexts;
 using mcLaunch.Views.Pages;
 using ReactiveUI;
 
@@ -22,21 +24,20 @@ public partial class FastLaunchPopup : UserControl
     public FastLaunchPopup()
     {
         InitializeComponent();
-        DataContext = new Data();
-        Data ctx = (Data) DataContext;
+        DataContext = new MinecraftVersionSelectionDataContext();
 
         VersionSelector.OnVersionChanged += version =>
         {
             FetchModLoadersLatestVersions(version.Id);
         };
         
-        FetchModLoadersLatestVersions(ctx.Versions[0].Id);
+        FetchModLoadersLatestVersions(VersionSelector.Version.Id);
     }
 
     async void FetchModLoadersLatestVersions(string versionId)
     {
         LaunchButton.IsEnabled = false;
-        Data ctx = (Data) DataContext;
+        MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext;
         List<ModLoaderSupport> all = new();
 
         foreach (ModLoaderSupport ml in ModLoaderManager.All)
@@ -45,7 +46,7 @@ public partial class FastLaunchPopup : UserControl
             if (version != null) all.Add(ml);
         }
 
-        ctx.ModLoaders = all.ToArray();
+        ctx.ModLoaders = all.Select(m => new DataContextModLoader(m)).ToArray();
         ctx.SelectedModLoader = ctx.ModLoaders[0];
         LaunchButton.IsEnabled = true;
     }
@@ -58,7 +59,7 @@ public partial class FastLaunchPopup : UserControl
     private async void LaunchButtonClicked(object? sender, RoutedEventArgs e)
     {
         ManifestMinecraftVersion minecraftVersion = VersionSelector.Version;
-        ModLoaderSupport modloader = ((Data) DataContext).SelectedModLoader;
+        ModLoaderSupport modloader = ((MinecraftVersionSelectionDataContext) DataContext).SelectedModLoader.ModLoader;
         string name = $"Minecraft {minecraftVersion.Id}";
 
         Navigation.HidePopup();
@@ -88,48 +89,5 @@ public partial class FastLaunchPopup : UserControl
 
         BoxDetailsPage detailsPage = new BoxDetailsPage(box);
         await detailsPage.RunAsync();
-    }
-    
-    public class Data : ReactiveObject
-    {
-        ModLoaderVersion latestVersion;
-        ModLoaderSupport selectedModLoader;
-        private ModLoaderSupport[] modLoaders;
-
-        public ManifestMinecraftVersion[] Versions { get; }
-
-        public ModLoaderSupport[] ModLoaders
-        {
-            get => modLoaders;
-            set => this.RaiseAndSetIfChanged(ref modLoaders, value);
-        }
-
-        public ModLoaderSupport SelectedModLoader
-        {
-            get => selectedModLoader;
-            set => this.RaiseAndSetIfChanged(ref selectedModLoader, value);
-        }
-
-        public ModLoaderVersion LatestVersion
-        {
-            get => latestVersion;
-            set => this.RaiseAndSetIfChanged(ref latestVersion, value);
-        }
-
-        public Data()
-        {
-            Versions = Settings.Instance.EnableSnapshots
-                ? MinecraftManager.Manifest!.Versions
-                : MinecraftManager.ManifestVersions;
-            
-            // TODO: Allow all modloaders for FastLaunch
-            
-            ModLoaders = new[]
-            {
-                new VanillaModLoaderSupport()
-            };
-
-            selectedModLoader = ModLoaders[0];
-        }
     }
 }

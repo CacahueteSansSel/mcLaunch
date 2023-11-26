@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -13,6 +15,7 @@ using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
+using mcLaunch.Views.DataContexts;
 using mcLaunch.Views.Pages;
 using ReactiveUI;
 
@@ -23,12 +26,13 @@ public partial class NewBoxPopup : UserControl
     public NewBoxPopup()
     {
         InitializeComponent();
-        DataContext = new Data(this);
-        Data ctx = (Data) DataContext;
+        DataContext = new MinecraftVersionSelectionDataContext();
+        MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext;
 
         Random rng = new Random();
 
-        Bitmap bmp = new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
+        Bitmap bmp =
+            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
         BoxIconImage.Source = bmp;
 
         if (AuthenticationManager.Account != null)
@@ -36,18 +40,15 @@ public partial class NewBoxPopup : UserControl
             AuthorNameTb.Text = AuthenticationManager.Account.Username;
         }
 
-        VersionSelector.OnVersionChanged += version =>
-        {
-            FetchModLoadersLatestVersions(version.Id);
-        };
+        VersionSelector.OnVersionChanged += version => { FetchModLoadersLatestVersions(version.Id); };
 
-        FetchModLoadersLatestVersions(ctx.Versions[0].Id);
+        FetchModLoadersLatestVersions(VersionSelector.Version.Id);
     }
 
     async void FetchModLoadersLatestVersions(string versionId)
     {
         CreateButton.IsEnabled = false;
-        Data ctx = (Data) DataContext;
+        MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext;
         List<ModLoaderSupport> all = new();
 
         foreach (ModLoaderSupport ml in ModLoaderManager.All)
@@ -56,7 +57,7 @@ public partial class NewBoxPopup : UserControl
             if (version != null) all.Add(ml);
         }
 
-        ctx.ModLoaders = all.ToArray();
+        ctx.ModLoaders = all.Select(m => new DataContextModLoader(m)).ToArray();
         ctx.SelectedModLoader = ctx.ModLoaders[0];
         CreateButton.IsEnabled = true;
     }
@@ -71,7 +72,7 @@ public partial class NewBoxPopup : UserControl
         string boxName = BoxNameTb.Text;
         string boxAuthor = AuthorNameTb.Text;
         ManifestMinecraftVersion minecraftVersion = VersionSelector.Version;
-        ModLoaderSupport modloader = ((Data) DataContext).SelectedModLoader;
+        ModLoaderSupport modloader = ((MinecraftVersionSelectionDataContext) DataContext).SelectedModLoader.ModLoader;
 
         if (string.IsNullOrWhiteSpace(boxName)
             || string.IsNullOrWhiteSpace(boxAuthor)
@@ -117,45 +118,6 @@ public partial class NewBoxPopup : UserControl
         MainPage.Instance?.PopulateBoxList();
     }
 
-    public class Data : ReactiveObject
-    {
-        private NewBoxPopup popup;
-        ModLoaderVersion latestVersion;
-        ModLoaderSupport selectedModLoader;
-        private ModLoaderSupport[] modLoaders;
-
-        public ManifestMinecraftVersion[] Versions { get; }
-
-        public ModLoaderSupport[] ModLoaders
-        {
-            get => modLoaders;
-            set => this.RaiseAndSetIfChanged(ref modLoaders, value);
-        }
-
-        public ModLoaderSupport SelectedModLoader
-        {
-            get => selectedModLoader;
-            set => this.RaiseAndSetIfChanged(ref selectedModLoader, value);
-        }
-
-        public ModLoaderVersion LatestVersion
-        {
-            get => latestVersion;
-            set => this.RaiseAndSetIfChanged(ref latestVersion, value);
-        }
-
-        public Data(NewBoxPopup popup)
-        {
-            this.popup = popup;
-            Versions = Settings.Instance.EnableSnapshots
-                ? MinecraftManager.Manifest!.Versions
-                : MinecraftManager.ManifestVersions;
-            ModLoaders = ModLoaderManager.All.ToArray();
-
-            selectedModLoader = ModLoaders[0];
-        }
-    }
-
     private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
     {
         OpenFileDialog ofd = new OpenFileDialog();
@@ -186,7 +148,8 @@ public partial class NewBoxPopup : UserControl
     {
         Random rng = new Random((BoxNameTb.Text ?? string.Empty).GetHashCode());
 
-        Bitmap bmp = new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
+        Bitmap bmp =
+            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
 
         BoxIconImage.Source = bmp;
     }

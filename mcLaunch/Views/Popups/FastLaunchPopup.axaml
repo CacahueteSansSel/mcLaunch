@@ -20,10 +20,11 @@
                 <TextBlock Classes="light" Margin="0 20 0 5">Minecraft version</TextBlock>
                 <views:MinecraftVersionSelector x:Name="VersionSelector"></views:MinecraftVersionSelector>
                 <TextBlock Classes="light" Margin="0 20 0 5">Mod Loader</TextBlock>
-                <ComboBox x:Name="ModloaderCbox" SelectedItem="{Binding SelectedModLoader}" ItemsSource="{Binding ModLoaders}">
+                <ComboBox x:Name="ModloaderCbox" IsEnabled="False" SelectedItem="{Binding SelectedModLoader}" ItemsSource="{Binding ModLoaders}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0 0 7 0"></Image>
                                 <TextBlock Text="{Binding Name}"></TextBlock>
                                 <TextBlock Margin="7 0 0 0" Opacity="0.5" Text="{Binding LatestVersion.Name}"></TextBlock>
                             </StackPanel>

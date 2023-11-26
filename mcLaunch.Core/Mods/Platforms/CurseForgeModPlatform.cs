@@ -33,9 +33,12 @@ public class CurseForgeModPlatform : ModPlatform
 
     public override async Task<Modification[]> GetModsAsync(int page, Box box, string searchQuery)
     {
+        if (!Enum.TryParse(box.Manifest.ModLoaderId, true, out ModLoaderType type))
+            return Array.Empty<Modification>();
+        
         CursePaginatedResponse<List<Mod>> resp = await client.SearchMods(MinecraftGameId,
             gameVersion: box == null ? null : box.Manifest.Version,
-            modLoaderType: box == null ? null : Enum.Parse<ModLoaderType>(box.Manifest.ModLoaderId, true),
+            modLoaderType: box == null ? null : type,
             sortField: ModsSearchSortField.Popularity,
             sortOrder: SortOrder.Descending,
             pageSize: 10,
