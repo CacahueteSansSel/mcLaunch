@@ -114,12 +114,12 @@ public class Minecraft
     {
         this.launcherName = launcherName;
         this.launcherVersion = launcherVersion;
-        
+
         if (expose) versionType = launcherName;
 
         return this;
     }
-    
+
     public Minecraft WithDownloaders(AssetsDownloader assets, LibrariesDownloader libraries, JVMDownloader jvm)
     {
         assetsRoot = Path.GetFullPath(assets.VirtualPath ?? assets.Path);
@@ -134,12 +134,12 @@ public class Minecraft
 
         return this;
     }
-    
+
     public Process Run()
     {
         string jarPath = $"{sysFolder.Path}/versions/{Version.Id}/{Version.Id}.jar";
         string jvm = jvmPath ?? sysFolder.GetJVM(Version.JavaVersion.Component);
-        
+
         if (Version.Arguments == null)
         {
             Version.Arguments = MinecraftVersion.ModelArguments.Default;
@@ -149,7 +149,7 @@ public class Minecraft
         {
             Version.Arguments.JVM = MinecraftVersion.ModelArguments.Default.JVM;
         }
-        
+
         string args = Version.Arguments.Build(new Dictionary<string, string>()
         {
             {"auth_player_name", username},
@@ -186,7 +186,7 @@ public class Minecraft
         {
             if (quickPlayPath != null)
                 args += $" --quickPlayPath {quickPlayPath}";
-            
+
             switch (quickPlayMode)
             {
                 case QuickPlayWorldType.Singleplayer:
@@ -194,7 +194,7 @@ public class Minecraft
 
                     if (quickPlaySingleplayerWorldName != null)
                         args += $" \"{quickPlaySingleplayerWorldName}\"";
-                    
+
                     break;
                 case QuickPlayWorldType.Multiplayer:
                     // TODO: QuickPlay multiplayer & realms support
@@ -214,7 +214,7 @@ public class Minecraft
             UseShellExecute = true,
             WorkingDirectory = Folder.CompletePath
         };
-        
+
         return Process.Start(info);
     }
 }

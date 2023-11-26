@@ -17,8 +17,9 @@ public class NeoForgeModLoaderVersion : ModLoaderVersion
     {
         string[] installerUrls = new[]
         {
-            IsNewerFormat ? $"https://maven.neoforged.net/releases/net/neoforged/neoforge/{Name}/neoforge-{Name}-installer.jar"
-            : $"https://maven.neoforged.net/releases/net/neoforged/forge/{FullName}/forge-{FullName}-installer.jar",
+            IsNewerFormat
+                ? $"https://maven.neoforged.net/releases/net/neoforged/neoforge/{Name}/neoforge-{Name}-installer.jar"
+                : $"https://maven.neoforged.net/releases/net/neoforged/forge/{FullName}/forge-{FullName}-installer.jar",
         };
         string versionName = $"{MinecraftVersion}-forge-{Name}";
 
@@ -46,7 +47,7 @@ public class NeoForgeModLoaderVersion : ModLoaderVersion
 
                 await File.WriteAllBytesAsync(fullPath, await resp.Content.ReadAsByteArrayAsync());
                 success = true;
-                
+
                 break;
             }
 
@@ -54,7 +55,7 @@ public class NeoForgeModLoaderVersion : ModLoaderVersion
         }
 
         // TODO: Implement a new way for installing Forge
-        
+
         string wrapperJarPath = Path.GetFullPath($"{SystemFolderPath}/forge/target/wrapper.jar");
         string classPathSeparator = OperatingSystem.IsWindows() ? ";" : ":";
 
