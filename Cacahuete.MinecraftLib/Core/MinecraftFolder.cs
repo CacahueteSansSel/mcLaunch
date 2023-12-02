@@ -11,6 +11,8 @@ public class MinecraftFolder
     public MinecraftFolder(string path)
     {
         Path = path;
+
+        if (!Directory.Exists(path)) Directory.CreateDirectory(path);
     }
 
     public bool HasVersion(string id)
