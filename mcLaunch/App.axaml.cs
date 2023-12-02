@@ -10,6 +10,7 @@ using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods.Platforms;
+using mcLaunch.Managers;
 using mcLaunch.Utilities;
 
 namespace mcLaunch;
@@ -38,6 +39,7 @@ public partial class App : Application
         CacheManager.Init();
         AuthenticationManager.Init(Credentials.Get("azure"), Credentials.Get("tokens"));
         DefaultsManager.Init();
+        AnonymityManager.Init();
         MinecraftVersion.ModelArguments.Default =
             JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(InternalSettings.Get("default_args.json"))!;
     }

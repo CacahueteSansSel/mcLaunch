@@ -18,6 +18,8 @@ public class Settings
     public bool ExposeLauncherNameToMinecraft { get; set; }
     [Setting(Name = "Enable snapshots versions of Minecraft", Group = "Minecraft")]
     public bool EnableSnapshots { get; set; }
+    [Setting(Name = "Anonymize box name & icons", Group = "Display")]
+    public bool AnonymizeBoxIdentity { get; set; }
 
     public Settings()
     {

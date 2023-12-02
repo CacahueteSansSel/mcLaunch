@@ -4,18 +4,21 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Managers;
 
 namespace mcLaunch.Views.Pages;
 
 public partial class MainPage : UserControl
 {
     public static MainPage Instance { get; private set; }
+    private AnonymitySession anonSession;
 
     public MainPage()
     {
         Instance = this;
         
         InitializeComponent();
+        anonSession = AnonymityManager.CreateSession();
 
         PopulateBoxList();
     }
@@ -29,7 +32,7 @@ public partial class MainPage : UserControl
         
         foreach (Box box in boxes)
         {
-            BoxContainer.Children.Add(new BoxEntryCard(box));
+            BoxContainer.Children.Add(new BoxEntryCard(box, anonSession));
         }
     }
 }
