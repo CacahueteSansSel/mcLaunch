@@ -146,8 +146,7 @@ public static class DownloadManager
                 bytesInSecond += input;
             }
 
-            string pathFolders = entry.Target.Replace(Path.GetFileName(entry.Target), "")
-                .Trim('/').Trim('\\').Trim();
+            string pathFolders = entry.Target.Replace(Path.GetFileName(entry.Target), "").Trim();
 
             if (!Directory.Exists(pathFolders)) Directory.CreateDirectory(pathFolders);
 
