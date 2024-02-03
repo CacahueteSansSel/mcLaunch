@@ -170,8 +170,11 @@ public partial class BoxDetailsPage : UserControl
         // TODO: crash report parser
         // RegExp for mod dependencies error (Forge) : /(Failure message): .+/g
 
+        string fullPath = Environment.GetCommandLineArgs()[0];
+        string binaryFolder = fullPath.Replace(Path.GetFileName(fullPath), "")
+            .Trim('\\').Trim('/').Trim();
         string backgroundProcessFilename
-            = Path.GetFullPath("mcLaunch.MinecraftGuard" + (OperatingSystem.IsWindows() ? ".exe" : ""));
+            = $"{binaryFolder}/mcLaunch.MinecraftGuard{(OperatingSystem.IsWindows() ? ".exe" : "")}";
 
         if (File.Exists(backgroundProcessFilename))
         {
