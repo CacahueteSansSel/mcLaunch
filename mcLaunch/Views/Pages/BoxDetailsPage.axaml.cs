@@ -28,7 +28,7 @@ namespace mcLaunch.Views.Pages;
 public partial class BoxDetailsPage : UserControl
 {
     public static BoxDetailsPage? LastOpened { get; private set; }
-    
+
     public Box Box { get; }
     public SubControl SubControl { get; private set; }
 
@@ -44,7 +44,7 @@ public partial class BoxDetailsPage : UserControl
 
         Box = box;
         DataContext = box;
-        
+
         Box.SetWatching(true);
 
         if (box.Manifest.Type == BoxType.Temporary)
@@ -52,6 +52,7 @@ public partial class BoxDetailsPage : UserControl
             ContentsBox.IsVisible = false;
             return;
         }
+
         ContentsBox.IsVisible = true;
 
         VersionBadge.Text = $"Minecraft {box.Manifest.Version}";
@@ -59,7 +60,7 @@ public partial class BoxDetailsPage : UserControl
         ModLoaderBadge.Text = $"{box.ModLoader?.Name ?? "Unknown"} {box.Manifest.ModLoaderVersion}";
 
         box.LoadBackground();
-        
+
         RunBoxChecks();
     }
 
@@ -72,10 +73,11 @@ public partial class BoxDetailsPage : UserControl
         if (changes.Length > 0)
         {
             Box.SaveManifest();
-            
-            ShowWarning($"Some changes have been applied to your box: \n{string.Join('\n', changes.Select(c => $"    - {c}"))}");
+
+            ShowWarning(
+                $"Some changes have been applied to your box: \n{string.Join('\n', changes.Select(c => $"    - {c}"))}");
         }
-        
+
         LoadingIcon.IsVisible = false;
         SubControlButtons.IsEnabled = true;
 
@@ -107,7 +109,7 @@ public partial class BoxDetailsPage : UserControl
     {
         WarningStripe.IsVisible = false;
     }
-    
+
     public void SetSubControl(SubControl control)
     {
         SubControl = control;
@@ -128,7 +130,7 @@ public partial class BoxDetailsPage : UserControl
     {
         SubControl.Box = Box;
         SubControl.ParentPage = this;
-        
+
         await SubControl.PopulateAsync();
     }
 
@@ -146,7 +148,7 @@ public partial class BoxDetailsPage : UserControl
         }
 
         Navigation.ShowPopup(new GameLaunchPopup());
-        
+
         Box.SetExposeLauncher(Utilities.Settings.Instance.ExposeLauncherNameToMinecraft);
         Box.SetLauncherVersion(CurrentBuild.Version.ToString());
 
@@ -162,8 +164,8 @@ public partial class BoxDetailsPage : UserControl
         if (java.HasExited)
         {
             Navigation.ShowPopup(new CrashPopup(java.ExitCode, Box.Manifest.Id)
-                .WithCustomLog("The process exited in the early starting process"));
-            
+                .WithCustomLog(java.StandardError.ReadToEnd()));
+
             return;
         }
 
@@ -279,12 +281,13 @@ public partial class BoxDetailsPage : UserControl
                 {
                     Directory.Delete(Box.Path, true);
                     MainPage.Instance.PopulateBoxList();
-                    
+
                     Navigation.Pop();
                 }
                 catch (Exception exception)
                 {
-                    Navigation.ShowPopup(new MessageBoxPopup("Failed to delete box", $"Failed to delete the box {Box.Manifest.Name} : {exception.Message}"));
+                    Navigation.ShowPopup(new MessageBoxPopup("Failed to delete box",
+                        $"Failed to delete the box {Box.Manifest.Name} : {exception.Message}"));
                 }
             }));
     }
