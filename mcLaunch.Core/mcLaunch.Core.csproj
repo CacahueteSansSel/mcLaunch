@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -11,13 +11,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Avalonia" Version="11.0.4" />
+      <PackageReference Include="Avalonia" Version="11.0.7" />
       <PackageReference Include="CurseForge.NET" Version="1.0.1" />
-      <PackageReference Include="K4os.Compression.LZ4" Version="1.3.6" />
-      <PackageReference Include="Markdig" Version="0.33.0" />
-      <PackageReference Include="Modrinth.Net" Version="3.3.0" />
-      <PackageReference Include="ReactiveUI" Version="19.5.1" />
-      <PackageReference Include="SharpNBT" Version="1.2.0" />
+      <PackageReference Include="K4os.Compression.LZ4" Version="1.3.7-beta" />
+      <PackageReference Include="Markdig" Version="0.34.0" />
+      <PackageReference Include="Modrinth.Net" Version="3.4.1" />
+      <PackageReference Include="ReactiveUI" Version="19.5.41" />
+      <PackageReference Include="SharpNBT" Version="1.3.1" />
     </ItemGroup>
 
     <ItemGroup>
