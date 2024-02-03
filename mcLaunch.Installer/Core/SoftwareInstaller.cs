@@ -22,6 +22,8 @@ public class SoftwareInstaller
 
     async Task RunPostInstallTasks()
     {
+        if (!OperatingSystem.IsWindows()) return;
+
         string appPath = $"{Parameters.TargetDirectory}/mcLaunch.exe";
 
         if (Parameters.PlaceShortcutOnDesktop)
@@ -87,21 +89,25 @@ public class SoftwareInstaller
                 }
                 catch (Exception e)
                 {
-                    
                 }
             }
         }
-        
+
         archive.ExtractToDirectory(Parameters.TargetDirectory, true);
 
         if (CopyInstaller)
         {
             Directory.CreateDirectory($"{Parameters.TargetDirectory}/installer");
-            File.Copy(Environment.GetCommandLineArgs()[0], $"{Parameters.TargetDirectory}/installer/installer.exe", true);
+            File.Copy(Environment.GetCommandLineArgs()[0],
+                $"{Parameters.TargetDirectory}/installer/installer" + (OperatingSystem.IsWindows() ? ".exe" : ""),
+                true);
+            
+            if (!OperatingSystem.IsWindows())
+                File.SetUnixFileMode($"{Parameters.TargetDirectory}/installer/installer", UnixFileMode.UserExecute);
         }
 
         MainWindow.Instance.Next();
 
-        await RunPostInstallTasks();
+        if (OperatingSystem.IsWindows()) await RunPostInstallTasks();
     }
 }

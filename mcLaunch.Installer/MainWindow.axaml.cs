@@ -64,15 +64,27 @@ public partial class MainWindow : Window
             
             return;
         }
-        
-        pages = new InstallerPage[]
+
+        if (OperatingSystem.IsWindows())
         {
-            new WelcomePage(),
-            new SelectFolderPage(),
-            new CheckboxesSettingsPage(),
-            new InstallationPage(),
-            new InstalledPage()
-        };
+            pages = [
+                new WelcomePage(),
+                new SelectFolderPage(),
+                new CheckboxesSettingsPage(),
+                new InstallationPage(),
+                new InstalledPage()
+            ];
+        }
+        else
+        {
+            pages = [
+                new WelcomePage(),
+                new SelectFolderPage(),
+                new InstallationPage(),
+                new InstalledPage()
+            ];
+        }
+        
         SetupPageContainer.Content = pages[0];
         pages[0].OnShow();
 
