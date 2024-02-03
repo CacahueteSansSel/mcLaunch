@@ -162,7 +162,7 @@ public partial class BoxDetailsPage : UserControl
         if (java.HasExited)
         {
             Navigation.ShowPopup(new CrashPopup(java.ExitCode, Box.Manifest.Id)
-                .WithCustomLog(java.StandardError.ReadToEnd()));
+                .WithCustomLog("The process exited in the early starting process"));
             
             return;
         }

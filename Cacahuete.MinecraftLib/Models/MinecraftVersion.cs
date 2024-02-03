@@ -46,7 +46,7 @@ public class MinecraftVersion
         set
         {
             args = value;
-            
+
             if (args != null)
             {
                 if (Arguments == null) Arguments = new ModelArguments();
@@ -54,7 +54,7 @@ public class MinecraftVersion
                 foreach (string arg in MinecraftArguments.Split(' '))
                 {
                     if (Arguments.Game != null && Arguments.Game.Contains(arg)) continue;
-                
+
                     List<object> objs = new List<object>(Arguments.Game ?? Array.Empty<object>());
                     objs.Add(arg);
                     Arguments.Game = objs.ToArray();
@@ -62,7 +62,7 @@ public class MinecraftVersion
             }
         }
     }
-    
+
     // Needed to specify a custom client url (used by modloaders for example)
     [JsonIgnore] public string? CustomClientUrl { get; set; }
 
@@ -74,10 +74,11 @@ public class MinecraftVersion
             await File.WriteAllTextAsync($"{targetDirectoryPath}/{Id}.json", JsonSerializer.Serialize(this));
         }
 
-        if (CustomClientUrl != null && File.Exists($"{targetDirectoryPath}/{Id}.jar")) 
+        if (CustomClientUrl != null && File.Exists($"{targetDirectoryPath}/{Id}.jar"))
             return;
 
-        await Context.Downloader.DownloadAsync(CustomClientUrl ?? Downloads.Client.Url, $"{targetDirectoryPath}/{Id}.jar", 
+        await Context.Downloader.DownloadAsync(CustomClientUrl ?? Downloads.Client.Url,
+            $"{targetDirectoryPath}/{Id}.jar",
             CustomClientUrl == null ? Downloads.Client.Hash : null);
     }
 
@@ -93,13 +94,15 @@ public class MinecraftVersion
     {
         if (Arguments.Game == null) Arguments.Game = Array.Empty<object>();
         if (Arguments.JVM == null) Arguments.JVM = Array.Empty<object>();
-        
+
         return new MinecraftVersion
         {
             Arguments = new ModelArguments
             {
-                Game = new List<object>((Arguments ?? ModelArguments.Default).Game).AddsOnce(other.Arguments.Game ?? ModelArguments.Default.Game).ToArray(),
-                JVM = new List<object>((Arguments ?? ModelArguments.Default).JVM).AddsOnce(other.Arguments.JVM ?? ModelArguments.Default.JVM).ToArray()
+                Game = new List<object>((Arguments ?? ModelArguments.Default).Game)
+                    .AddsOnce(other.Arguments.Game ?? ModelArguments.Default.Game).ToArray(),
+                JVM = new List<object>((Arguments ?? ModelArguments.Default).JVM)
+                    .AddsOnce(other.Arguments.JVM ?? ModelArguments.Default.JVM).ToArray()
             },
             AssetIndex = this.AssetIndex ?? other.AssetIndex,
             Assets = this.Assets ?? other.Assets,
@@ -193,12 +196,13 @@ public class MinecraftVersion
 
                 public bool CheckIfSatisfied()
                 {
-                    if (!string.IsNullOrWhiteSpace(Name) && Name.ToLower() != Utilities.GetPlatformIdentifier().ToLower())
+                    if (!string.IsNullOrWhiteSpace(Name) &&
+                        Name.ToLower() != Utilities.GetPlatformIdentifier().ToLower())
                         return false;
-                    
+
                     if (!string.IsNullOrWhiteSpace(Arch) && Arch.ToLower() != Utilities.GetArchitecture().ToLower())
                         return false;
-                    
+
                     // TODO: Implement more rules
 
                     return true;
@@ -351,7 +355,7 @@ public class MinecraftVersion
                         {
                             if (processedArgs.Contains(valueJson.GetString())) continue;
                             processedArgs.Add(valueJson.GetString());
-                        
+
                             final += FormatArgument(valueJson.GetString(), replacements) + " ";
                             continue;
                         }
@@ -360,7 +364,7 @@ public class MinecraftVersion
                         {
                             if (processedArgs.Contains(value.GetString())) continue;
                             processedArgs.Add(value.GetString());
-                        
+
                             final += FormatArgument(value.GetString(), replacements) + " ";
                         }
                     }
@@ -375,7 +379,7 @@ public class MinecraftVersion
                 {
                     if (arg is not JsonElement elmt) continue;
                     if (elmt.ValueKind != JsonValueKind.String) continue;
-                
+
                     if (processedArgs.Contains(elmt.GetString())) continue;
                     processedArgs.Add(elmt.GetString());
 

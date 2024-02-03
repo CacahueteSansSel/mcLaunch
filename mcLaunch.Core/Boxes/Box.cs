@@ -366,10 +366,10 @@ public class Box
         await SetupVersionAsync();
 
         Minecraft = new Minecraft(Version, Folder)
+            .WithSystemFolder(BoxManager.SystemFolder)
             .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher)
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
-            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader)
-            .WithSystemFolder(BoxManager.SystemFolder);
+            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader);
     }
 
     public void SetExposeLauncher(bool exposeLauncher)

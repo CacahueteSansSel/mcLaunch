@@ -6,31 +6,16 @@ namespace Cacahuete.MinecraftLib.Core;
 
 public class Minecraft
 {
-    bool disableMultiplayer;
-    bool disableChat;
-    bool demo;
-    string? serverAddress;
-    int serverPort;
-    string launcherName;
-    string launcherVersion;
-    string classPath;
-    string nativesPath;
-    string classPathSeparator = ";";
-    string username;
-    string assetsRoot;
-    string assetIndexName;
-    string uuid;
-    string accessToken;
-    string clientId;
-    string xuid;
-    string userType;
-    string versionType;
-    string? jvmPath;
-    QuickPlayWorldType? quickPlayMode;
-    string? quickPlayPath;
-    string? quickPlaySingleplayerWorldName;
-    Process mc;
-    MinecraftFolder sysFolder;
+    private Dictionary<string, string> args = new();
+    private MinecraftFolder sysFolder;
+    private bool disableMultiplayer;
+    private bool disableChat;
+    private string? serverAddress;
+    private uint serverPort;
+    private QuickPlayWorldType? quickPlayMode;
+    private string? quickPlayPath;
+    private string? quickPlaySingleplayerWorldName;
+    private string? jvmPath;
 
     public MinecraftVersion Version { get; }
     public MinecraftFolder Folder { get; }
@@ -39,17 +24,10 @@ public class Minecraft
     {
         Version = version;
         Folder = folder;
-        sysFolder = folder;
-        versionType = version.Type;
-
-        if (OperatingSystem.IsWindows())
-        {
-            classPathSeparator = ";";
-        }
-        else
-        {
-            classPathSeparator = ":";
-        }
+        
+        args["version_name"] = version.Id;
+        args["version_type"] = version.Type;
+        args["game_directory"] = folder.CompletePath;
     }
 
     public Minecraft WithSystemFolder(MinecraftFolder systemFolder)
@@ -61,21 +39,22 @@ public class Minecraft
 
     public Minecraft WithUser(string username, Guid uuid)
     {
-        this.username = username;
-        this.uuid = uuid.ToString().Replace("-", "");
+        args["auth_player_name"] = username;
+        args["auth_uuid"] = uuid.ToString("N");
 
         return this;
     }
 
     public Minecraft WithUser(MinecraftAuthenticationResult auth, AuthenticationPlatform platform)
     {
-        username = auth.Username;
-        uuid = auth.Uuid;
-        xuid = auth.Xuid;
-        clientId = platform.ClientId;
-        accessToken = auth.AccessToken;
-        userType = platform.UserType;
-
+        args["auth_player_name"] = auth.Username;
+        args["auth_uuid"] = auth.Uuid;
+        args["auth_xuid"] = auth.Xuid;
+        args["clientid"] = platform.ClientId;
+        args["user_type"] = platform.UserType;
+        args["auth_session"] = $"token:{auth.AccessToken}:{auth.Uuid}";
+        args["auth_access_token"] = auth.AccessToken;
+        
         return this;
     }
 
@@ -105,26 +84,30 @@ public class Minecraft
     public Minecraft WithServer(string address, string port)
     {
         serverAddress = address;
-        serverPort = int.Parse(port);
+        serverPort = uint.Parse(port);
 
         return this;
     }
 
     public Minecraft WithCustomLauncherDetails(string launcherName, string launcherVersion, bool expose = false)
     {
-        this.launcherName = launcherName;
-        this.launcherVersion = launcherVersion;
+        args["launcher_name"] = launcherName;
+        args["launcher_version"] = launcherVersion;
 
-        if (expose) versionType = launcherName;
+        if (expose) args["version_type"] = launcherName;
 
         return this;
     }
 
     public Minecraft WithDownloaders(AssetsDownloader assets, LibrariesDownloader libraries, JVMDownloader jvm)
     {
-        assetsRoot = Path.GetFullPath(assets.VirtualPath ?? assets.Path);
-        classPath = string.Join(classPathSeparator, libraries.ClassPath) + classPathSeparator;
-        nativesPath = Path.GetFullPath(libraries.NativesPath);
+        string classPathSeparator = OperatingSystem.IsWindows() ? ";" : ":";
+        string jarPath = $"{sysFolder.Path}/versions/{Version.Id}/{Version.Id}.jar";
+        
+        string assetsRoot = Path.GetFullPath(assets.VirtualPath ?? assets.Path);
+        string classPath = string.Join(classPathSeparator, libraries.ClassPath) + classPathSeparator;
+        string nativesPath = Path.GetFullPath(libraries.NativesPath);
+        
         jvmPath = jvm.GetJVMPath(Utilities.GetJavaPlatformIdentifier(), Version.JavaVersion?.Component ?? "jre-legacy")
             .TrimEnd('/');
 
@@ -132,13 +115,19 @@ public class Minecraft
         else if (OperatingSystem.IsMacOS()) jvmPath += "/jre.bundle/Contents/Home/bin/java";
         else jvmPath += "/bin/java";
 
+        args["assets_root"] = assetsRoot;
+        args["assets_index_name"] = Version.AssetIndex.Id;
+        args["classpath"] = classPath + Path.GetFullPath(jarPath);
+        args["classpath_separator"] = classPathSeparator;
+        args["natives_directory"] = nativesPath;
+        args["library_directory"] = $"{sysFolder.CompletePath}/libraries";
+        
         return this;
     }
 
     public Process Run()
     {
-        string jarPath = $"{sysFolder.Path}/versions/{Version.Id}/{Version.Id}.jar";
-        string jvm = jvmPath ?? sysFolder.GetJVM(Version.JavaVersion.Component);
+        string jvm = jvmPath ?? sysFolder.GetJVM(Version.JavaVersion!.Component);
 
         if (Version.Arguments == null)
         {
@@ -150,69 +139,49 @@ public class Minecraft
             Version.Arguments.JVM = MinecraftVersion.ModelArguments.Default.JVM;
         }
 
-        string args = Version.Arguments.Build(new Dictionary<string, string>()
-        {
-            {"auth_player_name", username},
-            {"auth_session", $"token:{accessToken}:{uuid}"},
-            {"version_name", Version.Id},
-            {"game_assets", $"{assetsRoot}"},
-            {"game_directory", Folder.CompletePath},
-            {"assets_root", assetsRoot},
-            {"assets_index_name", Version.AssetIndex.Id},
-            {"auth_uuid", uuid},
-            {"auth_access_token", accessToken},
-            {"clientid", clientId},
-            {"auth_xuid", xuid},
-            {"user_type", userType},
-            {"version_type", versionType},
-            {"launcher_name", launcherName},
-            {"launcher_version", launcherVersion},
-            {"classpath", classPath + Path.GetFullPath(jarPath)},
-            {"classpath_separator", classPathSeparator},
-            {"natives_directory", nativesPath},
-            {"library_directory", $"{sysFolder.CompletePath}/libraries"},
-            {"user_properties", "{}"}
-        }, Version.MainClass);
+        string builtArgs = Version.Arguments.Build(args, Version.MainClass);
 
-        if (disableMultiplayer) args += " --disableMultiplayer";
-        if (disableChat) args += " --disableChat";
+        if (disableMultiplayer) builtArgs += " --disableMultiplayer";
+        if (disableChat) builtArgs += " --disableChat";
         if (serverAddress != null)
         {
-            args += " --server " + serverAddress;
-            args += " --port " + serverPort;
+            builtArgs += " --server " + serverAddress;
+            builtArgs += " --port " + serverPort;
         }
 
         if (quickPlayMode.HasValue)
         {
             if (quickPlayPath != null)
-                args += $" --quickPlayPath {quickPlayPath}";
+                builtArgs += $" --quickPlayPath {quickPlayPath}";
 
             switch (quickPlayMode)
             {
                 case QuickPlayWorldType.Singleplayer:
-                    args += " --quickPlaySingleplayer";
+                    builtArgs += " --quickPlaySingleplayer";
 
                     if (quickPlaySingleplayerWorldName != null)
-                        args += $" \"{quickPlaySingleplayerWorldName}\"";
+                        builtArgs += $" \"{quickPlaySingleplayerWorldName}\"";
 
                     break;
                 case QuickPlayWorldType.Multiplayer:
                     // TODO: QuickPlay multiplayer & realms support
-                    args += " --quickPlayMultiplayer";
+                    builtArgs += " --quickPlayMultiplayer";
                     break;
                 case QuickPlayWorldType.Realms:
                     // TODO: QuickPlay multiplayer & realms support
-                    args += " --quickPlayRealms";
+                    builtArgs += " --quickPlayRealms";
                     break;
             }
         }
 
         ProcessStartInfo info = new()
         {
-            Arguments = args,
+            Arguments = builtArgs,
             FileName = jvm,
-            UseShellExecute = true,
-            WorkingDirectory = Folder.CompletePath
+            UseShellExecute = false,
+            WorkingDirectory = Folder.CompletePath,
+            RedirectStandardError = true,
+            RedirectStandardOutput = true
         };
 
         return Process.Start(info);
