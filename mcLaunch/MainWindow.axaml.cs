@@ -29,6 +29,14 @@ public partial class MainWindow : Window
     {
         Instance = this;
         InitializeComponent();
+
+        if (OperatingSystem.IsLinux())
+        {
+            // Hide the top header bar on Linux, because we can't have borderless windows on Linux with Avalonia
+            // apparently
+            
+            TopHeaderBar.IsVisible = false;
+        }
         
         UpdateBar.IsVisible = false;
         Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch", CurrentBuild.Version.ToString()));
@@ -42,7 +50,7 @@ public partial class MainWindow : Window
     public void SetDecorations(bool showDecorations)
     {
         TopBar.IsVisible = showDecorations;
-        TopHeaderBar.IsVisible = showDecorations;
+        TopHeaderBar.IsVisible = showDecorations && !OperatingSystem.IsLinux();
     }
 
     async void Authenticate()
