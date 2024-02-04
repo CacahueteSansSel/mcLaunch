@@ -25,6 +25,7 @@ public class Box
     private bool exposeLauncher = false;
     private string launcherVersion = "0.0.0";
     FileSystemWatcher watcher;
+    public bool UseDedicatedGraphics { get; set; }
     public string Path { get; }
     public MinecraftFolder Folder { get; }
     public Minecraft Minecraft { get; private set; }
@@ -367,6 +368,7 @@ public class Box
 
         Minecraft = new Minecraft(Version, Folder)
             .WithSystemFolder(BoxManager.SystemFolder)
+            .WithUseDedicatedGraphics(UseDedicatedGraphics)
             .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher)
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
             .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader);

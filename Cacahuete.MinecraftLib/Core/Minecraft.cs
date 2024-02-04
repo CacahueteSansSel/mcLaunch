@@ -16,6 +16,7 @@ public class Minecraft
     private string? quickPlayPath;
     private string? quickPlaySingleplayerWorldName;
     private string? jvmPath;
+    private bool useDedicatedGraphics;
 
     public MinecraftVersion Version { get; }
     public MinecraftFolder Folder { get; }
@@ -41,6 +42,13 @@ public class Minecraft
     {
         args["auth_player_name"] = username;
         args["auth_uuid"] = uuid.ToString("N");
+
+        return this;
+    }
+
+    public Minecraft WithUseDedicatedGraphics(bool useDedicatedGraphics)
+    {
+        this.useDedicatedGraphics = useDedicatedGraphics;
 
         return this;
     }
@@ -183,6 +191,22 @@ public class Minecraft
             RedirectStandardError = true,
             RedirectStandardOutput = true
         };
+
+        if (useDedicatedGraphics)
+        {
+            if (OperatingSystem.IsLinux() && File.Exists("/usr/bin/prime-run"))
+            {
+                info.Arguments = $"{info.FileName} {info.Arguments}";
+                info.FileName = "/usr/bin/prime-run";
+            }
+        }
+
+        if (!OperatingSystem.IsWindows())
+        {
+            info.UseShellExecute = true;
+            info.RedirectStandardError = false;
+            info.RedirectStandardOutput = false;
+        }
 
         return Process.Start(info);
     }

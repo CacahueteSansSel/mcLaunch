@@ -149,6 +149,7 @@ public partial class BoxDetailsPage : UserControl
 
         Navigation.ShowPopup(new GameLaunchPopup());
 
+        Box.UseDedicatedGraphics = Utilities.Settings.Instance.ForceDedicatedGraphics;
         Box.SetExposeLauncher(Utilities.Settings.Instance.ExposeLauncherNameToMinecraft);
         Box.SetLauncherVersion(CurrentBuild.Version.ToString());
 
@@ -164,7 +165,8 @@ public partial class BoxDetailsPage : UserControl
         if (java.HasExited)
         {
             Navigation.ShowPopup(new CrashPopup(java.ExitCode, Box.Manifest.Id)
-                .WithCustomLog(java.StandardError.ReadToEnd()));
+                .WithCustomLog(java.StartInfo.RedirectStandardError ? java.StandardError.ReadToEnd() 
+                    : "Minecraft exited in early startup process"));
 
             return;
         }
@@ -173,8 +175,7 @@ public partial class BoxDetailsPage : UserControl
         // RegExp for mod dependencies error (Forge) : /(Failure message): .+/g
 
         string fullPath = Environment.GetCommandLineArgs()[0];
-        string binaryFolder = fullPath.Replace(Path.GetFileName(fullPath), "")
-            .Trim('\\').Trim('/').Trim();
+        string binaryFolder = fullPath.Replace(Path.GetFileName(fullPath), "").Trim();
         string backgroundProcessFilename
             = $"{binaryFolder}/mcLaunch.MinecraftGuard{(OperatingSystem.IsWindows() ? ".exe" : "")}";
 
