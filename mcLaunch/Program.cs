@@ -39,11 +39,14 @@ class Program
             
             // We generate a crash report that we will feed to the new launcher instance
             string crashReportFilename = LauncherCrashReport.Generate(e);
+            
+            string fullPath = Environment.GetCommandLineArgs()[0];
+            string binaryFolder = fullPath.Replace(Path.GetFileName(fullPath), "").Trim();
 
             Process.Start(new ProcessStartInfo
             {
-                FileName = Path.GetFullPath("mcLaunch") + (OperatingSystem.IsWindows() ? ".exe" : ""),
-                WorkingDirectory = Environment.CurrentDirectory,
+                FileName = $"{binaryFolder}/mcLaunch${(OperatingSystem.IsWindows() ? ".exe" : "")}",
+                WorkingDirectory = binaryFolder,
                 Arguments = $"--crash \"{crashReportFilename}\"",
                 UseShellExecute = false
             });
