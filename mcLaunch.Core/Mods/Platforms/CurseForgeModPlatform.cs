@@ -129,7 +129,8 @@ public class CurseForgeModPlatform : ModPlatform
 
         try
         {
-            Mod cfMod = (await client.GetMod(uint.Parse(id))).Data;
+            if (!uint.TryParse(id, out uint value)) return null;
+            Mod cfMod = (await client.GetMod(value)).Data;
             List<string> minecraftVersions = new();
 
             foreach (var file in cfMod.LatestFiles)
@@ -171,7 +172,9 @@ public class CurseForgeModPlatform : ModPlatform
 
     public override async Task<PlatformModpack> GetModpackAsync(string id)
     {
-        Mod cfMod = (await client.GetMod(uint.Parse(id))).Data;
+        if (!uint.TryParse(id, out uint value)) return null;
+        
+        Mod cfMod = (await client.GetMod(value)).Data;
         List<string> minecraftVersions = new();
 
         foreach (var file in cfMod.LatestFiles)
