@@ -127,14 +127,14 @@ class Build : NukeBuild
             );
             
             CopyDirectoryRecursively(
-                $"{Solution.GetProject("mcLaunch.MinecraftGuard").Directory}/bin/Release/net7.0/win-x64/publish",
+                $"{Solution.GetProject("mcLaunch.MinecraftGuard").Directory}/bin/Release/{FrameworkVersion}/win-x64/publish",
                 $"{outputDirPath}/windows", 
                 DirectoryExistsPolicy.Merge,
                 FileExistsPolicy.OverwriteIfNewer
             );
             
             CopyDirectoryRecursively(
-                $"{Solution.GetProject("mcLaunch.MinecraftGuard").Directory}/bin/Release/net7.0/linux-x64/publish",
+                $"{Solution.GetProject("mcLaunch.MinecraftGuard").Directory}/bin/Release/{FrameworkVersion}/linux-x64/publish",
                 $"{outputDirPath}/linux", 
                 DirectoryExistsPolicy.Merge,
                 FileExistsPolicy.OverwriteIfNewer
