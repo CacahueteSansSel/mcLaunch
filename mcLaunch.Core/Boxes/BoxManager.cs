@@ -160,7 +160,7 @@ public static class BoxManager
                 0.5f + (float) index / pack.AdditionalFiles.Length / 2);
 
             string filename = $"{box.Folder.Path}/{additionalFile.Path}";
-            string folderPath = filename.Replace(Path.GetFileName(filename), "").Trim('/');
+            string folderPath = filename.Replace(Path.GetFileName(filename), "");
 
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 
