@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Concurrent;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -98,13 +99,16 @@ public class BoxManifest : ReactiveObject
         if (filenames.Length == 0) return;
         if (HasModificationStrict(id, versionId, platformId)) return;
 
-        Modifications.Add(new BoxStoredModification
+        lock (Modifications)
         {
-            Id = id,
-            PlatformId = platformId,
-            VersionId = versionId,
-            Filenames = filenames
-        });
+            Modifications.Add(new BoxStoredModification
+            {
+                Id = id,
+                PlatformId = platformId,
+                VersionId = versionId,
+                Filenames = filenames
+            });
+        }
     }
 
     public void RemoveModification(string id, Box box)
@@ -113,7 +117,11 @@ public class BoxManifest : ReactiveObject
         if (mod == null) return;
 
         mod.Delete(box.Folder.CompletePath);
-        Modifications.Remove(mod);
+
+        lock (Modifications)
+        {
+            Modifications.Remove(mod);
+        }
     }
 
     public async Task<bool> RunPostDeserializationChecks()

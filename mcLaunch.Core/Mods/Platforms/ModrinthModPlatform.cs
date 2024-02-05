@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Collections.Concurrent;
+using System.Security.Cryptography;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods.Packs;
@@ -17,7 +18,7 @@ public class ModrinthModPlatform : ModPlatform
     public static ModrinthModPlatform Instance { get; private set; }
 
     ModrinthClient client;
-    Dictionary<string, Modification> modCache = new();
+    ConcurrentDictionary<string, Modification> modCache = new();
 
     public override string Name { get; } = "Modrinth";
     public ModrinthClient Client => client;
@@ -163,7 +164,7 @@ public class ModrinthModPlatform : ModPlatform
             
             mod.TransformLongDescriptionToHtml();
 
-            modCache.Add(id, mod);
+            modCache.TryAdd(id, mod);
             CacheManager.Store(mod, cacheName);
             return mod;
         }
