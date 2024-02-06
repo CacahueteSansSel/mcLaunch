@@ -31,7 +31,7 @@ public partial class BrowseModpacksPage : UserControl
         lastMinecraftVersion = minecraftVersion;
 
         PaginatedResponse<PlatformModpack> packs = await ModPlatformManager.Platform.GetModpacksAsync(page, query, minecraftVersion);
-        foreach (PlatformModpack modpack in packs.Data)
+        foreach (PlatformModpack modpack in packs.Items)
             BoxContainer.Children.Add(new ModpackEntryCard(modpack));
         
         LoadingCircleIcon.IsVisible = false;
@@ -51,7 +51,7 @@ public partial class BrowseModpacksPage : UserControl
         PaginatedResponse<PlatformModpack> additionalPacks = await ModPlatformManager.Platform.GetModpacksAsync(PageIndex, 
             lastQuery, lastMinecraftVersion);
 
-        foreach (PlatformModpack modpack in additionalPacks.Data)
+        foreach (PlatformModpack modpack in additionalPacks.Items)
             BoxContainer.Children.Add(new ModpackEntryCard(modpack));
     }
 }

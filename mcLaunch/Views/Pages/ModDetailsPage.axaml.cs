@@ -135,7 +135,7 @@ public partial class ModDetailsPage : UserControl
             TargetBox.Manifest.ModLoaderId, version, TargetBox.Manifest.Version);
 
         ModPlatform.ModDependency[] optionalDeps =
-            deps.Data.Where(dep =>
+            deps.Items.Where(dep =>
                     dep.Type == ModPlatform.DependencyRelationType.Optional && !TargetBox.HasModificationSoft(dep.Mod))
                 .ToArray();
 

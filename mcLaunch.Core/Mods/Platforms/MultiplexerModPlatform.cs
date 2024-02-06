@@ -18,14 +18,12 @@ public class MultiplexerModPlatform : ModPlatform
     public override async Task<PaginatedResponse<Modification>> GetModsAsync(int page, Box box, string searchQuery)
     {
         List<Modification> mods = new();
-        int totalPageCount = 0;
 
         foreach (ModPlatform platform in _platforms)
         {
             PaginatedResponse<Modification> modsFromPlatform = await platform.GetModsAsync(page, box, searchQuery);
-            if (totalPageCount < modsFromPlatform.TotalPageCount) totalPageCount = modsFromPlatform.TotalPageCount;
 
-            foreach (Modification mod in modsFromPlatform.Data)
+            foreach (Modification mod in modsFromPlatform.Items)
             {
                 int similarModCount = mods.Count(m => m.IsSimilar(mod));
                 
@@ -35,21 +33,19 @@ public class MultiplexerModPlatform : ModPlatform
             }
         }
 
-        return new PaginatedResponse<Modification>(page, totalPageCount, mods.ToArray());
+        return new PaginatedResponse<Modification>(page, mods.Count / 20, mods.ToArray());
     }
 
     public override async Task<PaginatedResponse<PlatformModpack>> GetModpacksAsync(int page, string searchQuery,
         string minecraftVersion)
     {
         List<PlatformModpack> mods = new();
-        int totalPageCount = 0;
 
         foreach (ModPlatform platform in _platforms)
         {
             PaginatedResponse<PlatformModpack> modpacksFromPlatform = await platform.GetModpacksAsync(page, searchQuery, minecraftVersion);
-            if (totalPageCount < modpacksFromPlatform.TotalPageCount) totalPageCount = modpacksFromPlatform.TotalPageCount;
 
-            foreach (PlatformModpack mod in modpacksFromPlatform.Data)
+            foreach (PlatformModpack mod in modpacksFromPlatform.Items)
             {
                 int similarModCount = mods.Count(m => m.IsSimilar(mod));
                 
@@ -60,7 +56,7 @@ public class MultiplexerModPlatform : ModPlatform
             }
         }
         
-        return new PaginatedResponse<PlatformModpack>(page, totalPageCount, mods.ToArray());
+        return new PaginatedResponse<PlatformModpack>(page, mods.Count / 20, mods.ToArray());
     }
 
     public override async Task<PaginatedResponse<ModDependency>> GetModDependenciesAsync(string id, string modLoaderId, string versionId, string minecraftVersionId)

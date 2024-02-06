@@ -131,7 +131,7 @@ public partial class ModificationList : UserControl, IBoxEventListener
         lastBox = box;
         lastQuery = query;
 
-        return mods.Data;
+        return mods.Items.ToArray();
     }
 
     public class Data : ReactiveObject

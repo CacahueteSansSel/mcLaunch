@@ -275,7 +275,7 @@ public class Box
             mod.Id,
             Manifest.ModLoaderId, version, Manifest.Version);
 
-        foreach (ModPlatform.ModDependency dep in deps.Data)
+        foreach (ModPlatform.ModDependency dep in deps.Items)
         {
             if (!Manifest.HasModificationStrict(dep.Mod.Id, mod.ModPlatformId)
                 && Manifest.HasModificationSoft(dep.Mod))
