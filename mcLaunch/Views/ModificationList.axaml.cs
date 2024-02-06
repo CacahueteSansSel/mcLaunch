@@ -16,6 +16,7 @@ using mcLaunch.Core;
 using mcLaunch.Core.Mods.Platforms;
 using mcLaunch.Models;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Utilities;
@@ -125,12 +126,12 @@ public partial class ModificationList : UserControl, IBoxEventListener
     {
         Data ctx = (Data) DataContext;
 
-        var mods = await ModPlatformManager.Platform.GetModsAsync(ctx.Page, box, query);
+        PaginatedResponse<Modification> mods = await ModPlatformManager.Platform.GetModsAsync(ctx.Page, box, query);
 
         lastBox = box;
         lastQuery = query;
 
-        return mods;
+        return mods.Data;
     }
 
     public class Data : ReactiveObject

@@ -9,6 +9,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Utilities;
@@ -45,16 +46,18 @@ public partial class ModDetailsPage : UserControl
 
         ModPlatformBadge.Text = mod.Platform.Name;
         ModPlatformBadge.Icon =
-            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{mod.Platform.Name.ToLower()}.png")));
+            new Bitmap(
+                AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{mod.Platform.Name.ToLower()}.png")));
         if (mod.License != null)
         {
             ModLicenseBadge.Text = mod.GetLicenseDisplayName();
             ModLicenseBadge.IsVisible = true;
         }
         else ModLicenseBadge.IsVisible = false;
+
         ModOpenSource.IsVisible = mod.IsOpenSource;
         ModClosedSource.IsVisible = !mod.IsOpenSource;
-        
+
         SetInstalled(targetBox != null && targetBox.HasModificationSoft(mod));
         GetModAdditionalInfos();
 
@@ -96,7 +99,7 @@ public partial class ModDetailsPage : UserControl
     private async void InstallButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (TargetBox == null) return;
-        
+
         isInstalling = true;
 
         InstallButton.IsVisible = false;
@@ -127,11 +130,12 @@ public partial class ModDetailsPage : UserControl
 
         string version = versions[0];
 
-        ModPlatform.ModDependency[] deps = await ModPlatformManager.Platform.GetModDependenciesAsync(Mod.Id,
+        PaginatedResponse<ModPlatform.ModDependency> deps = await ModPlatformManager.Platform.GetModDependenciesAsync(
+            Mod.Id,
             TargetBox.Manifest.ModLoaderId, version, TargetBox.Manifest.Version);
 
         ModPlatform.ModDependency[] optionalDeps =
-            deps.Where(dep =>
+            deps.Data.Where(dep =>
                     dep.Type == ModPlatform.DependencyRelationType.Optional && !TargetBox.HasModificationSoft(dep.Mod))
                 .ToArray();
 
@@ -143,7 +147,7 @@ public partial class ModDetailsPage : UserControl
 
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
-        
+
                 BoxDetailsPage.LastOpened?.Reload();
 
                 isInstalling = false;
@@ -153,7 +157,7 @@ public partial class ModDetailsPage : UserControl
 
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
-        
+
                 BoxDetailsPage.LastOpened?.Reload();
 
                 isInstalling = false;
@@ -166,7 +170,7 @@ public partial class ModDetailsPage : UserControl
 
         LoadingButtonFrame.IsVisible = false;
         SetInstalled(true);
-        
+
         BoxDetailsPage.LastOpened?.Reload();
 
         isInstalling = false;
@@ -175,7 +179,7 @@ public partial class ModDetailsPage : UserControl
     private async void UninstallButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (TargetBox == null) return;
-        
+
         InstallButton.IsVisible = false;
         InstallButton.IsEnabled = false;
 
@@ -185,7 +189,7 @@ public partial class ModDetailsPage : UserControl
         TargetBox.Manifest.RemoveModification(Mod.Id, TargetBox);
 
         TargetBox.SaveManifest();
-        
+
         BoxDetailsPage.LastOpened?.Reload();
 
         SetInstalled(false);
@@ -194,9 +198,9 @@ public partial class ModDetailsPage : UserControl
     async Task FinishInstallAsync()
     {
         if (TargetBox == null) return;
-        
+
         bool success = await TargetBox.UpdateModAsync(Mod, false);
-        
+
         if (!success)
         {
             Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
@@ -217,7 +221,7 @@ public partial class ModDetailsPage : UserControl
     private async void UpdateButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (TargetBox == null) return;
-        
+
         InstallButton.IsVisible = false;
         InstallButton.IsEnabled = false;
 
@@ -229,26 +233,23 @@ public partial class ModDetailsPage : UserControl
 
         if (!string.IsNullOrWhiteSpace(Mod.Changelog))
         {
-            Navigation.ShowPopup(new ChangelogPopup(Mod, async () =>
-            {
-                await FinishInstallAsync();
-            }, () =>
+            Navigation.ShowPopup(new ChangelogPopup(Mod, async () => { await FinishInstallAsync(); }, () =>
             {
                 LoadingButtonFrame.IsVisible = false;
 
                 UpdateButton.IsVisible = true;
                 UpdateButton.IsEnabled = true;
-                
+
                 InstallButton.IsVisible = false;
                 InstallButton.IsEnabled = false;
-                
+
                 UninstallButton.IsVisible = true;
                 UninstallButton.IsEnabled = true;
             }));
 
             return;
         }
-        
+
         await FinishInstallAsync();
     }
 

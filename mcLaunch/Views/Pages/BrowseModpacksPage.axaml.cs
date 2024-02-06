@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 
@@ -29,12 +30,9 @@ public partial class BrowseModpacksPage : UserControl
         lastQuery = query;
         lastMinecraftVersion = minecraftVersion;
 
-        PlatformModpack[] packs = await ModPlatformManager.Platform.GetModpacksAsync(page, query, minecraftVersion);
-
-        foreach (PlatformModpack modpack in packs)
-        {
+        PaginatedResponse<PlatformModpack> packs = await ModPlatformManager.Platform.GetModpacksAsync(page, query, minecraftVersion);
+        foreach (PlatformModpack modpack in packs.Data)
             BoxContainer.Children.Add(new ModpackEntryCard(modpack));
-        }
         
         LoadingCircleIcon.IsVisible = false;
     }
@@ -50,10 +48,10 @@ public partial class BrowseModpacksPage : UserControl
     {
         PageIndex++;
         
-        PlatformModpack[] additionalPacks = await ModPlatformManager.Platform.GetModpacksAsync(PageIndex, 
+        PaginatedResponse<PlatformModpack> additionalPacks = await ModPlatformManager.Platform.GetModpacksAsync(PageIndex, 
             lastQuery, lastMinecraftVersion);
 
-        foreach (PlatformModpack modpack in additionalPacks)
+        foreach (PlatformModpack modpack in additionalPacks.Data)
             BoxContainer.Children.Add(new ModpackEntryCard(modpack));
     }
 }

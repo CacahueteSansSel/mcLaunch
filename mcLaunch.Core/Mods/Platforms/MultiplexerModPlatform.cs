@@ -1,5 +1,6 @@
 ﻿using mcLaunch.Core.Managers;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Core;
 
 namespace mcLaunch.Core.Mods.Platforms;
 
@@ -14,15 +15,17 @@ public class MultiplexerModPlatform : ModPlatform
 
     public override string Name { get; } = "Multiplexer";
     
-    public override async Task<Modification[]> GetModsAsync(int page, Box box, string searchQuery)
+    public override async Task<PaginatedResponse<Modification>> GetModsAsync(int page, Box box, string searchQuery)
     {
         List<Modification> mods = new();
+        int totalPageCount = 0;
 
         foreach (ModPlatform platform in _platforms)
         {
-            Modification[] modsFromPlatform = await platform.GetModsAsync(page, box, searchQuery);
+            PaginatedResponse<Modification> modsFromPlatform = await platform.GetModsAsync(page, box, searchQuery);
+            if (totalPageCount < modsFromPlatform.TotalPageCount) totalPageCount = modsFromPlatform.TotalPageCount;
 
-            foreach (Modification mod in modsFromPlatform)
+            foreach (Modification mod in modsFromPlatform.Data)
             {
                 int similarModCount = mods.Count(m => m.IsSimilar(mod));
                 
@@ -31,20 +34,22 @@ public class MultiplexerModPlatform : ModPlatform
                 if (similarModCount == 0) mods.Add(mod);
             }
         }
-        
-        return mods.ToArray();
+
+        return new PaginatedResponse<Modification>(page, totalPageCount, mods.ToArray());
     }
 
-    public override async Task<PlatformModpack[]> GetModpacksAsync(int page, string searchQuery,
+    public override async Task<PaginatedResponse<PlatformModpack>> GetModpacksAsync(int page, string searchQuery,
         string minecraftVersion)
     {
         List<PlatformModpack> mods = new();
+        int totalPageCount = 0;
 
         foreach (ModPlatform platform in _platforms)
         {
-            PlatformModpack[] modpacksFromPlatform = await platform.GetModpacksAsync(page, searchQuery, minecraftVersion);
+            PaginatedResponse<PlatformModpack> modpacksFromPlatform = await platform.GetModpacksAsync(page, searchQuery, minecraftVersion);
+            if (totalPageCount < modpacksFromPlatform.TotalPageCount) totalPageCount = modpacksFromPlatform.TotalPageCount;
 
-            foreach (PlatformModpack mod in modpacksFromPlatform)
+            foreach (PlatformModpack mod in modpacksFromPlatform.Data)
             {
                 int similarModCount = mods.Count(m => m.IsSimilar(mod));
                 
@@ -55,10 +60,10 @@ public class MultiplexerModPlatform : ModPlatform
             }
         }
         
-        return mods.ToArray();
+        return new PaginatedResponse<PlatformModpack>(page, totalPageCount, mods.ToArray());
     }
 
-    public override async Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId, string minecraftVersionId)
+    public override async Task<PaginatedResponse<ModDependency>> GetModDependenciesAsync(string id, string modLoaderId, string versionId, string minecraftVersionId)
     {
         Modification mod = await GetModAsync(id);
         if (mod == null) return null;

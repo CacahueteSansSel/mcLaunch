@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods.Packs;
 using Modrinth;
@@ -40,7 +41,7 @@ public class ModrinthModPlatform : ModPlatform
         });
     }
 
-    public override async Task<Modification[]> GetModsAsync(int page, Box box, string searchQuery)
+    public override async Task<PaginatedResponse<Modification>> GetModsAsync(int page, Box box, string searchQuery)
     {
         FacetCollection collection = new();
 
@@ -75,10 +76,10 @@ public class ModrinthModPlatform : ModPlatform
         // Download all mods images
         foreach (Modification mod in mods) mod.DownloadIconAsync();
 
-        return mods;
+        return new PaginatedResponse<Modification>(page, search.TotalHits / search.Limit, mods);
     }
 
-    public override async Task<PlatformModpack[]> GetModpacksAsync(int page, string searchQuery,
+    public override async Task<PaginatedResponse<PlatformModpack>> GetModpacksAsync(int page, string searchQuery,
         string minecraftVersion)
     {
         FacetCollection collection = new();
@@ -109,17 +110,17 @@ public class ModrinthModPlatform : ModPlatform
         // TODO: fix that causing slow loading process
         foreach (PlatformModpack pack in modpacks) await pack.DownloadIconAsync();
 
-        return modpacks;
+        return new PaginatedResponse<PlatformModpack>(page, search.TotalHits / search.Limit, modpacks);
     }
 
-    public override async Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId,
+    public override async Task<PaginatedResponse<ModDependency>> GetModDependenciesAsync(string id, string modLoaderId, string versionId,
         string minecraftVersionId)
     {
         Version[] versions = await client.Version.GetProjectVersionListAsync(id, new[] {modLoaderId},
             new[] {minecraftVersionId});
         Version? version = versions.FirstOrDefault(v => v.Id == versionId);
 
-        return await Task.Run(() =>
+        return new PaginatedResponse<ModDependency>(0, 1, await Task.Run(() =>
         {
             return version.Dependencies.Where(dep => dep.ProjectId != null).Select(dep => new ModDependency
             {
@@ -127,7 +128,7 @@ public class ModrinthModPlatform : ModPlatform
                 VersionId = dep.VersionId,
                 Type = (DependencyRelationType) dep.DependencyType
             }).ToArray();
-        });
+        }));
     }
 
     public override async Task<Modification> GetModAsync(string id)

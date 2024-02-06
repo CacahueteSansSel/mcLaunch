@@ -79,15 +79,15 @@ public class Box
         QuickPlay = new QuickPlayManager(Folder);
 
         ReloadManifest(true);
-        if (File.Exists($"{path}/icon.png") && Manifest.Icon == null) 
+        if (File.Exists($"{path}/icon.png") && Manifest.Icon == null)
             LoadIcon();
     }
 
     void CreateWatcher()
     {
-        if (!Directory.Exists(Folder.CompletePath)) 
+        if (!Directory.Exists(Folder.CompletePath))
             Directory.CreateDirectory(Folder.CompletePath);
-        
+
         watcher = new FileSystemWatcher(Folder.CompletePath);
         watcher.IncludeSubdirectories = true;
         watcher.Created += OnFileCreated;
@@ -106,10 +106,10 @@ public class Box
         foreach (BoxStoredModification mod in Manifest.Modifications)
         {
             if (!mod.Filenames.Contains(relativePath)) continue;
-                
+
             Manifest.RemoveModification(mod.Id, this);
             EventListener?.OnModRemoved(mod.Id);
-                
+
             break;
         }
     }
@@ -128,11 +128,11 @@ public class Box
             await using MemoryStream fs = new MemoryStream(await File.ReadAllBytesAsync(e.FullPath));
             ModVersion? version = await ModPlatformManager.Platform.GetModVersionFromData(fs);
             if (version == null || version.Mod == null) return;
-            
+
             // Add the mod to the list
-            Manifest.AddModification(version.Mod.Id, version.VersionId, 
-                version.Mod.ModPlatformId, new[] {relativePath});
-            
+            Manifest.AddModification(version.Mod.Id, version.VersionId,
+                version.Mod.ModPlatformId, new[] { relativePath });
+
             EventListener?.OnModAdded(version.Mod);
         }
         catch (Exception exception)
@@ -157,7 +157,7 @@ public class Box
     {
         watcher.EnableRaisingEvents = isWatching;
     }
- 
+
     public string? ReadReadmeFile() => HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
 
     public void ReloadManifest(bool force = false)
@@ -178,10 +178,10 @@ public class Box
             icon = Manifest.Icon;
             background = Manifest.Background;
         }
-        
+
         Manifest = JsonSerializer.Deserialize<BoxManifest>(File.ReadAllText(manifestPath))!;
         RunPostDeserializationChecks();
-        
+
         Manifest.FileHash = hash;
 
         if (isReload)
@@ -195,7 +195,7 @@ public class Box
     {
         List<string> changes = new();
         List<BoxStoredModification> modsToRemove = new();
-        
+
         ReloadManifest();
 
         foreach (BoxStoredModification mod in Manifest.Modifications)
@@ -206,12 +206,12 @@ public class Box
                 string path = $"{Folder.CompletePath}/{filename}";
                 if (!File.Exists(path)) continue;
                 exists = true;
-                
+
                 break;
             }
 
             if (exists) continue;
-            
+
             modsToRemove.Add(mod);
             changes.Add($"Mod {mod.Name} has been removed because it is not present on disk anymore");
         }
@@ -231,14 +231,15 @@ public class Box
 
         foreach (string modFilename in unknownModsFilenames)
         {
-            await using MemoryStream fs = new MemoryStream(await File.ReadAllBytesAsync($"{Folder.CompletePath}/{modFilename}"));
+            await using MemoryStream fs =
+                new MemoryStream(await File.ReadAllBytesAsync($"{Folder.CompletePath}/{modFilename}"));
             ModVersion? version = await ModPlatformManager.Platform.GetModVersionFromData(fs);
             if (version == null || version.Mod == null) continue;
-            
+
             // Add the mod to the list
-            Manifest.AddModification(version.Mod.Id, version.VersionId, 
-                version.Mod.ModPlatformId, new[] {modFilename});
-            
+            Manifest.AddModification(version.Mod.Id, version.VersionId,
+                version.Mod.ModPlatformId, new[] { modFilename });
+
             save = true;
         }
 
@@ -247,7 +248,7 @@ public class Box
 
     async void RunPostDeserializationChecks()
     {
-        if (await Manifest?.RunPostDeserializationChecks()) 
+        if (await Manifest?.RunPostDeserializationChecks())
             SaveManifest();
     }
 
@@ -265,15 +266,16 @@ public class Box
                 Manifest.Version);
 
         if (versions.Length == 0) return false;
-        
+
         Manifest.RemoveModification(mod.Id, this);
-        
+
         string version = versions[0];
 
-        ModPlatform.ModDependency[] deps = await ModPlatformManager.Platform.GetModDependenciesAsync(mod.Id,
+        PaginatedResponse<ModPlatform.ModDependency> deps = await ModPlatformManager.Platform.GetModDependenciesAsync(
+            mod.Id,
             Manifest.ModLoaderId, version, Manifest.Version);
 
-        foreach (ModPlatform.ModDependency dep in deps)
+        foreach (ModPlatform.ModDependency dep in deps.Data)
         {
             if (!Manifest.HasModificationStrict(dep.Mod.Id, mod.ModPlatformId)
                 && Manifest.HasModificationSoft(dep.Mod))
@@ -281,8 +283,8 @@ public class Box
                 // The dependency is installed from another platform
                 continue;
             }
-            
-            if (Manifest.HasModificationStrict(dep.Mod.Id, mod.ModPlatformId) 
+
+            if (Manifest.HasModificationStrict(dep.Mod.Id, mod.ModPlatformId)
                 && Manifest.GetModification(dep.Mod.Id).VersionId != dep.VersionId)
             {
                 // The mod is installed on this box & the required version does not match the installed one
@@ -305,7 +307,7 @@ public class Box
                 }
             }
         }
-        
+
         return await ModPlatformManager.Platform.InstallModAsync(this, mod, version, installOptional);
     }
 
@@ -336,7 +338,7 @@ public class Box
 
         List<MinecraftServer> servers = new();
         CompoundTag tag = NbtFile.Read($"{Folder.Path}/servers.dat", FormatOptions.Java);
-        ListTag serversTag = (ListTag) tag["servers"];
+        ListTag serversTag = (ListTag)tag["servers"];
 
         foreach (CompoundTag server in serversTag)
         {
@@ -355,8 +357,8 @@ public class Box
 
     public string[] GetScreenshotPaths()
     {
-        return !Directory.Exists($"{Folder.Path}/screenshots") 
-            ? Array.Empty<string>() 
+        return !Directory.Exists($"{Folder.Path}/screenshots")
+            ? Array.Empty<string>()
             : Directory.GetFiles($"{Folder.Path}/screenshots", "*.png");
     }
 
@@ -386,11 +388,11 @@ public class Box
 
     public List<string> GetUnlistedMods()
     {
-        if (!Directory.Exists($"{Path}/minecraft/mods")) 
+        if (!Directory.Exists($"{Path}/minecraft/mods"))
             return new List<string>();
-        
+
         List<string> mods = new();
-        
+
         foreach (string file in Directory.GetFiles($"{Path}/minecraft/mods", "*.jar"))
         {
             string absPath = file.Replace(Path, "").Replace('\\', '/')
@@ -479,16 +481,16 @@ public class Box
                 if (modVersion == null) continue;
 
                 Manifest.RemoveModification(mod.Id, this);
-                bool success = await ModrinthModPlatform.Instance.InstallModAsync(this, modVersion.Mod, 
+                bool success = await ModrinthModPlatform.Instance.InstallModAsync(this, modVersion.Mod,
                     modVersion.VersionId, false);
-                
+
                 if (success) migratedMods.Add(modVersion.Mod);
             }
         }
 
         return migratedMods.ToArray();
     }
-    
+
     public async Task<Modification[]> MigrateToCurseForgeAsync(Action<BoxStoredModification, int, int> statusCallback)
     {
         int cur = 0;
@@ -512,9 +514,9 @@ public class Box
                 if (modVersion == null) continue;
 
                 Manifest.RemoveModification(mod.Id, this);
-                bool success = await CurseForgeModPlatform.Instance.InstallModAsync(this, modVersion.Mod, 
+                bool success = await CurseForgeModPlatform.Instance.InstallModAsync(this, modVersion.Mod,
                     modVersion.VersionId, false);
-                
+
                 if (success) migratedMods.Add(modVersion.Mod);
             }
         }
@@ -528,7 +530,7 @@ public class Box
     public bool HasModificationSoft(Modification mod)
         => Manifest.HasModificationSoft(mod);
 
-    public void SaveManifest() 
+    public void SaveManifest()
         => File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
 
     // Launch Minecraft normally
@@ -536,7 +538,7 @@ public class Box
     {
         Manifest.LastLaunchTime = DateTime.Now;
         SaveManifest();
-        
+
         return Minecraft.Run();
     }
 
@@ -551,8 +553,8 @@ public class Box
     // Launch a Minecraft world directly using QuickPlay
     public Process Run(MinecraftWorld world)
     {
-        string profilePath = QuickPlay.Create(QuickPlayWorldType.Singleplayer, 
-            (QuickPlayGameMode) world.GameMode, world.FolderName);
+        string profilePath = QuickPlay.Create(QuickPlayWorldType.Singleplayer,
+            (QuickPlayGameMode)world.GameMode, world.FolderName);
 
         return Minecraft
             .WithSingleplayerQuickPlay(profilePath, world.FolderName)

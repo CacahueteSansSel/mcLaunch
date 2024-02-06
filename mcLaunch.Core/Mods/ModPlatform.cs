@@ -3,6 +3,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Core;
 
 namespace mcLaunch.Core.Mods;
 
@@ -11,9 +12,9 @@ public abstract class ModPlatform
     public abstract string Name { get; }
     public Bitmap Icon { get; private set; }
 
-    public abstract Task<Modification[]> GetModsAsync(int page, Box box, string searchQuery);
-    public abstract Task<PlatformModpack[]> GetModpacksAsync(int page, string searchQuery, string minecraftVersion);
-    public abstract Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId, string minecraftVersionId);
+    public abstract Task<PaginatedResponse<Modification>> GetModsAsync(int page, Box box, string searchQuery);
+    public abstract Task<PaginatedResponse<PlatformModpack>> GetModpacksAsync(int page, string searchQuery, string minecraftVersion);
+    public abstract Task<PaginatedResponse<ModDependency>> GetModDependenciesAsync(string id, string modLoaderId, string versionId, string minecraftVersionId);
 
     public abstract Task<Modification> GetModAsync(string id);
     public abstract Task<PlatformModpack> GetModpackAsync(string id);

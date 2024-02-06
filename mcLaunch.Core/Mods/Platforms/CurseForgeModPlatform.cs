@@ -6,6 +6,7 @@ using CurseForge.Models.Games;
 using CurseForge.Models.Mods;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods.Packs;
 using CurseForgeClient = CurseForge.CurseForge;
@@ -31,11 +32,11 @@ public class CurseForgeModPlatform : ModPlatform
         client = new CurseForgeClient(apiKey, "mcLaunch/1.0.0");
     }
 
-    public override async Task<Modification[]> GetModsAsync(int page, Box box, string searchQuery)
+    public override async Task<PaginatedResponse<Modification>> GetModsAsync(int page, Box box, string searchQuery)
     {
         ModLoaderType type = ModLoaderType.Any;
         if (box != null && !Enum.TryParse(box.Manifest.ModLoaderId, true, out type))
-            return Array.Empty<Modification>();
+            return PaginatedResponse<Modification>.Empty;
         
         CursePaginatedResponse<List<Mod>> resp = await client.SearchMods(MinecraftGameId,
             gameVersion: box?.Manifest.Version,
@@ -82,10 +83,10 @@ public class CurseForgeModPlatform : ModPlatform
         // Download all mods images
         foreach (Modification mod in mods) mod.DownloadIconAsync();
 
-        return mods;
+        return new PaginatedResponse<Modification>(page, (int)resp.Pagination.TotalCount, mods);
     }
 
-    public override async Task<PlatformModpack[]> GetModpacksAsync(int page, string searchQuery,
+    public override async Task<PaginatedResponse<PlatformModpack>> GetModpacksAsync(int page, string searchQuery,
         string minecraftVersion)
     {
         CursePaginatedResponse<List<Mod>> resp = await client.SearchMods(MinecraftGameId,
@@ -118,7 +119,7 @@ public class CurseForgeModPlatform : ModPlatform
         // TODO: fix that causing slow loading process
         foreach (PlatformModpack pack in modpacks) await pack.DownloadIconAsync();
         
-        return modpacks;
+        return new PaginatedResponse<PlatformModpack>(page, (int)resp.Pagination.TotalCount, modpacks);
     }
 
     public override async Task<Modification> GetModAsync(string id)
@@ -233,7 +234,7 @@ public class CurseForgeModPlatform : ModPlatform
         return modVersions.ToArray();
     }
 
-    public override async Task<ModDependency[]> GetModDependenciesAsync(string id, string modLoaderId, string versionId,
+    public override async Task<PaginatedResponse<ModDependency>> GetModDependenciesAsync(string id, string modLoaderId, string versionId,
         string minecraftVersionId)
     {
         List<File> files = (await client.GetModFiles(uint.Parse(id), minecraftVersionId,
@@ -242,12 +243,12 @@ public class CurseForgeModPlatform : ModPlatform
 
         return await Task.Run(() =>
         {
-            return file.Dependencies.Select(dep => new ModDependency
+            return new PaginatedResponse<ModDependency>(0, 1, file.Dependencies.Select(dep => new ModDependency
             {
                 Mod = GetModAsync(dep.ModId.ToString()).GetAwaiter().GetResult(),
                 VersionId = GetModAsync(dep.ModId.ToString()).GetAwaiter().GetResult().LatestVersion,
                 Type = ToRelationType(dep.RelationType)
-            }).ToArray();
+            }).ToArray());
         });
     }
 
