@@ -107,7 +107,7 @@ public class CurseForgeModPlatform : ModPlatform
             Url = null,
             IconPath = modpack.Logo.Url,
             MinecraftVersions = modpack.LatestFiles.SelectMany(f => f.GameVersions).ToArray(),
-            BackgroundPath = modpack.Screnshots?.FirstOrDefault()?.Url,
+            BackgroundPath = modpack.Screnshots?.FirstOrDefault()?.Url ?? modpack.Logo.Url,
             LatestMinecraftVersion = modpack.LatestFiles.Count == 0 ? null : modpack.LatestFiles[0].GameVersions[0],
             DownloadCount = (int)modpack.DownloadCount,
             LastUpdated = modpack.DateModified.DateTime,
@@ -196,7 +196,7 @@ public class CurseForgeModPlatform : ModPlatform
             ModpackFileUrl = pv.DownloadUrl,
             ModpackFileHash = pv.Hashes[0].Value
         }).ToArray();
-
+        
         PlatformModpack mod = new PlatformModpack
         {
             Id = cfMod.Id.ToString(),
@@ -204,7 +204,7 @@ public class CurseForgeModPlatform : ModPlatform
             ShortDescription = cfMod.Summary,
             Author = cfMod.Authors?.FirstOrDefault()?.Name,
             IconPath = cfMod.Logo.Url,
-            BackgroundPath = cfMod.Screnshots?.FirstOrDefault()?.Url,
+            BackgroundPath = cfMod.Screnshots?.FirstOrDefault()?.Url ?? cfMod.Logo.Url,
             MinecraftVersions = minecraftVersions.ToArray(),
             LatestMinecraftVersion = minecraftVersions.Last(),
             Versions = versions,
