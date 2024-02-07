@@ -103,14 +103,21 @@ public class Box
         if (!relativePath.StartsWith("mods")) return;
         // A mod was removed
 
-        foreach (BoxStoredModification mod in Manifest.Modifications)
+        try
         {
-            if (!mod.Filenames.Contains(relativePath)) continue;
+            foreach (BoxStoredModification mod in Manifest.Modifications)
+            {
+                if (!mod.Filenames.Contains(relativePath)) continue;
 
-            Manifest.RemoveModification(mod.Id, this);
-            EventListener?.OnModRemoved(mod.Id);
+                Manifest.RemoveModification(mod.Id, this);
+                EventListener?.OnModRemoved(mod.Id);
 
-            break;
+                break;
+            }
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
         }
     }
 
