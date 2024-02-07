@@ -19,7 +19,6 @@ public abstract class ModPlatform
     public abstract Task<Modification> GetModAsync(string id);
     public abstract Task<ModVersion[]> GetModVersionsAsync(Modification mod, string modLoaderId, string minecraftVersionId);
     public abstract Task<PlatformModpack> GetModpackAsync(string id);
-    public abstract Task<string[]> GetModVersionList(string modId, string modLoaderId, string minecraftVersionId);
 
     public abstract Task<bool> InstallModAsync(Box targetBox, Modification mod, string versionId, bool installOptional);
     public abstract Task<ModificationPack> LoadModpackFileAsync(string filename);

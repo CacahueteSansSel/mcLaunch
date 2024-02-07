@@ -52,24 +52,25 @@ public static class BoxManager
 
     static async Task PostProcessBoxAsync(Box box, BoxManifest manifest)
     {
-        if (manifest.ModLoaderId == "fabric")
+        switch (manifest.ModLoaderId)
         {
-            // Install Fabric API automatically from Modrinth
+            case "fabric":
+                // Install Fabric API automatically from Modrinth
 
-            try
-            {
-                string fabricApiId = "P7dR8mSH";
-                Modification fabricApi = await ModrinthModPlatform.Instance.GetModAsync(fabricApiId);
+                try
+                {
+                    Modification fabricApi = await ModrinthModPlatform.Instance.GetModAsync("P7dR8mSH");
 
-                string[] versions = await ModrinthModPlatform.Instance.GetModVersionList(
-                    fabricApiId, "fabric", manifest.Version);
+                    ModVersion[] versions = await ModrinthModPlatform.Instance.GetModVersionsAsync(
+                        fabricApi, "fabric", manifest.Version);
 
-                await ModrinthModPlatform.Instance.InstallModAsync(box, fabricApi, versions[0],
-                    false);
-            }
-            catch (Exception e)
-            {
-            }
+                    await ModrinthModPlatform.Instance.InstallModAsync(box, fabricApi, versions[0].Id, false);
+                }
+                catch (Exception e)
+                {
+                }
+
+                break;
         }
     }
 

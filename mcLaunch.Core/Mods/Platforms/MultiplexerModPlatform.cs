@@ -95,14 +95,6 @@ public class MultiplexerModPlatform : ModPlatform
         return null;
     }
 
-    public override async Task<string[]> GetModVersionList(string modId, string modLoaderId, string minecraftVersionId)
-    {
-        Modification mod = await GetModAsync(modId);
-        if (mod == null) return null;
-
-        return await mod.Platform.GetModVersionList(modId, modLoaderId, minecraftVersionId);
-    }
-
     public override async Task<bool> InstallModAsync(Box targetBox, Modification mod, string versionId,
         bool installOptional)
     {

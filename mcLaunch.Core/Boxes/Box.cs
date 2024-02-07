@@ -269,8 +269,8 @@ public class Box
 
     public async Task<bool> UpdateModAsync(Modification mod, bool installOptional = false)
     {
-        string[] versions =
-            await ModPlatformManager.Platform.GetModVersionList(mod.Id,
+        ModVersion[] versions =
+            await ModPlatformManager.Platform.GetModVersionsAsync(mod,
                 Manifest.ModLoaderId,
                 Manifest.Version);
 
@@ -278,11 +278,11 @@ public class Box
 
         Manifest.RemoveModification(mod.Id, this);
 
-        string version = versions[0];
+        ModVersion version = versions[0];
 
         PaginatedResponse<ModPlatform.ModDependency> deps = await ModPlatformManager.Platform.GetModDependenciesAsync(
             mod.Id,
-            Manifest.ModLoaderId, version, Manifest.Version);
+            Manifest.ModLoaderId, version.Id, Manifest.Version);
 
         foreach (ModPlatform.ModDependency dep in deps.Items)
         {
@@ -317,7 +317,7 @@ public class Box
             }
         }
 
-        return await ModPlatformManager.Platform.InstallModAsync(this, mod, version, installOptional);
+        return await ModPlatformManager.Platform.InstallModAsync(this, mod, version.Id, installOptional);
     }
 
     public MinecraftWorld[] LoadWorlds()

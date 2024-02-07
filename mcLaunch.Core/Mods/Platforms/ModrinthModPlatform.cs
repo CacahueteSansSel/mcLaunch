@@ -234,15 +234,6 @@ public class ModrinthModPlatform : ModPlatform
         }
     }
 
-    public override async Task<string[]> GetModVersionList(string modId, string modLoaderId,
-        string minecraftVersionId)
-    {
-        Version[] versions = await client.Version.GetProjectVersionListAsync(modId, new[] {modLoaderId},
-            new[] {minecraftVersionId});
-
-        return versions.Select(v => v.Id).ToArray();
-    }
-
     async Task InstallVersionAsync(Box targetBox, Version version, bool installOptional)
     {
         if (version.Dependencies != null)

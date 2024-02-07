@@ -78,7 +78,7 @@ public partial class ModListSubControl : SubControl
 
         foreach (Modification mod in mods)
         {
-            string[] versions = await ModPlatformManager.Platform.GetModVersionList(mod.Id,
+            ModVersion[] versions = await ModPlatformManager.Platform.GetModVersionsAsync(mod,
                 Box.Manifest.ModLoaderId, Box.Manifest.Version);
 
             mod.IsInvalid = versions.Length == 0;
@@ -90,7 +90,7 @@ public partial class ModListSubControl : SubControl
                 continue;
             }
 
-            mod.IsUpdateRequired = versions[0] != mod.InstalledVersion;
+            mod.IsUpdateRequired = versions[0].Id != mod.InstalledVersion;
             if (mod.IsUpdateRequired)
             {
                 isChanges = true;

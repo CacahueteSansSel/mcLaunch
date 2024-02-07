@@ -234,21 +234,6 @@ public class CurseForgeModPlatform : ModPlatform
         return mod;
     }
 
-    public override async Task<string[]> GetModVersionList(string modId, string modLoaderId,
-        string minecraftVersionId)
-    {
-        //Mod cfMod = (await client.GetMod(uint.Parse(modId))).Data;
-        List<string> modVersions = new();
-
-        foreach (File file in (await client.GetModFiles(uint.Parse(modId), minecraftVersionId,
-                     Enum.Parse<ModLoaderType>(modLoaderId, true), pageSize: 100)).Data)
-        {
-            modVersions.Add(file.Id.ToString());
-        }
-
-        return modVersions.ToArray();
-    }
-
     public override async Task<PaginatedResponse<ModDependency>> GetModDependenciesAsync(string id, string modLoaderId, string versionId,
         string minecraftVersionId)
     {

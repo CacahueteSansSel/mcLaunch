@@ -119,10 +119,10 @@ public class ModrinthModificationPack : ModificationPack
                         {
                             try
                             {
-                                string[] versions = await ModrinthModPlatform.Instance.GetModVersionList(id, ModloaderId,
-                                    MinecraftVersion);
+                                ModVersion[] versions = await ModrinthModPlatform.Instance.GetModVersionsAsync(
+                                    Modification.CreateIdOnly(id), ModloaderId, MinecraftVersion);
                             
-                                ver = await ModrinthModPlatform.Instance.Client.Version.GetAsync(versions[0]);
+                                ver = await ModrinthModPlatform.Instance.Client.Version.GetAsync(versions[0].Id);
                             }
                             catch
                             {
