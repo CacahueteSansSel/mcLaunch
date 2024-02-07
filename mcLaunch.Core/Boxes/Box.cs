@@ -137,7 +137,7 @@ public class Box
             if (version == null || version.Mod == null) return;
 
             // Add the mod to the list
-            Manifest.AddModification(version.Mod.Id, version.VersionId,
+            Manifest.AddModification(version.Mod.Id, version.Id,
                 version.Mod.ModPlatformId, new[] { relativePath });
 
             EventListener?.OnModAdded(version.Mod);
@@ -244,7 +244,7 @@ public class Box
             if (version == null || version.Mod == null) continue;
 
             // Add the mod to the list
-            Manifest.AddModification(version.Mod.Id, version.VersionId,
+            Manifest.AddModification(version.Mod.Id, version.Id,
                 version.Mod.ModPlatformId, new[] { modFilename });
 
             save = true;
@@ -489,7 +489,7 @@ public class Box
 
                 Manifest.RemoveModification(mod.Id, this);
                 bool success = await ModrinthModPlatform.Instance.InstallModAsync(this, modVersion.Mod,
-                    modVersion.VersionId, false);
+                    modVersion.Id, false);
 
                 if (success) migratedMods.Add(modVersion.Mod);
             }
@@ -522,7 +522,7 @@ public class Box
 
                 Manifest.RemoveModification(mod.Id, this);
                 bool success = await CurseForgeModPlatform.Instance.InstallModAsync(this, modVersion.Mod,
-                    modVersion.VersionId, false);
+                    modVersion.Id, false);
 
                 if (success) migratedMods.Add(modVersion.Mod);
             }

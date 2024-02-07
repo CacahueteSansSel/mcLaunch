@@ -29,16 +29,11 @@ public static class UpdateManager
         GitHubRelease? latestRelease = await GitHubRepository.GetLatestReleaseAsync();
         if (latestRelease == null) return false;
 
-        if (Directory.Exists("installer") && File.Exists("installer/installer.exe"))
+        if (Directory.Exists("installer") && PlatformSpecific.ProcessExists("installer/installer"))
         {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = Path.GetFullPath("installer/installer.exe"),
-                WorkingDirectory = Path.GetFullPath("installer"),
-                Arguments = $"\"{Environment.CurrentDirectory}\"",
-                UseShellExecute = true,
-                Verb = "runas"
-            });
+            PlatformSpecific.LaunchProcess("installer/installer", 
+                $"\"{Environment.CurrentDirectory}\"", 
+                "runas");
             
             Environment.Exit(0);
             return true;

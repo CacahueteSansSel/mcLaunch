@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              Width="800" Height="450"
-             x:Class="mcLaunch.Views.Popups.ModpackVersionSelectionPopup">
+             x:Class="mcLaunch.Views.Popups.VersionSelectionPopup">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
@@ -18,7 +18,7 @@
                 <Panel></Panel>
             </DockPanel>
             <ScrollViewer Margin="0 5 0 0">
-                <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{Binding Versions}"
+                <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{Binding ContentVersions}"
                          SelectionChanged="VersionSelectionChanged" DoubleTapped="VersionListDoubleTapped">
                     <ListBox.Styles>
                         <Style Selector="ListBoxItem">

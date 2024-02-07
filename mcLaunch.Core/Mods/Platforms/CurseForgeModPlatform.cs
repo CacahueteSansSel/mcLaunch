@@ -172,6 +172,21 @@ public class CurseForgeModPlatform : ModPlatform
         }
     }
 
+    public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string modLoaderId, 
+        string minecraftVersionId)
+    {
+        List<ModVersion> modVersions = new();
+
+        foreach (File file in (await client.GetModFiles(uint.Parse(mod.Id), minecraftVersionId,
+                     Enum.Parse<ModLoaderType>(modLoaderId, true))).Data)
+        {
+            modVersions.Add(new ModVersion(mod, file.Id.ToString(), file.DisplayName, 
+                file.GameVersions.FirstOrDefault()));
+        }
+
+        return modVersions.ToArray();
+    }
+
     public override async Task<PlatformModpack> GetModpackAsync(string id)
     {
         if (!uint.TryParse(id, out uint value)) return null;
@@ -402,6 +417,7 @@ public class CurseForgeModPlatform : ModPlatform
         FingerprintMatch match = resp.Data.ExactMatches[0];
         Modification mod = await GetModAsync(match.Id.ToString());
 
-        return new ModVersion(mod, match.File.Id.ToString());
+        return new ModVersion(mod, match.File.Id.ToString(), 
+            match.File.DisplayName, match.File.GameVersions.FirstOrDefault());
     }
 }

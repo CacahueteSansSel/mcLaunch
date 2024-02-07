@@ -32,6 +32,7 @@
                     <TextBlock>Minecraft is the property of Mojang Studios, and they are not affiliated with this project</TextBlock>
                     <StackPanel Orientation="Horizontal" Spacing="5">
                         <Button Classes="secondary" Click="OpenGithubRepoButtonClicked">GitHub</Button>
+                        <Button Classes="secondary" Click="CrashLauncherButtonClicked">Crash</Button>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

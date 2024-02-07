@@ -14,7 +14,7 @@ public class MultiplexerModPlatform : ModPlatform
     }
 
     public override string Name { get; } = "Multiplexer";
-    
+
     public override async Task<PaginatedResponse<Modification>> GetModsAsync(int page, Box box, string searchQuery)
     {
         List<Modification> mods = new();
@@ -26,7 +26,7 @@ public class MultiplexerModPlatform : ModPlatform
             foreach (Modification mod in modsFromPlatform.Items)
             {
                 int similarModCount = mods.Count(m => m.IsSimilar(mod));
-                
+
                 // Avoid to add a mod that we have got from another platform
                 // Ensure only one mod per search query
                 if (similarModCount == 0) mods.Add(mod);
@@ -43,23 +43,25 @@ public class MultiplexerModPlatform : ModPlatform
 
         foreach (ModPlatform platform in _platforms)
         {
-            PaginatedResponse<PlatformModpack> modpacksFromPlatform = await platform.GetModpacksAsync(page, searchQuery, minecraftVersion);
+            PaginatedResponse<PlatformModpack> modpacksFromPlatform =
+                await platform.GetModpacksAsync(page, searchQuery, minecraftVersion);
 
             foreach (PlatformModpack mod in modpacksFromPlatform.Items)
             {
                 int similarModCount = mods.Count(m => m.IsSimilar(mod));
-                
+
                 // Avoid to add a modpack that we have got from another platform
                 // Ensure only one modpack per search query
                 // Spoiler: it doesn't work at all
                 if (similarModCount == 0) mods.Add(mod);
             }
         }
-        
+
         return new PaginatedResponse<PlatformModpack>(page, mods.Count / 20, mods.ToArray());
     }
 
-    public override async Task<PaginatedResponse<ModDependency>> GetModDependenciesAsync(string id, string modLoaderId, string versionId, string minecraftVersionId)
+    public override async Task<PaginatedResponse<ModDependency>> GetModDependenciesAsync(string id, string modLoaderId,
+        string versionId, string minecraftVersionId)
     {
         Modification mod = await GetModAsync(id);
         if (mod == null) return null;
@@ -77,6 +79,10 @@ public class MultiplexerModPlatform : ModPlatform
 
         return null;
     }
+
+    public override Task<ModVersion[]> GetModVersionsAsync(Modification mod, string modLoaderId,
+        string minecraftVersionId)
+        => mod.Platform!.GetModVersionsAsync(mod, modLoaderId, minecraftVersionId);
 
     public override async Task<PlatformModpack> GetModpackAsync(string id)
     {
@@ -97,7 +103,8 @@ public class MultiplexerModPlatform : ModPlatform
         return await mod.Platform.GetModVersionList(modId, modLoaderId, minecraftVersionId);
     }
 
-    public override async Task<bool> InstallModAsync(Box targetBox, Modification mod, string versionId, bool installOptional)
+    public override async Task<bool> InstallModAsync(Box targetBox, Modification mod, string versionId,
+        bool installOptional)
     {
         ModPlatform? modPlatform = mod.Platform ?? _platforms.FirstOrDefault(p => p.Name == mod.ModPlatformId);
 

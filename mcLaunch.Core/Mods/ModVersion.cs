@@ -1,13 +1,12 @@
-﻿namespace mcLaunch.Core.Mods;
+﻿using mcLaunch.Core.Core;
 
-public class ModVersion
+namespace mcLaunch.Core.Mods;
+
+public class ModVersion(Modification mod, string id, string name, string minecraftVersion) : IVersion
 {
-    public Modification Mod { get; set; }
-    public string VersionId { get; set; }
-
-    public ModVersion(Modification mod, string version)
-    {
-        Mod = mod;
-        VersionId = version;
-    }
+    public Modification Mod { get; set; } = mod;
+    public string Id { get; set; } = id;
+    public string Name { get; set; } = name;
+    public string ModLoader { get; set; }
+    public string MinecraftVersion { get; set; } = minecraftVersion;
 }

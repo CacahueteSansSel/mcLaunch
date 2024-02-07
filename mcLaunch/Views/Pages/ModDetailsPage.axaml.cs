@@ -96,6 +96,58 @@ public partial class ModDetailsPage : UserControl
         UninstallButton.IsEnabled = isInstalled;
     }
 
+    async void CreateModpackFromVersion(IVersion incomingVersion)
+    {
+        ModVersion version = (ModVersion)incomingVersion;
+        
+        LoadingButtonFrame.IsVisible = true;
+
+        PaginatedResponse<ModPlatform.ModDependency> deps = await ModPlatformManager.Platform.GetModDependenciesAsync(
+            Mod.Id,
+            TargetBox.Manifest.ModLoaderId, version.Id, TargetBox.Manifest.Version);
+
+        ModPlatform.ModDependency[] optionalDeps =
+            deps.Items.Where(dep =>
+                    dep.Type == ModPlatform.DependencyRelationType.Optional && !TargetBox.HasModificationSoft(dep.Mod))
+                .ToArray();
+
+        if (optionalDeps.Length > 0)
+        {
+            Navigation.ShowPopup(new OptionalModsPopup(TargetBox, Mod, optionalDeps, async () =>
+            {
+                await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version.Id, true);
+
+                LoadingButtonFrame.IsVisible = false;
+                SetInstalled(true);
+
+                BoxDetailsPage.LastOpened?.Reload();
+
+                isInstalling = false;
+            }, async () =>
+            {
+                await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version.Id, false);
+
+                LoadingButtonFrame.IsVisible = false;
+                SetInstalled(true);
+
+                BoxDetailsPage.LastOpened?.Reload();
+
+                isInstalling = false;
+            }));
+
+            return;
+        }
+
+        await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version.Id, false);
+
+        LoadingButtonFrame.IsVisible = false;
+        SetInstalled(true);
+
+        BoxDetailsPage.LastOpened?.Reload();
+
+        isInstalling = false;
+    }
+
     private async void InstallButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (TargetBox == null) return;
@@ -110,10 +162,8 @@ public partial class ModDetailsPage : UserControl
 
         LoadingButtonFrame.IsVisible = true;
 
-        // TODO: Version selection
-
-        string[] versions =
-            await ModPlatformManager.Platform.GetModVersionList(Mod.Id,
+        ModVersion[] versions =
+            await ModPlatformManager.Platform.GetModVersionsAsync(Mod,
                 TargetBox.Manifest.ModLoaderId,
                 TargetBox.Manifest.Version);
 
@@ -127,53 +177,11 @@ public partial class ModDetailsPage : UserControl
             SetInstalled(false);
             return;
         }
-
-        string version = versions[0];
-
-        PaginatedResponse<ModPlatform.ModDependency> deps = await ModPlatformManager.Platform.GetModDependenciesAsync(
-            Mod.Id,
-            TargetBox.Manifest.ModLoaderId, version, TargetBox.Manifest.Version);
-
-        ModPlatform.ModDependency[] optionalDeps =
-            deps.Items.Where(dep =>
-                    dep.Type == ModPlatform.DependencyRelationType.Optional && !TargetBox.HasModificationSoft(dep.Mod))
-                .ToArray();
-
-        if (optionalDeps.Length > 0)
-        {
-            Navigation.ShowPopup(new OptionalModsPopup(TargetBox, Mod, optionalDeps, async () =>
-            {
-                await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version, true);
-
-                LoadingButtonFrame.IsVisible = false;
-                SetInstalled(true);
-
-                BoxDetailsPage.LastOpened?.Reload();
-
-                isInstalling = false;
-            }, async () =>
-            {
-                await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version, false);
-
-                LoadingButtonFrame.IsVisible = false;
-                SetInstalled(true);
-
-                BoxDetailsPage.LastOpened?.Reload();
-
-                isInstalling = false;
-            }));
-
-            return;
-        }
-
-        await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version, false);
-
+        
         LoadingButtonFrame.IsVisible = false;
-        SetInstalled(true);
-
-        BoxDetailsPage.LastOpened?.Reload();
-
-        isInstalling = false;
+        
+        Navigation.ShowPopup(new VersionSelectionPopup(new ModVersionContentProvider(versions, Mod), 
+            CreateModpackFromVersion));
     }
 
     private async void UninstallButtonClicked(object? sender, RoutedEventArgs e)

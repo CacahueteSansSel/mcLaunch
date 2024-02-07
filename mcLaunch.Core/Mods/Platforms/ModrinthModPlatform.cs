@@ -175,6 +175,15 @@ public class ModrinthModPlatform : ModPlatform
         }
     }
 
+    public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string modLoaderId, string minecraftVersionId)
+    {
+        Version[] versions = await client.Version.GetProjectVersionListAsync(mod.Id, 
+            [modLoaderId], [minecraftVersionId]);
+
+        return versions.Select(v => new ModVersion(mod, v.Id, v.Name, 
+            v.GameVersions.FirstOrDefault())).ToArray();
+    }
+
     public override async Task<PlatformModpack> GetModpackAsync(string id)
     {
         try
@@ -351,7 +360,8 @@ public class ModrinthModPlatform : ModPlatform
             Version version = await client.VersionFile.GetVersionByHashAsync(hash);
             if (version == null) return null;
 
-            return new ModVersion(await GetModAsync(version.ProjectId), version.Id);
+            return new ModVersion(await GetModAsync(version.ProjectId), version.Id, 
+                version.Name, version.GameVersions.FirstOrDefault());
         }
         catch (Exception e)
         {

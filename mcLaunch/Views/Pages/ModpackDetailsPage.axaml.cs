@@ -8,6 +8,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Utilities;
@@ -56,17 +57,19 @@ public partial class ModpackDetailsPage : UserControl
     {
         CloneButton.IsVisible = false;
         
-        Navigation.ShowPopup(new ModpackVersionSelectionPopup(modpack, CreateModpack));
+        Navigation.ShowPopup(new VersionSelectionPopup(modpack, CreateModpack));
     }
 
-    private async void CreateModpack(PlatformModpack.ModpackVersion version)
+    private async void CreateModpack(IVersion version)
     {
+        if (version is not PlatformModpack.ModpackVersion modpackVersion) return;
+        
         Navigation.HidePopup();
         Navigation.ShowPopup(new StatusPopup($"Cloning {modpack.Name}", "Please wait for the modpack to be cloned"));
         StatusPopup.Instance.Status = "Downloading...";
         StatusPopup.Instance.ShowDownloadBanner = true;
 
-        Box box = await BoxManager.CreateFromPlatformModpack(modpack, version, (msg, percent) =>
+        Box box = await BoxManager.CreateFromPlatformModpack(modpack, modpackVersion, (msg, percent) =>
         {
             StatusPopup.Instance.Status = $"{msg}";
             StatusPopup.Instance.StatusPercent = percent;

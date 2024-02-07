@@ -174,21 +174,11 @@ public partial class BoxDetailsPage : UserControl
         // TODO: crash report parser
         // RegExp for mod dependencies error (Forge) : /(Failure message): .+/g
 
-        string fullPath = Environment.GetCommandLineArgs()[0];
-        string binaryFolder = fullPath.Replace(Path.GetFileName(fullPath), "").Trim();
-        string backgroundProcessFilename
-            = $"{binaryFolder}/mcLaunch.MinecraftGuard{(OperatingSystem.IsWindows() ? ".exe" : "")}";
-
-        if (File.Exists(backgroundProcessFilename))
+        if (PlatformSpecific.ProcessExists("mcLaunch.MinecraftGuard"))
         {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = backgroundProcessFilename,
-                Arguments = $"{java.Id.ToString()} {Box.Manifest.Id} {Box.Manifest.Type.ToString().ToLower()}",
-                CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                UseShellExecute = false
-            });
+            PlatformSpecific.LaunchProcess("mcLaunch.MinecraftGuard", 
+                $"{java.Id.ToString()} {Box.Manifest.Id} {Box.Manifest.Type.ToString().ToLower()}", 
+                hidden: true);
         }
 
         Environment.Exit(0);

@@ -4,13 +4,14 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Models;
 using Markdig;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Utilities;
 using ReactiveUI;
 
 namespace mcLaunch.Core.Mods;
 
-public class PlatformModpack : ReactiveObject
+public class PlatformModpack : ReactiveObject, IVersionContent
 {
     string? longDescriptionBody;
     Bitmap? icon;
@@ -24,6 +25,7 @@ public class PlatformModpack : ReactiveObject
     public string? ShortDescription { get; set; }
     public string? Changelog { get; set; }
     public string? Url { get; set; }
+    public IEnumerable<IVersion> ContentVersions => Versions;
 
     public string? LongDescriptionBody
     {
@@ -236,7 +238,7 @@ public class PlatformModpack : ReactiveObject
         return modloadersNames.ToArray();
     }
 
-    public class ModpackVersion
+    public class ModpackVersion : IVersion
     {
         public string Id { get; set; }
         public string Name { get; set; }

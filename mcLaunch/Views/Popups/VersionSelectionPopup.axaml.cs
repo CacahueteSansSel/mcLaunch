@@ -4,17 +4,18 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Mods;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Popups;
 
-public partial class ModpackVersionSelectionPopup : UserControl
+public partial class VersionSelectionPopup : UserControl
 {
-    private Action<PlatformModpack.ModpackVersion> versionSelectedCallback;
-    private PlatformModpack.ModpackVersion? selectedVersion;
+    private Action<IVersion> versionSelectedCallback;
+    private IVersion? selectedVersion;
 
-    public ModpackVersionSelectionPopup()
+    public VersionSelectionPopup()
     {
         InitializeComponent();
 
@@ -42,11 +43,11 @@ public partial class ModpackVersionSelectionPopup : UserControl
         }
     }
 
-    public ModpackVersionSelectionPopup(PlatformModpack modpack, Action<PlatformModpack.ModpackVersion> callback)
+    public VersionSelectionPopup(IVersionContent content, Action<IVersion> callback)
     {
         InitializeComponent();
 
-        DataContext = modpack;
+        DataContext = content;
         versionSelectedCallback = callback;
     }
 
@@ -54,7 +55,7 @@ public partial class ModpackVersionSelectionPopup : UserControl
     {
         if (e.AddedItems.Count > 0)
         {
-            selectedVersion = (PlatformModpack.ModpackVersion) e.AddedItems[0];
+            selectedVersion = (IVersion) e.AddedItems[0];
             InstallButton.IsVisible = true;
         }
     }
