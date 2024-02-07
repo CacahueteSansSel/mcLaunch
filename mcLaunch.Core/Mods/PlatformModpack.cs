@@ -189,7 +189,7 @@ public class PlatformModpack : ReactiveObject, IVersionContent
             {
                 try
                 {
-                    return Bitmap.DecodeToWidth(imageStream, 1280);
+                    return Bitmap.DecodeToWidth(imageStream, 640);
                 }
                 catch (Exception e)
                 {
@@ -242,10 +242,10 @@ public class PlatformModpack : ReactiveObject, IVersionContent
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string MinecraftVersion { get; set; }
-        public string ModpackFileUrl { get; set; }
+        public string? MinecraftVersion { get; set; }
+        public string? ModpackFileUrl { get; set; }
         public string? ModpackFileHash { get; set; }
-        public string ModLoader { get; set; }
+        public string? ModLoader { get; set; }
     }
 
     public void TransformLongDescriptionToHtml()

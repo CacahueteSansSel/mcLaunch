@@ -117,7 +117,7 @@ public class CurseForgeModPlatform : ModPlatform
         
         // Download all modpack images
         // TODO: fix that causing slow loading process
-        foreach (PlatformModpack pack in modpacks) await pack.DownloadIconAsync();
+        foreach (PlatformModpack pack in modpacks) pack.DownloadIconAsync();
         
         return new PaginatedResponse<PlatformModpack>(page, (int)resp.Pagination.TotalCount, modpacks);
     }
@@ -207,10 +207,10 @@ public class CurseForgeModPlatform : ModPlatform
         {
             Id = pv.Id.ToString(),
             Name = pv.DisplayName,
-            MinecraftVersion = pv.GameVersions[0],
+            MinecraftVersion = pv.GameVersions.FirstOrDefault(),
             ModLoader = cfMod.LatestFileIndexes?.FirstOrDefault(i => i.FileId == pv.Id)?.ModLoader.ToString().ToLower(),
             ModpackFileUrl = pv.DownloadUrl,
-            ModpackFileHash = pv.Hashes[0].Value
+            ModpackFileHash = pv.Hashes.FirstOrDefault()?.Value
         }).ToArray();
         
         PlatformModpack mod = new PlatformModpack
