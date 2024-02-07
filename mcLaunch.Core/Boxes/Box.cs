@@ -42,6 +42,8 @@ public class Box
     public bool IsRunning => MinecraftProcess != null && !MinecraftProcess.HasExited;
     public bool HasReadmeFile => File.Exists($"{Folder.Path}/README.md");
     public bool HasLicenseFile => File.Exists($"{Folder.Path}/LICENSE.md");
+    public bool HasCrashReports => Directory.Exists($"{Folder.Path}/crash-reports") 
+                                   && Directory.GetFiles($"{Folder.Path}/crash-reports").Length > 0;
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
@@ -341,7 +343,8 @@ public class Box
 
     public MinecraftServer[] LoadServers()
     {
-        if (!File.Exists($"{Folder.Path}/servers.dat")) return Array.Empty<MinecraftServer>();
+        if (!File.Exists($"{Folder.Path}/servers.dat")) 
+            return Array.Empty<MinecraftServer>();
 
         List<MinecraftServer> servers = new();
         CompoundTag tag = NbtFile.Read($"{Folder.Path}/servers.dat", FormatOptions.Java);
@@ -360,6 +363,16 @@ public class Box
         }
 
         return servers.ToArray();
+    }
+
+    public MinecraftCrashReport[] LoadCrashReports()
+    {
+        if (!Directory.Exists($"{Folder.Path}/crash-reports")) 
+            return Array.Empty<MinecraftCrashReport>();
+
+        return Directory.GetFiles($"{Folder.Path}/crash-reports")
+            .Select(file => new MinecraftCrashReport(file))
+            .ToArray();
     }
 
     public string[] GetScreenshotPaths()

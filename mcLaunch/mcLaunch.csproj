@@ -190,6 +190,8 @@
       <AvaloniaResource Include="resources\icons\neoforge.png" />
       <None Remove="resources\settings\anonymized_names.txt" />
       <AvaloniaResource Include="resources\settings\anonymized_names.txt" />
+      <None Remove="resources\icons\problem.png" />
+      <AvaloniaResource Include="resources\icons\problem.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -225,6 +227,14 @@
       </Compile>
       <Compile Update="Views\Popups\ModsPopup.axaml.cs">
         <DependentUpon>ModsPopup.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Pages\BoxDetails\CrashReportListSubControl.axaml.cs">
+        <DependentUpon>CrashReportListSubControl.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\CrashReportList.axaml.cs">
+        <DependentUpon>CrashReportList.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

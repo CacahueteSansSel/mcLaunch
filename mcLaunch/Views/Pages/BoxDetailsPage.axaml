@@ -84,6 +84,9 @@
                                     <Button Classes="transparent" Click="SubControlScreenshotClicked" ToolTip.Tip="Screenshots">
                                         <Image Source="/resources/icons/screenshot.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>
+                                    <Button x:Name="CrashReportButton" Classes="transparent" Click="SubControlCrashReportClicked" ToolTip.Tip="Crash Reports">
+                                        <Image Source="/resources/icons/problem.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
+                                    </Button>
                                     <Button Classes="transparent" Click="SubControlSettingsClicked" ToolTip.Tip="Game Settings">
                                         <Image Source="/resources/icons/game_settings.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>

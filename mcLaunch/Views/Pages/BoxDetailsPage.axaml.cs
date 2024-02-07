@@ -85,17 +85,18 @@ public partial class BoxDetailsPage : UserControl
         else SetSubControl(new ModListSubControl());
 
         ReadmeButton.IsVisible = Box.HasReadmeFile;
+        CrashReportButton.IsVisible = Box.HasCrashReports;
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
     {
-        Box.SetWatching(true);
+        Box?.SetWatching(true);
         base.OnLoaded(e);
     }
 
     protected override void OnUnloaded(RoutedEventArgs e)
     {
-        Box.SetWatching(false);
+        Box?.SetWatching(false);
         base.OnUnloaded(e);
     }
 
@@ -321,5 +322,10 @@ public partial class BoxDetailsPage : UserControl
     private void SubControlReadmeButtonClicked(object? sender, RoutedEventArgs e)
     {
         SetSubControl(new ReadmeSubControl(Box.ReadReadmeFile()));
+    }
+
+    private void SubControlCrashReportClicked(object? sender, RoutedEventArgs e)
+    {
+        SetSubControl(new CrashReportListSubControl());
     }
 }
