@@ -220,6 +220,8 @@ public class PlatformModpack : ReactiveObject
     public string[] FetchModLoaders()
     {
         List<string> modloadersNames = new();
+
+        if (Versions == null) return [];
         
         foreach (ModpackVersion? modpackVersion in Versions)
         {
