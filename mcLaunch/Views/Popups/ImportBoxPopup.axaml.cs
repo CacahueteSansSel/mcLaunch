@@ -33,22 +33,8 @@ public partial class ImportBoxPopup : UserControl
 
     private async void ImportDdLaunchBoxButtonClicked(object? sender, RoutedEventArgs e)
     {
-        OpenFileDialog ofd = new OpenFileDialog();
-        ofd.Title = "Select a mcLaunch Box Binary file...";
-        ofd.Filters = new List<FileDialogFilter>()
-        {
-            new()
-            {
-                Extensions = new List<string>()
-                {
-                    "box"
-                },
-                Name = "mcLaunch Box Binary file"
-            }
-        };
-
-        string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null || files.Length == 0) return;
+        string[] files = await FileSystemUtilities.PickFiles(false, "Import a box file", ["box"]);
+        if (files.Length == 0) return;
 
         BoxBinaryModificationPack bb = new(files[0]);
         
@@ -80,22 +66,8 @@ public partial class ImportBoxPopup : UserControl
 
     private async void ImportCurseForgeModpackButtonClicked(object? sender, RoutedEventArgs e)
     {
-        OpenFileDialog ofd = new OpenFileDialog();
-        ofd.Title = "Select a CurseForge modpack...";
-        ofd.Filters = new List<FileDialogFilter>()
-        {
-            new()
-            {
-                Extensions = new List<string>()
-                {
-                    "zip"
-                },
-                Name = "Zip Archive"
-            }
-        };
-
-        string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null || files.Length == 0) return;
+        string[] files = await FileSystemUtilities.PickFiles(false, "Import a CurseForge modpack", ["zip"]);
+        if (files.Length == 0) return;
 
         CurseForgeModificationPack modpack = new CurseForgeModificationPack(files[0]);
         
@@ -120,22 +92,8 @@ public partial class ImportBoxPopup : UserControl
 
     private async void ImportModrinthModpackButtonClicked(object? sender, RoutedEventArgs e)
     {
-        OpenFileDialog ofd = new OpenFileDialog();
-        ofd.Title = "Select a Modrinth modpack...";
-        ofd.Filters = new List<FileDialogFilter>()
-        {
-            new()
-            {
-                Extensions = new List<string>()
-                {
-                    "mrpack"
-                },
-                Name = "Modrinth Modpack"
-            }
-        };
-
-        string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null || files.Length == 0) return;
+        string[] files = await FileSystemUtilities.PickFiles(false, "Import a Modrinth modpack", ["mrpack"]);
+        if (files.Length == 0) return;
 
         ModrinthModificationPack modpack = new ModrinthModificationPack(files[0]);
         

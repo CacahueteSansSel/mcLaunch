@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -33,24 +34,11 @@ public partial class EditBoxPopup : UserControl
 
     private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
     {
-        OpenFileDialog ofd = new OpenFileDialog();
-        ofd.Title = "Select the icon image...";
-        ofd.Filters = new List<FileDialogFilter>()
-        {
-            new()
-            {
-                Extensions = new List<string>()
-                {
-                    "png"
-                },
-                Name = "PNG Image"
-            }
-        };
+        Bitmap[]? files = await FileSystemUtilities.PickBitmaps(false, "Select a new icon image");
+        if (files.Length == 0) return;
 
-        string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null || files.Length == 0) return;
-
-        BoxIconImage.Source = new Bitmap(files[0]);
+        Bitmap? bmp = files.FirstOrDefault();
+        if (bmp != null) BoxIconImage.Source = bmp;
     }
 
     private void CancelButtonClicked(object? sender, RoutedEventArgs e)

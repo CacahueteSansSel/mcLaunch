@@ -13,6 +13,7 @@ using Avalonia.Logging;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Platform.Storage;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Utilities;
@@ -232,25 +233,11 @@ public partial class BoxDetailsPage : UserControl
 
     private async void EditIconButtonClicked(object? sender, RoutedEventArgs e)
     {
-        OpenFileDialog ofd = new OpenFileDialog();
-        ofd.Title = "Select the icon image...";
-        ofd.Filters = new List<FileDialogFilter>()
-        {
-            new()
-            {
-                Extensions = new List<string>()
-                {
-                    "png"
-                },
-                Name = "PNG Image"
-            }
-        };
+        Bitmap[] files = await FileSystemUtilities.PickBitmaps(false, "Select a new icon image");
+        if (files.Length == 0) return;
 
-        string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null || files.Length == 0) return;
-
-        Bitmap iconBitmap = new Bitmap(files[0]);
-        Box.SetAndSaveIcon(iconBitmap);
+        Bitmap? bmp = files.FirstOrDefault();
+        if (bmp != null) Box.SetAndSaveIcon(bmp);
     }
 
     private void OpenFolderButtonClicked(object? sender, RoutedEventArgs e)
