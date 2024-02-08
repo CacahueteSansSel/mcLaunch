@@ -77,7 +77,7 @@ class Build : NukeBuild
         });
 
     Target Publish => _ => _
-        .DependsOn(Restore, KillPreviewerProcesses, WriteCommitId)
+        .DependsOn(KillPreviewerProcesses, WriteCommitId)
         .Executes(() =>
         {
             string outputDirPath = Solution.Directory / "output";
@@ -155,7 +155,8 @@ class Build : NukeBuild
         if (!OperatingSystem.IsWindows())
         {
             File.SetUnixFileMode($"{path}/Contents/MacOS/mcLaunch", 
-                UnixFileMode.UserExecute | UnixFileMode.OtherExecute | UnixFileMode.GroupExecute);
+                UnixFileMode.UserExecute | UnixFileMode.OtherExecute | UnixFileMode.GroupExecute
+                | UnixFileMode.UserWrite | UnixFileMode.UserRead | UnixFileMode.GroupRead | UnixFileMode.OtherRead);
         }
         
         File.Copy(Solution.GetProject("mcLaunch")!.Directory / "resources" / "Info.plist", 
