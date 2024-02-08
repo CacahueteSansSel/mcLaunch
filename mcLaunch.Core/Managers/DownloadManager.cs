@@ -13,9 +13,7 @@ public static class DownloadManager
 {
     static string currentSectionName;
     static List<DownloadEntry> currentSectionEntries = new();
-
     static List<DownloadSection> sections = new();
-
     static HttpClient client;
 
     public static DownloadSection? CurrentSection { get; private set; }
@@ -23,12 +21,12 @@ public static class DownloadManager
     public static string DescriptionLine => CurrentSection == null ? "No pending download" : CurrentSection.Name;
     public static bool IsProcessing { get; private set; }
 
-    public static event Action<string, float, int> OnDownloadProgressUpdate;
-    public static event Action OnDownloadFinished;
-    public static event Action<string> OnDownloadPrepareStarting;
-    public static event Action<string, string> OnDownloadError;
-    public static event Action OnDownloadPrepareEnding;
-    public static event Action<string, int> OnDownloadSectionStarting;
+    public static event Action<string, float, int>? OnDownloadProgressUpdate;
+    public static event Action? OnDownloadFinished;
+    public static event Action<string>? OnDownloadPrepareStarting;
+    public static event Action<string, string>? OnDownloadError;
+    public static event Action? OnDownloadPrepareEnding;
+    public static event Action<string, int>? OnDownloadSectionStarting;
 
     public static void Init()
     {
@@ -110,7 +108,7 @@ public static class DownloadManager
             long size = resp.Content.Headers.ContentLength ?? 0;
             MemoryStream ramStream = new();
             long b = 0;
-            long blockSize = 25;
+            long blockSize = 1024;
             long lastBytesInSecond = 0;
             long bytesInSecond = 0;
             DateTime lastSecond = DateTime.Now;
@@ -120,7 +118,7 @@ public static class DownloadManager
                 float oneEntryMax = 1f / section.Entries.Count;
                 double byteProgress = (double) b / size * oneEntryMax;
 
-                byte[] buffer = new byte[25];
+                byte[] buffer = new byte[blockSize];
                 int input = await downloadStream.ReadAsync(buffer);
                 if (input == 0) break;
 
