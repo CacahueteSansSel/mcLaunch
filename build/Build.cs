@@ -160,6 +160,8 @@ class Build : NukeBuild
         
         File.Copy(Solution.GetProject("mcLaunch")!.Directory / "resources" / "Info.plist", 
             $"{path}/Contents/Info.plist", true);
+        File.Copy(Solution.GetProject("mcLaunch")!.Directory / "resources" / "Icons.icns", 
+            $"{path}/Contents/Resources/mcLaunch.icns", true);
     }
 
     Target BuildInstaller => _ => _
