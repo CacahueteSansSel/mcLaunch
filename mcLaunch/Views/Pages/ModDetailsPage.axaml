@@ -33,6 +33,10 @@
                                         HorizontalContentAlignment="Center" Click="UpdateButtonClicked">
                                     Update
                                 </Button>
+                                <Button x:Name="TestButton" Classes="primary" Width="250" Margin="0 0 0 10"
+                                        HorizontalContentAlignment="Center" Click="TestButtonClicked">
+                                    Test with Fast Launch
+                                </Button>
                                 <Button x:Name="UninstallButton" Classes="secondary" Width="124"
                                         HorizontalContentAlignment="Center" Click="UninstallButtonClicked">
                                     Uninstall

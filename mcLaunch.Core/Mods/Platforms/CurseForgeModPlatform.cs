@@ -57,7 +57,7 @@ public class CurseForgeModPlatform : ModPlatform
             {
                 foreach (string ver in file.GameVersions)
                 {
-                    if (!minecraftVersions.Contains(ver))
+                    if (!minecraftVersions.Contains(ver) && ver.Contains('.'))
                         minecraftVersions.Add(ver);
                 }
             }
@@ -139,7 +139,7 @@ public class CurseForgeModPlatform : ModPlatform
             {
                 foreach (string ver in file.GameVersions)
                 {
-                    if (!minecraftVersions.Contains(ver))
+                    if (!minecraftVersions.Contains(ver) && ver.Contains('.'))
                         minecraftVersions.Add(ver);
                 }
             }
@@ -175,13 +175,18 @@ public class CurseForgeModPlatform : ModPlatform
     public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string modLoaderId, 
         string minecraftVersionId)
     {
+        ModLoaderType? modLoader = string.IsNullOrWhiteSpace(modLoaderId)
+            ? null
+            : Enum.Parse<ModLoaderType>(modLoaderId, true);
         List<ModVersion> modVersions = new();
 
-        foreach (File file in (await client.GetModFiles(uint.Parse(mod.Id), minecraftVersionId,
-                     Enum.Parse<ModLoaderType>(modLoaderId, true))).Data)
+        foreach (File file in (await client.GetModFiles(uint.Parse(mod.Id), mod.LatestMinecraftVersion,
+                     modLoader)).Data)
         {
+            string? modLoaderName = file.GameVersions.FirstOrDefault(ModLoaderManager.IsModLoaderName)?.ToLower();
+            
             modVersions.Add(new ModVersion(mod, file.Id.ToString(), file.DisplayName, 
-                file.GameVersions.FirstOrDefault()));
+                file.GameVersions.FirstOrDefault(v => v.Contains('.'))!, modLoaderName));
         }
 
         return modVersions.ToArray();
@@ -401,8 +406,9 @@ public class CurseForgeModPlatform : ModPlatform
 
         FingerprintMatch match = resp.Data.ExactMatches[0];
         Modification mod = await GetModAsync(match.Id.ToString());
+        string? modLoaderName = match.File.GameVersions.FirstOrDefault(ModLoaderManager.IsModLoaderName)?.ToLower();
 
         return new ModVersion(mod, match.File.Id.ToString(), 
-            match.File.DisplayName, match.File.GameVersions.FirstOrDefault());
+            match.File.DisplayName, match.File.GameVersions.FirstOrDefault(), modLoaderName);
     }
 }

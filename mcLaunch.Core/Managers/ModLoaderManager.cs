@@ -18,18 +18,24 @@ public static class ModLoaderManager
         // Forge
         // TODO: avoid to hardcode the jvm to use for Forge's installer
         All.Add(new ForgeModLoaderSupport(
-            BoxManager.JVMDownloader.GetJVMExecutablePath(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
+            BoxManager.JVMDownloader.GetJVMExecutablePath(
+                Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
                 "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
-        
+
         // NeoForge
         // TODO: avoid to hardcode the jvm to use for Forge's installer
         All.Add(new NeoForgeModLoaderSupport(
-            BoxManager.JVMDownloader.GetJVMExecutablePath(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
+            BoxManager.JVMDownloader.GetJVMExecutablePath(
+                Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
                 "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
 
         // Quilt
         All.Add(new QuiltModLoaderSupport());
     }
+
+    public static bool IsModLoaderName(string name) =>
+        All.Any(ml => string.Equals(ml.Id, name, StringComparison.CurrentCultureIgnoreCase)
+                      || ml.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
 
     public static ModLoaderSupport? Get(string id) => All.FirstOrDefault(ml => ml.Id == id);
 }

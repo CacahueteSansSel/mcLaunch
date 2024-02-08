@@ -8,6 +8,8 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Cacahuete.MinecraftLib.Core.ModLoaders;
+using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
@@ -71,7 +73,10 @@ public partial class ModDetailsPage : UserControl
             InstallButton.IsVisible = false;
             UpdateButton.IsVisible = false;
             UninstallButton.IsVisible = false;
+
+            TestButton.IsVisible = true;
         }
+        else TestButton.IsVisible = false;
     }
 
     async void GetModAdditionalInfos()
@@ -99,7 +104,7 @@ public partial class ModDetailsPage : UserControl
     async void CreateModpackFromVersion(IVersion incomingVersion)
     {
         ModVersion version = (ModVersion)incomingVersion;
-        
+
         LoadingButtonFrame.IsVisible = true;
 
         PaginatedResponse<ModPlatform.ModDependency> deps = await ModPlatformManager.Platform.GetModDependenciesAsync(
@@ -177,10 +182,10 @@ public partial class ModDetailsPage : UserControl
             SetInstalled(false);
             return;
         }
-        
+
         LoadingButtonFrame.IsVisible = false;
-        
-        Navigation.ShowPopup(new VersionSelectionPopup(new ModVersionContentProvider(versions, Mod), 
+
+        Navigation.ShowPopup(new VersionSelectionPopup(new ModVersionContentProvider(versions, Mod),
             CreateModpackFromVersion));
     }
 
@@ -264,5 +269,40 @@ public partial class ModDetailsPage : UserControl
     private void OpenButtonClicked(object? sender, RoutedEventArgs e)
     {
         PlatformSpecific.OpenUrl(Mod.Url);
+    }
+
+    async void CreateFastLaunchModpackFromVersion(IVersion incomingVersion)
+    {
+        Navigation.ShowPopup(new StatusPopup("Preparing launch", 
+            $"Preparing launching Fast Launch box for {Mod.Name}..."));
+        StatusPopup.Instance.ShowDownloadBanner = true;
+        
+        ModVersion version = (ModVersion)incomingVersion;
+        ModLoaderSupport? modLoader = ModLoaderManager.Get(version.ModLoader!);
+        ModLoaderVersion? modLoaderVersion = await modLoader!.FetchLatestVersion(version.MinecraftVersion);
+        ManifestMinecraftVersion minecraftVersion = await MinecraftManager.GetManifestAsync(version.MinecraftVersion);
+        
+        BoxManifest manifest = new BoxManifest(Mod.Name ?? "Unnamed", string.Empty, string.Empty, 
+            version.ModLoader, modLoaderVersion!.Name, null, minecraftVersion, BoxType.Temporary);
+        string path = await BoxManager.Create(manifest);
+        Box box = new Box(path);
+        box.SetAndSaveIcon(new Bitmap(AssetLoader.Open(
+            new Uri("avares://mcLaunch/resources/fastlaunch_box_logo.png"))));
+        
+        await ModPlatformManager.Platform.InstallModAsync(box, Mod, version.Id, false);
+        
+        StatusPopup.Instance.ShowDownloadBanner = false;
+        Navigation.HidePopup();
+
+        BoxDetailsPage detailsPage = new BoxDetailsPage(box);
+        await detailsPage.RunAsync();
+    }
+
+    private async void TestButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        ModVersion[] versions = await Mod.Platform.GetModVersionsAsync(Mod, null, null);
+
+        Navigation.ShowPopup(new VersionSelectionPopup(new ModVersionContentProvider(versions, Mod),
+            CreateFastLaunchModpackFromVersion));
     }
 }

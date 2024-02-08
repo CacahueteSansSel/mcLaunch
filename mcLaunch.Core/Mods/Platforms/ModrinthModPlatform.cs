@@ -50,11 +50,11 @@ public class ModrinthModPlatform : ModPlatform
             collection.Add(Facet.Category(box.Manifest.ModLoaderId.ToLower()));
             collection.Add(Facet.Version(box.Manifest.Version));
         }
-        
+
         collection.Add(Facet.ProjectType(ProjectType.Mod));
 
         SearchResponse search =
-            await client.Project.SearchAsync(searchQuery, facets: collection, limit: 10, offset: (ulong) (page * 10));
+            await client.Project.SearchAsync(searchQuery, facets: collection, limit: 10, offset: (ulong)(page * 10));
 
         Modification[] mods = search.Hits.Select(hit => new Modification
         {
@@ -87,7 +87,7 @@ public class ModrinthModPlatform : ModPlatform
         collection.Add(Facet.ProjectType(ProjectType.Modpack));
 
         SearchResponse search =
-            await client.Project.SearchAsync(searchQuery, facets: collection, limit: 10, offset: (ulong) (page * 10));
+            await client.Project.SearchAsync(searchQuery, facets: collection, limit: 10, offset: (ulong)(page * 10));
 
         PlatformModpack[] modpacks = search.Hits.Select(hit => new PlatformModpack
         {
@@ -102,7 +102,7 @@ public class ModrinthModPlatform : ModPlatform
             LatestMinecraftVersion = hit.Versions.Last(),
             DownloadCount = hit.Downloads,
             LastUpdated = hit.DateModified,
-            Color = (uint) hit.Color.Value.ToArgb(),
+            Color = (uint)hit.Color.Value.ToArgb(),
             Platform = this
         }).ToArray();
 
@@ -113,11 +113,12 @@ public class ModrinthModPlatform : ModPlatform
         return new PaginatedResponse<PlatformModpack>(page, search.TotalHits / search.Limit, modpacks);
     }
 
-    public override async Task<PaginatedResponse<ModDependency>> GetModDependenciesAsync(string id, string modLoaderId, string versionId,
+    public override async Task<PaginatedResponse<ModDependency>> GetModDependenciesAsync(string id, string modLoaderId,
+        string versionId,
         string minecraftVersionId)
     {
-        Version[] versions = await client.Version.GetProjectVersionListAsync(id, new[] {modLoaderId},
-            new[] {minecraftVersionId});
+        Version[] versions = await client.Version.GetProjectVersionListAsync(id, new[] { modLoaderId },
+            new[] { minecraftVersionId });
         Version? version = versions.FirstOrDefault(v => v.Id == versionId);
 
         return new PaginatedResponse<ModDependency>(0, 1, await Task.Run(() =>
@@ -126,7 +127,7 @@ public class ModrinthModPlatform : ModPlatform
             {
                 Mod = GetModAsync(dep.ProjectId).GetAwaiter().GetResult(),
                 VersionId = dep.VersionId,
-                Type = (DependencyRelationType) dep.DependencyType
+                Type = (DependencyRelationType)dep.DependencyType
             }).ToArray();
         }));
     }
@@ -162,7 +163,7 @@ public class ModrinthModPlatform : ModPlatform
                 LastUpdated = project.Updated,
                 Platform = this
             };
-            
+
             mod.TransformLongDescriptionToHtml();
 
             modCache.TryAdd(id, mod);
@@ -175,13 +176,15 @@ public class ModrinthModPlatform : ModPlatform
         }
     }
 
-    public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string modLoaderId, string minecraftVersionId)
+    public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string modLoaderId,
+        string minecraftVersionId)
     {
-        Version[] versions = await client.Version.GetProjectVersionListAsync(mod.Id, 
-            [modLoaderId], [minecraftVersionId]);
+        Version[] versions = await client.Version.GetProjectVersionListAsync(mod.Id,
+            modLoaderId == null ? null : [modLoaderId],
+            minecraftVersionId == null ? null : [minecraftVersionId]);
 
-        return versions.Select(v => new ModVersion(mod, v.Id, v.Name, 
-            v.GameVersions.FirstOrDefault())).ToArray();
+        return versions.Select(v => new ModVersion(mod, v.Id, v.Name,
+            v.GameVersions.FirstOrDefault(), v.Loaders.FirstOrDefault())).ToArray();
     }
 
     public override async Task<PlatformModpack> GetModpackAsync(string id)
@@ -220,10 +223,10 @@ public class ModrinthModPlatform : ModPlatform
                 LongDescriptionBody = project.Body,
                 DownloadCount = project.Downloads,
                 LastUpdated = project.Updated,
-                Color = (uint) project.Color.Value.ToArgb(),
+                Color = (uint)project.Color.Value.ToArgb(),
                 Platform = this
             };
-            
+
             pack.TransformLongDescriptionToHtml();
 
             return pack;
@@ -260,8 +263,8 @@ public class ModrinthModPlatform : ModPlatform
                 {
                     // Grab the latest available version for this dependency
                     Version[] depVersions = await client.Version.GetProjectVersionListAsync(dependency.ProjectId,
-                        new[] {targetBox.Manifest.ModLoaderId.ToLower()},
-                        new[] {targetBox.Manifest.Version});
+                        new[] { targetBox.Manifest.ModLoaderId.ToLower() },
+                        new[] { targetBox.Manifest.Version });
 
                     if (depVersions.Length == 0) continue;
 
@@ -328,7 +331,7 @@ public class ModrinthModPlatform : ModPlatform
         mod.LongDescriptionBody = project.Body;
         mod.BackgroundPath = project.FeaturedGallery;
         mod.Changelog = latest.Changelog;
-        
+
         mod.TransformLongDescriptionToHtml();
 
         return mod;
@@ -345,14 +348,14 @@ public class ModrinthModPlatform : ModPlatform
     {
         SHA1 sha = SHA1.Create();
         string hash = Convert.ToHexString(await sha.ComputeHashAsync(stream));
-        
+
         try
         {
             Version version = await client.VersionFile.GetVersionByHashAsync(hash);
             if (version == null) return null;
 
-            return new ModVersion(await GetModAsync(version.ProjectId), version.Id, 
-                version.Name, version.GameVersions.FirstOrDefault());
+            return new ModVersion(await GetModAsync(version.ProjectId), version.Id,
+                version.Name, version.GameVersions.FirstOrDefault(), version.Loaders.FirstOrDefault());
         }
         catch (Exception e)
         {
