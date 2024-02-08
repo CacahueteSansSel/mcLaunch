@@ -76,7 +76,7 @@ public partial class ModListSubControl : SubControl
         List<Modification> updateMods = new();
         bool isChanges = false;
 
-        foreach (Modification mod in mods)
+        await Parallel.ForEachAsync(mods, async (mod, token) =>
         {
             ModVersion[] versions = await ModPlatformManager.Platform.GetModVersionsAsync(mod,
                 Box.Manifest.ModLoaderId, Box.Manifest.Version);
@@ -87,7 +87,8 @@ public partial class ModListSubControl : SubControl
             {
                 isChanges = true;
                 updateMods.Add(mod);
-                continue;
+                
+                return;
             }
 
             mod.IsUpdateRequired = versions[0].Id != mod.InstalledVersion;
@@ -100,7 +101,7 @@ public partial class ModListSubControl : SubControl
             }
 
             updateMods.Add(mod);
-        }
+        });
 
         if (isChanges) ModsList.SetModifications(updateMods.ToArray());
 

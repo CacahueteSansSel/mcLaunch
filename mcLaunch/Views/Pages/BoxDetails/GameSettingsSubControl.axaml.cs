@@ -25,6 +25,8 @@ public partial class GameSettingsSubControl : SubControl
     {
         Container.Children.Clear();
 
+        if (Box.Options == null) return;
+
         foreach (var kv in Box.Options.Where(opt => Box.Options.CanOptionBeChanged(opt.Key)))
         {
             GameSettingElement element = new GameSettingElement(Box, kv.Key);
@@ -35,6 +37,7 @@ public partial class GameSettingsSubControl : SubControl
 
     private void SetAsDefaultButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (Box.Options == null) return;
         DefaultsManager.SetDefaultMinecraftOptions(Box.Options);
         
         Navigation.ShowPopup(new MessageBoxPopup("Successful", "These options have been set to default"));

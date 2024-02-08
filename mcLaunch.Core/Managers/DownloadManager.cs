@@ -11,10 +11,10 @@ namespace mcLaunch.Core.Managers;
 
 public static class DownloadManager
 {
-    static string currentSectionName;
-    static List<DownloadEntry> currentSectionEntries = new();
-    static List<DownloadSection> sections = new();
-    static HttpClient client;
+    static string? currentSectionName;
+    static List<DownloadEntry> currentSectionEntries = [];
+    static List<DownloadSection> sections = [];
+    private static HttpClient client;
 
     public static DownloadSection? CurrentSection { get; private set; }
     public static int PendingSectionCount => sections.Count;
@@ -122,7 +122,7 @@ public static class DownloadManager
                 int input = await downloadStream.ReadAsync(buffer);
                 if (input == 0) break;
 
-                await ramStream.WriteAsync(buffer, 0, input);
+                await ramStream.WriteAsync(buffer.AsMemory(0, input));
 
                 OnDownloadProgressUpdate?.Invoke(entry.Source,
                     (float) progress / section.Entries.Count + (float) byteProgress,
@@ -159,11 +159,11 @@ public static class DownloadManager
         }
     }
 
-    static async Task ExtractEntryAsync(DownloadEntry entry)
+    static Task ExtractEntryAsync(DownloadEntry entry)
     {
         if (!Directory.Exists(entry.Target)) Directory.CreateDirectory(entry.Target);
 
-        ZipFile.ExtractToDirectory(entry.Source, entry.Target, true);
+        return Task.Run(() => ZipFile.ExtractToDirectory(entry.Source, entry.Target, true));
     }
 
     static async Task ChmodEntryAsync(DownloadEntry entry)

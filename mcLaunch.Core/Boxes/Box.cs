@@ -31,7 +31,7 @@ public class Box
     public Minecraft Minecraft { get; private set; }
     public Process MinecraftProcess { get; }
     public MinecraftVersion Version { get; private set; }
-    public MinecraftOptions Options { get; private set; }
+    public MinecraftOptions? Options { get; private set; }
     public QuickPlayManager QuickPlay { get; private set; }
     public BoxManifest Manifest { get; private set; }
     public ModLoaderSupport? ModLoader => ModLoaderManager.Get(Manifest.ModLoaderId);
