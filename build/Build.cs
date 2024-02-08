@@ -29,7 +29,7 @@ class Build : NukeBuild
     ///   - JetBrains Rider            https://nuke.build/rider
     ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
     ///   - Microsoft VSCode           https://nuke.build/vscode
-    public static int Main() => Execute<Build>(x => x.Compile);
+    public static int Main() => Execute<Build>(x => x.Publish);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -80,74 +80,87 @@ class Build : NukeBuild
         .DependsOn(Restore, KillPreviewerProcesses, WriteCommitId)
         .Executes(() =>
         {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "dotnet",
-                WorkingDirectory = Solution.GetProject("mcLaunch.MinecraftGuard").Directory,
-                Arguments = "publish -c Release -r win-x64"
-            }).WaitForExit();
-
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "dotnet",
-                WorkingDirectory = Solution.GetProject("mcLaunch.MinecraftGuard").Directory,
-                Arguments = "publish -c Release -r linux-x64"
-            }).WaitForExit();
-
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "dotnet",
-                WorkingDirectory = Solution.GetProject("mcLaunch").Directory,
-                Arguments = "publish -c Release -r win-x64"
-            }).WaitForExit();
-
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "dotnet",
-                WorkingDirectory = Solution.GetProject("mcLaunch").Directory,
-                Arguments = "publish -c Release -r linux-x64"
-            }).WaitForExit();
-
             string outputDirPath = Solution.Directory / "output";
             if (!Directory.Exists(outputDirPath + "/windows")) Directory.CreateDirectory(outputDirPath + "/windows");
             if (!Directory.Exists(outputDirPath + "/linux")) Directory.CreateDirectory(outputDirPath + "/linux");
+            if (!Directory.Exists(outputDirPath + "/macos")) Directory.CreateDirectory(outputDirPath + "/macos");
+            
+            // Windows
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = Solution.GetProject("mcLaunch.MinecraftGuard")!.Directory,
+                Arguments = $"publish -c Release -r win-x64 --sc -o \"{outputDirPath + "/windows"}\""
+            })!.WaitForExit();
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = Solution.GetProject("mcLaunch")!.Directory,
+                Arguments = $"publish -c Release -r win-x64 --sc -o \"{outputDirPath + "/windows"}\""
+            })!.WaitForExit();
 
-            CopyDirectoryRecursively(
-                $"{Solution.GetProject("mcLaunch").Directory}/bin/Release/{FrameworkVersion}/win-x64/publish",
-                $"{outputDirPath}/windows", 
-                DirectoryExistsPolicy.Merge,
-                FileExistsPolicy.OverwriteIfNewer
-            );
-            
-            CopyDirectoryRecursively(
-                $"{Solution.GetProject("mcLaunch").Directory}/bin/Release/{FrameworkVersion}/linux-x64/publish",
-                $"{outputDirPath}/linux", 
-                DirectoryExistsPolicy.Merge,
-                FileExistsPolicy.OverwriteIfNewer
-            );
-            
-            CopyDirectoryRecursively(
-                $"{Solution.GetProject("mcLaunch.MinecraftGuard").Directory}/bin/Release/{FrameworkVersion}/win-x64/publish",
-                $"{outputDirPath}/windows", 
-                DirectoryExistsPolicy.Merge,
-                FileExistsPolicy.OverwriteIfNewer
-            );
-            
-            CopyDirectoryRecursively(
-                $"{Solution.GetProject("mcLaunch.MinecraftGuard").Directory}/bin/Release/{FrameworkVersion}/linux-x64/publish",
-                $"{outputDirPath}/linux", 
-                DirectoryExistsPolicy.Merge,
-                FileExistsPolicy.OverwriteIfNewer
-            );
+            // macOS
+            BuildMacOSBundle();
+
+            // Linux
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = Solution.GetProject("mcLaunch.MinecraftGuard")!.Directory,
+                Arguments = $"publish -c Release -r linux-x64 --sc -o \"{outputDirPath + "/linux"}\""
+            })!.WaitForExit();
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = Solution.GetProject("mcLaunch")!.Directory,
+                Arguments = $"publish -c Release -r linux-x64 --sc -o \"{outputDirPath + "/linux"}\""
+            })!.WaitForExit();
             
             Log.Information("Zipping windows build...");
             if (File.Exists($"{outputDirPath}/mcLaunch-windows.zip")) File.Delete($"{outputDirPath}/mcLaunch-windows.zip");
             ZipFile.CreateFromDirectory($"{outputDirPath}/windows", $"{outputDirPath}/mcLaunch-windows.zip");
             
+            Log.Information("Zipping macos build...");
+            if (File.Exists($"{outputDirPath}/mcLaunch-macos.zip")) File.Delete($"{outputDirPath}/mcLaunch-macos.zip");
+            ZipFile.CreateFromDirectory($"{outputDirPath}/macos", $"{outputDirPath}/mcLaunch-macos.zip");
+            
             Log.Information("Zipping linux build...");
             if (File.Exists($"{outputDirPath}/mcLaunch-linux.zip")) File.Delete($"{outputDirPath}/mcLaunch-linux.zip");
             ZipFile.CreateFromDirectory($"{outputDirPath}/linux", $"{outputDirPath}/mcLaunch-linux.zip");
         });
+
+    void BuildMacOSBundle()
+    {
+        /*
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                WorkingDirectory = Solution.GetProject("mcLaunch.MinecraftGuard")!.Directory,
+                Arguments = $"publish -c Release -r osx-arm64 -p:PublishSingleFile=true --sc -o \"{outputDirPath + "/macos"}\""
+            })!.WaitForExit();
+            */
+        
+        string path = Solution.Directory / "output" / "macos" / "mcLaunch.app";
+        Directory.CreateDirectory(path);
+        Directory.CreateDirectory($"{path}/Contents/MacOS");
+        Directory.CreateDirectory($"{path}/Contents/Resources");
+        
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = "dotnet",
+            WorkingDirectory = Solution.GetProject("mcLaunch")!.Directory,
+            Arguments = $"publish -c Release -r osx-arm64 -p:PublishSingleFile=true --sc -o \"{path}/Contents/MacOS\""
+        })!.WaitForExit();
+
+        if (!OperatingSystem.IsWindows())
+        {
+            File.SetUnixFileMode($"{path}/Contents/MacOS/mcLaunch", 
+                UnixFileMode.UserExecute | UnixFileMode.OtherExecute | UnixFileMode.GroupExecute);
+        }
+        
+        File.Copy(Solution.GetProject("mcLaunch")!.Directory / "resources" / "Info.plist", 
+            $"{path}/Contents/Info.plist", true);
+    }
 
     Target BuildInstaller => _ => _
         .DependsOn(Restore, KillPreviewerProcesses)

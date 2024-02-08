@@ -495,10 +495,12 @@ public class Box
             {
                 string realFilename = $"{Folder.Path}/{filename}";
 
-                await using FileStream fs = new FileStream(realFilename, FileMode.Open);
+                FileStream fs = new FileStream(realFilename, FileMode.Open);
 
                 ModVersion? modVersion = await ModrinthModPlatform.Instance.GetModVersionFromData(fs);
                 if (modVersion == null) continue;
+                
+                fs.Close();
 
                 Manifest.RemoveModification(mod.Id, this);
                 bool success = await ModrinthModPlatform.Instance.InstallModAsync(this, modVersion.Mod,
