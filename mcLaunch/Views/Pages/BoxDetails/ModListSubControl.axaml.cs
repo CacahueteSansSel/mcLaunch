@@ -149,6 +149,7 @@ public partial class ModListSubControl : SubControl
         }
 
         Navigation.ShowPopup(new StatusPopup("Updating mods", $"Please wait while we update mods from {Box.Manifest.Name}..."));
+        StatusPopup.Instance.ShowDownloadBanner = true;
         
         int failedModUpdates = 0;
         int index = 1;
@@ -166,11 +167,13 @@ public partial class ModListSubControl : SubControl
             index++;
         }
         
+        StatusPopup.Instance.ShowDownloadBanner = false;
         Navigation.HidePopup();
 
         if (failedModUpdates > 0)
         {
-            Navigation.ShowPopup(new MessageBoxPopup("Warning", $"{failedModUpdates} mod{(failedModUpdates > 1 ? "s" : "")} failed to update"));
+            Navigation.ShowPopup(new MessageBoxPopup("Warning", 
+                $"{failedModUpdates} mod{(failedModUpdates > 1 ? "s" : "")} failed to update"));
         }
         
         UpdateAllButton.IsVisible = false;
@@ -184,11 +187,14 @@ public partial class ModListSubControl : SubControl
             {
                 Navigation.ShowPopup(new StatusPopup("Migrating to CurseForge...",
                     $"Migrating the box {Box.Manifest.Name}'s mods to CurseForge equivalent..."));
+                StatusPopup.Instance.ShowDownloadBanner = true;
 
                 Modification[] mods = await Box.MigrateToCurseForgeAsync((mod, index, count) =>
                 {
                     StatusPopup.Instance.Status = $"Verifying & installing equivalent (mod {index}/{count})";
                 });
+                
+                StatusPopup.Instance.ShowDownloadBanner = false;
 
                 if (mods.Length == 0)
                 {
@@ -197,7 +203,7 @@ public partial class ModListSubControl : SubControl
                 }
 
                 Navigation.ShowPopup(new ModsPopup($"{mods.Length} mod(s) migrated",
-                    $"The following mods have been successfully migrated to their CurseForge equivalent", Box, mods));
+                    "The following mods have been successfully migrated to their CurseForge equivalent", Box, mods));
             }));
     }
 }

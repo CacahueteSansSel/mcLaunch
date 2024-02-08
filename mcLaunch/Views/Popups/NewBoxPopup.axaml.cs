@@ -27,7 +27,6 @@ public partial class NewBoxPopup : UserControl
     {
         InitializeComponent();
         DataContext = new MinecraftVersionSelectionDataContext();
-        MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext;
 
         Random rng = new Random();
 
@@ -48,8 +47,8 @@ public partial class NewBoxPopup : UserControl
     async void FetchModLoadersLatestVersions(string versionId)
     {
         CreateButton.IsEnabled = false;
-        MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext;
-        List<ModLoaderSupport> all = new();
+        MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext!;
+        List<ModLoaderSupport> all = [];
 
         foreach (ModLoaderSupport ml in ModLoaderManager.All)
         {
@@ -69,6 +68,9 @@ public partial class NewBoxPopup : UserControl
 
     private async void CreateBoxButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (string.IsNullOrWhiteSpace(BoxNameTb.Text) || string.IsNullOrWhiteSpace(AuthorNameTb.Text))
+            return;
+        
         string boxName = BoxNameTb.Text;
         string boxAuthor = AuthorNameTb.Text;
         ManifestMinecraftVersion minecraftVersion = VersionSelector.Version;
@@ -111,8 +113,11 @@ public partial class NewBoxPopup : UserControl
         BoxManifest newBoxManifest = new BoxManifest(boxName, null, boxAuthor, modloader.Id, modloaderVersions[0].Name,
             icon, minecraftVersion);
 
-        await BoxManager.Create(newBoxManifest);
+        StatusPopup.Instance.ShowDownloadBanner = true;
 
+        await BoxManager.Create(newBoxManifest);
+        
+        StatusPopup.Instance.ShowDownloadBanner = false;
         Navigation.HidePopup();
 
         MainPage.Instance?.PopulateBoxList();
