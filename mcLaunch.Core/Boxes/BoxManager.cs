@@ -41,6 +41,9 @@ public static class BoxManager
 
         foreach (string boxPath in Directory.GetDirectories(BoxesPath))
         {
+            // Don't load invalid boxes
+            if (!File.Exists($"{boxPath}/box.json")) continue;
+            
             Box box = new Box(boxPath);
             if (box.Manifest.Type == BoxType.Temporary && !includeTemp) continue;
             

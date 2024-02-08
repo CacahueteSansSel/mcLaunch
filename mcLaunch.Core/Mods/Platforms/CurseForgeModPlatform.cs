@@ -183,7 +183,8 @@ public class CurseForgeModPlatform : ModPlatform
         foreach (File file in (await client.GetModFiles(uint.Parse(mod.Id), mod.LatestMinecraftVersion,
                      modLoader)).Data)
         {
-            string? modLoaderName = file.GameVersions.FirstOrDefault(ModLoaderManager.IsModLoaderName)?.ToLower();
+            string? modLoaderName = file.GameVersions.FirstOrDefault(ModLoaderManager.IsModLoaderName)?.ToLower()
+                                    ?? "forge";
             
             modVersions.Add(new ModVersion(mod, file.Id.ToString(), file.DisplayName, 
                 file.GameVersions.FirstOrDefault(v => v.Contains('.'))!, modLoaderName));
@@ -203,7 +204,7 @@ public class CurseForgeModPlatform : ModPlatform
         {
             foreach (string ver in file.GameVersions)
             {
-                if (!minecraftVersions.Contains(ver))
+                if (!minecraftVersions.Contains(ver) && ver.Contains('.'))
                     minecraftVersions.Add(ver);
             }
         }
@@ -406,7 +407,9 @@ public class CurseForgeModPlatform : ModPlatform
 
         FingerprintMatch match = resp.Data.ExactMatches[0];
         Modification mod = await GetModAsync(match.Id.ToString());
-        string? modLoaderName = match.File.GameVersions.FirstOrDefault(ModLoaderManager.IsModLoaderName)?.ToLower();
+        // TODO: Maybe specify another modloader than forge as default
+        string modLoaderName = match.File.GameVersions.FirstOrDefault(ModLoaderManager.IsModLoaderName)?.ToLower()
+            ?? "forge";
 
         return new ModVersion(mod, match.File.Id.ToString(), 
             match.File.DisplayName, match.File.GameVersions.FirstOrDefault(), modLoaderName);

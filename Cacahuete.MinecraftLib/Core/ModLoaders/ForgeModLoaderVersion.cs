@@ -73,7 +73,10 @@ public class ForgeModLoaderVersion : ModLoaderVersion
 
         await forgeInstaller.WaitForExitAsync();
 
+        string versionFilename = $"{SystemFolderPath}/versions/{versionName}/{versionName}.json";
+        if (!File.Exists(versionFilename)) return null;
+
         return JsonSerializer.Deserialize<MinecraftVersion>(
-            await File.ReadAllTextAsync($"{SystemFolderPath}/versions/{versionName}/{versionName}.json"));
+            await File.ReadAllTextAsync(versionFilename));
     }
 }

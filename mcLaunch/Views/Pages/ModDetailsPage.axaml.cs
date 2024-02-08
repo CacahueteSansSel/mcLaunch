@@ -278,7 +278,7 @@ public partial class ModDetailsPage : UserControl
         StatusPopup.Instance.ShowDownloadBanner = true;
         
         ModVersion version = (ModVersion)incomingVersion;
-        ModLoaderSupport? modLoader = ModLoaderManager.Get(version.ModLoader!);
+        ModLoaderSupport? modLoader = ModLoaderManager.Get(version.ModLoader);
         ModLoaderVersion? modLoaderVersion = await modLoader!.FetchLatestVersion(version.MinecraftVersion);
         ManifestMinecraftVersion minecraftVersion = await MinecraftManager.GetManifestAsync(version.MinecraftVersion);
         
