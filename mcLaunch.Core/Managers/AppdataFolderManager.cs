@@ -59,6 +59,11 @@ public static class AppdataFolderManager
         if (File.Exists(name)) File.Delete(System.IO.Path.GetFullPath(name));
     }
 
+    public static void SetCustomPath(string path)
+    {
+        Path = path;
+    }
+
     public static async Task MigrateToAppdataAsync(Action<string, float>? statusCallback)
     {
         int c = 0;
