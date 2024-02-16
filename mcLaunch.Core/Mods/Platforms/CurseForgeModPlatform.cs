@@ -172,15 +172,15 @@ public class CurseForgeModPlatform : ModPlatform
         }
     }
 
-    public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string modLoaderId,
-        string minecraftVersionId)
+    public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string? modLoaderId,
+        string? minecraftVersionId)
     {
         ModLoaderType? modLoader = string.IsNullOrWhiteSpace(modLoaderId)
             ? null
             : Enum.Parse<ModLoaderType>(modLoaderId, true);
         List<ModVersion> modVersions = new();
 
-        foreach (File file in (await client.GetModFiles(uint.Parse(mod.Id), mod.LatestMinecraftVersion,
+        foreach (File file in (await client.GetModFiles(uint.Parse(mod.Id), minecraftVersionId,
                      modLoader)).Data)
         {
             string? modLoaderName = file.GameVersions.FirstOrDefault(ModLoaderManager.IsModLoaderName)?.ToLower()

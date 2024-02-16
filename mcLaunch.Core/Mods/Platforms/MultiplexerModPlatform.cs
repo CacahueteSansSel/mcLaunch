@@ -80,8 +80,8 @@ public class MultiplexerModPlatform : ModPlatform
         return null;
     }
 
-    public override Task<ModVersion[]> GetModVersionsAsync(Modification mod, string modLoaderId,
-        string minecraftVersionId)
+    public override Task<ModVersion[]> GetModVersionsAsync(Modification mod, string? modLoaderId,
+        string? minecraftVersionId)
         => mod.Platform!.GetModVersionsAsync(mod, modLoaderId, minecraftVersionId);
 
     public override async Task<PlatformModpack> GetModpackAsync(string id)
