@@ -134,6 +134,7 @@ public class BoxManifest : ReactiveObject
             hadChange = true;
         }
 
+        /*
         try
         {
             foreach (BoxStoredModification mod in Modifications)
@@ -177,6 +178,7 @@ public class BoxManifest : ReactiveObject
         {
             
         }
+        */
 
         return hadChange;
     }

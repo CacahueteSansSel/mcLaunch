@@ -98,6 +98,8 @@ public class Box
 
     private async void OnFileDeleted(object sender, FileSystemEventArgs e)
     {
+        if (DownloadManager.IsProcessing) return;
+        
         string relativePath = e.FullPath.Replace(Folder.CompletePath, "")
             .Trim('\\').Trim('/')
             .Replace('\\', '/');
@@ -125,6 +127,8 @@ public class Box
 
     private async void OnFileCreated(object sender, FileSystemEventArgs e)
     {
+        if (DownloadManager.IsProcessing) return;
+        
         string relativePath = e.FullPath.Replace(Folder.CompletePath, "")
             .Trim('\\').Trim('/')
             .Replace('\\', '/');
