@@ -1,23 +1,28 @@
 ﻿using System.Diagnostics;
+using Cacahuete.MinecraftLib.Core;
 
 namespace mcLaunch.Tests.Tests;
 
 public abstract class TestBase
 {
     public abstract string Name { get; }
+    public TestRunner Runner { get; internal set; }
+    public List<Type> Dependencies { get; } = new();
 
     protected string LatestTestFailure { get; private set; }
+    protected MinecraftFolder SystemFolder => Runner.MinecraftFolder;
+    
     public abstract Task<TestResult> RunAsync();
 
-    protected async Task<bool> Test(string name, Func<Task<bool>> test)
+    protected async Task<bool> Test(string name, Func<Task<TestResult>> test)
     {
         Console.Write($"    {name}: ");
 
         try
         {
-            bool result = await test.Invoke();
+            TestResult result = await test.Invoke();
 
-            if (!result) throw new TestFailedException(name);
+            if (!result.IsSuccess) throw new TestFailedException(name, result.Message);
             
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Success");
@@ -41,6 +46,11 @@ public abstract class TestBase
         return true;
     }
 
+    protected void AddDependency<T>() where T : TestBase
+    {
+        Dependencies.Add(typeof(T));
+    }
+
     protected TestResult Success(string? message = null)
         => new(true, message, this);
 
@@ -51,4 +61,4 @@ public abstract class TestBase
         => new(false, LatestTestFailure, this);
 }
 
-public class TestFailedException(string testName) : Exception($"Test '{testName}' failed");
+public class TestFailedException(string testName, string? message) : Exception($"Test '{testName}' failed: {message}");

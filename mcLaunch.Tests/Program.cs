@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using System.Reflection;
+using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Http;
 using mcLaunch.Core.Managers;
 using mcLaunch.Tests;
@@ -16,7 +17,9 @@ string testEnvPath = "test_env";
 if (!Directory.Exists(testEnvPath)) Directory.CreateDirectory(testEnvPath);
 AppdataFolderManager.SetCustomPath(Path.GetFullPath(testEnvPath));
 
-TestRunner runner = new();
+MinecraftFolder systemFolder = new MinecraftFolder(AppdataFolderManager.GetValidPath("system"));
+
+TestRunner runner = new(systemFolder);
 runner.RegisterTests(Assembly.GetExecutingAssembly().GetTypes()
     .Where(type => type.IsSubclassOf(typeof(TestBase)))
     .Select(type => (TestBase) Activator.CreateInstance(type)!)

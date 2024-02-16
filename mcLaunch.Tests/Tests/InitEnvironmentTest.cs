@@ -15,17 +15,22 @@ public class InitEnvironmentTest : TestBase
         if (!await Test("Fetching Minecraft versions", FetchingMinecraftVersions)) 
             return TestFailure();
 
-        return new TestResult(true, null);
+        return TestResult.Ok;
     }
 
-    private async Task<bool> FetchingMinecraftVersions()
+    private async Task<TestResult> FetchingMinecraftVersions()
     {
         await MinecraftManager.InitAsync();
 
-        return MinecraftManager.Manifest != null && MinecraftManager.ManifestVersions.Length > 0;
+        if (MinecraftManager.Manifest == null)
+            return TestResult.Error("Minecraft versions manifest is null");
+        if (MinecraftManager.ManifestVersions.Length == 0)
+            return TestResult.Error("Minecraft versions list is empty");
+        
+        return TestResult.Ok;
     }
 
-    async Task<bool> InitManagers()
+    async Task<TestResult> InitManagers()
     {
         AppBuilder app = AppBuilder.Configure<App>()
             .UsePlatformDetect()
@@ -35,6 +40,6 @@ public class InitEnvironmentTest : TestBase
         App mcl = (App) app.Instance!;
         mcl.InitManagers();
 
-        return true;
+        return TestResult.Ok;
     }
 }
