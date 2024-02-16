@@ -5,6 +5,7 @@ using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods.Packs;
 using Modrinth;
+using Modrinth.Exceptions;
 using Modrinth.Helpers;
 using Modrinth.Models;
 using Modrinth.Models.Enums.Project;
@@ -53,8 +54,17 @@ public class ModrinthModPlatform : ModPlatform
 
         collection.Add(Facet.ProjectType(ProjectType.Mod));
 
-        SearchResponse search =
-            await client.Project.SearchAsync(searchQuery, facets: collection, limit: 10, offset: (ulong)(page * 10));
+        SearchResponse search;
+
+        try
+        {
+            search = await client.Project.SearchAsync(searchQuery, facets: collection, 
+                limit: 10, offset: (ulong)(page * 10));
+        }
+        catch (ModrinthApiException e)
+        {
+            return PaginatedResponse<Modification>.Empty;
+        }
 
         Modification[] mods = search.Hits.Select(hit => new Modification
         {
@@ -86,8 +96,17 @@ public class ModrinthModPlatform : ModPlatform
 
         collection.Add(Facet.ProjectType(ProjectType.Modpack));
 
-        SearchResponse search =
-            await client.Project.SearchAsync(searchQuery, facets: collection, limit: 10, offset: (ulong)(page * 10));
+        SearchResponse search;
+
+        try
+        {
+            search = await client.Project.SearchAsync(searchQuery, facets: collection, 
+                limit: 10, offset: (ulong)(page * 10));
+        }
+        catch (ModrinthApiException e)
+        {
+            return PaginatedResponse<PlatformModpack>.Empty;
+        }
 
         PlatformModpack[] modpacks = search.Hits.Select(hit => new PlatformModpack
         {
@@ -107,8 +126,7 @@ public class ModrinthModPlatform : ModPlatform
         }).ToArray();
 
         // Download all modpack images
-        // TODO: fix that causing slow loading process
-        foreach (PlatformModpack pack in modpacks) await pack.DownloadIconAsync();
+        foreach (PlatformModpack pack in modpacks) pack.DownloadIconAsync();
 
         return new PaginatedResponse<PlatformModpack>(page, search.TotalHits / search.Limit, modpacks);
     }
@@ -117,19 +135,26 @@ public class ModrinthModPlatform : ModPlatform
         string versionId,
         string minecraftVersionId)
     {
-        Version[] versions = await client.Version.GetProjectVersionListAsync(id, new[] { modLoaderId },
-            new[] { minecraftVersionId });
-        Version? version = versions.FirstOrDefault(v => v.Id == versionId);
-
-        return new PaginatedResponse<ModDependency>(0, 1, await Task.Run(() =>
+        try
         {
-            return version.Dependencies.Where(dep => dep.ProjectId != null).Select(dep => new ModDependency
+            Version[] versions = await client.Version.GetProjectVersionListAsync(id, new[] {modLoaderId},
+                new[] {minecraftVersionId});
+            Version? version = versions.FirstOrDefault(v => v.Id == versionId);
+
+            return new PaginatedResponse<ModDependency>(0, 1, await Task.Run(() =>
             {
-                Mod = GetModAsync(dep.ProjectId).GetAwaiter().GetResult(),
-                VersionId = dep.VersionId,
-                Type = (DependencyRelationType)dep.DependencyType
-            }).ToArray();
-        }));
+                return version.Dependencies.Where(dep => dep.ProjectId != null).Select(dep => new ModDependency
+                {
+                    Mod = GetModAsync(dep.ProjectId).GetAwaiter().GetResult(),
+                    VersionId = dep.VersionId,
+                    Type = (DependencyRelationType) dep.DependencyType
+                }).ToArray();
+            }));
+        }
+        catch (ModrinthApiException e)
+        {
+            return PaginatedResponse<ModDependency>.Empty;
+        }
     }
 
     public override async Task<Modification> GetModAsync(string id)
@@ -168,9 +193,10 @@ public class ModrinthModPlatform : ModPlatform
 
             modCache.TryAdd(id, mod);
             CacheManager.Store(mod, cacheName);
+            
             return mod;
         }
-        catch (Exception e)
+        catch (ModrinthApiException e)
         {
             return null;
         }
@@ -179,9 +205,18 @@ public class ModrinthModPlatform : ModPlatform
     public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string? modLoaderId,
         string? minecraftVersionId)
     {
-        Version[] versions = await client.Version.GetProjectVersionListAsync(mod.Id,
-            modLoaderId == null ? null : [modLoaderId],
-            minecraftVersionId == null ? null : [minecraftVersionId]);
+        Version[] versions;
+
+        try
+        {
+            versions = await client.Version.GetProjectVersionListAsync(mod.Id,
+                modLoaderId == null ? null : [modLoaderId],
+                minecraftVersionId == null ? null : [minecraftVersionId]);
+        }
+        catch (ModrinthApiException e)
+        {
+            return Array.Empty<ModVersion>();
+        }
 
         return versions.Select(v => new ModVersion(mod, v.Id, v.Name,
             v.GameVersions.FirstOrDefault(), v.Loaders.FirstOrDefault())).ToArray();
@@ -231,7 +266,7 @@ public class ModrinthModPlatform : ModPlatform
 
             return pack;
         }
-        catch (Exception e)
+        catch (ModrinthApiException e)
         {
             return null;
         }
@@ -303,8 +338,17 @@ public class ModrinthModPlatform : ModPlatform
     public override async Task<bool> InstallModAsync(Box targetBox, Modification mod, string versionId,
         bool installOptional)
     {
-        Version version = await client.Version.GetAsync(versionId);
-        if (version == null) return false;
+        Version version;
+        
+        try
+        {
+            version = await client.Version.GetAsync(versionId);
+            if (version == null) return false;
+        }
+        catch (ModrinthApiException e)
+        {
+            return false;
+        }
 
         if (!targetBox.HasModificationSoft(mod)) await InstallVersionAsync(targetBox, version, installOptional);
 
@@ -323,16 +367,23 @@ public class ModrinthModPlatform : ModPlatform
     {
         if (mod.LongDescriptionBody != null && mod.Changelog != null) return mod;
 
-        Project project = await client.Project.GetAsync(mod.Id);
-        Version latest = await client.Version.GetAsync(project.Versions[0]);
+        try
+        {
+            Project project = await client.Project.GetAsync(mod.Id);
+            Version latest = await client.Version.GetAsync(project.Versions[0]);
 
-        mod.Versions = project.Versions;
-        mod.LatestVersion = mod.Versions.Last();
-        mod.LongDescriptionBody = project.Body;
-        mod.BackgroundPath = project.FeaturedGallery;
-        mod.Changelog = latest.Changelog;
+            mod.Versions = project.Versions;
+            mod.LatestVersion = mod.Versions.Last();
+            mod.LongDescriptionBody = project.Body;
+            mod.BackgroundPath = project.FeaturedGallery;
+            mod.Changelog = latest.Changelog;
 
-        mod.TransformLongDescriptionToHtml();
+            mod.TransformLongDescriptionToHtml();
+        }
+        catch (ModrinthApiException e)
+        {
+            
+        }
 
         return mod;
     }
@@ -357,7 +408,7 @@ public class ModrinthModPlatform : ModPlatform
             return new ModVersion(await GetModAsync(version.ProjectId), version.Id,
                 version.Name, version.GameVersions.FirstOrDefault(), version.Loaders.FirstOrDefault());
         }
-        catch (Exception e)
+        catch (ModrinthApiException e)
         {
             return null;
         }

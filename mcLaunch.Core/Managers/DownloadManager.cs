@@ -187,20 +187,10 @@ public static class DownloadManager
 
             int progress = 0;
             float progressPercent = 0f;
-            await Parallel.ForEachAsync(section.Entries, async (entry, token) =>
+            await Parallel.ForEachAsync(section.Entries.Where(entry => entry.Action == EntryAction.Download), 
+                async (entry, token) =>
             {
-                switch (entry.Action)
-                {
-                    case EntryAction.Download:
-                        await DownloadEntryAsync(entry, section, sectionIndex, progress);
-                        break;
-                    case EntryAction.Extract:
-                        await ExtractEntryAsync(entry);
-                        break;
-                    case EntryAction.Chmod:
-                        await ChmodEntryAsync(entry);
-                        break;
-                }
+                await DownloadEntryAsync(entry, section, sectionIndex, progress);
 
                 progress++;
                 float percent = (float) progress / section.Entries.Count;
@@ -211,6 +201,28 @@ public static class DownloadManager
                     OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
                 }
             });
+
+            foreach (DownloadEntry entry in section.Entries.Where(entry => entry.Action != EntryAction.Download))
+            {
+                switch (entry.Action)
+                {
+                    case EntryAction.Extract:
+                        await ExtractEntryAsync(entry);
+                        break;
+                    case EntryAction.Chmod:
+                        await ChmodEntryAsync(entry);
+                        break;
+                }
+                
+                progress++;
+                float percent = (float) progress / section.Entries.Count;
+
+                if (progressPercent < percent)
+                {
+                    progressPercent = percent;
+                    OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
+                }
+            }
 
             sectionIndex++;
         }
