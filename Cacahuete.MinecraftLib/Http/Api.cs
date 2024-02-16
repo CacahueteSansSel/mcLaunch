@@ -12,8 +12,8 @@ public static class Api
     const int RetryCount = 2;
     static ProductInfoHeaderValue? userAgent;
 
-    public static event Action OnNetworkError; 
-    public static event Action OnNetworkSuccess; 
+    public static event Action<string> OnNetworkError; 
+    public static event Action<string> OnNetworkSuccess; 
 
     public static void SetUserAgent(ProductInfoHeaderValue ua)
     {
@@ -31,14 +31,14 @@ public static class Api
         {
             if (t >= RetryCount)
             {
-                OnNetworkError?.Invoke();
+                OnNetworkError?.Invoke(url);
                 return default;
             }
             
             try
             {
                 resp = await client.GetAsync(url);
-                if (resp != null && resp.IsSuccessStatusCode) break;
+                if (resp.IsSuccessStatusCode) break;
             }
             catch (Exception e)
             {
@@ -53,7 +53,7 @@ public static class Api
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
         if (patchDateTimes) json = json.Replace("+0000", "");
         
-        OnNetworkSuccess?.Invoke();
+        OnNetworkSuccess?.Invoke(url);
     
         return JsonSerializer.Deserialize<T>(json);
     }
@@ -69,7 +69,7 @@ public static class Api
         {
             if (t >= RetryCount)
             {
-                OnNetworkError?.Invoke();
+                OnNetworkError?.Invoke(url);
                 return default;
             }
             
@@ -89,7 +89,7 @@ public static class Api
         if (!resp.IsSuccessStatusCode) return default;
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
         
-        OnNetworkSuccess?.Invoke();
+        OnNetworkSuccess?.Invoke(url);
     
         return JsonSerializer.Deserialize<T>(json);
     }
@@ -104,7 +104,7 @@ public static class Api
         {
             if (t >= RetryCount)
             {
-                OnNetworkError?.Invoke();
+                OnNetworkError?.Invoke(url);
                 return default;
             }
             
@@ -126,7 +126,7 @@ public static class Api
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
         if (patchDateTimes) json = json.Replace("+0000", "");
         
-        OnNetworkSuccess?.Invoke();
+        OnNetworkSuccess?.Invoke(url);
 
         return JsonNode.Parse(json);
     }
@@ -147,7 +147,7 @@ public static class Api
         {
             if (t >= RetryCount)
             {
-                OnNetworkError?.Invoke();
+                OnNetworkError?.Invoke(url);
                 return default;
             }
             
@@ -168,7 +168,7 @@ public static class Api
 
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
         
-        OnNetworkSuccess?.Invoke();
+        OnNetworkSuccess?.Invoke(url);
     
         return JsonSerializer.Deserialize<TResponse>(json);
     }

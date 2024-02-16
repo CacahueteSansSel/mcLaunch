@@ -1,4 +1,5 @@
-﻿using mcLaunch.Tests.Tests;
+﻿using System.Diagnostics;
+using mcLaunch.Tests.Tests;
 
 namespace mcLaunch.Tests;
 
@@ -35,6 +36,7 @@ public class TestRunner
             catch (Exception e)
             {
                 result = new TestResult(false, e.ToString(), test);
+                if (Debugger.IsAttached) throw;
             }
             
             Logging.Log(result.IsSuccess ? LogType.Success : LogType.Failure, 

@@ -1,4 +1,6 @@
-﻿namespace mcLaunch.Tests.Tests;
+﻿using System.Diagnostics;
+
+namespace mcLaunch.Tests.Tests;
 
 public abstract class TestBase
 {
@@ -19,6 +21,7 @@ public abstract class TestBase
             
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Success");
+            Console.ResetColor();
         }
         catch (Exception e)
         {
@@ -29,6 +32,8 @@ public abstract class TestBase
             Console.WriteLine($"    --> {e.GetType().FullName} {e.Message}");
 
             LatestTestFailure = $"{e.GetType().FullName} {e.Message}";
+            
+            if (Debugger.IsAttached) throw;
 
             return false;
         }

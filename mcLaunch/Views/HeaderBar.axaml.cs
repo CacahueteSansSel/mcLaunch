@@ -21,12 +21,12 @@ public partial class HeaderBar : UserControl
         Api.OnNetworkSuccess += OnApiNetworkSuccess;
     }
 
-    private void OnApiNetworkSuccess()
+    private void OnApiNetworkSuccess(string url)
     {
         OfflineBadge.IsVisible = false;
     }
 
-    private void OnApiNetworkError()
+    private void OnApiNetworkError(string url)
     {
         OfflineBadge.IsVisible = true;
     }

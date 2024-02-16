@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Platform;
@@ -24,7 +25,7 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
-    public async void InitManagers()
+    public async Task InitManagers()
     {
         Args = new ArgumentsParser(Environment.GetCommandLineArgs().Skip(1).ToArray());
         
@@ -44,7 +45,7 @@ public partial class App : Application
             JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(InternalSettings.Get("default_args.json"))!;
     }
 
-    public override void OnFrameworkInitializationCompleted()
+    public override async void OnFrameworkInitializationCompleted()
     {
         InitManagers();
         
