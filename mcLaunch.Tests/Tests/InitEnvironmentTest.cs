@@ -12,7 +12,7 @@ public class InitEnvironmentTest : TestBase
     {
         if (!await Test("Initializing managers", InitManagers)) 
             return TestFailure();
-        if (!await Test("Feetching Minecraft versions", FetchingMinecraftVersions)) 
+        if (!await Test("Fetching Minecraft versions", FetchingMinecraftVersions)) 
             return TestFailure();
 
         return new TestResult(true, null);
