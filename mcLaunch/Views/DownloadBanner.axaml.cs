@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
@@ -111,11 +112,14 @@ public partial class DownloadBanner : UserControl
 
     private void OnDownloadProgressUpdate(string file, float percent, int currentSectionIndex)
     {
-        UIDataContext.Progress = (int) MathF.Round(percent * 100);
-        UIDataContext.ResourceName = DownloadManager.DescriptionLine;
-        UIDataContext.ResourceDetailsText = $"{(int)MathF.Round(percent * 100)}%";
-        UIDataContext.ResourceCount = $"{currentSectionIndex}/{DownloadManager.PendingSectionCount}";
-        FileNameText.Text = Path.GetFileName(file);
+        Dispatcher.UIThread.Post(() =>
+        {
+            UIDataContext.Progress = (int) MathF.Round(percent * 100);
+            UIDataContext.ResourceName = DownloadManager.DescriptionLine;
+            UIDataContext.ResourceDetailsText = $"{(int)MathF.Round(percent * 100)}%";
+            UIDataContext.ResourceCount = $"{currentSectionIndex}/{DownloadManager.PendingSectionCount}";
+            FileNameText.Text = Path.GetFileName(file);
+        });
     }
 
     private class Data : ReactiveObject

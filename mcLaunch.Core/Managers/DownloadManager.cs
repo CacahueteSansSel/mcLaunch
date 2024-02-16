@@ -186,7 +186,8 @@ public static class DownloadManager
             OnDownloadSectionStarting?.Invoke(section.Name, sectionIndex + 1);
 
             int progress = 0;
-            foreach (DownloadEntry entry in section.Entries)
+            float progressPercent = 0f;
+            await Parallel.ForEachAsync(section.Entries, async (entry, token) =>
             {
                 switch (entry.Action)
                 {
@@ -202,9 +203,14 @@ public static class DownloadManager
                 }
 
                 progress++;
-                OnDownloadProgressUpdate?.Invoke(entry.Source, (float) progress / section.Entries.Count,
-                    sectionIndex + 1);
-            }
+                float percent = (float) progress / section.Entries.Count;
+
+                if (progressPercent < percent)
+                {
+                    progressPercent = percent;
+                    OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
+                }
+            });
 
             sectionIndex++;
         }
