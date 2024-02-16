@@ -30,10 +30,11 @@
                     <TextBlock Classes="light" FontSize="12">by</TextBlock>
                     <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{Binding Author}"></TextBlock>
                 </StackPanel>
-                <views:Badge IsVisible="{Binding IsInvalid}" Margin="0 -2 0 0" Text="Invalid"
-                             Icon="/resources/icons/delete.png">
+                <views:Badge IsVisible="{Binding IsInvalid}" Margin="10 0 0 0" Text="Not compatible"
+                             Icon="/resources/icons/close.png"
+                             ToolTip.Tip="mcLaunch did not find any version of this mod compatible with this Minecraft version and/or this modloader">
                 </views:Badge>
-                <views:Badge IsVisible="{Binding IsInstalledOnCurrentBoxUi}" Margin="10 -2 0 0" Text="Installed"
+                <views:Badge IsVisible="{Binding IsInstalledOnCurrentBoxUi}" Margin="10 0 0 0" Text="Installed"
                              Icon="/resources/icons/checkmark.png">
                 </views:Badge>
                 <views:AttentionBadge Margin="5 0 0 0" IsVisible="{Binding IsUpdateRequired}" Text="New update available"></views:AttentionBadge>
