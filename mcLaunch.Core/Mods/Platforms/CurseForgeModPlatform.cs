@@ -449,7 +449,6 @@ public class CurseForgeModPlatform : ModPlatform
 
     public override async Task<ModVersion?> GetModVersionFromData(Stream stream)
     {
-        // TODO: Implement this with fingerprints and murmur hash
         byte[] data = stream.ReadToEndAndClose();
         uint hash = MurmurHash2.HashNormal(data);
 
