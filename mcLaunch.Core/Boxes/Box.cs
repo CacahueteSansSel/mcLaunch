@@ -159,7 +159,7 @@ public class Box : IEquatable<Box>
     {
         try
         {
-            Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png", 155);
+            Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png");
         }
         catch (Exception e)
         {

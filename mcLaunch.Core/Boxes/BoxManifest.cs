@@ -134,52 +134,6 @@ public class BoxManifest : ReactiveObject
             hadChange = true;
         }
 
-        /*
-        try
-        {
-            foreach (BoxStoredModification mod in Modifications)
-            {
-                if (!ManifestVersion.HasValue || ManifestVersion < 2)
-                {
-                    string[] newArray = mod.Filenames;
-                    Regex relativePathRegex = new Regex("(?!\\/minecraft\\/)mods\\/.+");
-
-                    for (int i = 0; i < newArray.Length; i++)
-                    {
-                        string filename = newArray[i];
-
-                        if (!filename.StartsWith("mods/"))
-                        {
-                            filename = relativePathRegex.Match(filename).Value;
-                            hadChange = true;
-                        }
-
-                        newArray[i] = filename;
-                    }
-
-                    mod.Filenames = newArray;
-                }
-            
-                if (!string.IsNullOrWhiteSpace(mod.Name) && !string.IsNullOrWhiteSpace(mod.Author)) continue;
-
-                Modification dlMod = await ModPlatformManager.Platform.GetModAsync(mod.Id);
-                if (dlMod != null)
-                {
-                    mod.Name = dlMod.Name;
-                    mod.Author = dlMod.Author;
-                
-                    hadChange = true;
-                }
-            }
-        
-            if (hadChange) ManifestVersion = 2;
-        }
-        catch (Exception e)
-        {
-            
-        }
-        */
-
         return hadChange;
     }
 

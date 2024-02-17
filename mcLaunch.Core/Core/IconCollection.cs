@@ -143,7 +143,7 @@ public class IconCollection
         {
             try
             {
-                return Bitmap.DecodeToWidth(imageStream, IconSmallSize);
+                return Bitmap.DecodeToWidth(imageStream, SmallIconSize);
             }
             catch (Exception e)
             {
