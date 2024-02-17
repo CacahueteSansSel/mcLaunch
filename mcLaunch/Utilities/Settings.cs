@@ -12,7 +12,7 @@ namespace mcLaunch.Utilities;
 
 public class Settings
 {
-    public static Settings Instance { get; private set; }
+    public static Settings? Instance { get; private set; }
     
     [Setting(Name = "Expose launcher name to Minecraft", Group = "Minecraft")]
     public bool ExposeLauncherNameToMinecraft { get; set; }

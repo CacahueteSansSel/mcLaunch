@@ -220,6 +220,8 @@ public class BoxManifest : ReactiveObject
 
         return mcVersion;
     }
+
+    public override string ToString() => $"Manifest {Id} {Name}";
 }
 
 public class BoxStoredModification

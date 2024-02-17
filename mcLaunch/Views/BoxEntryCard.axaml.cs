@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Avalonia;
@@ -19,14 +20,30 @@ namespace mcLaunch.Views;
 
 public partial class BoxEntryCard : UserControl
 {
-    public Box Box { get; private set; }
+    public static readonly AttachedProperty<Box> ContentBoxProperty =
+        AvaloniaProperty.RegisterAttached<BoxEntryCard, UserControl, Box>(
+            nameof(ContentBox),
+            null,
+            inherits: true);
+
     private AnonymitySession anonSession;
+    private Box box;
+
+    public Box ContentBox
+    {
+        get => box;
+        set
+        {
+            box = value;
+            SetBox(box);
+        }
+    }
 
     public BoxEntryCard()
     {
         InitializeComponent();
     }
-    
+
     public BoxEntryCard(Box box, AnonymitySession anonSession)
     {
         InitializeComponent();
@@ -38,30 +55,31 @@ public partial class BoxEntryCard : UserControl
     protected override async void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
-        
+
         if (Settings.Instance.AnonymizeBoxIdentity)
         {
             object v = null;
-            
-            await Task.Run(() =>
-            {
-                v = anonSession.TakeNameAndIcon();
-            });
+
+            await Task.Run(() => { v = anonSession.TakeNameAndIcon(); });
 
             var tuple = ((string, Bitmap)) v;
-            
+
             BoxNameText.Text = tuple.Item1;
             BoxIcon.Source = tuple.Item2;
             AuthorText.Text = "Someone";
         }
     }
 
-    public void SetBox(Box box)
+    public void SetBox(Box? box)
     {
-        Box = box;
+        if (box == null) return;
+
+        this.box = box;
+
+        IsEnabled = true;
         DataContext = box.Manifest;
 
-        if (Settings.Instance.AnonymizeBoxIdentity)
+        if (Settings.Instance != null && Settings.Instance.AnonymizeBoxIdentity)
         {
             BoxNameText.Text = anonSession.TakeName();
         }
@@ -96,15 +114,15 @@ public partial class BoxEntryCard : UserControl
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
-        
-        Navigation.Push(new BoxDetailsPage(Box));
+
+        Navigation.Push(new BoxDetailsPage(box));
     }
 
     private void PlayButtonClicked(object? sender, RoutedEventArgs e)
     {
-        BoxDetailsPage page = new BoxDetailsPage(Box);
+        BoxDetailsPage page = new BoxDetailsPage(box);
         Navigation.Push(page);
-        
+
         page.Run();
     }
 }

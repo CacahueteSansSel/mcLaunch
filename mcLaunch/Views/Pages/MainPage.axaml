@@ -3,12 +3,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:boxes="clr-namespace:mcLaunch.Core.Boxes;assembly=mcLaunch.Core"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              Background="{DynamicResource BackgroundDarker}"
              x:Class="mcLaunch.Views.Pages.MainPage">
-    <ScrollViewer>
-        <WrapPanel x:Name="BoxContainer" Margin="28">
-            
-        </WrapPanel>
-    </ScrollViewer>
+    <DockPanel Margin="20, 10, 20 10">
+        <ScrollViewer>
+            <WrapPanel x:Name="BoxesContainer">
+                
+            </WrapPanel>
+        </ScrollViewer>
+    </DockPanel>
 </UserControl>

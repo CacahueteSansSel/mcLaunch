@@ -10,6 +10,9 @@ namespace mcLaunch.Core.Core;
 
 public class IconCollection
 {
+    public const int SmallIconSize = 48;
+    public const int LargeIconSize = 384;
+    
     public static IconCollection? Default { get; set; } = new() {IsDefaultIcon = true};
 
     public Uri? ResourceUri { get; private set; }
@@ -19,8 +22,8 @@ public class IconCollection
     public Bitmap? IconSmall { get; private set; }
     public Bitmap? IconLarge { get; private set; }
     public bool IsDefaultIcon { get; private set; }
-    public int IconSmallSize { get; private set; } = 48;
-    public int IconLargeSize { get; private set; } = 512;
+    public int IconSmallSize { get; private set; } = SmallIconSize;
+    public int IconLargeSize { get; private set; } = LargeIconSize;
 
     private IconCollection(string url, bool isFile)
     {
@@ -43,10 +46,10 @@ public class IconCollection
     public static IconCollection FromResources(string path)
         => new(new Uri($"avares://mcLaunch/resources/{path}"));
 
-    public static async Task<IconCollection> FromFileAsync(string filename, int largeSize = 512, int smallSize = 48)
+    public static async Task<IconCollection> FromFileAsync(string filename, int largeSize = LargeIconSize, int smallSize = SmallIconSize)
         => await new IconCollection(filename, true).WithCustomSizes(largeSize, smallSize).DownloadAllAsync();
 
-    public static async Task<IconCollection> FromBitmapAsync(Bitmap bitmap, int largeSize = 512, int smallSize = 48)
+    public static async Task<IconCollection> FromBitmapAsync(Bitmap bitmap, int largeSize = LargeIconSize, int smallSize = SmallIconSize)
     {
         IconCollection icon = new();
 
@@ -140,7 +143,7 @@ public class IconCollection
         {
             try
             {
-                return Bitmap.DecodeToWidth(imageStream, 48);
+                return Bitmap.DecodeToWidth(imageStream, IconSmallSize);
             }
             catch (Exception e)
             {
@@ -180,7 +183,7 @@ public class IconCollection
         {
             try
             {
-                return Bitmap.DecodeToWidth(imageStream, 512);
+                return Bitmap.DecodeToWidth(imageStream, LargeIconSize);
             }
             catch (Exception e)
             {

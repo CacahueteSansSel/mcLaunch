@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
-             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="261"
+             mc:Ignorable="d"
              Margin="5"
              Width="200" Height="261"
              Background="{DynamicResource Background}"

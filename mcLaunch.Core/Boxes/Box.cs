@@ -14,12 +14,13 @@ using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Mods.Platforms;
 using Modrinth.Exceptions;
+using ReactiveUI;
 using SharpNBT;
 using AuthenticationManager = mcLaunch.Core.Managers.AuthenticationManager;
 
 namespace mcLaunch.Core.Boxes;
 
-public class Box
+public class Box : IEquatable<Box>
 {
     private string manifestPath;
     private bool exposeLauncher = false;
@@ -164,6 +165,16 @@ public class Box
         {
             // TODO: Set the manifest icon to default
         }
+    }
+
+    public bool MatchesQuery(string query)
+    {
+        string queryLower = query.ToLower();
+
+        return Manifest.Name.ToLower().Contains(queryLower)
+               || Manifest.Author.ToLower().Contains(queryLower)
+               || Manifest.ModLoaderId.ToLower().Contains(queryLower)
+               || Manifest.Version.ToLower().Contains(queryLower);
     }
 
     public void SetWatching(bool isWatching)
@@ -586,4 +597,17 @@ public class Box
             .WithSingleplayerQuickPlay(profilePath, world.FolderName)
             .Run();
     }
+
+    public bool Equals(Box? other)
+        => other?.Manifest.Id == Manifest.Id;
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as Box);
+    }
+
+    public override int GetHashCode()
+        => Manifest.Id.GetHashCode();
+
+    public override string ToString() => $"Box {Manifest.Id} {Manifest.Name}";
 }

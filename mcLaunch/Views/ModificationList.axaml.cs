@@ -27,7 +27,7 @@ namespace mcLaunch.Views;
 
 public partial class ModificationList : UserControl, IBoxEventListener
 {
-    public static AttachedProperty<bool> HideInstalledBadgesProperty
+    public static readonly AttachedProperty<bool> HideInstalledBadgesProperty
         = AvaloniaProperty.RegisterAttached<ModificationList, UserControl, bool>(
             nameof(HideInstalledBadges),
             false,
