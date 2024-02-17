@@ -7,8 +7,10 @@ using ReactiveUI;
 
 namespace mcLaunch.Views.Pages;
 
-public partial class ErrorPage : UserControl
+public partial class ErrorPage : UserControl, ITopLevelPageControl
 {
+    public string Title { get; private set; }
+    
     public ErrorPage()
     {
         InitializeComponent();
@@ -17,6 +19,8 @@ public partial class ErrorPage : UserControl
     public ErrorPage(string message)
     {
         InitializeComponent();
+
+        Title = message;
 
         DataContext = new Data()
         {

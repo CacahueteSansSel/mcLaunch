@@ -5,8 +5,10 @@ using Avalonia.Markup.Xaml;
 
 namespace mcLaunch.Views.Pages;
 
-public partial class BrowseModsPage : UserControl
+public partial class BrowseModsPage : UserControl, ITopLevelPageControl
 {
+    public string Title => $"Browse mods";
+
     public BrowseModsPage()
     {
         InitializeComponent();

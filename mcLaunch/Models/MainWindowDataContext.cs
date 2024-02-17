@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
+using mcLaunch.Views;
 using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
 using ReactiveUI;
@@ -13,12 +14,12 @@ public class MainWindowDataContext : PageNavigator
 {
     public static MainWindowDataContext Instance { get; private set; }
     
-    Control curPage;
+    ITopLevelPageControl curPage;
     Control curPopup;
     bool isPopupShown;
-    Stack<Control> stack = new();
+    Stack<ITopLevelPageControl> stack = new();
 
-    public Control CurrentPage
+    public ITopLevelPageControl CurrentPage
     {
         get => curPage;
         set => this.RaiseAndSetIfChanged(ref curPage, value);
@@ -41,7 +42,7 @@ public class MainWindowDataContext : PageNavigator
         set => MainWindow.Instance.SetDecorations(value);
     }
     
-    public MainWindowDataContext(Control? mainPage, bool decorations)
+    public MainWindowDataContext(ITopLevelPageControl? mainPage, bool decorations)
     {
         Instance = this;
 
@@ -50,14 +51,18 @@ public class MainWindowDataContext : PageNavigator
         HidePopup();
     }
 
-    void Set<T>() where T : Control, new()
+    void Set<T>() where T : ITopLevelPageControl, new()
     {
         CurrentPage = new T();
+        
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
     }
 
-    void Set(Control value)
+    void Set(ITopLevelPageControl value)
     {
         CurrentPage = value;
+        
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
     }
 
     public void Reset()
@@ -78,27 +83,35 @@ public class MainWindowDataContext : PageNavigator
     public void ShowLoadingPage()
     {
         CurrentPage = new LoadingPage();
+        
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
     }
 
     public void ShowStartingPage()
     {
         CurrentPage = new StartingPage();
+        
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
     }
 
     public void HideLoadingPage()
     {
         CurrentPage = stack.Count == 0 ? null : stack.Peek();
+        
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
     }
 
-    public void Push<T>(bool decorations = true) where T : Control, new()
+    public void Push<T>(bool decorations = true) where T : ITopLevelPageControl, new()
         => Push(new T(), decorations);
 
-    public void Push(Control value, bool decorations = true)
+    public void Push(ITopLevelPageControl value, bool decorations = true)
     {
         stack.Push(value);
         
         CurrentPage = value;
         ShowDecorations = decorations;
+        
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
     }
 
     public void Pop()
@@ -112,6 +125,8 @@ public class MainWindowDataContext : PageNavigator
         this.RaisePropertyChanged(nameof(CurrentPage));
         CurrentPage = stack.Peek();
         this.RaisePropertyChanged(nameof(CurrentPage));
+        
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
     }
 
     public void ShowPopup(Control popup)

@@ -10,8 +10,10 @@ using mcLaunch.Views.Windows;
 
 namespace mcLaunch.Views.Pages;
 
-public partial class SettingsPage : UserControl
+public partial class SettingsPage : UserControl, ITopLevelPageControl
 {
+    public string Title => $"Settings";
+    
     public SettingsPage()
     {
         InitializeComponent();

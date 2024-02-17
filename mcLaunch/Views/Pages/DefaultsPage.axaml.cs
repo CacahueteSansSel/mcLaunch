@@ -7,8 +7,10 @@ using mcLaunch.Core.MinecraftFormats;
 
 namespace mcLaunch.Views.Pages;
 
-public partial class DefaultsPage : UserControl
+public partial class DefaultsPage : UserControl, ITopLevelPageControl
 {
+    public string Title => $"Manage defaults";
+    
     public DefaultsPage()
     {
         InitializeComponent();

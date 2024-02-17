@@ -8,9 +8,10 @@ using mcLaunch.Core.Mods;
 
 namespace mcLaunch.Views.Pages;
 
-public partial class ModSearchPage : UserControl
+public partial class ModSearchPage : UserControl, ITopLevelPageControl
 {
     public Box Box { get; }
+    public string Title => $"Browse mods for {Box.Manifest.Name} on {Box.Manifest.ModLoaderId} {Box.Manifest.Version}";
 
     public ModSearchPage()
     {

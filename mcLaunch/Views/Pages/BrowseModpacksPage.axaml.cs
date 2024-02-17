@@ -8,9 +8,12 @@ using mcLaunch.Core.Mods;
 
 namespace mcLaunch.Views.Pages;
 
-public partial class BrowseModpacksPage : UserControl
+public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
 {
     public int PageIndex { get; private set; }
+
+    public string Title => $"Browse modpacks";
+    
     string lastQuery = string.Empty;
     string lastMinecraftVersion = string.Empty;
     

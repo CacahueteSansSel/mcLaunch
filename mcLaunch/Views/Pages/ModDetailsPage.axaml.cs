@@ -20,11 +20,12 @@ using Modrinth.Models;
 
 namespace mcLaunch.Views.Pages;
 
-public partial class ModDetailsPage : UserControl
+public partial class ModDetailsPage : UserControl, ITopLevelPageControl
 {
     bool isInstalling = false;
     public Modification Mod { get; private set; }
     public Box? TargetBox { get; private set; }
+    public string Title => $"{Mod.Name} from {Mod.Author} on {Mod.ModPlatformId}";
 
     public ModDetailsPage()
     {

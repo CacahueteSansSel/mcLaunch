@@ -13,12 +13,16 @@ public partial class HeaderBar : UserControl
     {
         InitializeComponent();
 
-        IsVisible = !OperatingSystem.IsLinux();
         Logo.SetValue(DockPanel.DockProperty, OperatingSystem.IsMacOS() ? Dock.Right : Dock.Left);
         Logo.Margin = new Thickness(15, 5, OperatingSystem.IsMacOS() ? -150 : 0, 0);
         
         Api.OnNetworkError += OnApiNetworkError;
         Api.OnNetworkSuccess += OnApiNetworkSuccess;
+    }
+
+    public void SetTitle(string title)
+    {
+        TitleText.Text = title;
     }
 
     private void OnApiNetworkSuccess(string url)

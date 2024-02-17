@@ -12,8 +12,10 @@ using mcLaunch.Views.Popups;
 
 namespace mcLaunch.Views.Pages;
 
-public partial class OnBoardingPage : UserControl
+public partial class OnBoardingPage : UserControl, ITopLevelPageControl
 {
+    public string Title => $"mcLaunch";
+    
     public OnBoardingPage()
     {
         InitializeComponent();

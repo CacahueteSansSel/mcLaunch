@@ -8,9 +8,11 @@ using mcLaunch.Managers;
 
 namespace mcLaunch.Views.Pages;
 
-public partial class MainPage : UserControl
+public partial class MainPage : UserControl, ITopLevelPageControl
 {
     public static MainPage Instance { get; private set; }
+    public string Title => $"Your boxes";
+    
     private AnonymitySession anonSession;
 
     public MainPage()

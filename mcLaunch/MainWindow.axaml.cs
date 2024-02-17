@@ -30,6 +30,8 @@ public partial class MainWindow : Window
     {
         Instance = this;
         InitializeComponent();
+        
+        SetTitle("mcLaunch");
 
         if (OperatingSystem.IsLinux())
         {
@@ -49,6 +51,12 @@ public partial class MainWindow : Window
         
         MainWindowDataContext.Instance.ShowStartingPage();
         Authenticate();
+    }
+
+    public void SetTitle(string title)
+    {
+        Title = $"{title} - mcLaunch";
+        TopHeaderBar?.SetTitle(title);
     }
 
     public void SetDecorations(bool showDecorations)

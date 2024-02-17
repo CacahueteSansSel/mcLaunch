@@ -26,12 +26,15 @@ using mcLaunch.Views.Popups;
 
 namespace mcLaunch.Views.Pages;
 
-public partial class BoxDetailsPage : UserControl
+public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 {
     public static BoxDetailsPage? LastOpened { get; private set; }
 
     public Box Box { get; }
     public SubControl SubControl { get; private set; }
+
+    public string Title =>
+        $"{Box.Manifest.Name} by {Box.Manifest.Author} on {Box.Manifest.ModLoaderId} {Box.Manifest.Version}";
 
     public BoxDetailsPage()
     {

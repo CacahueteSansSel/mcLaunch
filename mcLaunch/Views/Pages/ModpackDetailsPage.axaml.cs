@@ -16,8 +16,10 @@ using mcLaunch.Views.Popups;
 
 namespace mcLaunch.Views.Pages;
 
-public partial class ModpackDetailsPage : UserControl
+public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
 {
+    public string Title => $"{modpack.Name} by {modpack.Author} on {modpack.ModPlatformId}";
+    
     private PlatformModpack modpack;
     
     public ModpackDetailsPage()
