@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using mcLaunch.GitHub;
 using mcLaunch.GitHub.Models;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
@@ -18,11 +19,7 @@ public partial class UpdateNotificationBar : UserControl
 
     private async void UpdateButtonClicked(object? sender, RoutedEventArgs e)
     {
-        if (!await UpdateManager.UpdateAsync())
-        {
-            Navigation.ShowPopup(new MessageBoxPopup("Error", "Update failed. You can download the update on the GitHub repository manually."));
-            return;
-        }
+        Navigation.ShowPopup(new UpdateChangelogPopup(await GitHubRepository.GetLatestReleaseAsync()));
     }
 
     private void IgnoreButtonClicked(object? sender, RoutedEventArgs e)
@@ -32,6 +29,6 @@ public partial class UpdateNotificationBar : UserControl
 
     public void SetUpdateDetails(GitHubRelease release)
     {
-        VersionNameText.Text = $"mcLaunch {release.Name.TrimStart('v')}";
+        VersionNameText.Text = release.Name.TrimStart('v');
     }
 }

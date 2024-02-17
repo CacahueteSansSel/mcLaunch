@@ -2,8 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="45"
-             Height="45"
+             mc:Ignorable="d" d:DesignWidth="800"
+             Height="60"
              x:Class="mcLaunch.Views.UpdateNotificationBar">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
@@ -12,11 +12,14 @@
         <DockPanel VerticalAlignment="Center" Margin="10 0 10 0">
             <StackPanel VerticalAlignment="Center" DockPanel.Dock="Left" Orientation="Vertical">
                 <TextBlock DockPanel.Dock="Left">An update for mcLaunch is available</TextBlock>
-                <TextBlock x:Name="VersionNameText" DockPanel.Dock="Left" Classes="title">mcLaunch v1.0.1</TextBlock>
+                <StackPanel Orientation="Horizontal" Spacing="10" Height="30">
+                    <Image Source="/resources/logo_big.png" Height="15" VerticalAlignment="Center"></Image>
+                    <TextBlock x:Name="VersionNameText" VerticalAlignment="Center" FontWeight="SemiBold">v0.2.0</TextBlock>
+                </StackPanel>
             </StackPanel>
             <StackPanel DockPanel.Dock="Right" Spacing="5" Orientation="Horizontal">
-                <Button Classes="secondary" Click="IgnoreButtonClicked">Ignore</Button>
-                <Button Classes="primary" Click="UpdateButtonClicked">Update</Button>
+                <Button Classes="secondary" Click="IgnoreButtonClicked">Hide</Button>
+                <Button Classes="primary" Click="UpdateButtonClicked">See more details</Button>
             </StackPanel>
             <Panel></Panel>
         </DockPanel>

@@ -4,6 +4,7 @@ namespace mcLaunch.GitHub.Models;
 
 public class GitHubRelease
 {
+    [JsonPropertyName("body")] public string MarkdownBody { get; set; }
     [JsonPropertyName("url")] public string Url { get; set; }
     [JsonPropertyName("assets_url")] public string AssetsUrl { get; set; }
     [JsonPropertyName("upload_url")] public string UploadUrl { get; set; }

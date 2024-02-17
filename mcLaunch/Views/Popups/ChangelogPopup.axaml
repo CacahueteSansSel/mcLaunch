@@ -17,7 +17,7 @@
                 <Button DockPanel.Dock="Right" Classes="primary" Click="InstallButtonClicked">Install</Button>
                 <Panel></Panel>
             </DockPanel>
-            <Border Margin="0 15 0 0" Padding="5" Classes="frame" BoxShadow="" Background="{DynamicResource BackgroundDarker}">
+            <Border Margin="0 15 0 0" Padding="5" Classes="frame-without-shadow" BoxShadow="" Background="{DynamicResource BackgroundDarker}">
                 <avalonia:MarkdownScrollViewer x:Name="MarkdownArea" />
             </Border>
         </DockPanel>

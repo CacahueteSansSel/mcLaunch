@@ -237,5 +237,9 @@
         <DependentUpon>CrashReportList.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\Popups\UpdateChangelogPopup.axaml.cs">
+        <DependentUpon>UpdateChangelogPopup.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>
