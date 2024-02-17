@@ -20,16 +20,14 @@ namespace mcLaunch.Views;
 
 public partial class BoxEntryCard : UserControl
 {
-    public static readonly AttachedProperty<Box> ContentBoxProperty =
-        AvaloniaProperty.RegisterAttached<BoxEntryCard, UserControl, Box>(
-            nameof(ContentBox),
-            null,
-            inherits: true);
+    public static readonly AvaloniaProperty<Box> BoxProperty =
+        AvaloniaProperty.RegisterDirect<BoxEntryCard, Box>(nameof(Box), card => card.box,
+            (card, box) => card.SetBox(box));
 
     private AnonymitySession anonSession;
     private Box box;
 
-    public Box ContentBox
+    public Box Box
     {
         get => box;
         set

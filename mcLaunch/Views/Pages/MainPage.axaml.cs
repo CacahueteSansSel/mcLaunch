@@ -38,14 +38,16 @@ public partial class MainPage : UserControl, ITopLevelPageControl
 
         if (string.IsNullOrWhiteSpace(query))
         {
-            BoxesContainer.Children.Clear();
-            BoxesContainer.Children.AddRange(loadedBoxes.Select(box => new BoxEntryCard(box, anonSession)));
+            BoxesContainer.ItemsSource = loadedBoxes;
 
             return;
         }
 
-        BoxesContainer.Children.Clear();
-        BoxesContainer.Children.AddRange(loadedBoxes.Where(box => box.MatchesQuery(query))
-            .Select(box => new BoxEntryCard(box, anonSession)));
+        BoxesContainer.ItemsSource = loadedBoxes.Where(box => box.MatchesQuery(query));
+    }
+
+    private void SearchBoxTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        PopulateBoxList(SearchBox.Text, false);
     }
 }
