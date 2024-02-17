@@ -65,6 +65,10 @@ public class ModrinthModPlatform : ModPlatform
         {
             return PaginatedResponse<Modification>.Empty;
         }
+        catch (TaskCanceledException e)
+        {
+            return PaginatedResponse<Modification>.Empty;
+        }
 
         Modification[] mods = search.Hits.Select(hit => new Modification
         {
@@ -104,6 +108,10 @@ public class ModrinthModPlatform : ModPlatform
                 limit: 10, offset: (ulong)(page * 10));
         }
         catch (ModrinthApiException e)
+        {
+            return PaginatedResponse<PlatformModpack>.Empty;
+        }
+        catch (TaskCanceledException e)
         {
             return PaginatedResponse<PlatformModpack>.Empty;
         }
@@ -155,6 +163,10 @@ public class ModrinthModPlatform : ModPlatform
         {
             return PaginatedResponse<ModDependency>.Empty;
         }
+        catch (TaskCanceledException e)
+        {
+            return PaginatedResponse<ModDependency>.Empty;
+        }
     }
 
     public override async Task<Modification> GetModAsync(string id)
@@ -200,6 +212,10 @@ public class ModrinthModPlatform : ModPlatform
         {
             return null;
         }
+        catch (TaskCanceledException e)
+        {
+            return null;
+        }
     }
 
     public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string? modLoaderId,
@@ -214,6 +230,10 @@ public class ModrinthModPlatform : ModPlatform
                 minecraftVersionId == null ? null : [minecraftVersionId]);
         }
         catch (ModrinthApiException e)
+        {
+            return Array.Empty<ModVersion>();
+        }
+        catch (TaskCanceledException e)
         {
             return Array.Empty<ModVersion>();
         }
@@ -267,6 +287,10 @@ public class ModrinthModPlatform : ModPlatform
             return pack;
         }
         catch (ModrinthApiException e)
+        {
+            return null;
+        }
+        catch (TaskCanceledException e)
         {
             return null;
         }
@@ -349,6 +373,10 @@ public class ModrinthModPlatform : ModPlatform
         {
             return false;
         }
+        catch (TaskCanceledException e)
+        {
+            return false;
+        }
 
         if (!targetBox.HasModificationSoft(mod)) await InstallVersionAsync(targetBox, version, installOptional);
 
@@ -384,6 +412,10 @@ public class ModrinthModPlatform : ModPlatform
         {
             
         }
+        catch (TaskCanceledException e)
+        {
+            
+        }
 
         return mod;
     }
@@ -409,6 +441,10 @@ public class ModrinthModPlatform : ModPlatform
                 version.Name, version.GameVersions.FirstOrDefault(), version.Loaders.FirstOrDefault());
         }
         catch (ModrinthApiException e)
+        {
+            return null;
+        }
+        catch (TaskCanceledException e)
         {
             return null;
         }
