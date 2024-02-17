@@ -12,7 +12,7 @@ public class IconCollection
 {
     public static IconCollection? Default { get; set; } = new() {IsDefaultIcon = true};
 
-    public Stream? DirectStream { get; private set; }
+    public Uri? ResourceUri { get; private set; }
     public string? Url { get; private set; }
     public bool IsLocalFile { get; private set; }
 
@@ -28,20 +28,20 @@ public class IconCollection
         IsLocalFile = isFile;
     }
 
-    private IconCollection(Stream stream)
+    public IconCollection(Uri resourceUri)
     {
-        DirectStream = stream;
+        ResourceUri = resourceUri;
     }
 
     private IconCollection()
     {
+        
     }
 
     public static IconCollection FromUrl(string url) => new(url, false);
-    public static IconCollection FromStream(Stream stream) => new(stream);
 
     public static IconCollection FromResources(string path)
-        => FromStream(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/{path}")));
+        => new(new Uri($"avares://mcLaunch/resources/{path}"));
 
     public static async Task<IconCollection> FromFileAsync(string filename, int largeSize = 512, int smallSize = 48)
         => await new IconCollection(filename, true).WithCustomSizes(largeSize, smallSize).DownloadAllAsync();
@@ -69,8 +69,8 @@ public class IconCollection
 
     async Task<Stream> LoadStreamAsync()
     {
-        if (DirectStream != null) 
-            return DirectStream;
+        if (ResourceUri != null) 
+            return AssetLoader.Open(ResourceUri);
 
         if (Url == null)
             return AssetLoader.Open(new Uri($"avares://mcLaunch/resources/default_mod_logo.png"));
@@ -119,8 +119,8 @@ public class IconCollection
     {
         SHA1 sha = SHA1.Create();
         string cacheName = string.Empty;
-        bool isStream = DirectStream != null;
-        if (!isStream)
+        bool isResource = ResourceUri != null;
+        if (!isResource)
         {
             string hash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(Url)));
 
@@ -134,7 +134,7 @@ public class IconCollection
             }
         }
 
-        await using Stream imageStream = await LoadStreamAsync();
+        Stream imageStream = await LoadStreamAsync();
 
         IconSmall = await Task.Run(() =>
         {
@@ -148,15 +148,19 @@ public class IconCollection
             }
         });
 
-        if (!isStream) CacheManager.Store(IconSmall, cacheName);
+        if (!isResource)
+        {
+            CacheManager.Store(IconSmall, cacheName);
+            await imageStream.DisposeAsync();
+        }
     }
 
     public async Task DownloadLargeAsync()
     {
         SHA1 sha = SHA1.Create();
         string cacheName = string.Empty;
-        bool isStream = DirectStream != null;
-        if (!isStream)
+        bool isResource = ResourceUri != null;
+        if (!isResource)
         {
             string hash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(Url)));
 
@@ -170,7 +174,7 @@ public class IconCollection
             }
         }
 
-        await using Stream imageStream = await LoadStreamAsync();
+        Stream imageStream = await LoadStreamAsync();
 
         IconLarge = await Task.Run(() =>
         {
@@ -184,7 +188,11 @@ public class IconCollection
             }
         });
 
-        if (!isStream) CacheManager.Store(IconLarge, cacheName);
+        if (!isResource)
+        {
+            CacheManager.Store(IconLarge, cacheName);
+            await imageStream.DisposeAsync();
+        }
     }
 
     public async Task<IconCollection> DownloadAllAsync()
