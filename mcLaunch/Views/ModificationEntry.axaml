@@ -37,7 +37,7 @@
                 <views:Badge IsVisible="{Binding IsInstalledOnCurrentBoxUi}" Margin="10 0 0 0" Text="Installed"
                              Icon="/resources/icons/checkmark.png">
                 </views:Badge>
-                <views:AttentionBadge Margin="5 0 0 0" IsVisible="{Binding IsUpdateRequired}" Text="New update available"></views:AttentionBadge>
+                <views:Badge x:Name="UpdateBadge" Margin="5 0 0 0" IsVisible="{Binding IsUpdateRequired}" Icon="/resources/icons/update.png" Text="Update available"></views:Badge>
             </StackPanel>
             <StackPanel IsVisible="{Binding !IsFilenameEmpty}" Orientation="Horizontal" Opacity="0.5">
                 <TextBlock Classes="light" FontSize="12" Text="{Binding Filename}"></TextBlock>
