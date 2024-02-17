@@ -94,8 +94,7 @@ public partial class NewBoxPopup : UserControl
         else
         {
             Random rng = new Random(BoxNameTb.Text.GetHashCode());
-            icon = IconCollection.FromStream(
-                AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
+            icon = IconCollection.FromResources($"box_icons/{rng.Next(0, 4)}.png");
         }
 
         // We fetch automatically the latest version of the modloader for now

@@ -134,10 +134,24 @@ public class Modification : ReactiveObject
         return License;
     }
 
+    public void SetDefaultIcon()
+    {
+        Icon = IconCollection.Default!;
+    }
+    
     public async Task DownloadIconAsync()
     {
+        if (string.IsNullOrWhiteSpace(IconUrl))
+        {
+            SetDefaultIcon();
+            return;
+        }
+        
         Icon = IconCollection.FromUrl(IconUrl);
         await Icon.DownloadAllAsync();
+        
+        if (Icon.IconLarge == null && Icon.IconSmall == null) 
+            SetDefaultIcon();
     }
 
     async Task<Stream> LoadBackgroundStreamAsync()

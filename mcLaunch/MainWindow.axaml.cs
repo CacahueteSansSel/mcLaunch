@@ -10,6 +10,7 @@ using Avalonia.Controls;
 using Cacahuete.MinecraftLib.Auth;
 using Cacahuete.MinecraftLib.Http;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.GitHub;
 using mcLaunch.Managers;
@@ -40,6 +41,9 @@ public partial class MainWindow : Window
         
         UpdateBar.IsVisible = false;
         Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch", CurrentBuild.Version.ToString()));
+        
+        IconCollection.Default = IconCollection.FromResources("default_mod_logo.png");
+        IconCollection.Default.DownloadAllAsync();
 
         DataContext = new MainWindowDataContext(null, false);
         

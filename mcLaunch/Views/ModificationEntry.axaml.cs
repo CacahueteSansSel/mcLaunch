@@ -35,7 +35,7 @@ public partial class ModificationEntry : UserControl
             Mod = new Modification
             {
                 Name = "Sample Mod",
-                Icon = IconCollection.Default(),
+                Icon = IconCollection.Default,
                 Author = "sample dev",
                 ShortDescription = "sample desc",
                 IsUpdateRequired = false,
