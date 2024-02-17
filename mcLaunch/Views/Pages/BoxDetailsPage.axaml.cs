@@ -64,6 +64,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         ModLoaderBadge.Text = $"{box.ModLoader?.Name ?? "Unknown"} {box.Manifest.ModLoaderVersion}";
 
         box.LoadBackground();
+        DefaultBackground.IsVisible = box.Manifest.Background == null;
 
         RunBoxChecks();
     }

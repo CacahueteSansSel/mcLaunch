@@ -24,6 +24,8 @@ public partial class ModSearchPage : UserControl, ITopLevelPageControl
 
         Box = box;
         DataContext = Box;
+
+        DefaultBackground.IsVisible = box.Manifest.Background == null;
         
         ModList.Search(box, "");
     }

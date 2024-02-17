@@ -11,6 +11,7 @@
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <Panel>
+        <Image x:Name="DefaultBackground" Stretch="UniformToFill" Source="/resources/background_default.png"></Image>
         <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}"></Image>
         <TextBlock Classes="id" Opacity="0.4" Margin="20 10 0 0" Text="{Binding Manifest.Id}"></TextBlock>
         <Button Margin="0 10 15 0" ZIndex="10" IsHitTestVisible="True" VerticalAlignment="Top" HorizontalAlignment="Right" Classes="transparent" Click="EditBackgroundButtonClicked"  ToolTip.Tip="Select background image">

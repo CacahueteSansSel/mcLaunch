@@ -78,6 +78,8 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
             TestButton.IsVisible = true;
         }
         else TestButton.IsVisible = false;
+
+        DefaultBackground.IsVisible = mod.BackgroundPath == null;
     }
 
     async void GetModAdditionalInfos()

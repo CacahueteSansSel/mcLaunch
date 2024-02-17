@@ -37,6 +37,7 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
         this.modpack = modpack;
         DataContext = modpack;
         OpenInBrowserButton.IsVisible = modpack.Url != null;
+        DefaultBackground.IsVisible = this.modpack.BackgroundPath == null;
 
         string[] supportedMinecraftVersions = this.modpack.FetchAndSortSupportedMinecraftVersions();
         if (supportedMinecraftVersions.Length > 0)

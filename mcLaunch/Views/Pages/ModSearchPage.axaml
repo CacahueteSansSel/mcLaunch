@@ -10,6 +10,7 @@
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
     <Panel>
+        <Image x:Name="DefaultBackground" Stretch="UniformToFill" Source="/resources/background_default.png"></Image>
         <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}"></Image>
         <ScrollViewer>
             <StackPanel>

@@ -193,6 +193,8 @@
       <AvaloniaResource Include="resources\settings\anonymized_names.txt" />
       <None Remove="resources\icons\problem.png" />
       <AvaloniaResource Include="resources\icons\problem.png" />
+      <None Remove="resources\background_default.png" />
+      <AvaloniaResource Include="resources\background_default.png" />
     </ItemGroup>
 
     <ItemGroup>
