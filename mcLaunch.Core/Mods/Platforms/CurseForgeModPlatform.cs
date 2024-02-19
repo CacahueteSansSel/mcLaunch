@@ -148,7 +148,7 @@ public class CurseForgeModPlatform : ModPlatform
         if (modCache.TryGetValue(id, out var cachedMod))
             return cachedMod;
         
-        string cacheName = $"mod-{id}";
+        string cacheName = $"mod-curseforge-{id}";
         if (CacheManager.HasModification(cacheName))
         {
             // Mods loaded from the cache 

@@ -96,6 +96,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     protected override void OnLoaded(RoutedEventArgs e)
     {
         Box?.SetWatching(true);
+        Reload();
+        
         base.OnLoaded(e);
     }
 

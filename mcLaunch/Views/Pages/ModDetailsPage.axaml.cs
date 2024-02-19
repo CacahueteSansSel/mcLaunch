@@ -151,8 +151,6 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
         LoadingButtonFrame.IsVisible = false;
         SetInstalled(true);
 
-        BoxDetailsPage.LastOpened?.Reload();
-
         isInstalling = false;
     }
 
