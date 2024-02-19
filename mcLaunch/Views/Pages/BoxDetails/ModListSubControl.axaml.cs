@@ -52,18 +52,18 @@ public partial class ModListSubControl : SubControl
 
         List<Modification> mods = new();
 
-        foreach (BoxStoredModification storedMod in Box.Manifest.Modifications)
+        await Parallel.ForEachAsync(Box.Manifest.Modifications, async (boxMod, token) =>
         {
-            Modification mod = await ModPlatformManager.Platform.GetModAsync(storedMod.Id);
-            if (mod == null) continue;
+            Modification mod = await ModPlatformManager.Platform.GetModAsync(boxMod.Id);
+            if (mod == null) return;
 
-            mod.Filename = storedMod.Filenames.Length == 0 ? "" : storedMod.Filenames[0].Replace("mods/", "").Trim();
-            mod.InstalledVersion = storedMod.VersionId;
+            mod.Filename = boxMod.Filenames.Length == 0 ? "" : boxMod.Filenames[0].Replace("mods/", "").Trim();
+            mod.InstalledVersion = boxMod.VersionId;
 
             mod.DownloadIconAsync();
 
             mods.Add(mod);
-        }
+        });
 
         ModsList.SetBox(Box);
         ModsList.SetModifications(mods.ToArray());

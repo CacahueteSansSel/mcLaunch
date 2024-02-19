@@ -85,6 +85,8 @@ public class BoxManifest : ReactiveObject
 
     public bool HasModificationSoft(Modification mod)
     {
+        if (mod == null) return false;
+        
         BoxStoredModification? storedMod =
             Modifications.FirstOrDefault(m => mod.IsSimilar(m) || HasModificationStrict(mod.Id, mod.ModPlatformId));
 
