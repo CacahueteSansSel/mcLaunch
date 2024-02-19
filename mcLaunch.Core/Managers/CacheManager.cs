@@ -37,15 +37,29 @@ public static class CacheManager
     {
         if (!File.Exists($"{FolderPath}/bitmaps/{id}.cache")) return null;
         
-        return new Bitmap($"{FolderPath}/bitmaps/{id}.cache");
+        try
+        {
+            return new Bitmap($"{FolderPath}/bitmaps/{id}.cache");
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
     public static Modification? LoadModification(string id)
     {
         if (!File.Exists($"{FolderPath}/mods/{id}.cache")) return null;
         
-        using FileStream fs = new($"{FolderPath}/mods/{id}.cache", FileMode.Open);
-        return new Modification(fs);
+        try
+        {
+            using FileStream fs = new($"{FolderPath}/mods/{id}.cache", FileMode.Open);
+            return new Modification(fs);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
     public static bool HasBitmap(string id)

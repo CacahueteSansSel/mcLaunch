@@ -171,18 +171,21 @@ public class ModrinthModPlatform : ModPlatform
 
     public override async Task<Modification> GetModAsync(string id)
     {
+        if (modCache.TryGetValue(id, out var cachedMod))
+            return cachedMod;
+        
         string cacheName = $"mod-{id}";
         if (CacheManager.HasModification(cacheName))
         {
             // Mods loaded from the cache 
-            Modification mod = CacheManager.LoadModification(cacheName)!;
-            mod.Platform = this;
+            Modification? mod = CacheManager.LoadModification(cacheName)!;
 
-            return mod;
+            if (mod != null)
+            {
+                mod.Platform = this;
+                return mod;
+            }
         }
-        
-        if (modCache.TryGetValue(id, out var cachedMod))
-            return cachedMod;
 
         try
         {

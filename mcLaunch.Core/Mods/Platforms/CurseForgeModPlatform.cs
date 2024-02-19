@@ -143,18 +143,23 @@ public class CurseForgeModPlatform : ModPlatform
 
     public override async Task<Modification> GetModAsync(string id)
     {
+        if (!uint.TryParse(id, out uint intId)) 
+            return null;
+        if (modCache.TryGetValue(id, out var cachedMod))
+            return cachedMod;
+        
         string cacheName = $"mod-{id}";
         if (CacheManager.HasModification(cacheName))
         {
             // Mods loaded from the cache 
-            Modification mod = CacheManager.LoadModification(cacheName)!;
-            mod.Platform = this;
+            Modification? mod = CacheManager.LoadModification(cacheName)!;
 
-            return mod;
+            if (mod != null)
+            {
+                mod.Platform = this;
+                return mod;
+            }
         }
-        
-        if (modCache.TryGetValue(id, out var cachedMod))
-            return cachedMod;
 
         try
         {
@@ -202,6 +207,8 @@ public class CurseForgeModPlatform : ModPlatform
     public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string? modLoaderId,
         string? minecraftVersionId)
     {
+        if (!uint.TryParse(mod.Id, out uint id)) return [];
+        
         try
         {
             ModLoaderType? modLoader = string.IsNullOrWhiteSpace(modLoaderId)
@@ -209,8 +216,7 @@ public class CurseForgeModPlatform : ModPlatform
                 : Enum.Parse<ModLoaderType>(modLoaderId, true);
             List<ModVersion> modVersions = new();
 
-            foreach (File file in (await client.GetModFiles(uint.Parse(mod.Id), minecraftVersionId,
-                         modLoader)).Data)
+            foreach (File file in (await client.GetModFiles(id, minecraftVersionId, modLoader)).Data)
             {
                 string? modLoaderName = file.GameVersions.FirstOrDefault(ModLoaderManager.IsModLoaderName)?.ToLower()
                                         ?? "forge";
@@ -223,7 +229,7 @@ public class CurseForgeModPlatform : ModPlatform
         }
         catch (HttpRequestException)
         {
-            return Array.Empty<ModVersion>();
+            return [];
         }
     }
 
@@ -288,9 +294,12 @@ public class CurseForgeModPlatform : ModPlatform
         string versionId,
         string minecraftVersionId)
     {
+        if (!uint.TryParse(id, out uint intId)) 
+            return null;
+        
         try
         {
-            List<File> files = (await client.GetModFiles(uint.Parse(id), minecraftVersionId,
+            List<File> files = (await client.GetModFiles(intId, minecraftVersionId,
                 Enum.Parse<ModLoaderType>(modLoaderId, true), pageSize: 100)).Data;
             File? file = files.FirstOrDefault(f => f.Id == uint.Parse(versionId));
 
@@ -430,11 +439,14 @@ public class CurseForgeModPlatform : ModPlatform
 
     public override async Task<Modification> DownloadModInfosAsync(Modification mod)
     {
+        if (!uint.TryParse(mod.Id, out uint id)) 
+            return null;
+        
         Mod cfMod;
 
         try
         {
-            cfMod = (await client.GetMod(uint.Parse(mod.Id))).Data;
+            cfMod = (await client.GetMod(id)).Data;
         }
         catch (HttpRequestException)
         {
@@ -444,7 +456,7 @@ public class CurseForgeModPlatform : ModPlatform
         mod.Changelog = (cfMod.LatestFiles == null || cfMod.LatestFiles.FirstOrDefault() == null)
             ? string.Empty
             : (await client.GetModFileChangelog(cfMod.Id, cfMod.LatestFiles.FirstOrDefault().Id)).Data;
-        mod.LongDescriptionBody = (await client.GetModDescription(uint.Parse(mod.Id))).Data;
+        mod.LongDescriptionBody = (await client.GetModDescription(id)).Data;
 
         return mod;
     }
