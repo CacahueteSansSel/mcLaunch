@@ -143,9 +143,17 @@ public class CurseForgeModPlatform : ModPlatform
     public override async Task<Modification> GetModAsync(string id)
     {
         string cacheName = $"mod-{id}";
-        if (CacheManager.Has(cacheName)) return CacheManager.LoadModification(cacheName)!;
-        if (modCache.ContainsKey(id))
-            return modCache[id];
+        if (CacheManager.HasModification(cacheName))
+        {
+            // Mods loaded from the cache 
+            Modification mod = CacheManager.LoadModification(cacheName)!;
+            mod.Platform = this;
+
+            return mod;
+        }
+        
+        if (modCache.TryGetValue(id, out var cachedMod))
+            return cachedMod;
 
         try
         {

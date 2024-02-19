@@ -115,7 +115,7 @@ public class PlatformModpack : ReactiveObject, IVersionContent
     public async Task DownloadIconAsync()
     {
         string cacheName = $"icon-mod-{Platform.Name}-{Id}";
-        if (CacheManager.Has(cacheName))
+        if (CacheManager.HasBitmap(cacheName))
         {
             await Task.Run(() =>
             {
@@ -169,7 +169,7 @@ public class PlatformModpack : ReactiveObject, IVersionContent
     public async Task DownloadBackgroundAsync()
     {
         string cacheName = $"bkg-mod-{Platform.Name}-{Id}";
-        if (CacheManager.Has(cacheName))
+        if (CacheManager.HasBitmap(cacheName))
         {
             await Task.Run(() =>
             {

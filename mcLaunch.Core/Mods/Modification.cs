@@ -8,6 +8,7 @@ using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
+using mcLaunch.Core.Mods.Platforms;
 using ReactiveUI;
 
 namespace mcLaunch.Core.Mods;
@@ -98,6 +99,50 @@ public class Modification : ReactiveObject
     public bool IsDownloadCountValid => DownloadCount.HasValue;
     public bool IsLastUpdatedValid => LastUpdated.HasValue;
 
+    public Modification(Stream inputStream)
+    {
+        BinaryReader rd = new(inputStream);
+
+        Name = rd.ReadNullableString();
+        Id = rd.ReadString();
+        Author = rd.ReadString();
+        ShortDescription = rd.ReadNullableString();
+        Changelog = rd.ReadNullableString();
+        Url = rd.ReadNullableString();
+        IconUrl = rd.ReadNullableString();
+        LatestVersion = rd.ReadNullableString();
+        LatestMinecraftVersion = rd.ReadNullableString();
+        DownloadCount = rd.ReadInt32();
+        if (DownloadCount == 0) DownloadCount = null;
+        LastUpdated = DateTime.FromBinary(rd.ReadInt64());
+        License = rd.ReadNullableString();
+        string? platformId = rd.ReadNullableString();
+    }
+
+    public Modification()
+    {
+        
+    }
+
+    public void WriteToStream(Stream stream)
+    {
+        BinaryWriter wr = new(stream);
+        
+        wr.WriteNullableString(Name);
+        wr.Write(Id);
+        wr.Write(Author);
+        wr.WriteNullableString(ShortDescription);
+        wr.WriteNullableString(Changelog);
+        wr.WriteNullableString(Url);
+        wr.WriteNullableString(IconUrl);
+        wr.WriteNullableString(LatestVersion);
+        wr.WriteNullableString(LatestMinecraftVersion);
+        wr.Write(DownloadCount ?? 0);
+        wr.Write(LastUpdated?.ToBinary() ?? 0);
+        wr.WriteNullableString(License);
+        wr.WriteNullableString(Platform?.Name);
+    }
+
     public void TransformLongDescriptionToHtml()
     {
         if (string.IsNullOrWhiteSpace(LongDescriptionBody))
@@ -176,7 +221,7 @@ public class Modification : ReactiveObject
     public async Task DownloadBackgroundAsync()
     {
         string cacheName = $"bkg-mod-{Platform.Name}-{Id}";
-        if (CacheManager.Has(cacheName))
+        if (CacheManager.HasBitmap(cacheName))
         {
             await Task.Run(() => { Background = CacheManager.LoadBitmap(cacheName); });
 

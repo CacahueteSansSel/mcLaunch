@@ -129,7 +129,7 @@ public class IconCollection
 
             cacheName = $"is-{hash}";
 
-            if (CacheManager.Has(cacheName) && !IsLocalFile)
+            if (CacheManager.HasBitmap(cacheName) && !IsLocalFile)
             {
                 await Task.Run(() => { IconSmall = CacheManager.LoadBitmap(cacheName); });
 
@@ -169,7 +169,7 @@ public class IconCollection
 
             cacheName = $"il-{hash}";
 
-            if (CacheManager.Has(cacheName) && !IsLocalFile)
+            if (CacheManager.HasBitmap(cacheName) && !IsLocalFile)
             {
                 await Task.Run(() => { IconLarge = CacheManager.LoadBitmap(cacheName); });
 

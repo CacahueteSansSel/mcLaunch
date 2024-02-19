@@ -12,30 +12,45 @@ public static class CacheManager
     public static void Init()
     {
         FolderPath = AppdataFolderManager.GetValidPath("cache");
-
-        if (!Directory.Exists(FolderPath)) Directory.CreateDirectory(FolderPath);
+        
+        Directory.CreateDirectory(FolderPath);
+        Directory.CreateDirectory($"{FolderPath}/bitmaps");
+        Directory.CreateDirectory($"{FolderPath}/mods");
     }
 
     public static void Store(Bitmap? bmp, string id)
     {
         if (bmp == null) return;
         
-        bmp.Save($"{FolderPath}/{id}");
+        bmp.Save($"{FolderPath}/bitmaps/{id}.cache", 30);
     }
 
     public static void Store(Modification? mod, string id)
     {
         if (mod == null) return;
-        
-        File.WriteAllText($"{FolderPath}/{id}", JsonSerializer.Serialize(mod));
+
+        using FileStream fs = new($"{FolderPath}/mods/{id}.cache", FileMode.Create);
+        mod.WriteToStream(fs);
     }
 
-    public static Bitmap LoadBitmap(string id)
-        => new Bitmap($"{FolderPath}/{id}");
+    public static Bitmap? LoadBitmap(string id)
+    {
+        if (!File.Exists($"{FolderPath}/bitmaps/{id}.cache")) return null;
+        
+        return new Bitmap($"{FolderPath}/bitmaps/{id}.cache");
+    }
 
     public static Modification? LoadModification(string id)
-        => JsonSerializer.Deserialize<Modification>(File.ReadAllText($"{FolderPath}/{id}"));
+    {
+        if (!File.Exists($"{FolderPath}/mods/{id}.cache")) return null;
+        
+        using FileStream fs = new($"{FolderPath}/mods/{id}.cache", FileMode.Open);
+        return new Modification(fs);
+    }
 
-    public static bool Has(string id)
-        => File.Exists($"{FolderPath}/{id}");
+    public static bool HasBitmap(string id)
+        => File.Exists($"{FolderPath}/bitmaps/{id}.cache");
+
+    public static bool HasModification(string id)
+        => File.Exists($"{FolderPath}/mods/{id}.cache");
 }

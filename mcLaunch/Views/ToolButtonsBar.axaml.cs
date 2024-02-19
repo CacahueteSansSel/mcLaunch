@@ -100,13 +100,13 @@ public partial class ToolButtonsBar : UserControl
             AuthenticationManager.OnLogin += async result =>
             {
                 Account = result;
-                string cacheName = $"user-{account.Uuid}";
+                string headIconCacheName = $"user-{account.Uuid}";
                 
-                if (CacheManager.Has(cacheName))
+                if (CacheManager.HasBitmap(headIconCacheName))
                 {
                     await Task.Run(() =>
                     {
-                        HeadIcon = CacheManager.LoadBitmap(cacheName);
+                        HeadIcon = CacheManager.LoadBitmap(headIconCacheName);
                     });
 
                     return;
@@ -128,7 +128,7 @@ public partial class ToolButtonsBar : UserControl
                         }
                     });
             
-                    CacheManager.Store(HeadIcon, cacheName);
+                    CacheManager.Store(HeadIcon, headIconCacheName);
                 }
             };
         }
