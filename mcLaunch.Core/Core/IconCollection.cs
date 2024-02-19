@@ -123,7 +123,7 @@ public class IconCollection
         SHA1 sha = SHA1.Create();
         string cacheName = string.Empty;
         bool isResource = ResourceUri != null;
-        if (!isResource)
+        if (!isResource && !IsLocalFile)
         {
             string hash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(Url)));
 
@@ -151,11 +151,13 @@ public class IconCollection
             }
         });
 
-        if (!isResource)
+        if (!isResource && !IsLocalFile)
         {
             CacheManager.Store(IconSmall, cacheName);
-            await imageStream.DisposeAsync();
         }
+        
+        
+        if (!isResource || IsLocalFile) await imageStream.DisposeAsync();
     }
 
     public async Task DownloadLargeAsync()
@@ -163,7 +165,7 @@ public class IconCollection
         SHA1 sha = SHA1.Create();
         string cacheName = string.Empty;
         bool isResource = ResourceUri != null;
-        if (!isResource)
+        if (!isResource && !IsLocalFile)
         {
             string hash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(Url)));
 
@@ -191,11 +193,12 @@ public class IconCollection
             }
         });
 
-        if (!isResource)
+        if (!isResource && !IsLocalFile)
         {
             CacheManager.Store(IconLarge, cacheName);
-            await imageStream.DisposeAsync();
         }
+        
+        if (!isResource || IsLocalFile) await imageStream.DisposeAsync();
     }
 
     public async Task<IconCollection> DownloadAllAsync()
