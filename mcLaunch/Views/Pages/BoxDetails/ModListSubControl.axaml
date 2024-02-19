@@ -28,6 +28,8 @@
                     <Button x:Name="MigrateToCurseForgeButton" DockPanel.Dock="Left" Classes="secondary square" Click="MigrateToCurseForgeButtonClicked" ToolTip.Tip="Migrate all mods to CurseForge" BorderBrush="#ee6234">
                         <Image Width="13" Height="13" Source="/resources/icons/curseforge.png"></Image>
                     </Button>
+                    <views:SeparatorLine></views:SeparatorLine>
+                    <TextBox x:Name="SearchBox" Watermark="Search mod" Width="300" VerticalContentAlignment="Center" TextChanged="SearchBoxTextChanged"></TextBox>
                 </StackPanel>
                 <StackPanel Height="15" x:Name="SearchingForUpdates" DockPanel.Dock="Left" IsVisible="False" Orientation="Horizontal">
                     <views:LoadingCircle RenderTransform="scale(0.7)"></views:LoadingCircle>

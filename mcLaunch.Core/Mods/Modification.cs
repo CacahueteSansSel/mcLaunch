@@ -15,7 +15,7 @@ namespace mcLaunch.Core.Mods;
 public class Modification : ReactiveObject
 {
     public static Modification CreateIdOnly(string id) => new() {Id = id};
-    
+
     string? longDescriptionBody;
     IconCollection icon;
     Bitmap? background;
@@ -127,18 +127,18 @@ public class Modification : ReactiveObject
     public bool IsSimilar(BoxStoredModification other)
         => IsSimilar(other.Name, other.Author);
 
-    public string GetLicenseDisplayName()
-    {
-        if (!IsOpenSource) return "All Rights Reserved";
+    public bool MatchesQuery(string query)
+        => Name.Contains(query, StringComparison.InvariantCultureIgnoreCase)
+           || Author.Contains(query, StringComparison.InvariantCultureIgnoreCase)
+           || ModPlatformId.Contains(query, StringComparison.InvariantCultureIgnoreCase);
 
-        return License;
-    }
+    public string GetLicenseDisplayName() => License ?? "Unknown";
 
     public void SetDefaultIcon()
     {
         Icon = IconCollection.Default!;
     }
-    
+
     public async Task DownloadIconAsync()
     {
         if (string.IsNullOrWhiteSpace(IconUrl))
@@ -146,11 +146,11 @@ public class Modification : ReactiveObject
             SetDefaultIcon();
             return;
         }
-        
+
         Icon = IconCollection.FromUrl(IconUrl);
         await Icon.DownloadAllAsync();
-        
-        if (Icon.IconLarge == null && Icon.IconSmall == null) 
+
+        if (Icon.IconLarge == null && Icon.IconSmall == null)
             SetDefaultIcon();
     }
 

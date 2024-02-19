@@ -36,6 +36,7 @@ public partial class ModificationList : UserControl, IBoxEventListener
 
     Box lastBox;
     string lastQuery;
+    private List<Modification> fullModList = new();
 
     public bool HideInstalledBadges { get; set; }
     public Modification[] Mods => ((Data) DataContext).Modifications;
@@ -70,10 +71,19 @@ public partial class ModificationList : UserControl, IBoxEventListener
     public void SetModifications(Modification[] mods)
     {
         Data ctx = (Data) DataContext;
-
         ctx.Modifications = mods;
 
+        fullModList = [..mods];
+
         SetModificationsAttributes();
+    }
+
+    public void SetQuery(string? query)
+    {
+        Data ctx = (Data) DataContext;
+        ctx.Modifications = string.IsNullOrWhiteSpace(query) 
+            ? fullModList.ToArray() 
+            : fullModList.Where(mod => mod.MatchesQuery(query)).ToArray();
     }
 
     void SetModificationsAttributes()

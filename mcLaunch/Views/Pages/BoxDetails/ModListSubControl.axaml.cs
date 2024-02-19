@@ -207,4 +207,9 @@ public partial class ModListSubControl : SubControl
                     "The following mods have been successfully migrated to their CurseForge equivalent", Box, mods));
             }));
     }
+
+    private void SearchBoxTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        ModsList.SetQuery(SearchBox.Text);
+    }
 }
