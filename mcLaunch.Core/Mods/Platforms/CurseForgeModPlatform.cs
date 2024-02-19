@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using CurseForge.Models;
 using CurseForge.Models.Files;
 using CurseForge.Models.Fingerprints;
@@ -22,7 +23,7 @@ public class CurseForgeModPlatform : ModPlatform
     public const int ModsClassId = 6;
 
     CurseForgeClient client;
-    Dictionary<string, Modification> modCache = new();
+    ConcurrentDictionary<string, Modification> modCache = new();
 
     public override string Name { get; } = "Curseforge";
 
