@@ -22,15 +22,29 @@ public static class CacheManager
     {
         if (bmp == null) return;
         
-        bmp.Save($"{FolderPath}/bitmaps/{id}.cache", 30);
+        try
+        {
+            bmp.Save($"{FolderPath}/bitmaps/{id}.cache", 30);
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     public static void Store(Modification? mod, string id)
     {
         if (mod == null) return;
 
-        using FileStream fs = new($"{FolderPath}/mods/{id}.cache", FileMode.Create);
-        mod.WriteToStream(fs);
+        try
+        {
+            using FileStream fs = new($"{FolderPath}/mods/{id}.cache", FileMode.Create);
+            mod.WriteToStream(fs);
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     public static Bitmap? LoadBitmap(string id)

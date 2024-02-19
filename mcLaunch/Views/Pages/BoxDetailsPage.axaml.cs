@@ -136,6 +136,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
     async void PopulateSubControl()
     {
+        if (SubControl == null) return;
+        
         SubControl.Box = Box;
         SubControl.ParentPage = this;
 
