@@ -113,6 +113,21 @@
         <Setter Property="BoxShadow" Value="0 3 10 1 #AA000000"></Setter>
     </Style>
     
+    <Style Selector="Border.frame-dark">
+        <Setter Property="Background" Value="{DynamicResource BackgroundMiddle}"></Setter>
+        <Setter Property="CornerRadius" Value="4"></Setter>
+        <Setter Property="BorderThickness" Value="1"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+        <Setter Property="BoxShadow" Value="0 3 10 1 #AA000000"></Setter>
+    </Style>
+    
+    <Style Selector="Border.frame-dark-without-shadow">
+        <Setter Property="Background" Value="{DynamicResource BackgroundMiddle}"></Setter>
+        <Setter Property="CornerRadius" Value="4"></Setter>
+        <Setter Property="BorderThickness" Value="1"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+    </Style>
+    
     <Style Selector="Border.frame-without-shadow">
         <Setter Property="Background" Value="{DynamicResource Background}"></Setter>
         <Setter Property="CornerRadius" Value="4"></Setter>
@@ -186,6 +201,11 @@
                 <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
             </Transitions>
         </Setter>
+    </Style>
+
+    <Style Selector="Image.icon">
+        <Setter Property="Height" Value="16"></Setter>
+        <Setter Property="Width" Value="16"></Setter>
     </Style>
 
     <Style Selector="Button.square">

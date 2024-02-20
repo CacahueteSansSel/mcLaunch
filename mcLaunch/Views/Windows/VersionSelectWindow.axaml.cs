@@ -30,6 +30,11 @@ public partial class VersionSelectWindow : Window
         DataContext = versions;
     }
 
+    public VersionSelectWindow(string title) : this()
+    {
+        Title = title;
+    }
+
     ManifestMinecraftVersion[] RunSearch(string? query)
     {
         if (string.IsNullOrWhiteSpace(query))

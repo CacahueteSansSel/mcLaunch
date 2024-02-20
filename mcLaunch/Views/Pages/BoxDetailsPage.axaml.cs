@@ -14,6 +14,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
+using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Mods;
 using mcLaunch.Core.Utilities;
@@ -23,6 +24,7 @@ using mcLaunch.Core.Mods.Packs;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.BoxDetails;
 using mcLaunch.Views.Popups;
+using mcLaunch.Views.Windows;
 
 namespace mcLaunch.Views.Pages;
 
@@ -59,9 +61,9 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         ContentsBox.IsVisible = true;
 
-        VersionBadge.Text = $"Minecraft {box.Manifest.Version}";
-        ModLoaderBadge.Icon = Box.ModLoader?.LoadIcon();
-        ModLoaderBadge.Text = $"{box.ModLoader?.Name ?? "Unknown"} {box.Manifest.ModLoaderVersion}";
+        MinecraftButtonText.Text = box.Manifest.Version;
+        ModloaderButtonLoaderIcon.Source = Box.ModLoader?.LoadIcon();
+        ModloaderButtonText.Text = $"{box.ModLoader?.Name ?? "Unknown"} {box.Manifest.ModLoaderVersion}";
 
         box.LoadBackground();
         DefaultBackground.IsVisible = box.Manifest.Background == null;
@@ -97,7 +99,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     {
         Box?.SetWatching(true);
         Reload();
-        
+
         base.OnLoaded(e);
     }
 
@@ -137,7 +139,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     async void PopulateSubControl()
     {
         if (SubControl == null) return;
-        
+
         SubControl.Box = Box;
         SubControl.ParentPage = this;
 
@@ -175,7 +177,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         if (java.HasExited)
         {
             Navigation.ShowPopup(new CrashPopup(java.ExitCode, Box.Manifest.Id)
-                .WithCustomLog(java.StartInfo.RedirectStandardError ? java.StandardError.ReadToEnd() 
+                .WithCustomLog(java.StartInfo.RedirectStandardError
+                    ? java.StandardError.ReadToEnd()
                     : "Minecraft exited in early startup process"));
 
             return;
@@ -186,8 +189,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         if (PlatformSpecific.ProcessExists("mcLaunch.MinecraftGuard"))
         {
-            PlatformSpecific.LaunchProcess("mcLaunch.MinecraftGuard", 
-                $"{java.Id.ToString()} {Box.Manifest.Id} {Box.Manifest.Type.ToString().ToLower()}", 
+            PlatformSpecific.LaunchProcess("mcLaunch.MinecraftGuard",
+                $"{java.Id.ToString()} {Box.Manifest.Id} {Box.Manifest.Type.ToString().ToLower()}",
                 hidden: true);
         }
 
@@ -322,5 +325,55 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     private void SubControlCrashReportClicked(object? sender, RoutedEventArgs e)
     {
         SetSubControl(new CrashReportListSubControl());
+    }
+
+    private async void MinecraftButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        VersionSelectWindow selectWindow = new("Select the new Minecraft version");
+
+        ManifestMinecraftVersion? newVersion = await selectWindow
+            .ShowDialog<ManifestMinecraftVersion?>(MainWindow.Instance);
+
+        if (newVersion == null) return;
+
+        Navigation.ShowPopup(new ConfirmMessageBoxPopup("Warning",
+            "Changing the Minecraft version can break mods, your worlds, and other important things. " +
+            "Proceed with caution ! Do you wish to continue ?",
+            () =>
+            {
+                Box.Manifest.Version = newVersion.Id;
+                Box.SaveManifest();
+
+                Navigation.Pop();
+                Navigation.Push(new BoxDetailsPage(Box));
+            }));
+    }
+
+    private void MinecraftButtonCursorEntered(object? sender, PointerEventArgs e)
+    {
+        MinecraftButtonEditIcon.IsVisible = true;
+        MinecraftButtonVanillaIcon.IsVisible = false;
+    }
+
+    private void MinecraftButtonCursorExited(object? sender, PointerEventArgs e)
+    {
+        MinecraftButtonEditIcon.IsVisible = false;
+        MinecraftButtonVanillaIcon.IsVisible = true;
+    }
+
+    private void ModloaderButtonClicked(object? sender, RoutedEventArgs e)
+    {
+    }
+
+    private void ModloaderButtonCursorEntered(object? sender, PointerEventArgs e)
+    {
+        ModloaderButtonEditIcon.IsVisible = true;
+        ModloaderButtonLoaderIcon.IsVisible = false;
+    }
+
+    private void ModloaderButtonCursorExited(object? sender, PointerEventArgs e)
+    {
+        ModloaderButtonEditIcon.IsVisible = false;
+        ModloaderButtonLoaderIcon.IsVisible = true;
     }
 }
