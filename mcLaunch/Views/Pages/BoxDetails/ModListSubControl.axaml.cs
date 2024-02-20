@@ -17,6 +17,7 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 public partial class ModListSubControl : SubControl
 {
     bool isAnyUpdate = false;
+    bool isUpdating = false;
     List<Modification> updatableModsList = new();
 
     public override string Title => "MODS";
@@ -38,7 +39,7 @@ public partial class ModListSubControl : SubControl
         }
 
         UpdateAllButton.IsVisible = false;
-        updatableModsList.Clear();
+        if (!isUpdating) updatableModsList.Clear();
 
         MigrateToModrinthButton.IsVisible = Box.Manifest.Modifications
             .Count(mod => mod.PlatformId.ToLower() != "modrinth") > 0;
@@ -97,7 +98,7 @@ public partial class ModListSubControl : SubControl
                 isChanges = true;
                 isAnyUpdate = true;
                 
-                updatableModsList.Add(mod);
+                if (!isUpdating) updatableModsList.Add(mod);
             }
 
             updateMods.Add(mod);
@@ -151,6 +152,8 @@ public partial class ModListSubControl : SubControl
 
         Navigation.ShowPopup(new StatusPopup("Updating mods", $"Please wait while we update mods from {Box.Manifest.Name}..."));
         StatusPopup.Instance.ShowDownloadBanner = true;
+
+        isUpdating = true;
         
         int failedModUpdates = 0;
         int index = 1;
@@ -176,7 +179,8 @@ public partial class ModListSubControl : SubControl
             Navigation.ShowPopup(new MessageBoxPopup("Warning", 
                 $"{failedModUpdates} mod{(failedModUpdates > 1 ? "s" : "")} failed to update"));
         }
-        
+
+        isUpdating = false;
         UpdateAllButton.IsVisible = false;
     }
 

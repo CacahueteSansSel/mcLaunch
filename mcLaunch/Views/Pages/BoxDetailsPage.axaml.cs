@@ -361,8 +361,28 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         MinecraftButtonVanillaIcon.IsVisible = true;
     }
 
-    private void ModloaderButtonClicked(object? sender, RoutedEventArgs e)
+    private async void ModloaderButtonClicked(object? sender, RoutedEventArgs e)
     {
+        ModLoaderSupportWrapper modLoaderSupportWrapper = new(Box.ModLoader);
+
+        await modLoaderSupportWrapper.FetchVersionsAsync(Box.Manifest.Version);
+        
+        Navigation.ShowPopup(new VersionSelectionPopup(modLoaderSupportWrapper, version =>
+        {
+            if (version is not ModLoaderVersionWrapper mlVersion) return;
+            
+            Navigation.ShowPopup(new ConfirmMessageBoxPopup("Warning",
+                "Changing the mod loader version can break some mods and other important things. " +
+                "Proceed with caution ! Do you wish to continue ?",
+                () =>
+                {
+                    Box.Manifest.ModLoaderVersion = mlVersion.Id;
+                    Box.SaveManifest();
+
+                    Navigation.Pop();
+                    Navigation.Push(new BoxDetailsPage(Box));
+                }));
+        }));
     }
 
     private void ModloaderButtonCursorEntered(object? sender, PointerEventArgs e)

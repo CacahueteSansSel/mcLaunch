@@ -301,6 +301,9 @@ public class Box : IEquatable<Box>
 
         foreach (ModPlatform.ModDependency dep in deps.Items)
         {
+            if (dep?.Mod == null || dep.Type == ModPlatform.DependencyRelationType.Incompatible) 
+                continue;
+            
             if (!Manifest.HasModificationStrict(dep.Mod.Id, mod.ModPlatformId)
                 && Manifest.HasModificationSoft(dep.Mod))
             {
