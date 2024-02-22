@@ -115,7 +115,7 @@ public class Box : IEquatable<Box>
                 if (!mod.Filenames.Contains(relativePath)) continue;
 
                 Manifest.RemoveContent(mod.Id, this);
-                EventListener?.OnModRemoved(mod.Id);
+                EventListener?.OnContentRemoved(mod.Id);
 
                 break;
             }
@@ -152,7 +152,7 @@ public class Box : IEquatable<Box>
             Manifest.AddContent(version.Content.Id, contentType, version.Id,
                 version.Content.ModPlatformId, [relativePath]);
 
-            EventListener?.OnModAdded(version.Content);
+            EventListener?.OnContentAdded(version.Content);
         }
         catch (Exception exception)
         {
@@ -569,10 +569,10 @@ public class Box : IEquatable<Box>
         return migratedMods.ToArray();
     }
 
-    public bool HasModification(MinecraftContent mod)
+    public bool HasContentStrict(MinecraftContent mod)
         => Manifest.HasContentStrict(mod.Id, mod.Platform.Name);
 
-    public bool HasModificationSoft(MinecraftContent mod)
+    public bool HasContentSoft(MinecraftContent mod)
         => Manifest.HasContentSoft(mod);
 
     public void SaveManifest()

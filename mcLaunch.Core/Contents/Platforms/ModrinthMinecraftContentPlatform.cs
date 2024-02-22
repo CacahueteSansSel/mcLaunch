@@ -450,7 +450,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             return false;
         }
 
-        if (!targetBox.HasModificationSoft(content)) 
+        if (!targetBox.HasContentSoft(content)) 
             await InstallVersionAsync(targetBox, version, installOptional, content.Type);
 
         await DownloadManager.ProcessAll();

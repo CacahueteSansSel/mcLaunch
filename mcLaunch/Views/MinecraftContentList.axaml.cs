@@ -25,23 +25,30 @@ using ReactiveUI;
 
 namespace mcLaunch.Views;
 
-public partial class ModificationList : UserControl, IBoxEventListener
+public partial class MinecraftContentList : UserControl, IBoxEventListener
 {
     public static readonly AttachedProperty<bool> HideInstalledBadgesProperty
-        = AvaloniaProperty.RegisterAttached<ModificationList, UserControl, bool>(
+        = AvaloniaProperty.RegisterAttached<MinecraftContentList, UserControl, bool>(
             nameof(HideInstalledBadges),
             false,
+            true
+        );
+    public static readonly AttachedProperty<MinecraftContentType> ContentTypeProperty
+        = AvaloniaProperty.RegisterAttached<MinecraftContentList, UserControl, MinecraftContentType>(
+            nameof(ContentType),
+            MinecraftContentType.Modification,
             true
         );
 
     Box lastBox;
     string lastQuery;
-    private List<MinecraftContent> fullModList = new();
+    private List<MinecraftContent> fullContentList = new();
 
     public bool HideInstalledBadges { get; set; }
-    public MinecraftContent[] Mods => ((Data) DataContext).Modifications;
+    public MinecraftContentType ContentType { get; set; }
+    public MinecraftContent[] Contents => ((Data) DataContext).Contents;
 
-    public ModificationList()
+    public MinecraftContentList()
     {
         InitializeComponent();
 
@@ -68,40 +75,40 @@ public partial class ModificationList : UserControl, IBoxEventListener
         LoadMoreButton.IsVisible = false;
     }
 
-    public void SetModifications(MinecraftContent[] mods)
+    public void SetContents(MinecraftContent[] contents)
     {
         Data ctx = (Data) DataContext;
-        ctx.Modifications = mods;
+        ctx.Contents = contents;
 
-        fullModList = [..mods];
+        fullContentList = [..contents];
 
-        SetModificationsAttributes();
+        ApplyContentAttributes();
     }
 
     public void SetQuery(string? query)
     {
         Data ctx = (Data) DataContext;
-        ctx.Modifications = string.IsNullOrWhiteSpace(query) 
-            ? fullModList.ToArray() 
-            : fullModList.Where(mod => mod.MatchesQuery(query)).ToArray();
+        ctx.Contents = string.IsNullOrWhiteSpace(query) 
+            ? fullContentList.ToArray() 
+            : fullContentList.Where(mod => mod.MatchesQuery(query)).ToArray();
     }
 
-    void SetModificationsAttributes()
+    void ApplyContentAttributes()
     {
         if (lastBox == null) return;
 
         Data ctx = (Data) DataContext;
-        List<MinecraftContent> newList = new List<MinecraftContent>(ctx.Modifications);
+        List<MinecraftContent> newList = new List<MinecraftContent>(ctx.Contents);
 
-        foreach (MinecraftContent mod in newList)
+        foreach (MinecraftContent content in newList)
         {
-            mod.IsInstalledOnCurrentBox = lastBox.HasModificationSoft(mod);
-            mod.IsInstalledOnCurrentBoxUi = !HideInstalledBadges && mod.IsInstalledOnCurrentBox;
+            content.IsInstalledOnCurrentBox = lastBox.HasContentSoft(content);
+            content.IsInstalledOnCurrentBoxUi = !HideInstalledBadges && content.IsInstalledOnCurrentBox;
         }
 
-        ctx.Modifications = newList.ToArray();
+        ctx.Contents = newList.ToArray();
 
-        NtsBanner.IsVisible = Mods == null || Mods.Length == 0;
+        NtsBanner.IsVisible = Contents == null || Contents.Length == 0;
         LoadMoreButton.IsVisible = !NtsBanner.IsVisible;
     }
 
@@ -123,20 +130,21 @@ public partial class ModificationList : UserControl, IBoxEventListener
 
         Data ctx = (Data) DataContext;
 
-        ctx.Modifications = await SearchModsAsync(box, query);
+        ctx.Contents = await SearchContentsAsync(box, query);
 
-        SetModificationsAttributes();
+        ApplyContentAttributes();
 
         LoadCircle.IsVisible = false;
-        LoadMoreButton.IsEnabled = ctx.Modifications.Length >= 10;
-        LoadMoreButton.IsVisible = ctx.Modifications.Length >= 10;
+        LoadMoreButton.IsEnabled = ctx.Contents.Length >= 10;
+        LoadMoreButton.IsVisible = ctx.Contents.Length >= 10;
     }
 
-    async Task<MinecraftContent[]> SearchModsAsync(Box box, string query)
+    async Task<MinecraftContent[]> SearchContentsAsync(Box box, string query)
     {
         Data ctx = (Data) DataContext;
 
-        PaginatedResponse<MinecraftContent> mods = await ModPlatformManager.Platform.GetContentsAsync(ctx.Page, box, query, MinecraftContentType.Modification);
+        PaginatedResponse<MinecraftContent> mods = await ModPlatformManager.Platform
+            .GetContentsAsync(ctx.Page, box, query, ContentType);
 
         lastBox = box;
         lastQuery = query;
@@ -146,13 +154,13 @@ public partial class ModificationList : UserControl, IBoxEventListener
 
     public class Data : ReactiveObject
     {
-        MinecraftContent[] mods;
+        MinecraftContent[] contents;
         int page;
 
-        public MinecraftContent[] Modifications
+        public MinecraftContent[] Contents
         {
-            get => mods;
-            set => this.RaiseAndSetIfChanged(ref mods, value);
+            get => contents;
+            set => this.RaiseAndSetIfChanged(ref contents, value);
         }
 
         public int Page
@@ -171,45 +179,45 @@ public partial class ModificationList : UserControl, IBoxEventListener
 
         ctx.Page++;
 
-        List<MinecraftContent> mods = new List<MinecraftContent>(ctx.Modifications);
-        mods.AddRange(await SearchModsAsync(lastBox, lastQuery));
+        List<MinecraftContent> contents = new List<MinecraftContent>(ctx.Contents);
+        contents.AddRange(await SearchContentsAsync(lastBox, lastQuery));
 
-        ctx.Modifications = mods.ToArray();
+        ctx.Contents = contents.ToArray();
 
         LoadCircle.IsVisible = false;
         LoadMoreButton.IsEnabled = true;
     }
 
-    private void ModSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void ContentSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (e.AddedItems.Count > 0)
         {
-            MinecraftContent selectedMod = (MinecraftContent) e.AddedItems[0];
-            Navigation.Push(new ModDetailsPage(selectedMod, lastBox));
+            MinecraftContent selectedContent = (MinecraftContent) e.AddedItems[0];
+            Navigation.Push(new ModDetailsPage(selectedContent, lastBox));
 
-            ModList.UnselectAll();
+            ContentList.UnselectAll();
         }
     }
 
-    public void OnModAdded(MinecraftContent mod)
+    public void OnContentAdded(MinecraftContent content)
     {
         Dispatcher.UIThread.Post(() =>
         {
             Data ctx = (Data) DataContext;
 
-            List<MinecraftContent> mods = new List<MinecraftContent>(ctx.Modifications);
-            mods.Add(mod);
-            ctx.Modifications = mods.ToArray();
+            List<MinecraftContent> contents = new List<MinecraftContent>(ctx.Contents);
+            contents.Add(content);
+            ctx.Contents = contents.ToArray();
         });
     }
 
-    public void OnModRemoved(string modId)
+    public void OnContentRemoved(string contentId)
     {
         Dispatcher.UIThread.Post(() =>
         {
             Data ctx = (Data) DataContext;
 
-            ctx.Modifications = ctx.Modifications.Where(mod => mod.Id != modId).ToArray();
+            ctx.Contents = ctx.Contents.Where(content => content.Id != contentId).ToArray();
         });
     }
 

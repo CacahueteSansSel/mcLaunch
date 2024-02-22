@@ -29,7 +29,6 @@ public class BoxManifest : ReactiveObject
     public string ModLoaderId { get; set; }
     public string ModLoaderVersion { get; set; }
     public string DescriptionLine => $"{ModLoaderId.ToUpper()} {Version}";
-    public string ModificationCount => Content.Count.ToString();
     [JsonPropertyName("Modifications")] // For compatibility reasons
     public List<BoxStoredContent> Content { get; set; } = new();
     [JsonIgnore]
@@ -47,6 +46,11 @@ public class BoxManifest : ReactiveObject
     [JsonIgnore]
     public IEnumerable<BoxStoredContent> ContentWorlds =>
         Content.Where(content => content.Type == MinecraftContentType.World);
+    public string ModificationCount => Content.Count.ToString();
+    public string ResourcepacksCount => ContentResourcepacks.Count().ToString();
+    public string DatapacksCount => ContentDatapacks.Count().ToString();
+    public string ShadersCount => ShadersCount.Count().ToString();
+    public string ContentWorldsCount => ContentWorlds.Count().ToString();
     public DateTime LastLaunchTime { get; set; }
     public BoxType Type { get; set; }
     
@@ -111,6 +115,9 @@ public class BoxManifest : ReactiveObject
 
     public BoxStoredContent? GetContent(string id)
         => Content.FirstOrDefault(content => content.Id == id);
+
+    public BoxStoredContent[] GetContents(MinecraftContentType type)
+        => Content.Where(c => c.Type == type).ToArray();
 
     public void AddContent(string id, MinecraftContentType type, string versionId, string platformId, string[] filenames)
     {

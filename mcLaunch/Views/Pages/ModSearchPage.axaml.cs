@@ -32,7 +32,7 @@ public partial class ModSearchPage : UserControl, ITopLevelPageControl
 
     private void SearchButtonClicked(object? sender, RoutedEventArgs e)
     {
-        ModList.SetModifications(Array.Empty<MinecraftContent>());
+        ModList.SetContents(Array.Empty<MinecraftContent>());
         
         ModList.Search(Box, SearchBoxInput.Text);
     }

@@ -61,7 +61,7 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
         ModOpenSource.IsVisible = mod.IsOpenSource;
         ModClosedSource.IsVisible = !mod.IsOpenSource;
 
-        SetInstalled(targetBox != null && targetBox.HasModificationSoft(mod));
+        SetInstalled(targetBox != null && targetBox.HasContentSoft(mod));
         GetModAdditionalInfos();
 
         UpdateButton.IsEnabled = mod.IsUpdateRequired;
@@ -116,7 +116,7 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
 
         MinecraftContentPlatform.ContentDependency[] optionalDeps =
             deps.Items.Where(dep =>
-                    dep.Type == MinecraftContentPlatform.DependencyRelationType.Optional && !TargetBox.HasModificationSoft(dep.Content))
+                    dep.Type == MinecraftContentPlatform.DependencyRelationType.Optional && !TargetBox.HasContentSoft(dep.Content))
                 .ToArray();
 
         if (optionalDeps.Length > 0)

@@ -89,7 +89,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         SubControlButtons.IsEnabled = true;
 
         if (Box.HasReadmeFile) SetSubControl(new ReadmeSubControl(Box.ReadReadmeFile()));
-        else SetSubControl(new ModListSubControl());
+        else SetSubControl(new ContentsSubControl());
 
         ReadmeButton.IsVisible = Box.HasReadmeFile;
         CrashReportButton.IsVisible = Box.HasCrashReports;
@@ -284,12 +284,12 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
     private void SubControlModButtonClicked(object? sender, RoutedEventArgs e)
     {
-        SetSubControl(new ModListSubControl());
+        SetSubControl(new ContentsSubControl(MinecraftContentType.Modification));
     }
 
     private void SubControlResourcePackButtonClicked(object? sender, RoutedEventArgs e)
     {
-        // TODO: Resources packs SubControl
+        SetSubControl(new ContentsSubControl(MinecraftContentType.ResourcePack));
     }
 
     private void SubControlWorldButtonClicked(object? sender, RoutedEventArgs e)

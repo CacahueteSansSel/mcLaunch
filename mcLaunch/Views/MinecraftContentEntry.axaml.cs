@@ -11,7 +11,7 @@ using mcLaunch.Core.Contents.Platforms;
 
 namespace mcLaunch.Views;
 
-public partial class ModificationEntry : UserControl
+public partial class MinecraftContentEntry : UserControl
 {
     public static readonly AttachedProperty<MinecraftContent> ModProperty =
         AvaloniaProperty.RegisterAttached<MinecraftContent, UserControl, MinecraftContent>(
@@ -25,7 +25,7 @@ public partial class ModificationEntry : UserControl
         set => DataContext = value;
     }
 
-    public ModificationEntry()
+    public MinecraftContentEntry()
     {
         InitializeComponent();
 
@@ -35,6 +35,7 @@ public partial class ModificationEntry : UserControl
             Mod = new MinecraftContent
             {
                 Name = "Sample Mod",
+                Type = MinecraftContentType.Modification,
                 Icon = IconCollection.Default,
                 Author = "sample dev",
                 ShortDescription = "sample desc",

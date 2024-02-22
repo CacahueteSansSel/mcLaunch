@@ -19,7 +19,7 @@
                 <Panel></Panel>
             </DockPanel>
             <ScrollViewer>
-                <views:ModificationList x:Name="ModList" IsHitTestVisible="False"></views:ModificationList>
+                <views:MinecraftContentList x:Name="ModList" IsHitTestVisible="False"></views:MinecraftContentList>
             </ScrollViewer>
         </DockPanel>
     </Border>

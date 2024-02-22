@@ -450,7 +450,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             return false;
         }
 
-        if (!targetBox.HasModificationSoft(content))
+        if (!targetBox.HasContentSoft(content))
         {
             if (!await InstallFile(targetBox, version.Data, installOptional, content.Type))
             {
