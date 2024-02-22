@@ -127,7 +127,7 @@ public partial class ContentsSubControl : SubControl
 
     private void AddModsButtonClicked(object? sender, RoutedEventArgs e)
     {
-        Navigation.Push(new ModSearchPage(Box));
+        Navigation.Push(new ContentSearchPage(Box, ContentType));
     }
 
     private void MigrateToModrinthButtonClicked(object? sender, RoutedEventArgs e)
