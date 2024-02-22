@@ -6,7 +6,7 @@
              xmlns:avalonia="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
              xmlns:avalonia1="clr-namespace:TheArtOfDev.HtmlRenderer.Avalonia;assembly=Avalonia.HtmlRenderer"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
-             x:Class="mcLaunch.Views.Pages.ModDetailsPage">
+             x:Class="mcLaunch.Views.Pages.ContentDetailsPage">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>

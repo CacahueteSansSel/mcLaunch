@@ -193,7 +193,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         if (e.AddedItems.Count > 0)
         {
             MinecraftContent selectedContent = (MinecraftContent) e.AddedItems[0];
-            Navigation.Push(new ModDetailsPage(selectedContent, lastBox));
+            Navigation.Push(new ContentDetailsPage(selectedContent, lastBox));
 
             ContentList.UnselectAll();
         }
