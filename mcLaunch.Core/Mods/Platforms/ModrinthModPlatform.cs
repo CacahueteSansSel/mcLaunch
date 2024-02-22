@@ -69,6 +69,10 @@ public class ModrinthModPlatform : ModPlatform
         {
             return PaginatedResponse<Modification>.Empty;
         }
+        catch (HttpRequestException e)
+        {
+            return PaginatedResponse<Modification>.Empty;
+        }
 
         Modification[] mods = search.Hits.Select(hit => new Modification
         {
@@ -112,6 +116,10 @@ public class ModrinthModPlatform : ModPlatform
             return PaginatedResponse<PlatformModpack>.Empty;
         }
         catch (TaskCanceledException e)
+        {
+            return PaginatedResponse<PlatformModpack>.Empty;
+        }
+        catch (HttpRequestException e)
         {
             return PaginatedResponse<PlatformModpack>.Empty;
         }
@@ -164,6 +172,10 @@ public class ModrinthModPlatform : ModPlatform
             return PaginatedResponse<ModDependency>.Empty;
         }
         catch (TaskCanceledException e)
+        {
+            return PaginatedResponse<ModDependency>.Empty;
+        }
+        catch (HttpRequestException e)
         {
             return PaginatedResponse<ModDependency>.Empty;
         }
@@ -227,6 +239,10 @@ public class ModrinthModPlatform : ModPlatform
         {
             return null;
         }
+        catch (HttpRequestException e)
+        {
+            return null;
+        }
     }
 
     public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string? modLoaderId,
@@ -245,6 +261,10 @@ public class ModrinthModPlatform : ModPlatform
             return Array.Empty<ModVersion>();
         }
         catch (TaskCanceledException e)
+        {
+            return Array.Empty<ModVersion>();
+        }
+        catch (HttpRequestException e)
         {
             return Array.Empty<ModVersion>();
         }
@@ -302,6 +322,10 @@ public class ModrinthModPlatform : ModPlatform
             return null;
         }
         catch (TaskCanceledException e)
+        {
+            return null;
+        }
+        catch (HttpRequestException e)
         {
             return null;
         }
@@ -388,6 +412,10 @@ public class ModrinthModPlatform : ModPlatform
         {
             return false;
         }
+        catch (HttpRequestException e)
+        {
+            return false;
+        }
 
         if (!targetBox.HasModificationSoft(mod)) await InstallVersionAsync(targetBox, version, installOptional);
 
@@ -427,6 +455,10 @@ public class ModrinthModPlatform : ModPlatform
         {
             
         }
+        catch (HttpRequestException e)
+        {
+            
+        }
 
         return mod;
     }
@@ -456,6 +488,10 @@ public class ModrinthModPlatform : ModPlatform
             return null;
         }
         catch (TaskCanceledException e)
+        {
+            return null;
+        }
+        catch (HttpRequestException e)
         {
             return null;
         }
