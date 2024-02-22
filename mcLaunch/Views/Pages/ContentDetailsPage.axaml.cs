@@ -186,6 +186,14 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
     {
         if (TargetBox == null) return;
 
+        if (TargetBox != null && !TargetBox.HasWorlds && ShownContent.Type == MinecraftContentType.DataPack)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Cannot download datapack", 
+                "You need to have at least one world to download a datapack"));
+
+            return;
+        }
+
         isInstalling = true;
 
         InstallButton.IsVisible = false;
