@@ -1,12 +1,12 @@
-﻿using mcLaunch.Core.Mods;
+﻿using mcLaunch.Core.Contents;
 
 namespace mcLaunch.Core.Managers;
 
 public static class ModPlatformManager
 {
-    public static ModPlatform Platform { get; private set; }
+    public static MinecraftContentPlatform Platform { get; private set; }
 
-    public static void Init(ModPlatform platform)
+    public static void Init(MinecraftContentPlatform platform)
     {
         Platform = platform;
     }

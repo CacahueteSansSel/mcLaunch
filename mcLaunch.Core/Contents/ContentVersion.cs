@@ -1,10 +1,11 @@
 ﻿using mcLaunch.Core.Core;
 
-namespace mcLaunch.Core.Mods;
+namespace mcLaunch.Core.Contents;
 
-public class ModVersion(Modification mod, string id, string name, string minecraftVersion, string? modLoader) : IVersion
+public class ContentVersion(MinecraftContent content, string id, string name, 
+    string minecraftVersion, string? modLoader) : IVersion
 {
-    public Modification Mod { get; set; } = mod;
+    public MinecraftContent Content { get; set; } = content;
     public string Id { get; set; } = id;
     public string Name { get; set; } = name;
     public string? ModLoader { get; set; } = modLoader;

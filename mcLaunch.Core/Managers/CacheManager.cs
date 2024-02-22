@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using Avalonia.Media.Imaging;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using Path = System.IO.Path;
 
 namespace mcLaunch.Core.Managers;
@@ -32,7 +32,7 @@ public static class CacheManager
         }
     }
 
-    public static void Store(Modification? mod, string id)
+    public static void Store(MinecraftContent? mod, string id)
     {
         if (mod == null) return;
 
@@ -61,14 +61,14 @@ public static class CacheManager
         }
     }
 
-    public static Modification? LoadModification(string id)
+    public static MinecraftContent? LoadModification(string id)
     {
         if (!File.Exists($"{FolderPath}/mods/{id}.cache")) return null;
         
         try
         {
             using FileStream fs = new($"{FolderPath}/mods/{id}.cache", FileMode.Open);
-            return new Modification(fs);
+            return new MinecraftContent(fs);
         }
         catch (Exception e)
         {

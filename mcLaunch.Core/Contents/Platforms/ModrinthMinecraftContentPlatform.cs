@@ -1,9 +1,9 @@
 ﻿using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Contents.Packs;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods.Packs;
 using Modrinth;
 using Modrinth.Exceptions;
 using Modrinth.Helpers;
@@ -13,19 +13,19 @@ using Modrinth.Models.Enums.Version;
 using File = Modrinth.Models.File;
 using Version = Modrinth.Models.Version;
 
-namespace mcLaunch.Core.Mods.Platforms;
+namespace mcLaunch.Core.Contents.Platforms;
 
-public class ModrinthModPlatform : ModPlatform
+public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 {
-    public static ModrinthModPlatform Instance { get; private set; }
+    public static ModrinthMinecraftContentPlatform Instance { get; private set; }
 
     ModrinthClient client;
-    ConcurrentDictionary<string, Modification> modCache = new();
+    ConcurrentDictionary<string, MinecraftContent> modCache = new();
 
     public override string Name { get; } = "Modrinth";
     public ModrinthClient Client => client;
 
-    public ModrinthModPlatform()
+    public ModrinthMinecraftContentPlatform()
     {
         Instance = this;
 
@@ -42,7 +42,7 @@ public class ModrinthModPlatform : ModPlatform
         });
     }
 
-    public override async Task<PaginatedResponse<Modification>> GetModsAsync(int page, Box box, string searchQuery)
+    public override async Task<PaginatedResponse<MinecraftContent>> GetContentsAsync(int page, Box box, string searchQuery)
     {
         FacetCollection collection = new();
 
@@ -63,18 +63,18 @@ public class ModrinthModPlatform : ModPlatform
         }
         catch (ModrinthApiException e)
         {
-            return PaginatedResponse<Modification>.Empty;
+            return PaginatedResponse<MinecraftContent>.Empty;
         }
         catch (TaskCanceledException e)
         {
-            return PaginatedResponse<Modification>.Empty;
+            return PaginatedResponse<MinecraftContent>.Empty;
         }
         catch (HttpRequestException e)
         {
-            return PaginatedResponse<Modification>.Empty;
+            return PaginatedResponse<MinecraftContent>.Empty;
         }
 
-        Modification[] mods = search.Hits.Select(hit => new Modification
+        MinecraftContent[] mods = search.Hits.Select(hit => new MinecraftContent
         {
             Id = hit.ProjectId,
             Name = hit.Title,
@@ -92,9 +92,9 @@ public class ModrinthModPlatform : ModPlatform
         }).ToArray();
 
         // Download all mods images
-        foreach (Modification mod in mods) mod.DownloadIconAsync();
+        foreach (MinecraftContent mod in mods) mod.DownloadIconAsync();
 
-        return new PaginatedResponse<Modification>(page, search.TotalHits / search.Limit, mods);
+        return new PaginatedResponse<MinecraftContent>(page, search.TotalHits / search.Limit, mods);
     }
 
     public override async Task<PaginatedResponse<PlatformModpack>> GetModpacksAsync(int page, string searchQuery,
@@ -147,7 +147,7 @@ public class ModrinthModPlatform : ModPlatform
         return new PaginatedResponse<PlatformModpack>(page, search.TotalHits / search.Limit, modpacks);
     }
 
-    public override async Task<PaginatedResponse<ModDependency>> GetModDependenciesAsync(string id, string modLoaderId,
+    public override async Task<PaginatedResponse<ContentDependency>> GetContentDependenciesAsync(string id, string modLoaderId,
         string versionId,
         string minecraftVersionId)
     {
@@ -157,11 +157,11 @@ public class ModrinthModPlatform : ModPlatform
                 new[] {minecraftVersionId});
             Version? version = versions.FirstOrDefault(v => v.Id == versionId);
 
-            return new PaginatedResponse<ModDependency>(0, 1, await Task.Run(() =>
+            return new PaginatedResponse<ContentDependency>(0, 1, await Task.Run(() =>
             {
-                return version.Dependencies.Where(dep => dep.ProjectId != null).Select(dep => new ModDependency
+                return version.Dependencies.Where(dep => dep.ProjectId != null).Select(dep => new ContentDependency
                 {
-                    Mod = GetModAsync(dep.ProjectId).GetAwaiter().GetResult(),
+                    Content = GetContentAsync(dep.ProjectId).GetAwaiter().GetResult(),
                     VersionId = dep.VersionId,
                     Type = (DependencyRelationType) dep.DependencyType
                 }).ToArray();
@@ -169,19 +169,19 @@ public class ModrinthModPlatform : ModPlatform
         }
         catch (ModrinthApiException e)
         {
-            return PaginatedResponse<ModDependency>.Empty;
+            return PaginatedResponse<ContentDependency>.Empty;
         }
         catch (TaskCanceledException e)
         {
-            return PaginatedResponse<ModDependency>.Empty;
+            return PaginatedResponse<ContentDependency>.Empty;
         }
         catch (HttpRequestException e)
         {
-            return PaginatedResponse<ModDependency>.Empty;
+            return PaginatedResponse<ContentDependency>.Empty;
         }
     }
 
-    public override async Task<Modification> GetModAsync(string id)
+    public override async Task<MinecraftContent> GetContentAsync(string id)
     {
         if (modCache.TryGetValue(id, out var cachedMod))
             return cachedMod;
@@ -190,7 +190,7 @@ public class ModrinthModPlatform : ModPlatform
         if (CacheManager.HasModification(cacheName))
         {
             // Mods loaded from the cache 
-            Modification? mod = CacheManager.LoadModification(cacheName)!;
+            MinecraftContent? mod = CacheManager.LoadModification(cacheName)!;
 
             if (mod != null)
             {
@@ -204,7 +204,7 @@ public class ModrinthModPlatform : ModPlatform
             Project project = await client.Project.GetAsync(id);
             TeamMember[] team = await client.Team.GetAsync(project.Team);
 
-            Modification mod = new Modification
+            MinecraftContent mod = new MinecraftContent
             {
                 Id = project.Id,
                 Name = project.Title,
@@ -245,31 +245,31 @@ public class ModrinthModPlatform : ModPlatform
         }
     }
 
-    public override async Task<ModVersion[]> GetModVersionsAsync(Modification mod, string? modLoaderId,
+    public override async Task<ContentVersion[]> GetContentVersionsAsync(MinecraftContent content, string? modLoaderId,
         string? minecraftVersionId)
     {
         Version[] versions;
 
         try
         {
-            versions = await client.Version.GetProjectVersionListAsync(mod.Id,
+            versions = await client.Version.GetProjectVersionListAsync(content.Id,
                 modLoaderId == null ? null : [modLoaderId],
                 minecraftVersionId == null ? null : [minecraftVersionId]);
         }
         catch (ModrinthApiException e)
         {
-            return Array.Empty<ModVersion>();
+            return Array.Empty<ContentVersion>();
         }
         catch (TaskCanceledException e)
         {
-            return Array.Empty<ModVersion>();
+            return Array.Empty<ContentVersion>();
         }
         catch (HttpRequestException e)
         {
-            return Array.Empty<ModVersion>();
+            return Array.Empty<ContentVersion>();
         }
 
-        return versions.Select(v => new ModVersion(mod, v.Id, v.Name,
+        return versions.Select(v => new ContentVersion(content, v.Id, v.Name,
             v.GameVersions.FirstOrDefault(), v.Loaders.FirstOrDefault())).ToArray();
     }
 
@@ -394,7 +394,7 @@ public class ModrinthModPlatform : ModPlatform
         DownloadManager.End();
     }
 
-    public override async Task<bool> InstallModAsync(Box targetBox, Modification mod, string versionId,
+    public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent mod, string versionId,
         bool installOptional)
     {
         Version version;
@@ -430,7 +430,7 @@ public class ModrinthModPlatform : ModPlatform
         return await new ModrinthModificationPack(filename).SetupAsync();
     }
 
-    public override async Task<Modification> DownloadModInfosAsync(Modification mod)
+    public override async Task<MinecraftContent> DownloadContentInfosAsync(MinecraftContent mod)
     {
         if (mod.LongDescriptionBody != null && mod.Changelog != null) return mod;
 
@@ -463,14 +463,14 @@ public class ModrinthModPlatform : ModPlatform
         return mod;
     }
 
-    public override ModPlatform GetModPlatform(string id)
+    public override MinecraftContentPlatform GetModPlatform(string id)
     {
         if (id == Name) return this;
 
         return null;
     }
 
-    public override async Task<ModVersion?> GetModVersionFromData(Stream stream)
+    public override async Task<ContentVersion?> GetContentVersionFromData(Stream stream)
     {
         SHA1 sha = SHA1.Create();
         string hash = Convert.ToHexString(await sha.ComputeHashAsync(stream));
@@ -480,7 +480,7 @@ public class ModrinthModPlatform : ModPlatform
             Version version = await client.VersionFile.GetVersionByHashAsync(hash);
             if (version == null) return null;
 
-            return new ModVersion(await GetModAsync(version.ProjectId), version.Id,
+            return new ContentVersion(await GetContentAsync(version.ProjectId), version.Id,
                 version.Name, version.GameVersions.FirstOrDefault(), version.Loaders.FirstOrDefault());
         }
         catch (ModrinthApiException e)

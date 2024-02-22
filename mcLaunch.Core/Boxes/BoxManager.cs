@@ -10,8 +10,8 @@ using mcLaunch.Core.Core;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
-using mcLaunch.Core.Mods;
-using mcLaunch.Core.Mods.Platforms;
+using mcLaunch.Core.Contents;
+using mcLaunch.Core.Contents.Platforms;
 
 namespace mcLaunch.Core.Boxes;
 
@@ -62,12 +62,12 @@ public static class BoxManager
 
                 try
                 {
-                    Modification fabricApi = await ModrinthModPlatform.Instance.GetModAsync("P7dR8mSH");
+                    MinecraftContent fabricApi = await ModrinthMinecraftContentPlatform.Instance.GetContentAsync("P7dR8mSH");
 
-                    ModVersion[] versions = await ModrinthModPlatform.Instance.GetModVersionsAsync(
+                    ContentVersion[] versions = await ModrinthMinecraftContentPlatform.Instance.GetContentVersionsAsync(
                         fabricApi, "fabric", manifest.Version);
 
-                    await ModrinthModPlatform.Instance.InstallModAsync(box, fabricApi, versions[0].Id, false);
+                    await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(box, fabricApi, versions[0].Id, false);
                 }
                 catch (Exception e)
                 {

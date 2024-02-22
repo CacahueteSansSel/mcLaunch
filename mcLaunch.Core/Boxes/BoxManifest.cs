@@ -7,7 +7,7 @@ using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using mcLaunch.Core.Utilities;
 using ReactiveUI;
 
@@ -83,7 +83,7 @@ public class BoxManifest : ReactiveObject
         => Modifications.FirstOrDefault(m => m.Id == id
                                              && m.PlatformId == platformId) != null;
 
-    public bool HasModificationSoft(Modification mod)
+    public bool HasModificationSoft(MinecraftContent mod)
     {
         if (mod == null) return false;
         

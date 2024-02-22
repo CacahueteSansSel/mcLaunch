@@ -10,7 +10,7 @@ using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Auth;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods.Platforms;
+using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;

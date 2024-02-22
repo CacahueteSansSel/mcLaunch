@@ -8,7 +8,7 @@ using Avalonia.Markup.Xaml;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 
@@ -18,7 +18,7 @@ public partial class ModListSubControl : SubControl
 {
     bool isAnyUpdate = false;
     bool isUpdating = false;
-    List<Modification> updatableModsList = new();
+    List<MinecraftContent> updatableModsList = new();
 
     public override string Title => "MODS";
 
@@ -51,11 +51,11 @@ public partial class ModListSubControl : SubControl
         ModsList.HideLoadMoreButton();
         ModsList.SetLoadingCircle(true);
 
-        List<Modification> mods = new();
+        List<MinecraftContent> mods = new();
 
         await Parallel.ForEachAsync(Box.Manifest.Modifications, async (boxMod, token) =>
         {
-            Modification mod = await ModPlatformManager.Platform.GetModAsync(boxMod.Id);
+            MinecraftContent mod = await ModPlatformManager.Platform.GetContentAsync(boxMod.Id);
             if (mod == null) return;
 
             mod.Filename = boxMod.Filenames.Length == 0 ? "" : boxMod.Filenames[0].Replace("mods/", "").Trim();
@@ -74,12 +74,12 @@ public partial class ModListSubControl : SubControl
 
         isAnyUpdate = false;
 
-        List<Modification> updateMods = new();
+        List<MinecraftContent> updateMods = new();
         bool isChanges = false;
 
         await Parallel.ForEachAsync(mods, async (mod, token) =>
         {
-            ModVersion[] versions = await ModPlatformManager.Platform.GetModVersionsAsync(mod,
+            ContentVersion[] versions = await ModPlatformManager.Platform.GetContentVersionsAsync(mod,
                 Box.Manifest.ModLoaderId, Box.Manifest.Version);
 
             mod.IsInvalid = versions.Length == 0;
@@ -126,7 +126,7 @@ public partial class ModListSubControl : SubControl
                 Navigation.ShowPopup(new StatusPopup("Migrating to Modrinth...",
                     $"Migrating the box {Box.Manifest.Name}'s mods to Modrinth equivalent..."));
 
-                Modification[] mods = await Box.MigrateToModrinthAsync((mod, index, count) =>
+                MinecraftContent[] mods = await Box.MigrateToModrinthAsync((mod, index, count) =>
                 {
                     StatusPopup.Instance.Status = $"Verifying & installing equivalent (mod {index}/{count})";
                 });
@@ -158,7 +158,7 @@ public partial class ModListSubControl : SubControl
         int failedModUpdates = 0;
         int index = 1;
         
-        foreach (Modification mod in updatableModsList)
+        foreach (MinecraftContent mod in updatableModsList)
         {
             StatusPopup.Instance.Status = $"Updating {mod.Name} ({index}/{updatableModsList.Count})";
             StatusPopup.Instance.StatusPercent = (float) index / updatableModsList.Count;
@@ -194,7 +194,7 @@ public partial class ModListSubControl : SubControl
                     $"Migrating the box {Box.Manifest.Name}'s mods to CurseForge equivalent..."));
                 StatusPopup.Instance.ShowDownloadBanner = true;
 
-                Modification[] mods = await Box.MigrateToCurseForgeAsync((mod, index, count) =>
+                MinecraftContent[] mods = await Box.MigrateToCurseForgeAsync((mod, index, count) =>
                 {
                     StatusPopup.Instance.Status = $"Verifying & installing equivalent (mod {index}/{count})";
                 });

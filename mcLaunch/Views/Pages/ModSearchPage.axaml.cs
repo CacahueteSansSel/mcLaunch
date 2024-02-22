@@ -4,7 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 
 namespace mcLaunch.Views.Pages;
 
@@ -32,7 +32,7 @@ public partial class ModSearchPage : UserControl, ITopLevelPageControl
 
     private void SearchButtonClicked(object? sender, RoutedEventArgs e)
     {
-        ModList.SetModifications(Array.Empty<Modification>());
+        ModList.SetModifications(Array.Empty<MinecraftContent>());
         
         ModList.Search(Box, SearchBoxInput.Text);
     }

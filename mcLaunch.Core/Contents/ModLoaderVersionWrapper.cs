@@ -1,7 +1,7 @@
 ﻿using Cacahuete.MinecraftLib.Core.ModLoaders;
 using mcLaunch.Core.Core;
 
-namespace mcLaunch.Core.Mods;
+namespace mcLaunch.Core.Contents;
 
 public class ModLoaderSupportWrapper : IVersionContent
 {

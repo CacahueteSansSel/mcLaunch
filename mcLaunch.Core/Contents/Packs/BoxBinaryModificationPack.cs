@@ -2,7 +2,7 @@
 using mcLaunch.Core.Boxes.Format;
 using mcLaunch.Core.Managers;
 
-namespace mcLaunch.Core.Mods.Packs;
+namespace mcLaunch.Core.Contents.Packs;
 
 public class BoxBinaryModificationPack : ModificationPack
 {
@@ -49,7 +49,7 @@ public class BoxBinaryModificationPack : ModificationPack
         init => boxBinary.ModLoaderVersion = value;
     }
 
-    public override SerializedModification[] Modifications { get; set; }
+    public override SerializedMinecraftContent[] Modifications { get; set; }
     public override AdditionalFile[] AdditionalFiles { get; set; }
     public byte[] IconData => boxBinary.IconData;
     public byte[] BackgroundData => boxBinary.BackgroundData;
@@ -63,10 +63,10 @@ public class BoxBinaryModificationPack : ModificationPack
     {
         boxBinary = new SerializedBox(filename);
 
-        List<SerializedModification> mods = new();
+        List<SerializedMinecraftContent> mods = new();
         foreach (Mod mod in boxBinary.Mods)
         {
-            mods.Add(new SerializedModification
+            mods.Add(new SerializedMinecraftContent
             {
                 IsRequired = true,
                 ModId = mod.Id,
@@ -88,9 +88,9 @@ public class BoxBinaryModificationPack : ModificationPack
         AdditionalFiles = files.ToArray();
     }
     
-    public override async Task InstallModificationAsync(Box targetBox, SerializedModification mod)
+    public override async Task InstallModificationAsync(Box targetBox, SerializedMinecraftContent mod)
     {
-        await ModPlatformManager.Platform.InstallModAsync(targetBox, new Modification
+        await ModPlatformManager.Platform.InstallContentAsync(targetBox, new MinecraftContent
         {
             Id = mod.ModId,
             ModPlatformId = mod.PlatformId

@@ -1,6 +1,6 @@
 ﻿using mcLaunch.Core.Boxes;
 
-namespace mcLaunch.Core.Mods;
+namespace mcLaunch.Core.Contents;
 
 public abstract class ModificationPack
 {
@@ -14,7 +14,7 @@ public abstract class ModificationPack
     public abstract string ModloaderId { get; init; }
     public abstract string ModloaderVersion { get; init; }
     
-    public abstract SerializedModification[] Modifications { get; set; }
+    public abstract SerializedMinecraftContent[] Modifications { get; set; }
     
     public abstract AdditionalFile[] AdditionalFiles { get; set; }
 
@@ -28,11 +28,11 @@ public abstract class ModificationPack
         
     }
 
-    public abstract Task InstallModificationAsync(Box targetBox, SerializedModification mod);
+    public abstract Task InstallModificationAsync(Box targetBox, SerializedMinecraftContent mod);
 
     public abstract Task ExportAsync(Box box, string filename);
 
-    public class SerializedModification
+    public class SerializedMinecraftContent
     {
         public string ModId { get; init; }
         public string VersionId { get; init; }

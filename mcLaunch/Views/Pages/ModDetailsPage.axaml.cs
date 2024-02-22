@@ -13,7 +13,7 @@ using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 using Modrinth.Models;
@@ -23,7 +23,7 @@ namespace mcLaunch.Views.Pages;
 public partial class ModDetailsPage : UserControl, ITopLevelPageControl
 {
     bool isInstalling = false;
-    public Modification Mod { get; private set; }
+    public MinecraftContent Mod { get; private set; }
     public Box? TargetBox { get; private set; }
     public string Title => $"{Mod.Name} from {Mod.Author} on {Mod.ModPlatformId}";
 
@@ -36,7 +36,7 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
         LoadingButtonFrame.IsVisible = false;
     }
 
-    public ModDetailsPage(Modification mod, Box? targetBox)
+    public ModDetailsPage(MinecraftContent mod, Box? targetBox)
     {
         InitializeComponent();
 
@@ -87,7 +87,7 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
         LoadCircle.IsVisible = true;
 
         await Mod.DownloadBackgroundAsync();
-        await ModPlatformManager.Platform.DownloadModInfosAsync(Mod);
+        await ModPlatformManager.Platform.DownloadContentInfosAsync(Mod);
 
         if (Mod.Background == null && TargetBox != null)
             Mod.Background = TargetBox.Manifest.Background;
@@ -106,24 +106,24 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
 
     async void CreateModpackFromVersion(IVersion incomingVersion)
     {
-        ModVersion version = (ModVersion)incomingVersion;
+        ContentVersion version = (ContentVersion)incomingVersion;
 
         LoadingButtonFrame.IsVisible = true;
 
-        PaginatedResponse<ModPlatform.ModDependency> deps = await ModPlatformManager.Platform.GetModDependenciesAsync(
+        PaginatedResponse<MinecraftContentPlatform.ContentDependency> deps = await ModPlatformManager.Platform.GetContentDependenciesAsync(
             Mod.Id,
             TargetBox.Manifest.ModLoaderId, version.Id, TargetBox.Manifest.Version);
 
-        ModPlatform.ModDependency[] optionalDeps =
+        MinecraftContentPlatform.ContentDependency[] optionalDeps =
             deps.Items.Where(dep =>
-                    dep.Type == ModPlatform.DependencyRelationType.Optional && !TargetBox.HasModificationSoft(dep.Mod))
+                    dep.Type == MinecraftContentPlatform.DependencyRelationType.Optional && !TargetBox.HasModificationSoft(dep.Content))
                 .ToArray();
 
         if (optionalDeps.Length > 0)
         {
             Navigation.ShowPopup(new OptionalModsPopup(TargetBox, Mod, optionalDeps, async () =>
             {
-                await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version.Id, true);
+                await ModPlatformManager.Platform.InstallContentAsync(TargetBox, Mod, version.Id, true);
 
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
@@ -133,7 +133,7 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
                 isInstalling = false;
             }, async () =>
             {
-                await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version.Id, false);
+                await ModPlatformManager.Platform.InstallContentAsync(TargetBox, Mod, version.Id, false);
 
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
@@ -146,7 +146,7 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
             return;
         }
 
-        await ModPlatformManager.Platform.InstallModAsync(TargetBox, Mod, version.Id, false);
+        await ModPlatformManager.Platform.InstallContentAsync(TargetBox, Mod, version.Id, false);
 
         LoadingButtonFrame.IsVisible = false;
         SetInstalled(true);
@@ -168,8 +168,8 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
 
         LoadingButtonFrame.IsVisible = true;
 
-        ModVersion[] versions =
-            await ModPlatformManager.Platform.GetModVersionsAsync(Mod,
+        ContentVersion[] versions =
+            await ModPlatformManager.Platform.GetContentVersionsAsync(Mod,
                 TargetBox.Manifest.ModLoaderId,
                 TargetBox.Manifest.Version);
 
@@ -278,7 +278,7 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
             $"Preparing launching Fast Launch box for {Mod.Name}..."));
         StatusPopup.Instance.ShowDownloadBanner = true;
         
-        ModVersion version = (ModVersion)incomingVersion;
+        ContentVersion version = (ContentVersion)incomingVersion;
         ModLoaderSupport? modLoader = ModLoaderManager.Get(version.ModLoader);
         ModLoaderVersion? modLoaderVersion = await modLoader!.FetchLatestVersion(version.MinecraftVersion);
         ManifestMinecraftVersion minecraftVersion = await MinecraftManager.GetManifestAsync(version.MinecraftVersion);
@@ -290,7 +290,7 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
         box.SetAndSaveIcon(new Bitmap(AssetLoader.Open(
             new Uri("avares://mcLaunch/resources/fastlaunch_box_logo.png"))));
         
-        await ModPlatformManager.Platform.InstallModAsync(box, Mod, version.Id, false);
+        await ModPlatformManager.Platform.InstallContentAsync(box, Mod, version.Id, false);
         
         StatusPopup.Instance.ShowDownloadBanner = false;
         Navigation.HidePopup();
@@ -301,7 +301,7 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
 
     private async void TestButtonClicked(object? sender, RoutedEventArgs e)
     {
-        ModVersion[] versions = await Mod.Platform.GetModVersionsAsync(Mod, null, null);
+        ContentVersion[] versions = await Mod.Platform.GetContentVersionsAsync(Mod, null, null);
 
         Navigation.ShowPopup(new VersionSelectionPopup(new ModVersionContentProvider(versions, Mod),
             CreateFastLaunchModpackFromVersion));

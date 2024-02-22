@@ -10,7 +10,7 @@ using Cacahuete.MinecraftLib.Auth;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods.Platforms;
+using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
 
@@ -33,9 +33,9 @@ public partial class App : Application
         DownloadManager.Init();
         await MinecraftManager.InitAsync();
         ModLoaderManager.Init();
-        ModPlatformManager.Init(new MultiplexerModPlatform(
-            new ModrinthModPlatform().WithIcon("modrinth"),
-            new CurseForgeModPlatform(Credentials.Get("curseforge")).WithIcon("curseforge")
+        ModPlatformManager.Init(new MultiplexerMinecraftContentPlatform(
+            new ModrinthMinecraftContentPlatform().WithIcon("modrinth"),
+            new CurseForgeMinecraftContentPlatform(Credentials.Get("curseforge")).WithIcon("curseforge")
         ));
         CacheManager.Init();
         AuthenticationManager.Init(Credentials.Get("azure"), Credentials.Get("tokens"));

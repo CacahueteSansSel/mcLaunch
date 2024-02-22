@@ -3,9 +3,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Mods.Platforms;
+using mcLaunch.Core.Contents.Platforms;
 
-namespace mcLaunch.Core.Mods.Packs;
+namespace mcLaunch.Core.Contents.Packs;
 
 public class CurseForgeModificationPack : ModificationPack
 {
@@ -17,7 +17,7 @@ public class CurseForgeModificationPack : ModificationPack
     public override string MinecraftVersion { get; init; }
     public override string ModloaderId { get; init; }
     public override string ModloaderVersion { get; init; }
-    public override SerializedModification[] Modifications { get; set; }
+    public override SerializedMinecraftContent[] Modifications { get; set; }
     public override AdditionalFile[] AdditionalFiles { get; set; }
 
     public CurseForgeModificationPack()
@@ -46,7 +46,7 @@ public class CurseForgeModificationPack : ModificationPack
         ModloaderId = modloaderVersionTokens[0];
         ModloaderVersion = modloaderVersionTokens[1];
 
-        Modifications = manifest.Files.Select(file => new SerializedModification
+        Modifications = manifest.Files.Select(file => new SerializedMinecraftContent
         {
             PlatformId = "Curseforge",
             ModId = file.ProjectId.ToString(),
@@ -61,9 +61,9 @@ public class CurseForgeModificationPack : ModificationPack
         }).ToArray();
     }
     
-    public override async Task InstallModificationAsync(Box targetBox, SerializedModification mod)
+    public override async Task InstallModificationAsync(Box targetBox, SerializedMinecraftContent mod)
     {
-        await CurseForgeModPlatform.Instance.InstallModAsync(targetBox, new Modification
+        await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(targetBox, new MinecraftContent
         {
             Id = mod.ModId
         }, mod.VersionId, false);

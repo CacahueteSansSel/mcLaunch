@@ -6,22 +6,22 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods;
-using mcLaunch.Core.Mods.Platforms;
+using mcLaunch.Core.Contents;
+using mcLaunch.Core.Contents.Platforms;
 
 namespace mcLaunch.Views;
 
 public partial class ModificationEntry : UserControl
 {
-    public static readonly AttachedProperty<Modification> ModProperty =
-        AvaloniaProperty.RegisterAttached<Modification, UserControl, Modification>(
+    public static readonly AttachedProperty<MinecraftContent> ModProperty =
+        AvaloniaProperty.RegisterAttached<MinecraftContent, UserControl, MinecraftContent>(
             nameof(Mod),
             null,
             inherits: true);
 
-    public Modification Mod
+    public MinecraftContent Mod
     {
-        get => (Modification) DataContext;
+        get => (MinecraftContent) DataContext;
         set => DataContext = value;
     }
 
@@ -32,7 +32,7 @@ public partial class ModificationEntry : UserControl
         if (Design.IsDesignMode)
         {
             CacheManager.Init();
-            Mod = new Modification
+            Mod = new MinecraftContent
             {
                 Name = "Sample Mod",
                 Icon = IconCollection.Default,
@@ -41,7 +41,7 @@ public partial class ModificationEntry : UserControl
                 IsUpdateRequired = false,
                 LastUpdated = DateTime.Today,
                 DownloadCount = 2800,
-                Platform = new ModrinthModPlatform()
+                Platform = new ModrinthMinecraftContentPlatform()
             };
         }
     }

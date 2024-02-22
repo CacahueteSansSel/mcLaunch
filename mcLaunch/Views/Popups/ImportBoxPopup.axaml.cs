@@ -8,7 +8,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Mods.Packs;
+using mcLaunch.Core.Contents.Packs;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
 
