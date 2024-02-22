@@ -66,8 +66,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 collection.Add(Facet.ProjectType(ProjectType.Shader));
                 break;
             case MinecraftContentType.DataPack:
-                // TODO: Mods are also included with datapacks
-                collection.Add(Facet.Category("datapack"));
+                collection.Add(Facet.ProjectType(ProjectType.Datapack));
                 break;
             case MinecraftContentType.World:
                 // TODO: Find a way to search for worlds
