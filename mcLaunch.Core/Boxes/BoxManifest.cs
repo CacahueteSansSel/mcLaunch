@@ -32,15 +32,20 @@ public class BoxManifest : ReactiveObject
     public string ModificationCount => Content.Count.ToString();
     [JsonPropertyName("Modifications")] // For compatibility reasons
     public List<BoxStoredContent> Content { get; set; } = new();
-    public IEnumerable<BoxStoredContent> Modifications =>
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentModifications =>
         Content.Where(content => content.Type == MinecraftContentType.Modification);
-    public IEnumerable<BoxStoredContent> ResourcePacks =>
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentResourcepacks =>
         Content.Where(content => content.Type == MinecraftContentType.ResourcePack);
-    public IEnumerable<BoxStoredContent> DataPacks =>
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentDatapacks =>
         Content.Where(content => content.Type == MinecraftContentType.DataPack);
-    public IEnumerable<BoxStoredContent> ShaderPacks =>
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentShaders =>
         Content.Where(content => content.Type == MinecraftContentType.ShaderPack);
-    public IEnumerable<BoxStoredContent> WorldsContents =>
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentWorlds =>
         Content.Where(content => content.Type == MinecraftContentType.World);
     public DateTime LastLaunchTime { get; set; }
     public BoxType Type { get; set; }
