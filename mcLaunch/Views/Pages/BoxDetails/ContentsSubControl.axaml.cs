@@ -36,6 +36,10 @@ public partial class ContentsSubControl : SubControl
         InitializeComponent();
         ContentType = contentType;
         this.canUpdate = canUpdate;
+
+        ContentText.Text = ContentNamePlural.ToUpper();
+        ContentCountText.Text = string.Empty;
+        SearchBox.Watermark = $"Search {ContentNamePlural.ToLower()}";
     }
 
     public override async Task PopulateAsync()
@@ -50,6 +54,8 @@ public partial class ContentsSubControl : SubControl
 
             return;
         }
+
+        ContentCountText.Text = Box.Manifest.GetContents(ContentType).Length.ToString();
 
         UpdateAllButton.IsVisible = false;
         if (!isUpdating) updatableContentsList.Clear();
