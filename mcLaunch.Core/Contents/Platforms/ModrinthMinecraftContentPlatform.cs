@@ -49,7 +49,8 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
         if (box != null)
         {
-            collection.Add(Facet.Category(box.Manifest.ModLoaderId.ToLower()));
+            if (contentType == MinecraftContentType.Modification) 
+                collection.Add(Facet.Category(box.Manifest.ModLoaderId.ToLower()));
             collection.Add(Facet.Version(box.Manifest.Version));
         }
 

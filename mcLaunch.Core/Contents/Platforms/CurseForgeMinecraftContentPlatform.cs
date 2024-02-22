@@ -67,8 +67,13 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         string searchQuery, MinecraftContentType contentType)
     {
         ModLoaderType type = ModLoaderType.Any;
-        if (box != null && !Enum.TryParse(box.Manifest.ModLoaderId, true, out type))
-            return PaginatedResponse<MinecraftContent>.Empty;
+
+        if (contentType == MinecraftContentType.Modification)
+        {
+            if (box != null && !Enum.TryParse(box.Manifest.ModLoaderId, true, out type))
+                return PaginatedResponse<MinecraftContent>.Empty;
+        }
+        else type = ModLoaderType.Any;
 
         CursePaginatedResponse<List<Mod>> resp;
 
