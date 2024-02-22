@@ -49,6 +49,26 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         TargetBox = targetBox;
         DataContext = shownContent;
 
+        switch (shownContent.Type)
+        {
+            case MinecraftContentType.Modification:
+                InstallButton.Content = "Install";
+                UninstallButton.Content = "Uninstall";
+                break;
+            case MinecraftContentType.ResourcePack:
+            case MinecraftContentType.ShaderPack:
+            case MinecraftContentType.World:
+                InstallButton.Content = "Download";
+                UninstallButton.Content = "Remove";
+                break;
+            case MinecraftContentType.DataPack:
+                InstallButton.Content = "Download on all worlds";
+                InstallButton.Width = 250;
+                UninstallButton.Content = "Remove from all worlds";
+                UninstallButton.Width = 250;
+                break;
+        }
+
         ModPlatformBadge.Text = shownContent.Platform.Name;
         ModPlatformBadge.Icon =
             new Bitmap(

@@ -16,9 +16,10 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 
 public partial class ContentsSubControl : SubControl
 {
-    bool isAnyUpdate = false;
-    bool isUpdating = false;
-    List<MinecraftContent> updatableContentsList = new();
+    private bool isAnyUpdate = false;
+    private bool isUpdating = false;
+    private bool canUpdate = false;
+    private List<MinecraftContent> updatableContentsList = new();
 
     public override string Title => ContentNamePlural.ToUpper();
     public MinecraftContentType ContentType { get; set; }
@@ -30,10 +31,11 @@ public partial class ContentsSubControl : SubControl
         InitializeComponent();
     }
 
-    public ContentsSubControl(MinecraftContentType contentType)
+    public ContentsSubControl(MinecraftContentType contentType, bool canUpdate = true)
     {
         InitializeComponent();
         ContentType = contentType;
+        this.canUpdate = canUpdate;
     }
 
     public override async Task PopulateAsync()
@@ -82,6 +84,12 @@ public partial class ContentsSubControl : SubControl
         ModsList.SetBox(Box);
         ModsList.SetContents(contents.ToArray());
         ModsList.SetLoadingCircle(false);
+
+        if (!canUpdate)
+        {
+            UpdateAllButton.IsVisible = false;
+            return;
+        }
 
         SearchingForUpdates.IsVisible = true;
 

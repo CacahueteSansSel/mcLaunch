@@ -295,7 +295,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
     private void SubControlDatapackButtonClicked(object? sender, RoutedEventArgs e)
     {
-        SetSubControl(new ContentsSubControl(MinecraftContentType.DataPack));
+        SetSubControl(new ContentsSubControl(MinecraftContentType.DataPack, false));
     }
 
     private void SubControlShaderButtonClicked(object? sender, RoutedEventArgs e)
