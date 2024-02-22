@@ -183,6 +183,11 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
                     : null,
                 TargetBox.Manifest.Version);
 
+        if (ShownContent.Type == MinecraftContentType.DataPack)
+        {
+            versions = versions.Where(version => version.ModLoader == "datapack").ToArray();
+        }
+
         if (versions.Length == 0)
         {
             Navigation.ShowPopup(new MessageBoxPopup("Installation failed",

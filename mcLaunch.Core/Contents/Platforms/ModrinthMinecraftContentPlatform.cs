@@ -208,6 +208,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             ProjectType.Mod => MinecraftContentType.Modification,
             ProjectType.Resourcepack => MinecraftContentType.ResourcePack,
             ProjectType.Shader => MinecraftContentType.ShaderPack,
+            ProjectType.Datapack => MinecraftContentType.DataPack,
             _ => MinecraftContentType.Modification
         };
     }
