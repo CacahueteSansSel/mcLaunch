@@ -95,6 +95,12 @@
                                     <Button Classes="transparent" Click="SubControlResourcePackButtonClicked" ToolTip.Tip="Manage resourcepacks">
                                         <Image Source="/resources/icons/resource_pack.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>
+                                    <Button Classes="transparent" Click="SubControlDatapackButtonClicked" ToolTip.Tip="Manage datapacks">
+                                        <Image Source="/resources/icons/datapack.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
+                                    </Button>
+                                    <Button Classes="transparent" Click="SubControlShaderButtonClicked" ToolTip.Tip="Manage shaders">
+                                        <Image Source="/resources/icons/shader.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
+                                    </Button>
                                     <Button Classes="transparent" Click="SubControlServerButtonClicked" ToolTip.Tip="Servers">
                                         <Image Source="/resources/icons/at.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>

@@ -292,6 +292,16 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         SetSubControl(new ContentsSubControl(MinecraftContentType.ResourcePack));
     }
 
+    private void SubControlDatapackButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        SetSubControl(new ContentsSubControl(MinecraftContentType.DataPack));
+    }
+
+    private void SubControlShaderButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        SetSubControl(new ContentsSubControl(MinecraftContentType.ShaderPack));
+    }
+
     private void SubControlWorldButtonClicked(object? sender, RoutedEventArgs e)
     {
         SetSubControl(new WorldListSubControl());
