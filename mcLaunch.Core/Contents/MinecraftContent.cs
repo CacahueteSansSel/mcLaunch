@@ -181,7 +181,7 @@ public class MinecraftContent : ReactiveObject
     public bool IsSimilar(MinecraftContent other)
         => IsSimilar(other.Name, other.Author);
 
-    public bool IsSimilar(BoxStoredModification other)
+    public bool IsSimilar(BoxStoredContent other)
         => IsSimilar(other.Name, other.Author);
 
     public bool MatchesQuery(string query)

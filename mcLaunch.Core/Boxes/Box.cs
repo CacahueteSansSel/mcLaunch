@@ -110,11 +110,11 @@ public class Box : IEquatable<Box>
 
         try
         {
-            foreach (BoxStoredModification mod in Manifest.Modifications)
+            foreach (BoxStoredContent mod in Manifest.Content)
             {
                 if (!mod.Filenames.Contains(relativePath)) continue;
 
-                Manifest.RemoveModification(mod.Id, this);
+                Manifest.RemoveContent(mod.Id, this);
                 EventListener?.OnModRemoved(mod.Id);
 
                 break;
@@ -134,8 +134,13 @@ public class Box : IEquatable<Box>
             .Trim('\\').Trim('/')
             .Replace('\\', '/');
 
-        if (!relativePath.StartsWith("mods")) return;
-        // A mod was added
+        MinecraftContentType contentType;
+
+        if (relativePath.StartsWith("mods")) contentType = MinecraftContentType.Modification;
+        else if (relativePath.StartsWith("resourcepacks")) contentType = MinecraftContentType.ResourcePack;
+        else if (relativePath.StartsWith("shaderpacks")) contentType = MinecraftContentType.ShaderPack;
+        else if (relativePath.StartsWith("datapacks")) contentType = MinecraftContentType.DataPack;
+        else return;
 
         try
         {
@@ -144,8 +149,8 @@ public class Box : IEquatable<Box>
             if (version == null || version.Content == null) return;
 
             // Add the mod to the list
-            Manifest.AddModification(version.Content.Id, version.Id,
-                version.Content.ModPlatformId, new[] { relativePath });
+            Manifest.AddContent(version.Content.Id, contentType, version.Id,
+                version.Content.ModPlatformId, [relativePath]);
 
             EventListener?.OnModAdded(version.Content);
         }
@@ -218,11 +223,11 @@ public class Box : IEquatable<Box>
     public async Task<string[]> RunIntegrityChecks()
     {
         List<string> changes = new();
-        List<BoxStoredModification> modsToRemove = new();
+        List<BoxStoredContent> modsToRemove = new();
 
         ReloadManifest();
 
-        foreach (BoxStoredModification mod in Manifest.Modifications)
+        foreach (BoxStoredContent mod in Manifest.Content)
         {
             bool exists = false;
             foreach (string filename in mod.Filenames)
@@ -242,7 +247,7 @@ public class Box : IEquatable<Box>
 
         if (await AddMissingModsToList()) SaveManifest();
 
-        Manifest.Modifications.RemoveMany(modsToRemove);
+        Manifest.Content.RemoveMany(modsToRemove);
 
         return changes.ToArray();
     }
@@ -261,7 +266,7 @@ public class Box : IEquatable<Box>
             if (version == null || version.Content == null) continue;
 
             // Add the mod to the list
-            Manifest.AddModification(version.Content.Id, version.Id,
+            Manifest.AddContent(version.Content.Id, MinecraftContentType.Modification, version.Id,
                 version.Content.ModPlatformId, new[] { modFilename });
 
             save = true;
@@ -291,7 +296,7 @@ public class Box : IEquatable<Box>
 
         if (versions.Length == 0) return false;
 
-        Manifest.RemoveModification(mod.Id, this);
+        Manifest.RemoveContent(mod.Id, this);
 
         ContentVersion version = versions[0];
 
@@ -304,15 +309,15 @@ public class Box : IEquatable<Box>
             if (dep?.Content == null || dep.Type == MinecraftContentPlatform.DependencyRelationType.Incompatible) 
                 continue;
             
-            if (!Manifest.HasModificationStrict(dep.Content.Id, mod.ModPlatformId)
-                && Manifest.HasModificationSoft(dep.Content))
+            if (!Manifest.HasContentStrict(dep.Content.Id, mod.ModPlatformId)
+                && Manifest.HasContentSoft(dep.Content))
             {
                 // The dependency is installed from another platform
                 continue;
             }
 
-            if (Manifest.HasModificationStrict(dep.Content.Id, mod.ModPlatformId)
-                && Manifest.GetModification(dep.Content.Id).VersionId != dep.VersionId)
+            if (Manifest.HasContentStrict(dep.Content.Id, mod.ModPlatformId)
+                && Manifest.GetContent(dep.Content.Id).VersionId != dep.VersionId)
             {
                 // The mod is installed on this box & the required version does not match the installed one
 
@@ -435,7 +440,7 @@ public class Box : IEquatable<Box>
         {
             string absPath = file.Replace(Path, "").Replace('\\', '/')
                 .Replace("minecraft/", "").Replace(Path, "").Trim('/').Trim();
-            if (Manifest.Modifications.FirstOrDefault(mod => mod.Filenames.Contains(absPath)) != null)
+            if (Manifest.Content.FirstOrDefault(mod => mod.Filenames.Contains(absPath)) != null)
                 continue;
 
             mods.Add(absPath);
@@ -496,17 +501,17 @@ public class Box : IEquatable<Box>
         await BoxManager.SetupVersionAsync(Version);
     }
 
-    public async Task<MinecraftContent[]> MigrateToModrinthAsync(Action<BoxStoredModification, int, int> statusCallback)
+    public async Task<MinecraftContent[]> MigrateToModrinthAsync(Action<BoxStoredContent, int, int> statusCallback)
     {
         int cur = 0;
         List<MinecraftContent> migratedMods = new();
 
-        BoxStoredModification[] modsToMigrate = Manifest.Modifications.Where(m =>
+        BoxStoredContent[] modsToMigrate = Manifest.Content.Where(m =>
             m.PlatformId.ToLower() != "modrinth").ToArray();
 
-        foreach (BoxStoredModification mod in modsToMigrate)
+        foreach (BoxStoredContent mod in modsToMigrate)
         {
-            statusCallback?.Invoke(mod, cur, Manifest.Modifications.Count);
+            statusCallback?.Invoke(mod, cur, Manifest.Content.Count);
             cur++;
 
             foreach (string filename in mod.Filenames)
@@ -520,7 +525,7 @@ public class Box : IEquatable<Box>
                 
                 fs.Close();
 
-                Manifest.RemoveModification(mod.Id, this);
+                Manifest.RemoveContent(mod.Id, this);
                 bool success = await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(this, modVersion.Content,
                     modVersion.Id, false);
 
@@ -531,17 +536,17 @@ public class Box : IEquatable<Box>
         return migratedMods.ToArray();
     }
 
-    public async Task<MinecraftContent[]> MigrateToCurseForgeAsync(Action<BoxStoredModification, int, int> statusCallback)
+    public async Task<MinecraftContent[]> MigrateToCurseForgeAsync(Action<BoxStoredContent, int, int> statusCallback)
     {
         int cur = 0;
         List<MinecraftContent> migratedMods = new();
 
-        BoxStoredModification[] modsToMigrate = Manifest.Modifications.Where(m =>
+        BoxStoredContent[] modsToMigrate = Manifest.Content.Where(m =>
             m.PlatformId.ToLower() != "curseforge").ToArray();
 
-        foreach (BoxStoredModification mod in modsToMigrate)
+        foreach (BoxStoredContent mod in modsToMigrate)
         {
-            statusCallback?.Invoke(mod, cur, Manifest.Modifications.Count);
+            statusCallback?.Invoke(mod, cur, Manifest.Content.Count);
             cur++;
 
             foreach (string filename in mod.Filenames)
@@ -553,7 +558,7 @@ public class Box : IEquatable<Box>
                 ContentVersion? modVersion = await CurseForgeMinecraftContentPlatform.Instance.GetContentVersionFromData(fs);
                 if (modVersion == null) continue;
 
-                Manifest.RemoveModification(mod.Id, this);
+                Manifest.RemoveContent(mod.Id, this);
                 bool success = await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(this, modVersion.Content,
                     modVersion.Id, false);
 
@@ -565,10 +570,10 @@ public class Box : IEquatable<Box>
     }
 
     public bool HasModification(MinecraftContent mod)
-        => Manifest.HasModificationStrict(mod.Id, mod.Platform.Name);
+        => Manifest.HasContentStrict(mod.Id, mod.Platform.Name);
 
     public bool HasModificationSoft(MinecraftContent mod)
-        => Manifest.HasModificationSoft(mod);
+        => Manifest.HasContentSoft(mod);
 
     public void SaveManifest()
         => File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));

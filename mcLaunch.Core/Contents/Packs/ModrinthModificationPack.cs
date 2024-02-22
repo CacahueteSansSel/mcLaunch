@@ -226,7 +226,7 @@ public class ModrinthModificationPack : ModificationPack
         index.Dependencies.Minecraft = box.Manifest.Version;
 
         List<ModelModrinthIndex.ModelFile> files = new();
-        foreach (BoxStoredModification mod in box.Manifest.Modifications)
+        foreach (BoxStoredContent mod in box.Manifest.Content)
         {
             if (mod.PlatformId.ToLower() != "modrinth")
             {

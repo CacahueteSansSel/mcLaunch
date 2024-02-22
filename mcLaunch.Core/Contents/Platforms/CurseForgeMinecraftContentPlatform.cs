@@ -181,10 +181,10 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             return cachedContent;
         
         string cacheName = $"content-curseforge-{id}";
-        if (CacheManager.HasModification(cacheName))
+        if (CacheManager.HasContent(cacheName))
         {
             // Mods loaded from the cache 
-            MinecraftContent? content = CacheManager.LoadModification(cacheName)!;
+            MinecraftContent? content = CacheManager.LoadContent(cacheName)!;
 
             if (content != null)
             {
@@ -398,7 +398,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             }
         }
 
-        if (targetBox.Manifest.HasModificationStrict(file.ModId.ToString(), Name))
+        if (targetBox.Manifest.HasContentStrict(file.ModId.ToString(), Name))
         {
             Debug.WriteLine($"Mod {file.DisplayName} already installed in {targetBox.Manifest.Name}");
             return false;
@@ -425,7 +425,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
 
         filenames.Add($"{folder}/{file.FileName}");
 
-        targetBox.Manifest.AddModification(file.ModId.ToString(), file.Id.ToString(), Name,
+        targetBox.Manifest.AddContent(file.ModId.ToString(), contentType, file.Id.ToString(), Name,
             filenames.ToArray());
 
         DownloadManager.End();

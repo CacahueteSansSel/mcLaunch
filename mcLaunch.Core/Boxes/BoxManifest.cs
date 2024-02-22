@@ -29,8 +29,19 @@ public class BoxManifest : ReactiveObject
     public string ModLoaderId { get; set; }
     public string ModLoaderVersion { get; set; }
     public string DescriptionLine => $"{ModLoaderId.ToUpper()} {Version}";
-    public string ModificationCount => Modifications.Count.ToString();
-    public List<BoxStoredModification> Modifications { get; set; } = new();
+    public string ModificationCount => Content.Count.ToString();
+    [JsonPropertyName("Modifications")] // For compatibility reasons
+    public List<BoxStoredContent> Content { get; set; } = new();
+    public IEnumerable<BoxStoredContent> Modifications =>
+        Content.Where(content => content.Type == MinecraftContentType.Modification);
+    public IEnumerable<BoxStoredContent> ResourcePacks =>
+        Content.Where(content => content.Type == MinecraftContentType.ResourcePack);
+    public IEnumerable<BoxStoredContent> DataPacks =>
+        Content.Where(content => content.Type == MinecraftContentType.DataPack);
+    public IEnumerable<BoxStoredContent> ShaderPacks =>
+        Content.Where(content => content.Type == MinecraftContentType.ShaderPack);
+    public IEnumerable<BoxStoredContent> WorldsContents =>
+        Content.Where(content => content.Type == MinecraftContentType.World);
     public DateTime LastLaunchTime { get; set; }
     public BoxType Type { get; set; }
     
@@ -74,38 +85,39 @@ public class BoxManifest : ReactiveObject
         Version = version.Id;
     }
 
-    public bool HasModificationStrict(string id, string versionId, string platformId)
-        => Modifications.FirstOrDefault(m => m.Id == id
+    public bool HasContentStrict(string id, string versionId, string platformId)
+        => Content.FirstOrDefault(m => m.Id == id
                                              && m.PlatformId == platformId
                                              && m.VersionId == versionId) != null;
 
-    public bool HasModificationStrict(string id, string platformId)
-        => Modifications.FirstOrDefault(m => m.Id == id
+    public bool HasContentStrict(string id, string platformId)
+        => Content.FirstOrDefault(m => m.Id == id
                                              && m.PlatformId == platformId) != null;
 
-    public bool HasModificationSoft(MinecraftContent mod)
+    public bool HasContentSoft(MinecraftContent content)
     {
-        if (mod == null) return false;
+        if (content == null) return false;
         
-        BoxStoredModification? storedMod =
-            Modifications.FirstOrDefault(m => mod.IsSimilar(m) || HasModificationStrict(mod.Id, mod.ModPlatformId));
+        BoxStoredContent? storedContent =
+            Content.FirstOrDefault(m => content.IsSimilar(m) || HasContentStrict(content.Id, content.ModPlatformId));
 
-        return storedMod != null;
+        return storedContent != null;
     }
 
-    public BoxStoredModification? GetModification(string id)
-        => Modifications.FirstOrDefault(mod => mod.Id == id);
+    public BoxStoredContent? GetContent(string id)
+        => Content.FirstOrDefault(content => content.Id == id);
 
-    public void AddModification(string id, string versionId, string platformId, string[] filenames)
+    public void AddContent(string id, MinecraftContentType type, string versionId, string platformId, string[] filenames)
     {
         if (filenames.Length == 0) return;
-        if (HasModificationStrict(id, versionId, platformId)) return;
+        if (HasContentStrict(id, versionId, platformId)) return;
 
-        lock (Modifications)
+        lock (Content)
         {
-            Modifications.Add(new BoxStoredModification
+            Content.Add(new BoxStoredContent
             {
                 Id = id,
+                Type = type,
                 PlatformId = platformId,
                 VersionId = versionId,
                 Filenames = filenames
@@ -113,16 +125,16 @@ public class BoxManifest : ReactiveObject
         }
     }
 
-    public void RemoveModification(string id, Box box)
+    public void RemoveContent(string id, Box box)
     {
-        BoxStoredModification? mod = GetModification(id);
-        if (mod == null) return;
+        BoxStoredContent? content = GetContent(id);
+        if (content == null) return;
 
-        mod.Delete(box.Folder.CompletePath);
+        content.Delete(box.Folder.CompletePath);
 
-        lock (Modifications)
+        lock (Content)
         {
-            Modifications.Remove(mod);
+            Content.Remove(content);
         }
     }
 
@@ -180,7 +192,7 @@ public class BoxManifest : ReactiveObject
     public override string ToString() => $"Manifest {Id} {Name}";
 }
 
-public class BoxStoredModification
+public class BoxStoredContent
 {
     public string Id { get; init; }
     public string VersionId { get; init; }
@@ -188,6 +200,7 @@ public class BoxStoredModification
     public string[] Filenames { get; set; }
     public string Name { get; set; }
     public string Author { get; set; }
+    public MinecraftContentType Type { get; set; } = MinecraftContentType.Modification;
 
     public void Delete(string boxRootPath)
     {

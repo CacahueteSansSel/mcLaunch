@@ -200,7 +200,7 @@ public partial class ModDetailsPage : UserControl, ITopLevelPageControl
         UninstallButton.IsVisible = false;
         UninstallButton.IsEnabled = false;
 
-        TargetBox.Manifest.RemoveModification(Mod.Id, TargetBox);
+        TargetBox.Manifest.RemoveContent(Mod.Id, TargetBox);
 
         TargetBox.SaveManifest();
 

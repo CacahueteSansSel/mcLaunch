@@ -61,13 +61,13 @@ public static class CacheManager
         }
     }
 
-    public static MinecraftContent? LoadModification(string id)
+    public static MinecraftContent? LoadContent(string id)
     {
-        if (!File.Exists($"{FolderPath}/mods/{id}.cache")) return null;
+        if (!File.Exists($"{FolderPath}/contents/{id}.cache")) return null;
         
         try
         {
-            using FileStream fs = new($"{FolderPath}/mods/{id}.cache", FileMode.Open);
+            using FileStream fs = new($"{FolderPath}/contents/{id}.cache", FileMode.Open);
             return new MinecraftContent(fs);
         }
         catch (Exception e)
@@ -79,6 +79,6 @@ public static class CacheManager
     public static bool HasBitmap(string id)
         => File.Exists($"{FolderPath}/bitmaps/{id}.cache");
 
-    public static bool HasModification(string id)
-        => File.Exists($"{FolderPath}/mods/{id}.cache");
+    public static bool HasContent(string id)
+        => File.Exists($"{FolderPath}/contents/{id}.cache");
 }

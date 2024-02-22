@@ -217,10 +217,10 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             return cachedMod;
         
         string cacheName = $"content-modrinth-{id}";
-        if (CacheManager.HasModification(cacheName))
+        if (CacheManager.HasContent(cacheName))
         {
             // Mods loaded from the cache 
-            MinecraftContent? mod = CacheManager.LoadModification(cacheName)!;
+            MinecraftContent? mod = CacheManager.LoadContent(cacheName)!;
 
             if (mod != null)
             {
@@ -379,7 +379,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                     if (dependency.DependencyType != DependencyType.Required) continue;
                 }
 
-                if (targetBox.Manifest.HasModificationStrict(dependency.ProjectId, Name))
+                if (targetBox.Manifest.HasContentStrict(dependency.ProjectId, Name))
                     continue;
 
                 string depVersionId = dependency.VersionId;
@@ -421,7 +421,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             filenames.Add($"{folder}/{file.FileName}");
         }
 
-        targetBox.Manifest.AddModification(version.ProjectId, version.Id, Name,
+        targetBox.Manifest.AddContent(version.ProjectId, contentType, version.Id, Name,
             filenames.ToArray());
 
         DownloadManager.End();

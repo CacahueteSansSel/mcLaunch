@@ -14,7 +14,7 @@
     </UserControl.Styles>
     <Panel>
         <StackPanel Orientation="Vertical">
-            <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{Binding Modifications}"
+            <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{Binding Content}"
                      SelectionChanged="ModSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">

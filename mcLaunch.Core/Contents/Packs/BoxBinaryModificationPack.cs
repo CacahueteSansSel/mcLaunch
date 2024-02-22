@@ -119,7 +119,7 @@ public class BoxBinaryModificationPack : ModificationPack
         bb.BackgroundData = backgroundStream.ToArray();
 
         List<Mod> mods = new();
-        foreach (BoxStoredModification mod in box.Manifest.Modifications)
+        foreach (BoxStoredContent mod in box.Manifest.Content)
         {
             mods.Add(new Mod
             {

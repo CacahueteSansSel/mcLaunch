@@ -41,9 +41,9 @@ public partial class ModListSubControl : SubControl
         UpdateAllButton.IsVisible = false;
         if (!isUpdating) updatableModsList.Clear();
 
-        MigrateToModrinthButton.IsVisible = Box.Manifest.Modifications
+        MigrateToModrinthButton.IsVisible = Box.Manifest.Content
             .Count(mod => mod.PlatformId.ToLower() != "modrinth") > 0;
-        MigrateToCurseForgeButton.IsVisible = Box.Manifest.Modifications
+        MigrateToCurseForgeButton.IsVisible = Box.Manifest.Content
             .Count(mod => mod.PlatformId.ToLower() != "curseforge") > 0;
 
         VanillaDisclaimer.IsVisible = false;
@@ -53,7 +53,7 @@ public partial class ModListSubControl : SubControl
 
         List<MinecraftContent> mods = new();
 
-        await Parallel.ForEachAsync(Box.Manifest.Modifications, async (boxMod, token) =>
+        await Parallel.ForEachAsync(Box.Manifest.Content, async (boxMod, token) =>
         {
             MinecraftContent mod = await ModPlatformManager.Platform.GetContentAsync(boxMod.Id);
             if (mod == null) return;
