@@ -136,7 +136,7 @@ public partial class ModificationList : UserControl, IBoxEventListener
     {
         Data ctx = (Data) DataContext;
 
-        PaginatedResponse<MinecraftContent> mods = await ModPlatformManager.Platform.GetContentsAsync(ctx.Page, box, query);
+        PaginatedResponse<MinecraftContent> mods = await ModPlatformManager.Platform.GetContentsAsync(ctx.Page, box, query, MinecraftContentType.Modification);
 
         lastBox = box;
         lastQuery = query;

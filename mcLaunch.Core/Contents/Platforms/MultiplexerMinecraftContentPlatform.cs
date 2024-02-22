@@ -15,31 +15,32 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
 
     public override string Name { get; } = "Multiplexer";
 
-    public override async Task<PaginatedResponse<MinecraftContent>> GetContentsAsync(int page, Box box, string searchQuery)
+    public override async Task<PaginatedResponse<MinecraftContent>> GetContentsAsync(int page, Box box,
+        string searchQuery, MinecraftContentType contentType)
     {
-        List<MinecraftContent> mods = new();
+        List<MinecraftContent> contents = new();
 
         foreach (MinecraftContentPlatform platform in _platforms)
         {
-            PaginatedResponse<MinecraftContent> modsFromPlatform = await platform.GetContentsAsync(page, box, searchQuery);
+            PaginatedResponse<MinecraftContent> modsFromPlatform = await platform.GetContentsAsync(page, box, searchQuery, contentType);
 
             foreach (MinecraftContent mod in modsFromPlatform.Items)
             {
-                int similarModCount = mods.Count(m => m.IsSimilar(mod));
+                int similarModCount = contents.Count(m => m.IsSimilar(mod));
 
                 // Avoid to add a mod that we have got from another platform
                 // Ensure only one mod per search query
-                if (similarModCount == 0) mods.Add(mod);
+                if (similarModCount == 0) contents.Add(mod);
             }
         }
 
-        return new PaginatedResponse<MinecraftContent>(page, mods.Count / 20, mods.ToArray());
+        return new PaginatedResponse<MinecraftContent>(page, contents.Count / 20, contents.ToArray());
     }
 
     public override async Task<PaginatedResponse<PlatformModpack>> GetModpacksAsync(int page, string searchQuery,
         string minecraftVersion)
     {
-        List<PlatformModpack> mods = new();
+        List<PlatformModpack> modpacks = new();
 
         foreach (MinecraftContentPlatform platform in _platforms)
         {
@@ -48,16 +49,16 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
 
             foreach (PlatformModpack mod in modpacksFromPlatform.Items)
             {
-                int similarModCount = mods.Count(m => m.IsSimilar(mod));
+                int similarModCount = modpacks.Count(m => m.IsSimilar(mod));
 
                 // Avoid to add a modpack that we have got from another platform
                 // Ensure only one modpack per search query
                 // Spoiler: it doesn't work at all
-                if (similarModCount == 0) mods.Add(mod);
+                if (similarModCount == 0) modpacks.Add(mod);
             }
         }
 
-        return new PaginatedResponse<PlatformModpack>(page, mods.Count / 20, mods.ToArray());
+        return new PaginatedResponse<PlatformModpack>(page, modpacks.Count / 20, modpacks.ToArray());
     }
 
     public override async Task<PaginatedResponse<ContentDependency>> GetContentDependenciesAsync(string id, string modLoaderId,
@@ -73,8 +74,8 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
     {
         foreach (MinecraftContentPlatform platform in _platforms)
         {
-            MinecraftContent mod = await platform.GetContentAsync(id);
-            if (mod != null) return mod;
+            MinecraftContent content = await platform.GetContentAsync(id);
+            if (content != null) return content;
         }
 
         return null;
@@ -95,14 +96,14 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
         return null;
     }
 
-    public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent mod, string versionId,
+    public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent content, string versionId,
         bool installOptional)
     {
-        MinecraftContentPlatform? modPlatform = mod.Platform ?? _platforms.FirstOrDefault(p => p.Name == mod.ModPlatformId);
+        MinecraftContentPlatform? platform = content.Platform ?? _platforms.FirstOrDefault(p => p.Name == content.ModPlatformId);
 
-        if (modPlatform == null || !_platforms.Contains(modPlatform)) return false;
+        if (platform == null || !_platforms.Contains(platform)) return false;
 
-        return await modPlatform.InstallContentAsync(targetBox, mod, versionId, installOptional);
+        return await platform.InstallContentAsync(targetBox, content, versionId, installOptional);
     }
 
     public override async Task<ModificationPack> LoadModpackFileAsync(string filename)
@@ -110,13 +111,13 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
         return null;
     }
 
-    public override async Task<MinecraftContent> DownloadContentInfosAsync(MinecraftContent mod)
+    public override async Task<MinecraftContent> DownloadContentInfosAsync(MinecraftContent content)
     {
-        MinecraftContentPlatform minecraftContentPlatform = mod.Platform;
+        MinecraftContentPlatform minecraftContentPlatform = content.Platform;
 
-        if (!_platforms.Contains(minecraftContentPlatform)) return mod;
+        if (!_platforms.Contains(minecraftContentPlatform)) return content;
 
-        return await minecraftContentPlatform.DownloadContentInfosAsync(mod);
+        return await minecraftContentPlatform.DownloadContentInfosAsync(content);
     }
 
     public override MinecraftContentPlatform GetModPlatform(string id)
