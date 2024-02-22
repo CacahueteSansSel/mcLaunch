@@ -118,6 +118,16 @@ public class MinecraftContent : ReactiveObject
         LastUpdated = DateTime.FromBinary(rd.ReadInt64());
         License = rd.ReadNullableString();
         string? platformId = rd.ReadNullableString();
+
+        try
+        {
+            Type = (MinecraftContentType) rd.ReadByte();
+        }
+        catch (Exception e)
+        {
+            // Doing this to ensure compatibility with older cache
+            Type = MinecraftContentType.Modification;
+        }
     }
 
     public MinecraftContent()
@@ -142,6 +152,7 @@ public class MinecraftContent : ReactiveObject
         wr.Write(LastUpdated?.ToBinary() ?? 0);
         wr.WriteNullableString(License);
         wr.WriteNullableString(Platform?.Name);
+        wr.Write((byte)Type);
     }
 
     public void TransformLongDescriptionToHtml()
@@ -221,7 +232,7 @@ public class MinecraftContent : ReactiveObject
 
     public async Task DownloadBackgroundAsync()
     {
-        string cacheName = $"bkg-mod-{Platform.Name}-{Id}";
+        string cacheName = $"bkg-{Type}-{Platform.Name}-{Id}";
         if (CacheManager.HasBitmap(cacheName))
         {
             await Task.Run(() => { Background = CacheManager.LoadBitmap(cacheName); });
@@ -249,23 +260,6 @@ public class MinecraftContent : ReactiveObject
 
             CacheManager.Store(Background, cacheName);
         }
-    }
-
-    public async void CommandDownload(Box target)
-    {
-        // TODO: Version selection
-
-        ContentVersion[] versions =
-            await ModPlatformManager.Platform.GetContentVersionsAsync(this,
-                target.Manifest.ModLoaderId,
-                target.Manifest.Version);
-
-        // TODO: maybe tell the user when the installation failed
-        if (versions.Length == 0) return;
-
-        await ModPlatformManager.Platform.InstallContentAsync(target, this, versions[0].Id, false);
-
-        IsInstalledOnCurrentBox = true;
     }
 }
 
