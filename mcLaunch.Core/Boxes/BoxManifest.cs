@@ -46,10 +46,15 @@ public class BoxManifest : ReactiveObject
     [JsonIgnore]
     public IEnumerable<BoxStoredContent> ContentWorlds =>
         Content.Where(content => content.Type == MinecraftContentType.World);
+    [JsonIgnore]
     public string ModificationCount => Content.Count.ToString();
+    [JsonIgnore]
     public string ResourcepacksCount => ContentResourcepacks.Count().ToString();
+    [JsonIgnore]
     public string DatapacksCount => ContentDatapacks.Count().ToString();
+    [JsonIgnore]
     public string ShadersCount => ShadersCount.Count().ToString();
+    [JsonIgnore]
     public string ContentWorldsCount => ContentWorlds.Count().ToString();
     public DateTime LastLaunchTime { get; set; }
     public BoxType Type { get; set; }

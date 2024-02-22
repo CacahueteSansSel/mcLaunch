@@ -291,7 +291,7 @@ public class Box : IEquatable<Box>
     {
         ContentVersion[] versions =
             await ModPlatformManager.Platform.GetContentVersionsAsync(mod,
-                Manifest.ModLoaderId,
+                mod.Type == MinecraftContentType.Modification ? Manifest.ModLoaderId : null,
                 Manifest.Version);
 
         if (versions.Length == 0) return false;
@@ -302,7 +302,8 @@ public class Box : IEquatable<Box>
 
         PaginatedResponse<MinecraftContentPlatform.ContentDependency> deps = await ModPlatformManager.Platform.GetContentDependenciesAsync(
             mod.Id,
-            Manifest.ModLoaderId, version.Id, Manifest.Version);
+            mod.Type == MinecraftContentType.Modification ? Manifest.ModLoaderId : null, 
+            version.Id, Manifest.Version);
 
         foreach (MinecraftContentPlatform.ContentDependency dep in deps.Items)
         {

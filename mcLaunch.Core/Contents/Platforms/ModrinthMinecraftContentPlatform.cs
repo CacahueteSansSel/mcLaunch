@@ -173,7 +173,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
     {
         try
         {
-            Version[] versions = await client.Version.GetProjectVersionListAsync(id, new[] {modLoaderId},
+            Version[] versions = await client.Version.GetProjectVersionListAsync(id, modLoaderId == null ? null : [modLoaderId],
                 new[] {minecraftVersionId});
             Version? version = versions.FirstOrDefault(v => v.Id == versionId);
 

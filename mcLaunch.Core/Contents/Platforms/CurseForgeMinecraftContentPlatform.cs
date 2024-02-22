@@ -340,7 +340,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         try
         {
             List<File> files = (await client.GetModFiles(intId, minecraftVersionId,
-                Enum.Parse<ModLoaderType>(modLoaderId, true), pageSize: 100)).Data;
+                modLoaderId == null ? null : Enum.Parse<ModLoaderType>(modLoaderId, true), pageSize: 100)).Data;
             File? file = files.FirstOrDefault(f => f.Id == uint.Parse(versionId));
 
             return await Task.Run(() =>

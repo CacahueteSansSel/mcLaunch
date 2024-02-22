@@ -116,7 +116,10 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         PaginatedResponse<MinecraftContentPlatform.ContentDependency> deps =
             await ModPlatformManager.Platform.GetContentDependenciesAsync(
                 ShownContent.Id,
-                TargetBox.Manifest.ModLoaderId, version.Id, TargetBox.Manifest.Version);
+                ShownContent.Type == MinecraftContentType.Modification
+                    ? TargetBox.Manifest.ModLoaderId
+                    : null,
+                version.Id, TargetBox.Manifest.Version);
 
         MinecraftContentPlatform.ContentDependency[] optionalDeps =
             deps.Items.Where(dep =>
@@ -175,7 +178,9 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
         ContentVersion[] versions =
             await ModPlatformManager.Platform.GetContentVersionsAsync(ShownContent,
-                TargetBox.Manifest.ModLoaderId,
+                ShownContent.Type == MinecraftContentType.Modification
+                    ? TargetBox.Manifest.ModLoaderId
+                    : null,
                 TargetBox.Manifest.Version);
 
         if (versions.Length == 0)
