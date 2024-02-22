@@ -364,7 +364,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         }
     }
 
-    async Task InstallVersionAsync(Box targetBox, Version version, bool installOptional,
+    async Task<string[]> InstallVersionAsync(Box targetBox, Version version, bool installOptional,
         MinecraftContentType contentType)
     {
         if (version.Dependencies != null && contentType == MinecraftContentType.Modification)
@@ -427,6 +427,8 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             filenames.ToArray());
 
         DownloadManager.End();
+
+        return filenames.ToArray();
     }
 
     public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent content, string versionId,
@@ -452,10 +454,15 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             return false;
         }
 
+        string[] paths = [];
+        
         if (!targetBox.HasContentSoft(content)) 
-            await InstallVersionAsync(targetBox, version, installOptional, content.Type);
+            paths = await InstallVersionAsync(targetBox, version, installOptional, content.Type);
 
         await DownloadManager.ProcessAll();
+
+        if (content.Type == MinecraftContentType.DataPack && paths.Length > 0) 
+            targetBox.InstallDatapack(versionId, $"{targetBox.Folder.CompletePath}/{paths[0]}");
 
         targetBox.SaveManifest();
         return true;

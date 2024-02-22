@@ -121,6 +121,9 @@ public class BoxManifest : ReactiveObject
     public BoxStoredContent? GetContent(string id)
         => Content.FirstOrDefault(content => content.Id == id);
 
+    public BoxStoredContent? GetContentByVersion(string versionId)
+        => Content.FirstOrDefault(content => content.VersionId == versionId);
+
     public BoxStoredContent[] GetContents(MinecraftContentType type)
         => Content.Where(c => c.Type == type).ToArray();
 

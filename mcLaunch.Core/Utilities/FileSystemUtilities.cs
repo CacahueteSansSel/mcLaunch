@@ -1,6 +1,6 @@
 ﻿namespace mcLaunch.Core.Utilities;
 
-public static class IOUtilities
+public static class FileSystemUtilities
 {
     public static void CopyDirectory(string fromPath, string toPath)
     {
@@ -16,4 +16,8 @@ public static class IOUtilities
             File.Copy(file, newPath, true);
         }
     }
+
+    public static string NormalizePath(string path)
+        => path.Replace('\\', Path.DirectorySeparatorChar)
+            .Replace('/', Path.DirectorySeparatorChar);
 }

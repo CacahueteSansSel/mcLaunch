@@ -47,7 +47,7 @@ public static class AppdataFolderManager
     {
         if (!Directory.Exists(name)) return;
 
-        await Task.Run(() => IOUtilities.CopyDirectory(System.IO.Path.GetFullPath(name), GetValidPath(name)));
+        await Task.Run(() => FileSystemUtilities.CopyDirectory(System.IO.Path.GetFullPath(name), GetValidPath(name)));
         if (Directory.Exists(name)) Directory.Delete(System.IO.Path.GetFullPath(name), true);
     }
 

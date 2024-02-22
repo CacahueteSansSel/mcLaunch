@@ -377,12 +377,12 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         }
     }
 
-    async Task<bool> InstallFile(Box targetBox, File file, bool installOptional, MinecraftContentType contentType)
+    async Task<string[]?> InstallFileAsync(Box targetBox, File file, bool installOptional, MinecraftContentType contentType)
     {
         if (!file.GameVersions.Contains(targetBox.Manifest.Version))
         {
             Debug.WriteLine($"Mod {file.DisplayName} is incompatible ! Skipping");
-            return false;
+            return null;
         }
 
         if (file.Dependencies != null && file.Dependencies.Count > 0 && contentType == MinecraftContentType.Modification)
@@ -400,14 +400,14 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
                 }
 
                 Mod cfMod = (await client.GetMod(dep.ModId)).Data;
-                await InstallFile(targetBox, cfMod.LatestFiles[0], false, MinecraftContentType.Modification);
+                await InstallFileAsync(targetBox, cfMod.LatestFiles[0], false, MinecraftContentType.Modification);
             }
         }
 
         if (targetBox.Manifest.HasContentStrict(file.ModId.ToString(), Name))
         {
             Debug.WriteLine($"Mod {file.DisplayName} already installed in {targetBox.Manifest.Name}");
-            return false;
+            return null;
         }
 
         DownloadManager.Begin(file.DisplayName);
@@ -423,7 +423,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             Debug.WriteLine($"Mod {file.DisplayName} cannot be downloaded !");
             DownloadManager.End();
 
-            return false;
+            return null;
         }
 
         // TODO: This may break things
@@ -436,7 +436,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
 
         DownloadManager.End();
 
-        return true;
+        return filenames.ToArray();
     }
 
     public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent content, string versionId,
@@ -456,9 +456,13 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             return false;
         }
 
+        string[]? filenames = null;
+
         if (!targetBox.HasContentSoft(content))
         {
-            if (!await InstallFile(targetBox, version.Data, installOptional, content.Type))
+            filenames = await InstallFileAsync(targetBox, version.Data, installOptional, content.Type);
+            
+            if (filenames == null)
             {
                 await DownloadManager.ProcessAll();
                 targetBox.SaveManifest();
@@ -468,6 +472,9 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         }
 
         await DownloadManager.ProcessAll();
+
+        if (content.Type == MinecraftContentType.DataPack && filenames != null)
+            targetBox.InstallDatapack(versionId, filenames[0]);
 
         targetBox.SaveManifest();
         return true;

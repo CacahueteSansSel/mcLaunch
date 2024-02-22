@@ -13,6 +13,7 @@ using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Platforms;
+using mcLaunch.Core.Utilities;
 using Modrinth.Exceptions;
 using ReactiveUI;
 using SharpNBT;
@@ -45,6 +46,8 @@ public class Box : IEquatable<Box>
     public bool HasLicenseFile => File.Exists($"{Folder.Path}/LICENSE.md");
     public bool HasCrashReports => Directory.Exists($"{Folder.Path}/crash-reports") 
                                    && Directory.GetFiles($"{Folder.Path}/crash-reports").Length > 0;
+
+    public bool HasWorlds => Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
@@ -170,6 +173,30 @@ public class Box : IEquatable<Box>
         {
             // TODO: Set the manifest icon to default
         }
+    }
+
+    public string[] InstallDatapack(string versionId, string filename)
+    {
+        List<string> paths = new();
+
+        foreach (string worldPath in Directory.GetDirectories($"{Folder.Path}/saves"))
+        {
+            string datapackFolderPath = $"{worldPath}/datapacks";
+            if (!Directory.Exists(datapackFolderPath)) 
+                Directory.CreateDirectory(datapackFolderPath);
+
+            string finalPath = FileSystemUtilities.NormalizePath($"{datapackFolderPath}/" +
+                                                                 $"{System.IO.Path.GetFileName(filename)}");
+            
+            File.Copy(filename, finalPath, true);
+            paths.Add(finalPath.Replace(Folder.CompletePath, "")
+                .TrimStart(System.IO.Path.DirectorySeparatorChar));
+        }
+
+        BoxStoredContent? content = Manifest.GetContentByVersion(versionId);
+        if (content != null) content.Filenames = [..content.Filenames, ..paths.ToArray()];
+        
+        return paths.ToArray();
     }
 
     public bool MatchesQuery(string query)
