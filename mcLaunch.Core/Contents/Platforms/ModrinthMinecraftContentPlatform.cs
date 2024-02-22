@@ -285,7 +285,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         try
         {
             versions = await client.Version.GetProjectVersionListAsync(content.Id,
-                modLoaderId == null ? null : [modLoaderId],
+                modLoaderId == null || content.Type != MinecraftContentType.Modification ? null : [modLoaderId],
                 minecraftVersionId == null ? null : [minecraftVersionId]);
         }
         catch (ModrinthApiException e)

@@ -81,7 +81,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         {
             resp = await client.SearchMods(MinecraftGameId,
                 gameVersion: box?.Manifest.Version,
-                modLoaderType: box == null ? null : type,
+                modLoaderType: (box == null || contentType != MinecraftContentType.Modification) ? null : type,
                 sortField: ModsSearchSortField.Popularity,
                 sortOrder: SortOrder.Descending,
                 pageSize: 10,
@@ -250,7 +250,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         
         try
         {
-            ModLoaderType? modLoader = string.IsNullOrWhiteSpace(modLoaderId)
+            ModLoaderType? modLoader = string.IsNullOrWhiteSpace(modLoaderId) 
+                                       || content.Type != MinecraftContentType.Modification
                 ? null
                 : Enum.Parse<ModLoaderType>(modLoaderId, true);
             List<ContentVersion> modVersions = new();
