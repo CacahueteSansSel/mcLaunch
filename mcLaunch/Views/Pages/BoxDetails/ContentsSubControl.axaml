@@ -50,6 +50,6 @@
                 
             </views:MinecraftContentList>
         </StackPanel>
-        <TextBlock x:Name="VanillaDisclaimer" VerticalAlignment="Center" HorizontalAlignment="Center" Height="20">Mods cannot be installed on vanilla instances</TextBlock>
+        <TextBlock x:Name="VanillaDisclaimer" VerticalAlignment="Center" HorizontalAlignment="Center" Height="20">Not available on vanilla instances</TextBlock>
     </Panel>
 </UserControl>

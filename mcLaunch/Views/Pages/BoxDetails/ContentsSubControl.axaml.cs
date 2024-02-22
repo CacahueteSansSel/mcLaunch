@@ -40,7 +40,9 @@ public partial class ContentsSubControl : SubControl
 
     public override async Task PopulateAsync()
     {
-        if (Box.Manifest.ModLoader is VanillaModLoaderSupport)
+        if (Box.Manifest.ModLoader is VanillaModLoaderSupport
+            && (ContentType == MinecraftContentType.Modification
+                || ContentType == MinecraftContentType.ShaderPack))
         {
             ModsList.HideLoadMoreButton();
             VanillaDisclaimer.IsVisible = true;
@@ -70,8 +72,10 @@ public partial class ContentsSubControl : SubControl
             if (content == null) return;
 
             string folder = $"{MinecraftContentUtils.GetInstallFolderName(ContentType)}/";
-            content.Filename = boxContent.Filenames.Length == 0 ? "" : boxContent.Filenames[0]
-                .Replace(folder, "").Trim();
+            content.Filename = boxContent.Filenames.Length == 0
+                ? ""
+                : boxContent.Filenames[0]
+                    .Replace(folder, "").Trim();
             content.InstalledVersion = boxContent.VersionId;
 
             content.DownloadIconAsync();
@@ -109,7 +113,7 @@ public partial class ContentsSubControl : SubControl
             {
                 isChanges = true;
                 toUpdateContents.Add(content);
-                
+
                 return;
             }
 
@@ -118,7 +122,7 @@ public partial class ContentsSubControl : SubControl
             {
                 isChanges = true;
                 isAnyUpdate = true;
-                
+
                 if (!isUpdating) updatableContentsList.Add(content);
             }
 
@@ -149,7 +153,8 @@ public partial class ContentsSubControl : SubControl
 
                 MinecraftContent[] contents = await Box.MigrateToModrinthAsync((mod, index, count) =>
                 {
-                    StatusPopup.Instance.Status = $"Verifying & installing equivalent ({ContentName} {index}/{count})";
+                    StatusPopup.Instance.Status =
+                        $"Verifying & installing equivalent ({ContentName} {index}/{count})";
                 });
 
                 if (contents.Length == 0)
@@ -159,7 +164,8 @@ public partial class ContentsSubControl : SubControl
                 }
 
                 Navigation.ShowPopup(new ModsPopup($"{contents.Length} {ContentName}(s) migrated",
-                    $"The following {ContentNamePlural} have been successfully migrated to their Modrinth equivalent", Box, contents));
+                    $"The following {ContentNamePlural} have been successfully migrated to their Modrinth equivalent",
+                    Box, contents));
             }));
     }
 
@@ -171,20 +177,20 @@ public partial class ContentsSubControl : SubControl
             return;
         }
 
-        Navigation.ShowPopup(new StatusPopup($"Updating {ContentNamePlural}", 
+        Navigation.ShowPopup(new StatusPopup($"Updating {ContentNamePlural}",
             $"Please wait while we update {ContentNamePlural} from {Box.Manifest.Name}..."));
         StatusPopup.Instance.ShowDownloadBanner = true;
 
         isUpdating = true;
-        
+
         int failedModUpdates = 0;
         int index = 1;
-        
+
         foreach (MinecraftContent mod in updatableContentsList)
         {
             StatusPopup.Instance.Status = $"Updating {mod.Name} ({index}/{updatableContentsList.Count})";
             StatusPopup.Instance.StatusPercent = (float) index / updatableContentsList.Count;
-            
+
             if (!await Box.UpdateModAsync(mod, false))
             {
                 failedModUpdates++;
@@ -192,13 +198,13 @@ public partial class ContentsSubControl : SubControl
 
             index++;
         }
-        
+
         StatusPopup.Instance.ShowDownloadBanner = false;
         Navigation.HidePopup();
 
         if (failedModUpdates > 0)
         {
-            Navigation.ShowPopup(new MessageBoxPopup("Warning", 
+            Navigation.ShowPopup(new MessageBoxPopup("Warning",
                 $"{failedModUpdates} {ContentName}{(failedModUpdates > 1 ? "s" : "")} failed to update"));
         }
 
@@ -218,9 +224,10 @@ public partial class ContentsSubControl : SubControl
 
                 MinecraftContent[] contents = await Box.MigrateToCurseForgeAsync((mod, index, count) =>
                 {
-                    StatusPopup.Instance.Status = $"Verifying & installing equivalent ({ContentName} {index}/{count})";
+                    StatusPopup.Instance.Status =
+                        $"Verifying & installing equivalent ({ContentName} {index}/{count})";
                 });
-                
+
                 StatusPopup.Instance.ShowDownloadBanner = false;
 
                 if (contents.Length == 0)
@@ -230,7 +237,8 @@ public partial class ContentsSubControl : SubControl
                 }
 
                 Navigation.ShowPopup(new ModsPopup($"{contents.Length} {ContentName}(s) migrated",
-                    $"The following {ContentNamePlural} have been successfully migrated to their CurseForge equivalent", Box, contents));
+                    $"The following {ContentNamePlural} have been successfully migrated to their CurseForge equivalent",
+                    Box, contents));
             }));
     }
 

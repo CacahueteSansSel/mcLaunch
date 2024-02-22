@@ -174,7 +174,18 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             return;
         }
 
-        await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, version.Id, false);
+        if (!await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, 
+                version.Id, false))
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Error", 
+                $"{ShownContent.Name} failed to download : the content may lack any download url"));
+
+            LoadingButtonFrame.IsVisible = false;
+            SetInstalled(false);
+            isInstalling = false;
+
+            return;
+        }
 
         LoadingButtonFrame.IsVisible = false;
         SetInstalled(true);
