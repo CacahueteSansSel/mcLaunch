@@ -190,8 +190,22 @@ public class Box : IEquatable<Box>
         string fullPath = $"{Path}/{path}";
 
         Directory.CreateDirectory($"{Path}/backups");
+        
+        File.Copy($"{Path}/box.json", $"{Folder.CompletePath}/box.json");
+        if (File.Exists($"{Path}/icon.png")) 
+            File.Copy($"{Path}/icon.png", $"{Folder.CompletePath}/icon.png");
+        if (File.Exists($"{Path}/background.png")) 
+            File.Copy($"{Path}/background.png", $"{Folder.CompletePath}/background.png");
 
-        await TarFile.CreateFromDirectoryAsync(Path, fullPath, false);
+        await TarFile.CreateFromDirectoryAsync(Folder.CompletePath, 
+            fullPath, false);
+        
+        if (File.Exists($"{Folder.CompletePath}/box.json")) 
+            File.Delete($"{Folder.CompletePath}/box.json");
+        if (File.Exists($"{Folder.CompletePath}/icon.png")) 
+            File.Delete($"{Folder.CompletePath}/icon.png");
+        if (File.Exists($"{Folder.CompletePath}/background.png")) 
+            File.Delete($"{Folder.CompletePath}/background.png");
 
         BoxBackup backup = new(name, BoxBackupType.Complete, DateTime.Now, path);
         Manifest.Backups.Add(backup);
@@ -208,10 +222,38 @@ public class Box : IEquatable<Box>
         switch (backup.Type)
         {
             case BoxBackupType.Complete:
+                List<BoxBackup> backups = Manifest.Backups;
+                
                 string archiveFullPath = $"{Path}/{backup.Filename}";
                 if (!File.Exists(archiveFullPath)) return false;
 
-                await TarFile.ExtractToDirectoryAsync(archiveFullPath, Path, true);
+                await TarFile.ExtractToDirectoryAsync(archiveFullPath, 
+                    Folder.CompletePath, true);
+
+                if (File.Exists($"{Folder.CompletePath}/box.json"))
+                {
+                    File.Copy($"{Folder.CompletePath}/box.json", $"{Path}/box.json", true);
+                    File.Delete($"{Folder.CompletePath}/box.json");
+                }
+                if (File.Exists($"{Folder.CompletePath}/icon.png"))
+                {
+                    File.Copy($"{Folder.CompletePath}/icon.png", $"{Path}/icon.png", true);
+                    File.Delete($"{Folder.CompletePath}/icon.png");
+                }
+                if (File.Exists($"{Folder.CompletePath}/background.png"))
+                {
+                    File.Copy($"{Folder.CompletePath}/background.png", $"{Path}/background.png", true);
+                    File.Delete($"{Folder.CompletePath}/background.png");
+                }
+                
+                // Ensure the backups are still listed even when restoring an earlier backup
+                ReloadManifest(true);
+                Manifest.Backups = backups;
+                SaveManifest();
+                
+                // Reload icon and background
+                LoadIcon();
+                LoadBackground();
                 
                 return true;
             case BoxBackupType.Partial:

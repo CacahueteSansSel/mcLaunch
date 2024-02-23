@@ -23,6 +23,7 @@ public partial class BackupListSubControl : SubControl
     {
         BackupList.SetLoadingCircle(true);
         BackupList.SetLaunchPage(ParentPage);
+        BackupList.SetBox(Box);
 
         BoxBackup[] backups = Box.Manifest.Backups.ToArray();
         await BackupList.SetBackupsAsync(backups);
