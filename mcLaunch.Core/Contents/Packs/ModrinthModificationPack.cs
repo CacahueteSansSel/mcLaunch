@@ -6,11 +6,11 @@ using System.Text.RegularExpressions;
 using System.Web;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Mods.Platforms;
+using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Utilities;
 using Version = Modrinth.Models.Version;
 
-namespace mcLaunch.Core.Mods.Packs;
+namespace mcLaunch.Core.Contents.Packs;
 
 public class ModrinthModificationPack : ModificationPack
 {
@@ -24,7 +24,7 @@ public class ModrinthModificationPack : ModificationPack
     public override string MinecraftVersion { get; init; }
     public override string ModloaderId { get; init; }
     public override string ModloaderVersion { get; init; }
-    public override SerializedModification[] Modifications { get; set; }
+    public override SerializedMinecraftContent[] Modifications { get; set; }
     public override AdditionalFile[] AdditionalFiles { get; set; }
 
     public ModrinthModificationPack()
@@ -66,7 +66,7 @@ public class ModrinthModificationPack : ModificationPack
 
     public async Task<ModrinthModificationPack> SetupAsync()
     {
-        List<SerializedModification> mods = new();
+        List<SerializedMinecraftContent> mods = new();
         foreach (var file in manifest.Files)
         {
             string firstDownload = file.Downloads[0];
@@ -89,12 +89,12 @@ public class ModrinthModificationPack : ModificationPack
                     {
                         try
                         {
-                            ver = await ModrinthModPlatform.Instance.Client.Version.GetByVersionNumberAsync(id, version);
+                            ver = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetByVersionNumberAsync(id, version);
                         }
                         catch (Exception e)
                         {
                             Version[] versions =
-                                await ModrinthModPlatform.Instance.Client.Version.GetProjectVersionListAsync(id,
+                                await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetProjectVersionListAsync(id,
                                     gameVersions: new[] {MinecraftVersion}, loaders: new[] {ModloaderId});
 
                             ver = versions.FirstOrDefault(v => v.GameVersions.Contains(MinecraftVersion));
@@ -113,16 +113,16 @@ public class ModrinthModificationPack : ModificationPack
                     {
                         try
                         {
-                            ver = await ModrinthModPlatform.Instance.Client.Version.GetAsync(version);
+                            ver = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetAsync(version);
                         }
                         catch (Exception e)
                         {
                             try
                             {
-                                ModVersion[] versions = await ModrinthModPlatform.Instance.GetModVersionsAsync(
-                                    Modification.CreateIdOnly(id), ModloaderId, MinecraftVersion);
+                                ContentVersion[] versions = await ModrinthMinecraftContentPlatform.Instance.GetContentVersionsAsync(
+                                    MinecraftContent.CreateIdOnly(id), ModloaderId, MinecraftVersion);
                             
-                                ver = await ModrinthModPlatform.Instance.Client.Version.GetAsync(versions[0].Id);
+                                ver = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetAsync(versions[0].Id);
                             }
                             catch
                             {
@@ -137,7 +137,7 @@ public class ModrinthModificationPack : ModificationPack
 
                     if (!ver.GameVersions.Contains(MinecraftVersion) && !ver.GameVersions.Contains(rootMcVer))
                     {
-                        Version[] versions = await ModrinthModPlatform.Instance.Client.Version.GetProjectVersionListAsync(id,
+                        Version[] versions = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetProjectVersionListAsync(id,
                             gameVersions: new[] {MinecraftVersion}, loaders: new[] {ModloaderId});
 
                         ver = versions.FirstOrDefault(v => v.GameVersions.Contains(MinecraftVersion));
@@ -149,7 +149,7 @@ public class ModrinthModificationPack : ModificationPack
                         }
                     }
 
-                    mods.Add(new SerializedModification
+                    mods.Add(new SerializedMinecraftContent
                     {
                         IsRequired = true,
                         ModId = id,
@@ -176,12 +176,12 @@ public class ModrinthModificationPack : ModificationPack
         return this;
     }
 
-    public override async Task InstallModificationAsync(Box targetBox, SerializedModification mod)
+    public override async Task InstallModificationAsync(Box targetBox, SerializedMinecraftContent mod)
     {
-        await ModrinthModPlatform.Instance.InstallModAsync(targetBox, new Modification
+        await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(targetBox, new MinecraftContent
         {
             Id = mod.ModId,
-            Platform = ModrinthModPlatform.Instance
+            Platform = ModrinthMinecraftContentPlatform.Instance
         }, mod.VersionId, false);
     }
 
@@ -226,7 +226,7 @@ public class ModrinthModificationPack : ModificationPack
         index.Dependencies.Minecraft = box.Manifest.Version;
 
         List<ModelModrinthIndex.ModelFile> files = new();
-        foreach (BoxStoredModification mod in box.Manifest.Modifications)
+        foreach (BoxStoredContent mod in box.Manifest.Content)
         {
             if (mod.PlatformId.ToLower() != "modrinth")
             {
@@ -240,7 +240,7 @@ public class ModrinthModificationPack : ModificationPack
                 continue;
             }
             
-            Version modVersion = await ModrinthModPlatform.Instance.Client.Version.GetAsync(mod.VersionId);
+            Version modVersion = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetAsync(mod.VersionId);
             var primaryVersionFile = modVersion.Files.First(f => f.Primary);
 
             ModelModrinthIndex.ModelFile fileModel = new()

@@ -8,24 +8,25 @@ using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods.Platforms;
+using mcLaunch.Core.Contents.Platforms;
 using ReactiveUI;
 
-namespace mcLaunch.Core.Mods;
+namespace mcLaunch.Core.Contents;
 
-public class Modification : ReactiveObject
+public class MinecraftContent : ReactiveObject
 {
-    public static Modification CreateIdOnly(string id) => new() {Id = id};
+    public static MinecraftContent CreateIdOnly(string id) => new() {Id = id};
 
     string? longDescriptionBody;
     IconCollection icon;
     Bitmap? background;
-    ModPlatform? platform;
+    MinecraftContentPlatform? platform;
     bool isInstalledOnCurrentBox;
 
     public string? Name { get; set; }
     public string Id { get; set; }
     public string Author { get; set; }
+    public MinecraftContentType Type { get; set; }
     public string? ShortDescription { get; set; }
     public string? Changelog { get; set; }
     public string? Url { get; set; }
@@ -87,7 +88,7 @@ public class Modification : ReactiveObject
     }
 
     [JsonIgnore]
-    public ModPlatform? Platform
+    public MinecraftContentPlatform? Platform
     {
         get => platform;
         set => platform = value;
@@ -99,7 +100,7 @@ public class Modification : ReactiveObject
     public bool IsDownloadCountValid => DownloadCount.HasValue;
     public bool IsLastUpdatedValid => LastUpdated.HasValue;
 
-    public Modification(Stream inputStream)
+    public MinecraftContent(Stream inputStream)
     {
         BinaryReader rd = new(inputStream);
 
@@ -117,9 +118,19 @@ public class Modification : ReactiveObject
         LastUpdated = DateTime.FromBinary(rd.ReadInt64());
         License = rd.ReadNullableString();
         string? platformId = rd.ReadNullableString();
+
+        try
+        {
+            Type = (MinecraftContentType) rd.ReadByte();
+        }
+        catch (Exception e)
+        {
+            // Doing this to ensure compatibility with older cache
+            Type = MinecraftContentType.Modification;
+        }
     }
 
-    public Modification()
+    public MinecraftContent()
     {
         
     }
@@ -141,6 +152,7 @@ public class Modification : ReactiveObject
         wr.Write(LastUpdated?.ToBinary() ?? 0);
         wr.WriteNullableString(License);
         wr.WriteNullableString(Platform?.Name);
+        wr.Write((byte)Type);
     }
 
     public void TransformLongDescriptionToHtml()
@@ -166,10 +178,10 @@ public class Modification : ReactiveObject
                && authorNormalized == otherAuthorNormalized;
     }
 
-    public bool IsSimilar(Modification other)
+    public bool IsSimilar(MinecraftContent other)
         => IsSimilar(other.Name, other.Author);
 
-    public bool IsSimilar(BoxStoredModification other)
+    public bool IsSimilar(BoxStoredContent other)
         => IsSimilar(other.Name, other.Author);
 
     public bool MatchesQuery(string query)
@@ -220,7 +232,7 @@ public class Modification : ReactiveObject
 
     public async Task DownloadBackgroundAsync()
     {
-        string cacheName = $"bkg-mod-{Platform.Name}-{Id}";
+        string cacheName = $"bkg-{Type}-{Platform.Name}-{Id}";
         if (CacheManager.HasBitmap(cacheName))
         {
             await Task.Run(() => { Background = CacheManager.LoadBitmap(cacheName); });
@@ -249,21 +261,13 @@ public class Modification : ReactiveObject
             CacheManager.Store(Background, cacheName);
         }
     }
+}
 
-    public async void CommandDownload(Box target)
-    {
-        // TODO: Version selection
-
-        ModVersion[] versions =
-            await ModPlatformManager.Platform.GetModVersionsAsync(this,
-                target.Manifest.ModLoaderId,
-                target.Manifest.Version);
-
-        // TODO: maybe tell the user when the installation failed
-        if (versions.Length == 0) return;
-
-        await ModPlatformManager.Platform.InstallModAsync(target, this, versions[0].Id, false);
-
-        IsInstalledOnCurrentBox = true;
-    }
+public enum MinecraftContentType
+{
+    Modification,
+    ResourcePack,
+    ShaderPack,
+    DataPack,
+    World
 }

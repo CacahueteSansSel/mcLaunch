@@ -7,7 +7,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;

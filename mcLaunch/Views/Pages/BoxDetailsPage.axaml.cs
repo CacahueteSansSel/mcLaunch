@@ -16,15 +16,16 @@ using Avalonia.Platform;
 using Avalonia.Platform.Storage;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.MinecraftFormats;
-using mcLaunch.Core.Mods.Packs;
+using mcLaunch.Core.Contents.Packs;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.BoxDetails;
 using mcLaunch.Views.Popups;
 using mcLaunch.Views.Windows;
+using FileSystemUtilities = mcLaunch.Utilities.FileSystemUtilities;
 
 namespace mcLaunch.Views.Pages;
 
@@ -89,7 +90,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         SubControlButtons.IsEnabled = true;
 
         if (Box.HasReadmeFile) SetSubControl(new ReadmeSubControl(Box.ReadReadmeFile()));
-        else SetSubControl(new ModListSubControl());
+        else SetSubControl(new ContentsSubControl());
 
         ReadmeButton.IsVisible = Box.HasReadmeFile;
         CrashReportButton.IsVisible = Box.HasCrashReports;
@@ -284,12 +285,22 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
     private void SubControlModButtonClicked(object? sender, RoutedEventArgs e)
     {
-        SetSubControl(new ModListSubControl());
+        SetSubControl(new ContentsSubControl(MinecraftContentType.Modification));
     }
 
     private void SubControlResourcePackButtonClicked(object? sender, RoutedEventArgs e)
     {
-        // TODO: Resources packs SubControl
+        SetSubControl(new ContentsSubControl(MinecraftContentType.ResourcePack));
+    }
+
+    private void SubControlDatapackButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        SetSubControl(new ContentsSubControl(MinecraftContentType.DataPack, false));
+    }
+
+    private void SubControlShaderButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        SetSubControl(new ContentsSubControl(MinecraftContentType.ShaderPack));
     }
 
     private void SubControlWorldButtonClicked(object? sender, RoutedEventArgs e)

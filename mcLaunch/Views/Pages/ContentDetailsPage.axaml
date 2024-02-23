@@ -6,7 +6,7 @@
              xmlns:avalonia="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
              xmlns:avalonia1="clr-namespace:TheArtOfDev.HtmlRenderer.Avalonia;assembly=Avalonia.HtmlRenderer"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
-             x:Class="mcLaunch.Views.Pages.ModDetailsPage">
+             x:Class="mcLaunch.Views.Pages.ContentDetailsPage">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
@@ -24,7 +24,7 @@
                 <Border Classes="frame" Margin="0 10 0 100" Width="888">
                     <StackPanel Margin="1" Orientation="Vertical">
                         <DockPanel Margin="38 38 38 0" LastChildFill="True">
-                            <Image DockPanel.Dock="Left" Source="{Binding Icon.IconLarge}" Height="155"></Image>
+                            <Image DockPanel.Dock="Left" Source="{Binding Icon.IconLarge}" Height="155" Width="155" Stretch="Uniform"></Image>
                             <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
                                 <Button x:Name="InstallButton" Classes="primary" Width="124"
                                         HorizontalContentAlignment="Center" Click="InstallButtonClicked">

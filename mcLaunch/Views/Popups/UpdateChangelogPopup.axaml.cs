@@ -5,7 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using mcLaunch.GitHub.Models;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;

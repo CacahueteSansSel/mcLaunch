@@ -10,7 +10,7 @@ using Cacahuete.MinecraftLib.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 

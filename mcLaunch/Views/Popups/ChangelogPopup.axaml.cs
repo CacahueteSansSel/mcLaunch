@@ -5,7 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Popups;
@@ -20,7 +20,7 @@ public partial class ChangelogPopup : UserControl
         InitializeComponent();
     }
 
-    public ChangelogPopup(Modification mod, Action confirm, Action cancel)
+    public ChangelogPopup(MinecraftContent mod, Action confirm, Action cancel)
     {
         InitializeComponent();
         

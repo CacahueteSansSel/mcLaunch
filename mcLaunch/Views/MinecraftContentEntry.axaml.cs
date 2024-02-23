@@ -6,42 +6,43 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods;
-using mcLaunch.Core.Mods.Platforms;
+using mcLaunch.Core.Contents;
+using mcLaunch.Core.Contents.Platforms;
 
 namespace mcLaunch.Views;
 
-public partial class ModificationEntry : UserControl
+public partial class MinecraftContentEntry : UserControl
 {
-    public static readonly AttachedProperty<Modification> ModProperty =
-        AvaloniaProperty.RegisterAttached<Modification, UserControl, Modification>(
+    public static readonly AttachedProperty<MinecraftContent> ModProperty =
+        AvaloniaProperty.RegisterAttached<MinecraftContent, UserControl, MinecraftContent>(
             nameof(Mod),
             null,
             inherits: true);
 
-    public Modification Mod
+    public MinecraftContent Mod
     {
-        get => (Modification) DataContext;
+        get => (MinecraftContent) DataContext;
         set => DataContext = value;
     }
 
-    public ModificationEntry()
+    public MinecraftContentEntry()
     {
         InitializeComponent();
 
         if (Design.IsDesignMode)
         {
             CacheManager.Init();
-            Mod = new Modification
+            Mod = new MinecraftContent
             {
                 Name = "Sample Mod",
+                Type = MinecraftContentType.Modification,
                 Icon = IconCollection.Default,
                 Author = "sample dev",
                 ShortDescription = "sample desc",
                 IsUpdateRequired = false,
                 LastUpdated = DateTime.Today,
                 DownloadCount = 2800,
-                Platform = new ModrinthModPlatform()
+                Platform = new ModrinthMinecraftContentPlatform()
             };
         }
     }

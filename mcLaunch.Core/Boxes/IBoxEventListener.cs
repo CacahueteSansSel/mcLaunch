@@ -1,9 +1,9 @@
-﻿using mcLaunch.Core.Mods;
+﻿using mcLaunch.Core.Contents;
 
 namespace mcLaunch.Core.Boxes;
 
 public interface IBoxEventListener
 {
-    void OnModAdded(Modification mod);
-    void OnModRemoved(string modId);
+    void OnContentAdded(MinecraftContent content);
+    void OnContentRemoved(string contentId);
 }

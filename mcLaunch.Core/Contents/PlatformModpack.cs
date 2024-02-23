@@ -9,14 +9,14 @@ using mcLaunch.Core.Managers;
 using mcLaunch.Core.Utilities;
 using ReactiveUI;
 
-namespace mcLaunch.Core.Mods;
+namespace mcLaunch.Core.Contents;
 
 public class PlatformModpack : ReactiveObject, IVersionContent
 {
     string? longDescriptionBody;
     Bitmap? icon;
     Bitmap? background;
-    ModPlatform? platform;
+    MinecraftContentPlatform? platform;
     bool isInstalledOnCurrentBox;
     
     public string? Name { get; set; }
@@ -64,7 +64,7 @@ public class PlatformModpack : ReactiveObject, IVersionContent
     }
 
     [JsonIgnore]
-    public ModPlatform? Platform
+    public MinecraftContentPlatform? Platform
     {
         get => platform;
         set => platform = value;

@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 using mcLaunch.Core;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 
 namespace mcLaunch.Models;
 
 public class ModificationListDataContext
 {
-    public List<Modification> Modifications { get; } = new();
+    public List<MinecraftContent> Modifications { get; } = new();
 
     public ModificationListDataContext()
     {
-        Modifications = new List<Modification>()
+        Modifications = new List<MinecraftContent>()
         {
-            new Modification {Author = "me", IconUrl = "todo", Name = "fungus mod"},
-            new Modification {Author = "not me", IconUrl = "todo", Name = "dzd mod"},
-            new Modification {Author = "your", IconUrl = "todo", Name = "dzdahahaHAHAHA mod"}
+            new MinecraftContent {Author = "me", IconUrl = "todo", Name = "fungus mod"},
+            new MinecraftContent {Author = "not me", IconUrl = "todo", Name = "dzd mod"},
+            new MinecraftContent {Author = "your", IconUrl = "todo", Name = "dzdahahaHAHAHA mod"}
         };
     }
     
-    public ModificationListDataContext(List<Modification> mods)
+    public ModificationListDataContext(List<MinecraftContent> mods)
     {
         Modifications = mods;
     }

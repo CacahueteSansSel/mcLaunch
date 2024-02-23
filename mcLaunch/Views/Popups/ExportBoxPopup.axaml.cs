@@ -4,8 +4,8 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Mods;
-using mcLaunch.Core.Mods.Packs;
+using mcLaunch.Core.Contents;
+using mcLaunch.Core.Contents.Packs;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Popups;

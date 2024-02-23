@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using Avalonia.Media.Imaging;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using Path = System.IO.Path;
 
 namespace mcLaunch.Core.Managers;
@@ -32,7 +32,7 @@ public static class CacheManager
         }
     }
 
-    public static void Store(Modification? mod, string id)
+    public static void Store(MinecraftContent? mod, string id)
     {
         if (mod == null) return;
 
@@ -61,14 +61,14 @@ public static class CacheManager
         }
     }
 
-    public static Modification? LoadModification(string id)
+    public static MinecraftContent? LoadContent(string id)
     {
-        if (!File.Exists($"{FolderPath}/mods/{id}.cache")) return null;
+        if (!File.Exists($"{FolderPath}/contents/{id}.cache")) return null;
         
         try
         {
-            using FileStream fs = new($"{FolderPath}/mods/{id}.cache", FileMode.Open);
-            return new Modification(fs);
+            using FileStream fs = new($"{FolderPath}/contents/{id}.cache", FileMode.Open);
+            return new MinecraftContent(fs);
         }
         catch (Exception e)
         {
@@ -79,6 +79,6 @@ public static class CacheManager
     public static bool HasBitmap(string id)
         => File.Exists($"{FolderPath}/bitmaps/{id}.cache");
 
-    public static bool HasModification(string id)
-        => File.Exists($"{FolderPath}/mods/{id}.cache");
+    public static bool HasContent(string id)
+        => File.Exists($"{FolderPath}/contents/{id}.cache");
 }

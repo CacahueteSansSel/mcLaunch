@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="mcLaunch.Views.ModificationList">
+             x:Class="mcLaunch.Views.MinecraftContentList">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
 
@@ -14,8 +14,8 @@
     </UserControl.Styles>
     <Panel>
         <StackPanel Orientation="Vertical">
-            <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{Binding Modifications}"
-                     SelectionChanged="ModSelectionChanged">
+            <ListBox x:Name="ContentList" SelectionMode="Single" ItemsSource="{Binding Contents}"
+                     SelectionChanged="ContentSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="CornerRadius" Value="4"></Setter>
@@ -24,7 +24,7 @@
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <views:ModificationEntry Mod="{Binding .}"></views:ModificationEntry>
+                        <views:MinecraftContentEntry Mod="{Binding .}"></views:MinecraftContentEntry>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -34,6 +34,6 @@
             </Button>
         </StackPanel>
         <views:LoadingCircle x:Name="LoadCircle" IsVisible="False" IsHitTestVisible="False" />
-        <views:NothingToShowBanner x:Name="NtsBanner" IsVisible="False" Footer="Your box's mods will be shown here"></views:NothingToShowBanner>
+        <views:NothingToShowBanner x:Name="NtsBanner" IsVisible="False" Footer="Installed content will show here"></views:NothingToShowBanner>
     </Panel>
 </UserControl>

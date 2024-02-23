@@ -195,6 +195,10 @@
       <AvaloniaResource Include="resources\icons\problem.png" />
       <None Remove="resources\background_default.png" />
       <AvaloniaResource Include="resources\background_default.png" />
+      <None Remove="resources\icons\datapack.png" />
+      <AvaloniaResource Include="resources\icons\datapack.png" />
+      <None Remove="resources\icons\shader.png" />
+      <AvaloniaResource Include="resources\icons\shader.png" />
     </ItemGroup>
 
     <ItemGroup>

@@ -35,7 +35,7 @@
                     <StackPanel Margin="1" Orientation="Vertical">
                         <DockPanel Margin="38 38 38 0" LastChildFill="True">
                             <Panel>
-                                <Image PointerEntered="BoxIconCursorEntered" PointerExited="BoxIconCursorLeft" DockPanel.Dock="Left" Source="{Binding Manifest.Icon.IconLarge}" Height="155"></Image>
+                                <Image PointerEntered="BoxIconCursorEntered" PointerExited="BoxIconCursorLeft" DockPanel.Dock="Left" Source="{Binding Manifest.Icon.IconLarge}" Height="155" Width="155" Stretch="Uniform"></Image>
                                 <Button IsVisible="False" IsEnabled="False" PointerEntered="BoxIconCursorEntered" x:Name="EditIconButton" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 5 5" Classes="transparent" Click="EditIconButtonClicked">
                                     <Image Source="/resources/icons/edit.png" Width="13" Height="13"></Image>
                                 </Button>
@@ -58,7 +58,7 @@
                                                Text="{Binding Manifest.Author}">
                                     </TextBlock>
                                 </StackPanel>
-                                <Border Margin="0 10 0 0" HorizontalAlignment="Left" Padding="10" Classes="frame-dark-without-shadow">
+                                <Border Margin="0 10 0 0" HorizontalAlignment="Left">
                                     <StackPanel Orientation="Horizontal" Spacing="10">
                                         <TextBlock VerticalAlignment="Center">Minecraft</TextBlock>
                                         <Button Classes="secondary" ToolTip.Tip="Click here to change the Minecraft version" Click="MinecraftButtonClicked" PointerEntered="MinecraftButtonCursorEntered" PointerExited="MinecraftButtonCursorExited">
@@ -94,6 +94,12 @@
                                     </Button>
                                     <Button Classes="transparent" Click="SubControlResourcePackButtonClicked" ToolTip.Tip="Manage resourcepacks">
                                         <Image Source="/resources/icons/resource_pack.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
+                                    </Button>
+                                    <Button Classes="transparent" Click="SubControlDatapackButtonClicked" ToolTip.Tip="Manage datapacks">
+                                        <Image Source="/resources/icons/datapack.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
+                                    </Button>
+                                    <Button Classes="transparent" Click="SubControlShaderButtonClicked" ToolTip.Tip="Manage shaders">
+                                        <Image Source="/resources/icons/shader.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>
                                     <Button Classes="transparent" Click="SubControlServerButtonClicked" ToolTip.Tip="Servers">
                                         <Image Source="/resources/icons/at.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>

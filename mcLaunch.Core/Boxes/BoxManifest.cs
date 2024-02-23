@@ -7,7 +7,7 @@ using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using mcLaunch.Core.Utilities;
 using ReactiveUI;
 
@@ -29,8 +29,33 @@ public class BoxManifest : ReactiveObject
     public string ModLoaderId { get; set; }
     public string ModLoaderVersion { get; set; }
     public string DescriptionLine => $"{ModLoaderId.ToUpper()} {Version}";
-    public string ModificationCount => Modifications.Count.ToString();
-    public List<BoxStoredModification> Modifications { get; set; } = new();
+    [JsonPropertyName("Modifications")] // For compatibility reasons
+    public List<BoxStoredContent> Content { get; set; } = new();
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentModifications =>
+        Content.Where(content => content.Type == MinecraftContentType.Modification);
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentResourcepacks =>
+        Content.Where(content => content.Type == MinecraftContentType.ResourcePack);
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentDatapacks =>
+        Content.Where(content => content.Type == MinecraftContentType.DataPack);
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentShaders =>
+        Content.Where(content => content.Type == MinecraftContentType.ShaderPack);
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentWorlds =>
+        Content.Where(content => content.Type == MinecraftContentType.World);
+    [JsonIgnore]
+    public string ModificationCount => Content.Count.ToString();
+    [JsonIgnore]
+    public string ResourcepacksCount => ContentResourcepacks.Count().ToString();
+    [JsonIgnore]
+    public string DatapacksCount => ContentDatapacks.Count().ToString();
+    [JsonIgnore]
+    public string ShadersCount => ShadersCount.Count().ToString();
+    [JsonIgnore]
+    public string ContentWorldsCount => ContentWorlds.Count().ToString();
     public DateTime LastLaunchTime { get; set; }
     public BoxType Type { get; set; }
     
@@ -74,38 +99,45 @@ public class BoxManifest : ReactiveObject
         Version = version.Id;
     }
 
-    public bool HasModificationStrict(string id, string versionId, string platformId)
-        => Modifications.FirstOrDefault(m => m.Id == id
+    public bool HasContentStrict(string id, string versionId, string platformId)
+        => Content.FirstOrDefault(m => m.Id == id
                                              && m.PlatformId == platformId
                                              && m.VersionId == versionId) != null;
 
-    public bool HasModificationStrict(string id, string platformId)
-        => Modifications.FirstOrDefault(m => m.Id == id
+    public bool HasContentStrict(string id, string platformId)
+        => Content.FirstOrDefault(m => m.Id == id
                                              && m.PlatformId == platformId) != null;
 
-    public bool HasModificationSoft(Modification mod)
+    public bool HasContentSoft(MinecraftContent content)
     {
-        if (mod == null) return false;
+        if (content == null) return false;
         
-        BoxStoredModification? storedMod =
-            Modifications.FirstOrDefault(m => mod.IsSimilar(m) || HasModificationStrict(mod.Id, mod.ModPlatformId));
+        BoxStoredContent? storedContent =
+            Content.FirstOrDefault(m => content.IsSimilar(m) || HasContentStrict(content.Id, content.ModPlatformId));
 
-        return storedMod != null;
+        return storedContent != null;
     }
 
-    public BoxStoredModification? GetModification(string id)
-        => Modifications.FirstOrDefault(mod => mod.Id == id);
+    public BoxStoredContent? GetContent(string id)
+        => Content.FirstOrDefault(content => content.Id == id);
 
-    public void AddModification(string id, string versionId, string platformId, string[] filenames)
+    public BoxStoredContent? GetContentByVersion(string versionId)
+        => Content.FirstOrDefault(content => content.VersionId == versionId);
+
+    public BoxStoredContent[] GetContents(MinecraftContentType type)
+        => Content.Where(c => c.Type == type).ToArray();
+
+    public void AddContent(string id, MinecraftContentType type, string versionId, string platformId, string[] filenames)
     {
         if (filenames.Length == 0) return;
-        if (HasModificationStrict(id, versionId, platformId)) return;
+        if (HasContentStrict(id, versionId, platformId)) return;
 
-        lock (Modifications)
+        lock (Content)
         {
-            Modifications.Add(new BoxStoredModification
+            Content.Add(new BoxStoredContent
             {
                 Id = id,
+                Type = type,
                 PlatformId = platformId,
                 VersionId = versionId,
                 Filenames = filenames
@@ -113,16 +145,16 @@ public class BoxManifest : ReactiveObject
         }
     }
 
-    public void RemoveModification(string id, Box box)
+    public void RemoveContent(string id, Box box)
     {
-        BoxStoredModification? mod = GetModification(id);
-        if (mod == null) return;
+        BoxStoredContent? content = GetContent(id);
+        if (content == null) return;
 
-        mod.Delete(box.Folder.CompletePath);
+        content.Delete(box.Folder.CompletePath);
 
-        lock (Modifications)
+        lock (Content)
         {
-            Modifications.Remove(mod);
+            Content.Remove(content);
         }
     }
 
@@ -180,7 +212,7 @@ public class BoxManifest : ReactiveObject
     public override string ToString() => $"Manifest {Id} {Name}";
 }
 
-public class BoxStoredModification
+public class BoxStoredContent
 {
     public string Id { get; init; }
     public string VersionId { get; init; }
@@ -188,6 +220,7 @@ public class BoxStoredModification
     public string[] Filenames { get; set; }
     public string Name { get; set; }
     public string Author { get; set; }
+    public MinecraftContentType Type { get; set; } = MinecraftContentType.Modification;
 
     public void Delete(string boxRootPath)
     {

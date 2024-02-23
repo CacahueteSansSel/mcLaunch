@@ -5,7 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Popups;
@@ -17,7 +17,7 @@ public partial class ModsPopup : UserControl
         InitializeComponent();
     }
 
-    public ModsPopup(string title, string text, Box box, Modification[] mods)
+    public ModsPopup(string title, string text, Box box, MinecraftContent[] mods)
     {
         InitializeComponent();
 
@@ -27,15 +27,15 @@ public partial class ModsPopup : UserControl
         DownloadIconAndApplyAsync(box, mods);
     }
 
-    async void DownloadIconAndApplyAsync(Box box, Modification[] mods)
+    async void DownloadIconAndApplyAsync(Box box, MinecraftContent[] mods)
     {
         ModList.SetLoadingCircle(true);
         
-        foreach (Modification mod in mods)
+        foreach (MinecraftContent mod in mods)
             await mod.DownloadIconAsync();
 
         ModList.SetLoadingCircle(false);
-        ModList.SetModifications(mods);
+        ModList.SetContents(mods);
     }
 
     private void OKButtonClicked(object? sender, RoutedEventArgs e)

@@ -4,7 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Mods;
+using mcLaunch.Core.Contents;
 
 namespace mcLaunch.Views.Pages;
 

@@ -5,7 +5,7 @@
              xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="450"
              Background="{DynamicResource BackgroundDarker}"
-             x:Class="mcLaunch.Views.Pages.ModSearchPage">
+             x:Class="mcLaunch.Views.Pages.ContentSearchPage">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
     </UserControl.Styles>
@@ -21,7 +21,7 @@
                     <StackPanel Margin="1" Orientation="Vertical">
                         <StackPanel Margin="29 0 29 0" Orientation="Vertical">
                             <StackPanel Classes="smoothShowLeft" Orientation="Horizontal">
-                                <TextBlock Classes="title" Margin="0 20 0 0" FontSize="32">Install more mods on</TextBlock>
+                                <TextBlock x:Name="TitleText" Classes="title" Margin="0 20 0 0" FontSize="32">Install more mods on</TextBlock>
                                 <TextBlock Classes="title" Margin="8 20 0 0" FontSize="32" Text="{Binding Manifest.Name}"></TextBlock>
                             </StackPanel>
                             <DockPanel Margin="0 20 0 0">
@@ -31,7 +31,7 @@
                                 <TextBox x:Name="SearchBoxInput" VerticalContentAlignment="Center" Watermark="Search here"></TextBox>
                             </DockPanel>
                         </StackPanel>
-                        <views:ModificationList x:Name="ModList" Margin="38 10 38 20"></views:ModificationList>
+                        <views:MinecraftContentList x:Name="ModList" Margin="38 10 38 20"></views:MinecraftContentList>
                     </StackPanel>
                 </Border>
             </StackPanel>
