@@ -30,7 +30,7 @@ public class BoxManifest : ReactiveObject
     public string ModLoaderVersion { get; set; }
     public string DescriptionLine => $"{ModLoaderId.ToUpper()} {Version}";
     [JsonPropertyName("Modifications")] // For compatibility reasons
-    public List<BoxStoredContent> Content { get; set; } = new();
+    public List<BoxStoredContent> Content { get; set; } = [];
     [JsonIgnore]
     public IEnumerable<BoxStoredContent> ContentModifications =>
         Content.Where(content => content.Type == MinecraftContentType.Modification);
@@ -77,6 +77,7 @@ public class BoxManifest : ReactiveObject
     }
 
     [JsonIgnore] public ModLoaderSupport? ModLoader => ModLoaderManager.Get(ModLoaderId);
+    public List<BoxBackup> Backups { get; set; } = [];
 
     public BoxManifest()
     {
@@ -234,6 +235,36 @@ public class BoxStoredContent
             if (File.Exists(path)) File.Delete(path);
         }
     }
+}
+
+public class BoxBackup
+{
+    public string Name { get; set; }
+    public BoxBackupType Type { get; set; }
+    public DateTime CreationTime { get; set; }
+    public string Filename { get; set; }
+
+    [JsonIgnore] public bool IsCompleteBackup => Type == BoxBackupType.Complete;
+    [JsonIgnore] public bool IsPartialBackup => Type == BoxBackupType.Partial;
+
+    public BoxBackup()
+    {
+        
+    }
+
+    public BoxBackup(string name, BoxBackupType type, DateTime creationTime, string filename)
+    {
+        Name = name;
+        Type = type;
+        CreationTime = creationTime;
+        Filename = filename;
+    }
+}
+
+public enum BoxBackupType
+{
+    Complete,
+    Partial
 }
 
 public enum BoxType

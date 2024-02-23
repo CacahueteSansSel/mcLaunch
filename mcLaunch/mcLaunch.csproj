@@ -199,6 +199,10 @@
       <AvaloniaResource Include="resources\icons\datapack.png" />
       <None Remove="resources\icons\shader.png" />
       <AvaloniaResource Include="resources\icons\shader.png" />
+      <None Remove="resources\icons\backups.png" />
+      <AvaloniaResource Include="resources\icons\backups.png" />
+      <None Remove="resources\default_backup_logo.png" />
+      <AvaloniaResource Include="resources\default_backup_logo.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -246,6 +250,18 @@
       </Compile>
       <Compile Update="Views\Popups\UpdateChangelogPopup.axaml.cs">
         <DependentUpon>UpdateChangelogPopup.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\BackupList.axaml.cs">
+        <DependentUpon>BackupList.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Pages\BoxDetails\BackupListSubControl.axaml.cs">
+        <DependentUpon>BackupListSubControl.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Popups\NewBackupPopup.axaml.cs">
+        <DependentUpon>NewBackupPopup.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

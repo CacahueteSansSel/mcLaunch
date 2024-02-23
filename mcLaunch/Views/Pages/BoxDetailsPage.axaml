@@ -116,6 +116,9 @@
                                     <Button Classes="transparent" Click="SubControlSettingsClicked" ToolTip.Tip="Game Settings">
                                         <Image Source="/resources/icons/game_settings.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
                                     </Button>
+                                    <Button Classes="transparent" Click="SubControlBackupsClicked" ToolTip.Tip="Backups">
+                                        <Image Source="/resources/icons/backups.png" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13" Height="13"></Image>
+                                    </Button>
                                 </StackPanel>
                                 <TextBlock x:Name="SubControlTitleText" IsVisible="True" FontSize="13" Classes="light" Margin="38 0 38 5">MODS</TextBlock>
                             </StackPanel>

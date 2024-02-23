@@ -338,6 +338,11 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         SetSubControl(new CrashReportListSubControl());
     }
 
+    private void SubControlBackupsClicked(object? sender, RoutedEventArgs e)
+    {
+        SetSubControl(new BackupListSubControl());
+    }
+
     private async void MinecraftButtonClicked(object? sender, RoutedEventArgs e)
     {
         VersionSelectWindow selectWindow = new("Select the new Minecraft version");

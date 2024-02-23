@@ -1,0 +1,55 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d"
+             Width="600" Height="450"
+             x:Class="mcLaunch.Views.Popups.NewBackupPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <StackPanel Margin="38">
+            <TextBlock Classes="title" FontSize="25">New backup</TextBlock>
+            <DockPanel Margin="0 20 0 0">
+                <StackPanel>
+                    <TextBlock Classes="light" Margin="0 0 0 0">Backup of</TextBlock>
+                    <views:BoxEntryCard x:Name="BackupOfBoxCard"></views:BoxEntryCard>
+                </StackPanel>
+                <StackPanel Margin="20 0 0 0" Orientation="Vertical">
+                    <TextBlock Classes="light" Margin="0 0 0 3">Backup Name</TextBlock>
+                    <TextBox x:Name="BackupNameTb" Watermark="Name" UseFloatingWatermark="False"></TextBox>
+                    <TextBlock Classes="light" Margin="0 20 0 3">Backup Type</TextBlock>
+                    <RadioButton x:Name="CompleteBackupRadioButton" IsChecked="True">
+                        <StackPanel VerticalAlignment="Top">
+                            <TextBlock Classes="title">Complete</TextBlock>
+                            <TextBlock Classes="light" TextWrapping="Wrap">
+                                Make a complete copy of your box. It includes every file, including the icon, any metadata, your worlds, config files, etc.
+                            </TextBlock>
+                        </StackPanel>
+                    </RadioButton>
+                    <Panel Height="10"></Panel>
+                    <RadioButton x:Name="PartialBackupRadioButton">
+                        <StackPanel VerticalAlignment="Top">
+                            <TextBlock Classes="title">Partial</TextBlock>
+                            <TextBlock Classes="light" TextWrapping="Wrap">
+                                Backup only what's essential.
+                            </TextBlock>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+            </DockPanel>
+            <DockPanel Margin="0 20 0 0">
+                <Button DockPanel.Dock="Right" x:Name="CancelButton" Classes="secondary" Click="CancelButtonClicked">Cancel</Button>
+                <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="primary" Click="CreateBackupButtonClicked" Height="40">
+                    <Panel>
+                        <TextBlock x:Name="CreateBackupButtonText">Create backup</TextBlock>
+                        <views:LoadingCircle x:Name="LoadingCircle" IsVisible="False" RenderTransform="scale(0.65)"></views:LoadingCircle>
+                    </Panel>
+                </Button>
+                <Panel></Panel>
+            </DockPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

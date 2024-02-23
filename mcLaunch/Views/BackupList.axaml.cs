@@ -21,33 +21,24 @@ using ReactiveUI;
 
 namespace mcLaunch.Views;
 
-public partial class ServerList : UserControl
+public partial class BackupList : UserControl
 {
     private Box lastBox;
     private BoxDetailsPage launchPage;
     private string lastQuery;
 
-    public bool HideInstalledBadges { get; set; }
-
-    public ServerList()
+    public BackupList()
     {
         InitializeComponent();
 
         DataContext = new Data();
-        if (Design.IsDesignMode) SetDefaultServers();
+        if (Design.IsDesignMode) SetDefaultBackups();
     }
 
-    async void SetDefaultServers()
+    async void SetDefaultBackups()
     {
-        await SetServersAsync([
-            new MinecraftServer
-            {
-                IsHidden = false,
-                Address = "example.com",
-                IconData = Array.Empty<byte>(),
-                Name = "Test Server",
-                Port = "25565"
-            }
+        await SetBackupsAsync([
+            new BoxBackup("Test Backup", BoxBackupType.Complete, DateTime.Now, "sample.tar.gz")
         ]);
     }
 
@@ -61,14 +52,12 @@ public partial class ServerList : UserControl
         lastBox = box;
     }
 
-    public async Task SetServersAsync(MinecraftServer[] servers)
+    public async Task SetBackupsAsync(BoxBackup[] backups)
     {
-        await LoadServerIconsAsync(servers);
-
         Data ctx = (Data) DataContext;
-        ctx.Servers = servers;
+        ctx.Backups = backups;
 
-        NtsBanner.IsVisible = servers.Length == 0;
+        NtsBanner.IsVisible = backups.Length == 0;
     }
 
     async Task LoadServerIconsAsync(MinecraftServer[] servers)
@@ -90,13 +79,13 @@ public partial class ServerList : UserControl
 
     public class Data : ReactiveObject
     {
-        MinecraftServer[] servers;
+        BoxBackup[] backups;
         int page;
 
-        public MinecraftServer[] Servers
+        public BoxBackup[] Backups
         {
-            get => servers;
-            set => this.RaiseAndSetIfChanged(ref servers, value);
+            get => backups;
+            set => this.RaiseAndSetIfChanged(ref backups, value);
         }
 
         public int Page
@@ -106,17 +95,17 @@ public partial class ServerList : UserControl
         }
     }
 
-    private void WorldSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void BackupSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (e.AddedItems.Count > 0 && launchPage != null)
         {
-            MinecraftServer server = (MinecraftServer) e.AddedItems[0];
+            BoxBackup backup = (BoxBackup) e.AddedItems[0];
 
-            Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Connect to {server.Name} ?",
-                $"Minecraft will start and automatically connect to {server.Name} at {server.Address}",
-                () => { launchPage.Run(server.Address, server.Port); }));
+            Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Connect to {backup.Name} ?",
+                $"Minecraft will start and automatically connect to {backup.Name} at {backup.Filename}",
+                () => { }));
         }
 
-        ServersList.UnselectAll();
+        BackupsList.UnselectAll();
     }
 }

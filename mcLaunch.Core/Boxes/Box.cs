@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Formats.Tar;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -173,6 +174,51 @@ public class Box : IEquatable<Box>
         {
             // TODO: Set the manifest icon to default
         }
+    }
+
+    public bool HasBackup(string name)
+        => Manifest.Backups.Any(backup => backup.Name == name);
+
+    public BoxBackup? GetBackup(string name)
+        => Manifest.Backups.FirstOrDefault(backup => backup.Name == name);
+
+    public async Task<BoxBackup?> CreateBackupAsync(string name)
+    {
+        if (HasBackup(name)) return null;
+
+        string path = $"backups/{name}.tar.gz";
+        string fullPath = $"{Path}/{path}";
+
+        Directory.CreateDirectory($"{Path}/backups");
+
+        await TarFile.CreateFromDirectoryAsync(Path, fullPath, false);
+
+        BoxBackup backup = new(name, BoxBackupType.Complete, DateTime.Now, path);
+        Manifest.Backups.Add(backup);
+        SaveManifest();
+        
+        return backup;
+    }
+
+    public async Task<bool> RestoreBackupAsync(string name)
+    {
+        BoxBackup? backup = GetBackup(name);
+        if (backup == null) return false;
+
+        switch (backup.Type)
+        {
+            case BoxBackupType.Complete:
+                string archiveFullPath = $"{Path}/{backup.Filename}";
+                if (!File.Exists(archiveFullPath)) return false;
+
+                await TarFile.ExtractToDirectoryAsync(archiveFullPath, Path, true);
+                
+                return true;
+            case BoxBackupType.Partial:
+                break;
+        }
+        
+        return false;
     }
 
     public string[] InstallDatapack(string versionId, string filename)
