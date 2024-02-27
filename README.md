@@ -27,7 +27,7 @@ Download `mcLaunch-linux.zip` from [the latest release](https://github.com/Cacah
 
 # Build
 
-Make sure to have the **.NET 6.0 SDK** installed, then clone the project.
+Make sure to have the [**.NET 8.0 SDK**](https://dotnet.microsoft.com/en-us/download) installed, then clone the project.
 
 ## Set your own credentials keys
 
