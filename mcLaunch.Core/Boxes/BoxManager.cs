@@ -28,6 +28,7 @@ public static class BoxManager
     public static AssetsDownloader AssetsDownloader => assetsDownloader;
     public static LibrariesDownloader LibrariesDownloader => librariesDownloader;
     public static JVMDownloader JVMDownloader => jvmDownloader;
+    public static int BoxCount => Directory.GetDirectories(BoxesPath).Length;
 
     public static Box[] LoadLocalBoxes(bool includeTemp = false)
     {

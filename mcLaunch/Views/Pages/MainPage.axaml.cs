@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Managers;
@@ -26,6 +27,13 @@ public partial class MainPage : UserControl, ITopLevelPageControl
         anonSession = AnonymityManager.CreateSession();
 
         PopulateBoxList();
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        
+        DiscordManager.SetPresenceBoxList();
     }
 
     public async void PopulateBoxList(string? query = null, bool reloadAll = true)

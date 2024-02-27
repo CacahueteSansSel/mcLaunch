@@ -21,6 +21,7 @@ using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Contents.Packs;
+using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.BoxDetails;
 using mcLaunch.Views.Popups;
@@ -100,6 +101,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     {
         Box?.SetWatching(true);
         Reload();
+        
+        DiscordManager.SetPresenceBox(Box);
 
         base.OnLoaded(e);
     }
@@ -161,6 +164,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         }
 
         Navigation.ShowPopup(new GameLaunchPopup());
+        DiscordManager.SetPresenceLaunching(Box);
 
         Box.UseDedicatedGraphics = Utilities.Settings.Instance.ForceDedicatedGraphics;
         Box.SetExposeLauncher(Utilities.Settings.Instance.ExposeLauncherNameToMinecraft);

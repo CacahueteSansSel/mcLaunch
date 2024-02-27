@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
+using mcLaunch.Managers;
 
 namespace mcLaunch.Views.Pages;
 
@@ -36,6 +37,13 @@ public partial class ContentSearchPage : UserControl, ITopLevelPageControl
         ModList.Search(box, "");
 
         TitleText.Text = $"Browse more {ContentNamePlural.ToLower()} on";
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        
+        DiscordManager.SetPresenceEditingBox(Box);
     }
 
     private void SearchButtonClicked(object? sender, RoutedEventArgs e)

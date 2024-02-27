@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Contents;
+using mcLaunch.Managers;
 
 namespace mcLaunch.Views.Pages;
 
@@ -22,6 +23,13 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
         InitializeComponent();
         
         if (!Design.IsDesignMode) LoadModpacksAsync();
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        
+        DiscordManager.SetPresenceModpacksList();
     }
 
     async void Search(int page, string query, string minecraftVersion)

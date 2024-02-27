@@ -13,15 +13,19 @@ namespace mcLaunch.Utilities;
 public class Settings
 {
     public static Settings? Instance { get; private set; }
-    
+
     [Setting(Name = "Expose launcher name to Minecraft", Group = "Minecraft")]
-    public bool ExposeLauncherNameToMinecraft { get; set; }
+    public bool ExposeLauncherNameToMinecraft { get; set; } = true;
     [Setting(Name = "Enable snapshots versions of Minecraft", Group = "Minecraft")]
     public bool EnableSnapshots { get; set; }
     [Setting(Name = "Force dedicated graphics", Group = "Minecraft")]
-    public bool ForceDedicatedGraphics { get; set; }
+    public bool ForceDedicatedGraphics { get; set; } = true;
     [Setting(Name = "Anonymize box name & icons", Group = "Display")]
     public bool AnonymizeBoxIdentity { get; set; }
+    [Setting(Name = "Use Discord's Rich Presence", Group = "Discord")]
+    public bool UseDiscordRpc { get; set; } = true;
+    [Setting(Name = "Show box infos on Discord's Rich Presence", Group = "Discord")]
+    public bool ShowBoxInfosOnDiscordRpc { get; set; }
 
     public Settings()
     {
@@ -32,6 +36,7 @@ public class Settings
     {
         ExposeLauncherNameToMinecraft = true;
         ForceDedicatedGraphics = true;
+        UseDiscordRpc = true;
         
         return this;
     }

@@ -41,8 +41,16 @@ public partial class App : Application
         AuthenticationManager.Init(Credentials.Get("azure"), Credentials.Get("tokens"));
         DefaultsManager.Init();
         AnonymityManager.Init();
+        DiscordManager.Init();
         MinecraftVersion.ModelArguments.Default =
             JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(InternalSettings.Get("default_args.json"))!;
+        
+        AppDomain.CurrentDomain.ProcessExit += ShutdownManagers;
+    }
+
+    private void ShutdownManagers(object? sender, EventArgs e)
+    {
+        DiscordManager.Shutdown();
     }
 
     public override async void OnFrameworkInitializationCompleted()
