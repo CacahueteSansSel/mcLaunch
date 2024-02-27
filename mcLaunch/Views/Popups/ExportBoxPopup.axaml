@@ -2,12 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="500"
              Width="450" Height="500"
              x:Class="mcLaunch.Views.Popups.ExportBoxPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">
@@ -15,7 +14,7 @@
             <TextBlock DockPanel.Dock="Top" Margin="0 20 0 0" TextWrapping="WrapWithOverflow">Please select the format to export to</TextBlock>
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" Classes="secondary" Click="ClosePopupButtonClicked">Close</Button>
-                <Panel></Panel>
+                <Panel />
             </DockPanel>
             <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Spacing="10" Margin="0 20 0 0">
                 <Button Classes="secondary" Width="370" Click="ExportBoxButtonClicked">

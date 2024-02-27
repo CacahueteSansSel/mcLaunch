@@ -1,12 +1,11 @@
-﻿using System.Text.Json.Serialization;
-using Cacahuete.MinecraftLib.Models;
+﻿using Cacahuete.MinecraftLib.Models;
 
 namespace Cacahuete.MinecraftLib.Auth;
 
 public abstract class AuthenticationPlatform
 {
     public delegate void ProgressCallback(string stepName, int stepIndex, int maxStepCount);
-    
+
     public Action<BrowserLoginCallbackParameters> BrowserLoginCallback { get; private set; }
     public abstract string UserType { get; }
     public abstract string ClientId { get; }
@@ -34,20 +33,8 @@ public class BrowserLoginCallbackParameters
 
 public class MinecraftAuthenticationResult
 {
-    public bool IsSuccess { get; set; }
-    public string ErrorCode { get; set; }
-    public string Message { get; set; }
-
-    public string Uuid { get; set; }
-    public string Xuid { get; set; }
-    public string AccessToken { get; set; }
-    public string Username { get; set; }
-    
-    public MinecraftProfile Profile { get; set; }
-
     public MinecraftAuthenticationResult()
     {
-        
     }
 
     public MinecraftAuthenticationResult(string errorMessage, string code = null)
@@ -69,6 +56,17 @@ public class MinecraftAuthenticationResult
 
         IsSuccess = true;
     }
+
+    public bool IsSuccess { get; set; }
+    public string ErrorCode { get; set; }
+    public string Message { get; set; }
+
+    public string Uuid { get; set; }
+    public string Xuid { get; set; }
+    public string AccessToken { get; set; }
+    public string Username { get; set; }
+
+    public MinecraftProfile Profile { get; set; }
 
     public bool Validate()
     {

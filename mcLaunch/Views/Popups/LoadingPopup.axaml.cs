@@ -1,8 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using mcLaunch.Core.Managers;
-using ReactiveUI;
+﻿using Avalonia.Controls;
 
 namespace mcLaunch.Views.Popups;
 

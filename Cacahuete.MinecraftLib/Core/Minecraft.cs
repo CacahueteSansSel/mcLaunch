@@ -6,30 +6,30 @@ namespace Cacahuete.MinecraftLib.Core;
 
 public class Minecraft
 {
-    private Dictionary<string, string> args = new();
-    private MinecraftFolder sysFolder;
-    private bool disableMultiplayer;
+    private readonly Dictionary<string, string> args = new();
     private bool disableChat;
-    private string? serverAddress;
-    private uint serverPort;
+    private bool disableMultiplayer;
+    private string? jvmPath;
     private QuickPlayWorldType? quickPlayMode;
     private string? quickPlayPath;
     private string? quickPlaySingleplayerWorldName;
-    private string? jvmPath;
+    private string? serverAddress;
+    private uint serverPort;
+    private MinecraftFolder sysFolder;
     private bool useDedicatedGraphics;
-
-    public MinecraftVersion Version { get; }
-    public MinecraftFolder Folder { get; }
 
     public Minecraft(MinecraftVersion version, MinecraftFolder folder)
     {
         Version = version;
         Folder = folder;
-        
+
         args["version_name"] = version.Id;
         args["version_type"] = version.Type;
         args["game_directory"] = folder.CompletePath;
     }
+
+    public MinecraftVersion Version { get; }
+    public MinecraftFolder Folder { get; }
 
     public Minecraft WithSystemFolder(MinecraftFolder systemFolder)
     {
@@ -62,7 +62,7 @@ public class Minecraft
         args["user_type"] = platform.UserType;
         args["auth_session"] = $"token:{auth.AccessToken}:{auth.Uuid}";
         args["auth_access_token"] = auth.AccessToken;
-        
+
         return this;
     }
 
@@ -111,11 +111,11 @@ public class Minecraft
     {
         string classPathSeparator = OperatingSystem.IsWindows() ? ";" : ":";
         string jarPath = $"{sysFolder.Path}/versions/{Version.Id}/{Version.Id}.jar";
-        
+
         string assetsRoot = Path.GetFullPath(assets.VirtualPath ?? assets.Path);
         string classPath = string.Join(classPathSeparator, libraries.ClassPath) + classPathSeparator;
         string nativesPath = Path.GetFullPath(libraries.NativesPath);
-        
+
         jvmPath = jvm.GetJVMPath(Utilities.GetJavaPlatformIdentifier(), Version.JavaVersion?.Component ?? "jre-legacy")
             .TrimEnd('/');
 
@@ -129,7 +129,7 @@ public class Minecraft
         args["classpath_separator"] = classPathSeparator;
         args["natives_directory"] = nativesPath;
         args["library_directory"] = $"{sysFolder.CompletePath}/libraries";
-        
+
         return this;
     }
 
@@ -137,15 +137,9 @@ public class Minecraft
     {
         string jvm = jvmPath ?? sysFolder.GetJVM(Version.JavaVersion!.Component);
 
-        if (Version.Arguments == null)
-        {
-            Version.Arguments = MinecraftVersion.ModelArguments.Default;
-        }
+        if (Version.Arguments == null) Version.Arguments = MinecraftVersion.ModelArguments.Default;
 
-        if (Version.Arguments.JVM == null)
-        {
-            Version.Arguments.JVM = MinecraftVersion.ModelArguments.Default.JVM;
-        }
+        if (Version.Arguments.JVM == null) Version.Arguments.JVM = MinecraftVersion.ModelArguments.Default.JVM;
 
         string builtArgs = Version.Arguments.Build(args, Version.MainClass);
 
@@ -193,13 +187,11 @@ public class Minecraft
         };
 
         if (useDedicatedGraphics)
-        {
             if (OperatingSystem.IsLinux() && File.Exists("/usr/bin/prime-run"))
             {
                 info.Arguments = $"{info.FileName} {info.Arguments}";
                 info.FileName = "/usr/bin/prime-run";
             }
-        }
 
         if (!OperatingSystem.IsWindows())
         {

@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Web;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Contents;
 using mcLaunch.Utilities;
+using ReverseMarkdown;
 
 namespace mcLaunch.Views.Popups;
 
 public partial class ChangelogPopup : UserControl
 {
-    private Action confirmCallback;
-    private Action cancelCallback;
-    
+    private readonly Action cancelCallback;
+    private readonly Action confirmCallback;
+
     public ChangelogPopup()
     {
         InitializeComponent();
@@ -23,7 +22,7 @@ public partial class ChangelogPopup : UserControl
     public ChangelogPopup(MinecraftContent mod, Action confirm, Action cancel)
     {
         InitializeComponent();
-        
+
         confirmCallback = confirm;
         cancelCallback = cancel;
 
@@ -33,7 +32,7 @@ public partial class ChangelogPopup : UserControl
         Regex isHtmlRegex = new Regex("<\\/\\w+>");
         if (isHtmlRegex.IsMatch(mod.Changelog))
         {
-            var converter = new ReverseMarkdown.Converter();
+            var converter = new Converter();
             MarkdownArea.Markdown = HttpUtility.HtmlDecode(converter.Convert(mod.Changelog));
         }
         else

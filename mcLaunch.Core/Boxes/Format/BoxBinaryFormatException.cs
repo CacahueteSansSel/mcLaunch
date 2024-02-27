@@ -2,5 +2,7 @@
 
 public class BoxBinaryFormatException : Exception
 {
-    public BoxBinaryFormatException(string message) : base(message) { }
+    public BoxBinaryFormatException(string message) : base(message)
+    {
+    }
 }

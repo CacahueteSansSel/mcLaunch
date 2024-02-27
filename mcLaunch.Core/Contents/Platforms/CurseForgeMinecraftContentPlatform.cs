@@ -3,13 +3,12 @@ using System.Diagnostics;
 using CurseForge.Models;
 using CurseForge.Models.Files;
 using CurseForge.Models.Fingerprints;
-using CurseForge.Models.Games;
 using CurseForge.Models.Mods;
-using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents.Packs;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
+using mcLaunch.Core.Utilities;
 using CurseForgeClient = CurseForge.CurseForge;
 using File = CurseForge.Models.Files.File;
 
@@ -17,7 +16,6 @@ namespace mcLaunch.Core.Contents.Platforms;
 
 public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
 {
-    public static CurseForgeMinecraftContentPlatform Instance { get; private set; }
     public const int MinecraftGameId = 432;
     public const int ModpacksClassId = 4471;
     public const int ModsClassId = 6;
@@ -26,10 +24,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
     public const int DataPacksClassId = 6945;
     public const int WorldsClassId = 17;
 
-    CurseForgeClient client;
-    ConcurrentDictionary<string, MinecraftContent> contentCache = new();
-
-    public override string Name { get; } = "Curseforge";
+    private readonly CurseForgeClient client;
+    private readonly ConcurrentDictionary<string, MinecraftContent> contentCache = new();
 
     public CurseForgeMinecraftContentPlatform(string apiKey)
     {
@@ -37,7 +33,11 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         client = new CurseForgeClient(apiKey, "mcLaunch/1.0.0");
     }
 
-    uint GetClassIdForType(MinecraftContentType type)
+    public static CurseForgeMinecraftContentPlatform Instance { get; private set; }
+
+    public override string Name { get; } = "Curseforge";
+
+    private uint GetClassIdForType(MinecraftContentType type)
     {
         return type switch
         {
@@ -50,7 +50,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         };
     }
 
-    MinecraftContentType GetTypeFromClassId(uint classId)
+    private MinecraftContentType GetTypeFromClassId(uint classId)
     {
         return classId switch
         {
@@ -73,7 +73,10 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             if (box != null && !Enum.TryParse(box.Manifest.ModLoaderId, true, out type))
                 return PaginatedResponse<MinecraftContent>.Empty;
         }
-        else type = ModLoaderType.Any;
+        else
+        {
+            type = ModLoaderType.Any;
+        }
 
         CursePaginatedResponse<List<Mod>> resp;
 
@@ -81,7 +84,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         {
             resp = await client.SearchMods(MinecraftGameId,
                 gameVersion: box?.Manifest.Version,
-                modLoaderType: (box == null || contentType != MinecraftContentType.Modification) ? null : type,
+                modLoaderType: box == null || contentType != MinecraftContentType.Modification ? null : type,
                 sortField: ModsSearchSortField.Popularity,
                 sortOrder: SortOrder.Descending,
                 pageSize: 10,
@@ -100,13 +103,9 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             List<string> minecraftVersions = new();
 
             foreach (var file in mod.LatestFiles)
-            {
-                foreach (string ver in file.GameVersions)
-                {
-                    if (!minecraftVersions.Contains(ver) && ver.Contains('.'))
-                        minecraftVersions.Add(ver);
-                }
-            }
+            foreach (string ver in file.GameVersions)
+                if (!minecraftVersions.Contains(ver) && ver.Contains('.'))
+                    minecraftVersions.Add(ver);
 
             MinecraftContent m = new MinecraftContent
             {
@@ -155,7 +154,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             return PaginatedResponse<PlatformModpack>.Empty;
         }
 
-        PlatformModpack[] modpacks = resp.Data.Select(modpack => new PlatformModpack()
+        PlatformModpack[] modpacks = resp.Data.Select(modpack => new PlatformModpack
         {
             Id = modpack.Id.ToString(),
             Name = modpack.Name,
@@ -180,11 +179,11 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
 
     public override async Task<MinecraftContent> GetContentAsync(string id)
     {
-        if (!uint.TryParse(id, out uint intId)) 
+        if (!uint.TryParse(id, out uint intId))
             return null;
         if (contentCache.TryGetValue(id, out var cachedContent))
             return cachedContent;
-        
+
         string cacheName = $"content-curseforge-{id}";
         if (CacheManager.HasContent(cacheName))
         {
@@ -205,14 +204,10 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             List<string> minecraftVersions = new();
 
             foreach (var file in cfMod.LatestFiles)
-            {
-                foreach (string ver in file.GameVersions)
-                {
-                    if (!minecraftVersions.Contains(ver) && ver.Contains('.'))
-                        minecraftVersions.Add(ver);
-                }
-            }
-            
+            foreach (string ver in file.GameVersions)
+                if (!minecraftVersions.Contains(ver) && ver.Contains('.'))
+                    minecraftVersions.Add(ver);
+
 
             MinecraftContent content = new MinecraftContent
             {
@@ -247,10 +242,10 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         string? minecraftVersionId)
     {
         if (!uint.TryParse(content.Id, out uint id)) return [];
-        
+
         try
         {
-            ModLoaderType? modLoader = string.IsNullOrWhiteSpace(modLoaderId) 
+            ModLoaderType? modLoader = string.IsNullOrWhiteSpace(modLoaderId)
                                        || content.Type != MinecraftContentType.Modification
                 ? null
                 : Enum.Parse<ModLoaderType>(modLoaderId, true);
@@ -287,17 +282,13 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         {
             return null;
         }
-        
+
         List<string> minecraftVersions = new();
 
         foreach (var file in cfMod.LatestFiles)
-        {
-            foreach (string ver in file.GameVersions)
-            {
-                if (!minecraftVersions.Contains(ver) && ver.Contains('.'))
-                    minecraftVersions.Add(ver);
-            }
-        }
+        foreach (string ver in file.GameVersions)
+            if (!minecraftVersions.Contains(ver) && ver.Contains('.'))
+                minecraftVersions.Add(ver);
 
         PlatformModpack.ModpackVersion[] versions = cfMod.LatestFiles.Select(pv => new PlatformModpack.ModpackVersion
         {
@@ -330,13 +321,14 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         return mod;
     }
 
-    public override async Task<PaginatedResponse<ContentDependency>> GetContentDependenciesAsync(string id, string modLoaderId,
+    public override async Task<PaginatedResponse<ContentDependency>> GetContentDependenciesAsync(string id,
+        string modLoaderId,
         string versionId,
         string minecraftVersionId)
     {
-        if (!uint.TryParse(id, out uint intId)) 
+        if (!uint.TryParse(id, out uint intId))
             return null;
-        
+
         try
         {
             List<File> files = (await client.GetModFiles(intId, minecraftVersionId,
@@ -348,12 +340,13 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
                 file ??= files.FirstOrDefault(f => f.Id == uint.Parse(versionId));
                 if (file == null) return new PaginatedResponse<ContentDependency>(0, 1, []);
 
-                return new PaginatedResponse<ContentDependency>(0, 1, file.Dependencies.Select(dep => new ContentDependency
-                {
-                    Content = GetContentAsync(dep.ModId.ToString()).GetAwaiter().GetResult(),
-                    VersionId = GetContentAsync(dep.ModId.ToString()).GetAwaiter().GetResult()?.LatestVersion,
-                    Type = ToRelationType(dep.RelationType)
-                }).ToArray());
+                return new PaginatedResponse<ContentDependency>(0, 1, file.Dependencies.Select(dep =>
+                    new ContentDependency
+                    {
+                        Content = GetContentAsync(dep.ModId.ToString()).GetAwaiter().GetResult(),
+                        VersionId = GetContentAsync(dep.ModId.ToString()).GetAwaiter().GetResult()?.LatestVersion,
+                        Type = ToRelationType(dep.RelationType)
+                    }).ToArray());
             });
         }
         catch (HttpRequestException)
@@ -362,7 +355,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         }
     }
 
-    DependencyRelationType ToRelationType(FileRelationType fileRelationType)
+    private DependencyRelationType ToRelationType(FileRelationType fileRelationType)
     {
         switch (fileRelationType)
         {
@@ -377,7 +370,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         }
     }
 
-    async Task<string[]?> InstallFileAsync(Box targetBox, File file, bool installOptional, MinecraftContentType contentType)
+    private async Task<string[]?> InstallFileAsync(Box targetBox, File file, bool installOptional,
+        MinecraftContentType contentType)
     {
         if (!file.GameVersions.Contains(targetBox.Manifest.Version))
         {
@@ -385,8 +379,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             return null;
         }
 
-        if (file.Dependencies != null && file.Dependencies.Count > 0 && contentType == MinecraftContentType.Modification)
-        {
+        if (file.Dependencies != null && file.Dependencies.Count > 0 &&
+            contentType == MinecraftContentType.Modification)
             foreach (FileDependency dep in file.Dependencies)
             {
                 if (installOptional)
@@ -402,7 +396,6 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
                 Mod cfMod = (await client.GetMod(dep.ModId)).Data;
                 await InstallFileAsync(targetBox, cfMod.LatestFiles[0], false, MinecraftContentType.Modification);
             }
-        }
 
         if (targetBox.Manifest.HasContentStrict(file.ModId.ToString(), Name))
         {
@@ -461,7 +454,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         if (!targetBox.HasContentSoft(content))
         {
             filenames = await InstallFileAsync(targetBox, version.Data, installOptional, content.Type);
-            
+
             if (filenames == null)
             {
                 await DownloadManager.ProcessAll();
@@ -487,9 +480,9 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
 
     public override async Task<MinecraftContent> DownloadContentInfosAsync(MinecraftContent content)
     {
-        if (!uint.TryParse(content.Id, out uint id)) 
+        if (!uint.TryParse(content.Id, out uint id))
             return null;
-        
+
         Mod cfMod;
 
         try
@@ -501,7 +494,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             return content;
         }
 
-        content.Changelog = (cfMod.LatestFiles == null || cfMod.LatestFiles.FirstOrDefault() == null)
+        content.Changelog = cfMod.LatestFiles == null || cfMod.LatestFiles.FirstOrDefault() == null
             ? string.Empty
             : (await client.GetModFileChangelog(cfMod.Id, cfMod.LatestFiles.FirstOrDefault().Id)).Data;
         content.LongDescriptionBody = (await client.GetModDescription(id)).Data;

@@ -5,9 +5,7 @@ namespace Cacahuete.MinecraftLib.Models.Forge;
 
 public class ForgePromotionsManifest
 {
-    [JsonPropertyName("homepage")]
-    public string Homepage { get; set; }
-    
-    [JsonPropertyName("promos")]
-    public JsonElement Promos { get; set; }
+    [JsonPropertyName("homepage")] public string Homepage { get; set; }
+
+    [JsonPropertyName("promos")] public JsonElement Promos { get; set; }
 }

@@ -1,14 +1,10 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 
 namespace mcLaunch.Views.Pages.Settings;
 
 public partial class SettingElement : UserControl
 {
-    public Setting Setting { get; private set; }
-    
     public SettingElement()
     {
         InitializeComponent();
@@ -17,14 +13,17 @@ public partial class SettingElement : UserControl
     public SettingElement(Setting setting)
     {
         InitializeComponent();
-        
+
         Setting = setting;
 
         Label.Text = setting.Name;
         BooleanCheckbox.IsVisible = setting.Type == SettingType.Boolean;
 
-        if (BooleanCheckbox.IsVisible) BooleanCheckbox.IsChecked = (bool)setting.Property.GetValue(Utilities.Settings.Instance)!;
+        if (BooleanCheckbox.IsVisible)
+            BooleanCheckbox.IsChecked = (bool) setting.Property.GetValue(Utilities.Settings.Instance)!;
     }
+
+    public Setting Setting { get; }
 
     private void BooleanCheckboxChecked(object? sender, RoutedEventArgs e)
     {

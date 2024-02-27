@@ -18,9 +18,9 @@ public static class Encryption
         using MemoryStream stream = new MemoryStream();
         using CryptoStream cryptoStream = new CryptoStream(stream, encryptor, CryptoStreamMode.Write);
         using BinaryWriter writer = new BinaryWriter(cryptoStream);
-        
+
         writer.Write(data);
-        
+
         cryptoStream.FlushFinalBlock();
 
         return (stream.ToArray(), iv);
@@ -42,8 +42,8 @@ public static class Encryption
         {
             int b = cryptoStream.ReadByte();
             if (b == -1) break;
-            
-            buffer.Add((byte)b);
+
+            buffer.Add((byte) b);
         }
 
         return buffer.ToArray();

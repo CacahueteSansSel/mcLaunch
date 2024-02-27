@@ -10,6 +10,6 @@ public class FabricModLoaderVersion : ModLoaderVersion
         string url =
             $"{FabricModLoaderSupport.Url}/v2/versions/loader/{minecraftVersionId}/{Name}/profile/json";
 
-        return await Api.GetAsync<MinecraftVersion>(url, patchDateTimes: true);
+        return await Api.GetAsync<MinecraftVersion>(url, true);
     }
 }

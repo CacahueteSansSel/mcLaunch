@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj" />
+        <ProjectReference Include="..\Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj"/>
     </ItemGroup>
 
 </Project>

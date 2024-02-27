@@ -6,12 +6,12 @@
              x:Class="mcLaunch.Views.Pages.ErrorPage"
              Background="{DynamicResource BackgroundDarker}">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <StackPanel Orientation="Vertical" Spacing="20" Margin="100">
         <TextBlock FontSize="25" Classes="title">An error occurred</TextBlock>
         <TextBlock FontSize="15" Classes="light">An error occurred and the launcher needs to stop immediately</TextBlock>
-        <TextBlock FontSize="15" Classes="light" Text="{Binding Text}"></TextBlock>
+        <TextBlock FontSize="15" Classes="light" Text="{Binding Text}" />
         <Button Classes="primary" Click="ExitLauncherButtonClicked">Exit launcher</Button>
     </StackPanel>
 </UserControl>

@@ -17,13 +17,7 @@ namespace mcLaunch.Core.Contents.Platforms;
 
 public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 {
-    public static ModrinthMinecraftContentPlatform Instance { get; private set; }
-
-    ModrinthClient client;
-    ConcurrentDictionary<string, MinecraftContent> contentCache = new();
-
-    public override string Name { get; } = "Modrinth";
-    public ModrinthClient Client => client;
+    private readonly ConcurrentDictionary<string, MinecraftContent> contentCache = new();
 
     public ModrinthMinecraftContentPlatform()
     {
@@ -36,11 +30,16 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             Contact = "https://github.com/CacahueteSansSel/mcLaunch"
         };
 
-        client = new ModrinthClient(new ModrinthClientConfig
+        Client = new ModrinthClient(new ModrinthClientConfig
         {
             UserAgent = ua.ToString()
         });
     }
+
+    public static ModrinthMinecraftContentPlatform Instance { get; private set; }
+
+    public override string Name { get; } = "Modrinth";
+    public ModrinthClient Client { get; }
 
     public override async Task<PaginatedResponse<MinecraftContent>> GetContentsAsync(int page, Box box,
         string searchQuery, MinecraftContentType contentType)
@@ -49,7 +48,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
         if (box != null)
         {
-            if (contentType == MinecraftContentType.Modification) 
+            if (contentType == MinecraftContentType.Modification)
                 collection.Add(Facet.Category(box.Manifest.ModLoaderId.ToLower()));
             collection.Add(Facet.Version(box.Manifest.Version));
         }
@@ -77,8 +76,8 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
         try
         {
-            search = await client.Project.SearchAsync(searchQuery, facets: collection, 
-                limit: 10, offset: (ulong)(page * 10));
+            search = await Client.Project.SearchAsync(searchQuery, facets: collection,
+                limit: 10, offset: (ulong) (page * 10));
         }
         catch (ModrinthApiException e)
         {
@@ -128,8 +127,8 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
         try
         {
-            search = await client.Project.SearchAsync(searchQuery, facets: collection, 
-                limit: 10, offset: (ulong)(page * 10));
+            search = await Client.Project.SearchAsync(searchQuery, facets: collection,
+                limit: 10, offset: (ulong) (page * 10));
         }
         catch (ModrinthApiException e)
         {
@@ -157,7 +156,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             LatestMinecraftVersion = hit.Versions.Last(),
             DownloadCount = hit.Downloads,
             LastUpdated = hit.DateModified,
-            Color = (uint)hit.Color.Value.ToArgb(),
+            Color = (uint) hit.Color.Value.ToArgb(),
             Platform = this
         }).ToArray();
 
@@ -167,13 +166,15 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         return new PaginatedResponse<PlatformModpack>(page, search.TotalHits / search.Limit, modpacks);
     }
 
-    public override async Task<PaginatedResponse<ContentDependency>> GetContentDependenciesAsync(string id, string modLoaderId,
+    public override async Task<PaginatedResponse<ContentDependency>> GetContentDependenciesAsync(string id,
+        string modLoaderId,
         string versionId,
         string minecraftVersionId)
     {
         try
         {
-            Version[] versions = await client.Version.GetProjectVersionListAsync(id, modLoaderId == null ? null : [modLoaderId],
+            Version[] versions = await Client.Version.GetProjectVersionListAsync(id,
+                modLoaderId == null ? null : [modLoaderId],
                 new[] {minecraftVersionId});
             Version? version = versions.FirstOrDefault(v => v.Id == versionId);
 
@@ -201,7 +202,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         }
     }
 
-    MinecraftContentType GetContentTypeFromProjectType(ProjectType type)
+    private MinecraftContentType GetContentTypeFromProjectType(ProjectType type)
     {
         return type switch
         {
@@ -217,7 +218,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
     {
         if (contentCache.TryGetValue(id, out var cachedMod))
             return cachedMod;
-        
+
         string cacheName = $"content-modrinth-{id}";
         if (CacheManager.HasContent(cacheName))
         {
@@ -233,8 +234,8 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
         try
         {
-            Project project = await client.Project.GetAsync(id);
-            TeamMember[] team = await client.Team.GetAsync(project.Team);
+            Project project = await Client.Project.GetAsync(id);
+            TeamMember[] team = await Client.Team.GetAsync(project.Team);
 
             MinecraftContent content = new MinecraftContent
             {
@@ -261,7 +262,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
             contentCache.TryAdd(id, content);
             CacheManager.Store(content, cacheName);
-            
+
             return content;
         }
         catch (ModrinthApiException e)
@@ -285,7 +286,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
         try
         {
-            versions = await client.Version.GetProjectVersionListAsync(content.Id,
+            versions = await Client.Version.GetProjectVersionListAsync(content.Id,
                 modLoaderId == null || content.Type != MinecraftContentType.Modification ? null : [modLoaderId],
                 minecraftVersionId == null ? null : [minecraftVersionId]);
         }
@@ -310,10 +311,10 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
     {
         try
         {
-            Project project = await client.Project.GetAsync(id);
-            TeamMember[] team = await client.Team.GetAsync(project.Team);
+            Project project = await Client.Project.GetAsync(id);
+            TeamMember[] team = await Client.Team.GetAsync(project.Team);
 
-            Version[] projectVersions = await client.Version.GetProjectVersionListAsync(id);
+            Version[] projectVersions = await Client.Version.GetProjectVersionListAsync(id);
             PlatformModpack.ModpackVersion[] versions = projectVersions.Select(pv => new PlatformModpack.ModpackVersion
             {
                 Id = pv.Id,
@@ -342,7 +343,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 LongDescriptionBody = project.Body,
                 DownloadCount = project.Downloads,
                 LastUpdated = project.Updated,
-                Color = (uint)project.Color.Value.ToArgb(),
+                Color = (uint) project.Color.Value.ToArgb(),
                 Platform = this
             };
 
@@ -364,11 +365,10 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         }
     }
 
-    async Task<string[]> InstallVersionAsync(Box targetBox, Version version, bool installOptional,
+    private async Task<string[]> InstallVersionAsync(Box targetBox, Version version, bool installOptional,
         MinecraftContentType contentType)
     {
         if (version.Dependencies != null && contentType == MinecraftContentType.Modification)
-        {
             foreach (Dependency dependency in version.Dependencies)
             {
                 if (installOptional)
@@ -390,9 +390,9 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 if (depVersionId == null)
                 {
                     // Grab the latest available version for this dependency
-                    Version[] depVersions = await client.Version.GetProjectVersionListAsync(dependency.ProjectId,
-                        new[] { targetBox.Manifest.ModLoaderId.ToLower() },
-                        new[] { targetBox.Manifest.Version });
+                    Version[] depVersions = await Client.Version.GetProjectVersionListAsync(dependency.ProjectId,
+                        new[] {targetBox.Manifest.ModLoaderId.ToLower()},
+                        new[] {targetBox.Manifest.Version});
 
                     if (depVersions.Length == 0) continue;
 
@@ -400,12 +400,11 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 }
                 else
                 {
-                    dependencyVersion = await client.Version.GetAsync(depVersionId);
+                    dependencyVersion = await Client.Version.GetAsync(depVersionId);
                 }
 
                 await InstallVersionAsync(targetBox, dependencyVersion, false, contentType);
             }
-        }
 
         DownloadManager.Begin(version.Name);
 
@@ -435,10 +434,10 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         bool installOptional)
     {
         Version version;
-        
+
         try
         {
-            version = await client.Version.GetAsync(versionId);
+            version = await Client.Version.GetAsync(versionId);
             if (version == null) return false;
         }
         catch (ModrinthApiException e)
@@ -455,13 +454,13 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         }
 
         string[] paths = [];
-        
-        if (!targetBox.HasContentSoft(content)) 
+
+        if (!targetBox.HasContentSoft(content))
             paths = await InstallVersionAsync(targetBox, version, installOptional, content.Type);
 
         await DownloadManager.ProcessAll();
 
-        if (content.Type == MinecraftContentType.DataPack && paths.Length > 0) 
+        if (content.Type == MinecraftContentType.DataPack && paths.Length > 0)
             targetBox.InstallDatapack(versionId, $"{targetBox.Folder.CompletePath}/{paths[0]}");
 
         targetBox.SaveManifest();
@@ -479,8 +478,8 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
         try
         {
-            Project project = await client.Project.GetAsync(content.Id);
-            Version latest = await client.Version.GetAsync(project.Versions[0]);
+            Project project = await Client.Project.GetAsync(content.Id);
+            Version latest = await Client.Version.GetAsync(project.Versions[0]);
 
             content.Versions = project.Versions;
             content.LatestVersion = content.Versions.Last();
@@ -492,15 +491,12 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         }
         catch (ModrinthApiException e)
         {
-            
         }
         catch (TaskCanceledException e)
         {
-            
         }
         catch (HttpRequestException e)
         {
-            
         }
 
         return content;
@@ -520,7 +516,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
         try
         {
-            Version version = await client.VersionFile.GetVersionByHashAsync(hash);
+            Version version = await Client.VersionFile.GetVersionByHashAsync(hash);
             if (version == null) return null;
 
             return new ContentVersion(await GetContentAsync(version.ProjectId), version.Id,

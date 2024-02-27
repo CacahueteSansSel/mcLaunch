@@ -10,32 +10,32 @@
              Classes="smoothShow"
              x:Class="mcLaunch.Views.BoxEntryCard">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
 
         <Style Selector="views|BoxEntryCard">
-            <Setter Property="CornerRadius" Value="4"></Setter>
-            <Setter Property="BorderThickness" Value="1"></Setter>
-            <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
         </Style>
 
         <Style Selector="views|BoxEntryCard:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"></Setter>
+            <Setter Property="Background" Value="{DynamicResource BackgroundLighter}" />
         </Style>
-        
+
         <Style Selector="views|BoxEntryCard.smoothShow">
             <Style.Animations>
                 <Animation Duration="0:0:.25" Easing="QuinticEaseInOut" IterationCount="1">
                     <KeyFrame Cue="0%">
-                        <Setter Property="Opacity" Value="0"/>
-                        <Setter Property="ScaleTransform.ScaleX" Value="0.8"/>
-                        <Setter Property="ScaleTransform.ScaleY" Value="0.8"/>
-                        <Setter Property="TranslateTransform.Y" Value="10"/>
+                        <Setter Property="Opacity" Value="0" />
+                        <Setter Property="ScaleTransform.ScaleX" Value="0.8" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="0.8" />
+                        <Setter Property="TranslateTransform.Y" Value="10" />
                     </KeyFrame>
                     <KeyFrame Cue="100%">
-                        <Setter Property="Opacity" Value="1"/>
-                        <Setter Property="ScaleTransform.ScaleX" Value="1"/>
-                        <Setter Property="ScaleTransform.ScaleY" Value="1"/>
-                        <Setter Property="TranslateTransform.Y" Value="0"/>
+                        <Setter Property="Opacity" Value="1" />
+                        <Setter Property="ScaleTransform.ScaleX" Value="1" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="1" />
+                        <Setter Property="TranslateTransform.Y" Value="0" />
                     </KeyFrame>
                 </Animation>
             </Style.Animations>
@@ -44,23 +44,25 @@
     <Panel>
         <StackPanel Margin="20 20 20 20">
             <Border ClipToBounds="True" CornerRadius="4">
-                <Panel Width="155" Height="155" >
-                    <Image x:Name="BoxIcon" Stretch="Uniform" Source="{Binding Icon.IconLarge}"></Image>
-                    <Button x:Name="PlayButton" IsVisible="False" ToolTip.Tip="Launch box" Classes="transparent-green" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="PlayButtonClicked">
-                        <Image Source="/resources/icons/play.png" Width="14" Height="14"></Image>
+                <Panel Width="155" Height="155">
+                    <Image x:Name="BoxIcon" Stretch="Uniform" Source="{Binding Icon.IconLarge}" />
+                    <Button x:Name="PlayButton" IsVisible="False" ToolTip.Tip="Launch box" Classes="transparent-green"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="PlayButtonClicked">
+                        <Image Source="/resources/icons/play.png" Width="14" Height="14" />
                     </Button>
                 </Panel>
             </Border>
-            <TextBlock x:Name="BoxNameText" FontSize="20" Classes="title" Margin="0 5 0 0" Text="{Binding Name}"></TextBlock>
+            <TextBlock x:Name="BoxNameText" FontSize="20" Classes="title" Margin="0 5 0 0" Text="{Binding Name}" />
             <StackPanel Orientation="Horizontal" Margin="0 0 0 3">
                 <TextBlock FontSize="12" Classes="light" Margin="0 0 0 0">by</TextBlock>
-                <TextBlock x:Name="AuthorText" FontSize="12" Classes="title" Margin="5 0 0 0" Text="{Binding Author}"></TextBlock>
+                <TextBlock x:Name="AuthorText" FontSize="12" Classes="title" Margin="5 0 0 0" Text="{Binding Author}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="5">
-                <views:Badge x:Name="VersionBadge" Icon="/resources/icons/vanilla.png"></views:Badge>
-                <views:Badge x:Name="ModLoaderBadge" Icon="/resources/icons/vanilla.png"></views:Badge>
+                <views:Badge x:Name="VersionBadge" Icon="/resources/icons/vanilla.png" />
+                <views:Badge x:Name="ModLoaderBadge" Icon="/resources/icons/vanilla.png" />
             </StackPanel>
         </StackPanel>
-        <Image x:Name="SnapshotStripe" IsVisible="False" Source="/resources/snapshot_stripe.png" Width="68" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsHitTestVisible="False"></Image>
+        <Image x:Name="SnapshotStripe" IsVisible="False" Source="/resources/snapshot_stripe.png" Width="68"
+               HorizontalAlignment="Right" VerticalAlignment="Bottom" IsHitTestVisible="False" />
     </Panel>
 </UserControl>

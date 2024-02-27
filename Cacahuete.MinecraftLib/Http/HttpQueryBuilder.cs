@@ -10,16 +10,13 @@ public class HttpQueryBuilder : Dictionary<string, string>
 
         return this;
     }
-    
+
     public string Build()
     {
         string final = "";
 
-        foreach (var kv in this)
-        {
-            final += $"{kv.Key}={HttpUtility.UrlEncode(kv.Value)}&";
-        }
-        
+        foreach (var kv in this) final += $"{kv.Key}={HttpUtility.UrlEncode(kv.Value)}&";
+
         return $"?{final.TrimEnd('&')}";
     }
 }

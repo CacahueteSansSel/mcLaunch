@@ -1,6 +1,4 @@
-﻿using System.Runtime.Intrinsics.Arm;
-using System.Security;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
@@ -8,16 +6,17 @@ namespace Cacahuete.MinecraftLib.Cache;
 
 public class CredentialsCache
 {
-    public string RootPath { get; private set; }
-    private string key;
+    private readonly string key;
 
     public CredentialsCache(string rootPath, string key)
     {
         if (!Directory.Exists(rootPath)) Directory.CreateDirectory(rootPath);
-        
+
         RootPath = rootPath;
         this.key = key;
     }
+
+    public string RootPath { get; }
 
     public T? Get<T>(string name)
     {
@@ -30,7 +29,7 @@ public class CredentialsCache
             .ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(filename)))
             .ToLower();
 
-        if (!File.Exists($"{RootPath}/{filename}") || !File.Exists($"{RootPath}/{ivFilename}")) 
+        if (!File.Exists($"{RootPath}/{filename}") || !File.Exists($"{RootPath}/{ivFilename}"))
             return default;
 
         byte[] iv = File.ReadAllBytes($"{RootPath}/{ivFilename}");
@@ -53,7 +52,7 @@ public class CredentialsCache
             .ToLower();
 
         var result = Encryption.Encrypt(key, Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data)));
-        
+
         File.WriteAllBytes($"{RootPath}/{filename}", result.data);
         File.WriteAllBytes($"{RootPath}/{ivFilename}", result.iv);
     }
@@ -61,16 +60,13 @@ public class CredentialsCache
     public void ClearAll()
     {
         foreach (string filename in Directory.GetFiles(RootPath))
-        {
             try
             {
                 File.Delete(filename);
             }
             catch (Exception e)
             {
-                
             }
-        }
     }
 
     public bool Clear(string name)

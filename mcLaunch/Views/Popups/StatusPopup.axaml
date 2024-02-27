@@ -7,23 +7,23 @@
              Width="450" Height="320"
              x:Class="mcLaunch.Views.Popups.StatusPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">
             <StackPanel DockPanel.Dock="Top">
-                <TextBlock Classes="title" FontSize="25" Text="{Binding Title}"></TextBlock>
-                <TextBlock Margin="0 10 0 0" TextWrapping="WrapWithOverflow"  Text="{Binding Text}"></TextBlock>
+                <TextBlock Classes="title" FontSize="25" Text="{Binding Title}" />
+                <TextBlock Margin="0 10 0 0" TextWrapping="WrapWithOverflow" Text="{Binding Text}" />
             </StackPanel>
-            <StackPanel DockPanel.Dock="Bottom"  Orientation="Vertical"  Spacing="10" Margin="0 20 0 0">
-                <TextBlock Classes="light" Text="{Binding StatusText}"></TextBlock>
-                <ProgressBar Value="{Binding StatusPercent}"></ProgressBar>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Spacing="10" Margin="0 20 0 0">
+                <TextBlock Classes="light" Text="{Binding StatusText}" />
+                <ProgressBar Value="{Binding StatusPercent}" />
                 <Panel x:Name="DownloadBannerContainer" IsVisible="False">
-                    <views:DownloadBanner x:Name="DownloadBanner"></views:DownloadBanner>
+                    <views:DownloadBanner x:Name="DownloadBanner" />
                 </Panel>
             </StackPanel>
             <Panel>
-                <views:LoadingCircle/>
+                <views:LoadingCircle />
             </Panel>
         </DockPanel>
     </Border>

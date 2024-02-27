@@ -2,29 +2,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
              xmlns:views="clr-namespace:mcLaunch.Views"
              xmlns:avalonia="clr-namespace:TheArtOfDev.HtmlRenderer.Avalonia;assembly=Avalonia.HtmlRenderer"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.ModpackDetailsPage">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Panel>
-        <Image x:Name="DefaultBackground" Stretch="UniformToFill" Source="/resources/background_default.png"></Image>
-        <Image Stretch="UniformToFill" Source="{Binding Background}"></Image>
+        <Image x:Name="DefaultBackground" Stretch="UniformToFill" Source="/resources/background_default.png" />
+        <Image Stretch="UniformToFill" Source="{Binding Background}" />
         <ScrollViewer>
             <StackPanel>
                 <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
-                    <views:BackButton></views:BackButton>
-                    <Button x:Name="OpenInBrowserButton" Margin="10 0 0 0" Classes="transparent" Click="OpenButtonClicked" ToolTip.Tip="Open in browser">
-                        <Image Source="/resources/icons/open.png" Width="14" Height="14"></Image>
+                    <views:BackButton />
+                    <Button x:Name="OpenInBrowserButton" Margin="10 0 0 0" Classes="transparent"
+                            Click="OpenButtonClicked" ToolTip.Tip="Open in browser">
+                        <Image Source="/resources/icons/open.png" Width="14" Height="14" />
                     </Button>
                 </StackPanel>
                 <Border Classes="frame" Margin="0 10 0 100" Width="888">
                     <StackPanel Margin="1" Orientation="Vertical">
                         <DockPanel Margin="38 38 38 0" LastChildFill="True">
-                            <Image DockPanel.Dock="Left" Source="{Binding Icon}" Height="155" Width="155" Stretch="Uniform"></Image>
+                            <Image DockPanel.Dock="Left" Source="{Binding Icon}" Height="155" Width="155"
+                                   Stretch="Uniform" />
                             <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
                                 <Button x:Name="CloneButton" Classes="primary" Width="124"
                                         HorizontalContentAlignment="Center" Click="CloneButtonClicked">
@@ -34,25 +35,26 @@
                                         Background="{DynamicResource BackgroundDarker}"
                                         BorderBrush="{DynamicResource BackgroundLighter}" BorderThickness="1"
                                         CornerRadius="4">
-                                    <views:LoadingCircle RenderTransform="scale(0.65)"></views:LoadingCircle>
+                                    <views:LoadingCircle RenderTransform="scale(0.65)" />
                                 </Border>
                             </StackPanel>
                             <StackPanel Classes="smoothShowLeft" Margin="29 0 0 0" Orientation="Vertical">
-                                <TextBlock Classes="title" FontSize="32" Text="{Binding Name}"></TextBlock>
+                                <TextBlock Classes="title" FontSize="32" Text="{Binding Name}" />
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="light" FontSize="16">by</TextBlock>
-                                    <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16" Text="{Binding Author}"></TextBlock>
+                                    <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16" Text="{Binding Author}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0" Spacing="5">
-                                    <views:Badge x:Name="ModpackVersionsBadge" Icon="/resources/icons/vanilla.png" HorizontalAlignment="Left"></views:Badge>
-                                    <views:Badge x:Name="ModpackPlatformBadge" Icon="/resources/icons/mod.png" HorizontalAlignment="Left"></views:Badge>
+                                    <views:Badge x:Name="ModpackVersionsBadge" Icon="/resources/icons/vanilla.png"
+                                                 HorizontalAlignment="Left" />
+                                    <views:Badge x:Name="ModpackPlatformBadge" Icon="/resources/icons/mod.png"
+                                                 HorizontalAlignment="Left" />
                                 </StackPanel>
                             </StackPanel>
                         </DockPanel>
                         <StackPanel Orientation="Vertical" Margin="38 0 38 38">
-                            <avalonia:HtmlPanel x:Name="DescHtmlPanel" Margin="0 10 0 0" Text="{Binding LongDescriptionBody}">
-                                
-                            </avalonia:HtmlPanel>
+                            <avalonia:HtmlPanel x:Name="DescHtmlPanel" Margin="0 10 0 0"
+                                                Text="{Binding LongDescriptionBody}" />
                         </StackPanel>
                     </StackPanel>
                 </Border>

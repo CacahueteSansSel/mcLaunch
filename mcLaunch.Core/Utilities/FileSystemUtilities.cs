@@ -9,7 +9,7 @@ public static class FileSystemUtilities
             string newPath = directory.Replace(fromPath, toPath);
             Directory.CreateDirectory(newPath);
         }
-        
+
         foreach (string file in Directory.GetFiles(fromPath, "*", SearchOption.AllDirectories))
         {
             string newPath = file.Replace(fromPath, toPath);
@@ -18,6 +18,8 @@ public static class FileSystemUtilities
     }
 
     public static string NormalizePath(string path)
-        => path.Replace('\\', Path.DirectorySeparatorChar)
+    {
+        return path.Replace('\\', Path.DirectorySeparatorChar)
             .Replace('/', Path.DirectorySeparatorChar);
+    }
 }

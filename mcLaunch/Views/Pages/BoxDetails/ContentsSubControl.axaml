@@ -6,50 +6,56 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.BoxDetails.ContentsSubControl">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Panel>
         <StackPanel x:Name="ContentPanel">
             <DockPanel>
                 <StackPanel Orientation="Horizontal" Spacing="5">
-                    <Button DockPanel.Dock="Left" Classes="secondary square" Click="AddModsButtonClicked" ToolTip.Tip="Add mods">
-                        <Image Width="13" Height="13" Source="/resources/icons/plus.png"></Image>
+                    <Button DockPanel.Dock="Left" Classes="secondary square" Click="AddModsButtonClicked"
+                            ToolTip.Tip="Add mods">
+                        <Image Width="13" Height="13" Source="/resources/icons/plus.png" />
                     </Button>
-                    <Button x:Name="UpdateAllButton" DockPanel.Dock="Left" Padding="10" Height="39" Classes="secondary" Click="UpdateAllButtonClicked" ToolTip.Tip="Update all">
+                    <Button x:Name="UpdateAllButton" DockPanel.Dock="Left" Padding="10" Height="39" Classes="secondary"
+                            Click="UpdateAllButtonClicked" ToolTip.Tip="Update all">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Image Width="13" Height="13" Source="/resources/icons/up_arrow.png"></Image>
+                            <Image Width="13" Height="13" Source="/resources/icons/up_arrow.png" />
                             <TextBlock x:Name="UpdateButtonCountText">0</TextBlock>
                         </StackPanel>
                     </Button>
-                    <views:SeparatorLine></views:SeparatorLine>
-                    <Button x:Name="MigrateToModrinthButton" DockPanel.Dock="Left" Classes="secondary square" Click="MigrateToModrinthButtonClicked" ToolTip.Tip="Migrate all mods to Modrinth" BorderBrush="#1bd96a">
-                        <Image Width="13" Height="13" Source="/resources/icons/modrinth.png"></Image>
+                    <views:SeparatorLine />
+                    <Button x:Name="MigrateToModrinthButton" DockPanel.Dock="Left" Classes="secondary square"
+                            Click="MigrateToModrinthButtonClicked" ToolTip.Tip="Migrate all mods to Modrinth"
+                            BorderBrush="#1bd96a">
+                        <Image Width="13" Height="13" Source="/resources/icons/modrinth.png" />
                     </Button>
-                    <Button x:Name="MigrateToCurseForgeButton" DockPanel.Dock="Left" Classes="secondary square" Click="MigrateToCurseForgeButtonClicked" ToolTip.Tip="Migrate all mods to CurseForge" BorderBrush="#ee6234">
-                        <Image Width="13" Height="13" Source="/resources/icons/curseforge.png"></Image>
+                    <Button x:Name="MigrateToCurseForgeButton" DockPanel.Dock="Left" Classes="secondary square"
+                            Click="MigrateToCurseForgeButtonClicked" ToolTip.Tip="Migrate all mods to CurseForge"
+                            BorderBrush="#ee6234">
+                        <Image Width="13" Height="13" Source="/resources/icons/curseforge.png" />
                     </Button>
-                    <views:SeparatorLine></views:SeparatorLine>
-                    <TextBox x:Name="SearchBox" Watermark="Search mod" Width="300" VerticalContentAlignment="Center" TextChanged="SearchBoxTextChanged"></TextBox>
+                    <views:SeparatorLine />
+                    <TextBox x:Name="SearchBox" Watermark="Search mod" Width="300" VerticalContentAlignment="Center"
+                             TextChanged="SearchBoxTextChanged" />
                 </StackPanel>
-                <StackPanel Height="15" x:Name="SearchingForUpdates" DockPanel.Dock="Left" IsVisible="False" Orientation="Horizontal">
-                    <views:LoadingCircle RenderTransform="scale(0.7)"></views:LoadingCircle>
+                <StackPanel Height="15" x:Name="SearchingForUpdates" DockPanel.Dock="Left" IsVisible="False"
+                            Orientation="Horizontal">
+                    <views:LoadingCircle RenderTransform="scale(0.7)" />
                     <TextBlock Height="20" Classes="light">Searching for updates...</TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
-                    <TextBlock x:Name="ContentCountText" Classes="light" Opacity="0.25" 
+                    <TextBlock x:Name="ContentCountText" Classes="light" Opacity="0.25"
                                HorizontalAlignment="Right">
                         0
                     </TextBlock>
-                    <TextBlock x:Name="ContentText" Classes="light" Margin="3 0 0 0" Opacity="0.25" 
+                    <TextBlock x:Name="ContentText" Classes="light" Margin="3 0 0 0" Opacity="0.25"
                                HorizontalAlignment="Right">
                         MODS
                     </TextBlock>
                 </StackPanel>
-                <Panel></Panel>
+                <Panel />
             </DockPanel>
-            <views:MinecraftContentList x:Name="ModsList" HideInstalledBadges="True" Margin="0 10 0 0">
-                
-            </views:MinecraftContentList>
+            <views:MinecraftContentList x:Name="ModsList" HideInstalledBadges="True" Margin="0 10 0 0" />
         </StackPanel>
         <TextBlock x:Name="VanillaDisclaimer" VerticalAlignment="Center" HorizontalAlignment="Center" Height="20">Not available on vanilla instances</TextBlock>
     </Panel>

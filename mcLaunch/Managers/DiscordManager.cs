@@ -1,5 +1,4 @@
-﻿using System;
-using DiscordRPC;
+﻿using DiscordRPC;
 using DiscordRPC.Logging;
 using DiscordRPC.Message;
 using mcLaunch.Core.Boxes;
@@ -37,7 +36,7 @@ public static class DiscordManager
     public static void SetPresence(string state, string? details, string asset, string assetDescription)
     {
         if (!Settings.Instance!.UseDiscordRpc) return;
-        
+
         _client.SetPresence(new RichPresence
         {
             Details = details ?? $"mcLaunch v{CurrentBuild.Version}",
@@ -60,28 +59,36 @@ public static class DiscordManager
     }
 
     public static void SetPresenceStart()
-        => SetPresence("Starting", null, "power", "Starting");
+    {
+        SetPresence("Starting", null, "power", "Starting");
+    }
 
     public static void SetPresenceBoxList()
-        => SetPresence("Among their boxes", $"{BoxManager.BoxCount} boxes", "boxes", "Watching boxes");
+    {
+        SetPresence("Among their boxes", $"{BoxManager.BoxCount} boxes", "boxes", "Watching boxes");
+    }
 
     public static void SetPresenceModpacksList()
-        => SetPresence("Browsing modpacks", null, "boxes", "Browsing modpacks");
+    {
+        SetPresence("Browsing modpacks", null, "boxes", "Browsing modpacks");
+    }
 
     public static void SetPresenceModsList()
-        => SetPresence("Browsing mods", null, "mods", "Browsing mods");
+    {
+        SetPresence("Browsing mods", null, "mods", "Browsing mods");
+    }
 
     public static void SetPresenceBox(Box box)
     {
         if (!Settings.Instance!.ShowBoxInfosOnDiscordRpc)
         {
             SetPresence("Viewing a box", null, "boxes", "Viewing a box");
-            
+
             return;
         }
 
         SetPresence($"Viewing {box.Manifest.Name}",
-            $"Minecraft {box.Manifest.Version} {box.Manifest.ModLoader?.Name}", 
+            $"Minecraft {box.Manifest.Version} {box.Manifest.ModLoader?.Name}",
             "boxes", "Viewing a box");
     }
 
@@ -90,12 +97,12 @@ public static class DiscordManager
         if (!Settings.Instance!.ShowBoxInfosOnDiscordRpc)
         {
             SetPresence("Editing a box", null, "edit", "Editing a box");
-            
+
             return;
         }
 
         SetPresence($"Editing {box.Manifest.Name}",
-            $"Minecraft {box.Manifest.Version} {box.Manifest.ModLoader?.Name}", 
+            $"Minecraft {box.Manifest.Version} {box.Manifest.ModLoader?.Name}",
             "boxes", "Editing a box");
     }
 
@@ -103,13 +110,13 @@ public static class DiscordManager
     {
         if (!Settings.Instance!.ShowBoxInfosOnDiscordRpc)
         {
-            SetPresence($"Launching a box", null, "launch", "Launching Minecraft");
-            
+            SetPresence("Launching a box", null, "launch", "Launching Minecraft");
+
             return;
         }
-        
+
         SetPresence($"Launching {box.Manifest.Name}",
-            $"Minecraft {box.Manifest.Version} {box.Manifest.ModLoader?.Name}", 
+            $"Minecraft {box.Manifest.Version} {box.Manifest.ModLoader?.Name}",
             "launch", "Launching Minecraft");
     }
 }

@@ -1,24 +1,16 @@
-﻿using System.Buffers.Text;
-using Avalonia.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
 using SharpNBT;
 
 namespace mcLaunch.Core.MinecraftFormats;
 
 public class MinecraftServer
 {
-    private string ip;
-    public bool IsHidden { get; set; }
-    public byte[] IconData { get; set; }
-    public string Address { get; set; }
-    public string Port { get; set; }
-    public string Name { get; set; }
-    public Bitmap? Icon { get; set; }
+    private readonly string ip;
 
     public MinecraftServer()
     {
-        
     }
-    
+
     public MinecraftServer(CompoundTag nbt)
     {
         IsHidden = nbt["hidden"] == null ? false : ((ByteTag) nbt["hidden"]).Value == 1;
@@ -31,10 +23,17 @@ public class MinecraftServer
         Port = tokens.Length == 1 ? "25565" : tokens[1];
     }
 
+    public bool IsHidden { get; set; }
+    public byte[] IconData { get; set; }
+    public string Address { get; set; }
+    public string Port { get; set; }
+    public string Name { get; set; }
+    public Bitmap? Icon { get; set; }
+
     public async Task LoadIconAsync()
     {
         MemoryStream imageStream = new(IconData);
-            
+
         Icon = await Task.Run(() =>
         {
             try

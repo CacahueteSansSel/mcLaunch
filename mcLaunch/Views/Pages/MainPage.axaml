@@ -10,16 +10,17 @@
     <Panel>
         <DockPanel Margin="20, 10, 20 10">
             <StackPanel DockPanel.Dock="Top" Margin="5 0 5 5">
-                <TextBox x:Name="SearchBox" Width="300" HorizontalAlignment="Left" Watermark="Search" TextChanged="SearchBoxTextChanged"></TextBox>
+                <TextBox x:Name="SearchBox" Width="300" HorizontalAlignment="Left" Watermark="Search"
+                         TextChanged="SearchBoxTextChanged" />
             </StackPanel>
             <ScrollViewer>
                 <ItemsRepeater x:Name="BoxesContainer">
                     <ItemsRepeater.Layout>
-                        <UniformGridLayout></UniformGridLayout>
+                        <UniformGridLayout />
                     </ItemsRepeater.Layout>
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate DataType="boxes:Box">
-                            <views:BoxEntryCard Box="{Binding .}"></views:BoxEntryCard>
+                            <views:BoxEntryCard Box="{Binding .}" />
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>

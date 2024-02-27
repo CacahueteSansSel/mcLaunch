@@ -5,15 +5,21 @@
              mc:Ignorable="d" d:DesignWidth="620" d:DesignHeight="450"
              x:Class="mcLaunch.Installer.Pages.CheckboxesSettingsPage">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
-    
+
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Vertical" Spacing="0">
             <TextBlock Classes="title" FontSize="25" Margin="0 0 0 10">Customize the installation process</TextBlock>
             <TextBlock Classes="title">When you are done, press next</TextBlock>
-            <CheckBox x:Name="DesktopShortcutCheckbox" Checked="DesktopShortcutCheckbox_OnChecked" Unchecked="DesktopShortcutCheckbox_OnUnchecked">Create a shortcut on the desktop</CheckBox>
-            <CheckBox x:Name="RegisterProgramListCheckbox" Checked="RegisterProgramListCheckbox_OnChecked" Unchecked="RegisterProgramListCheckbox_OnUnchecked">Register mcLaunch in the program list</CheckBox>
+            <CheckBox x:Name="DesktopShortcutCheckbox" Checked="DesktopShortcutCheckbox_OnChecked"
+                      Unchecked="DesktopShortcutCheckbox_OnUnchecked">
+                Create a shortcut on the desktop
+            </CheckBox>
+            <CheckBox x:Name="RegisterProgramListCheckbox" Checked="RegisterProgramListCheckbox_OnChecked"
+                      Unchecked="RegisterProgramListCheckbox_OnUnchecked">
+                Register mcLaunch in the program list
+            </CheckBox>
         </StackPanel>
     </StackPanel>
 </UserControl>

@@ -6,7 +6,7 @@
              Width="400" Height="310"
              x:Class="mcLaunch.Views.Popups.EditBoxPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <StackPanel Margin="38">
@@ -15,23 +15,24 @@
                 <StackPanel>
                     <TextBlock Classes="light" Margin="0 0 0 0">Icon</TextBlock>
                     <Panel>
-                        <Image x:Name="BoxIconImage" Source="/resources/default_box_logo.png" Width="103"></Image>
-                        <Button Classes="transparent" ToolTip.Tip="Edit icon" Margin="0 0 5 5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="SelectFileButtonClicked">
-                            <Image Source="/resources/icons/edit.png" Width="18" Height="18"></Image>
+                        <Image x:Name="BoxIconImage" Source="/resources/default_box_logo.png" Width="103" />
+                        <Button Classes="transparent" ToolTip.Tip="Edit icon" Margin="0 0 5 5"
+                                HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="SelectFileButtonClicked">
+                            <Image Source="/resources/icons/edit.png" Width="18" Height="18" />
                         </Button>
                     </Panel>
                 </StackPanel>
                 <StackPanel Margin="20 0 0 0" Orientation="Vertical">
                     <TextBlock Classes="light" Margin="0 0 0 3">Box Name</TextBlock>
-                    <TextBox x:Name="BoxNameTb" Watermark="Name" UseFloatingWatermark="False"></TextBox>
+                    <TextBox x:Name="BoxNameTb" Watermark="Name" UseFloatingWatermark="False" />
                     <TextBlock Classes="light" Margin="0 20 0 3">Author Name</TextBlock>
-                    <TextBox x:Name="AuthorNameTb" Watermark="Author" UseFloatingWatermark="False"></TextBox>
+                    <TextBox x:Name="AuthorNameTb" Watermark="Author" UseFloatingWatermark="False" />
                 </StackPanel>
             </DockPanel>
             <DockPanel Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" x:Name="CancelButton" Classes="secondary" Click="CancelButtonClicked">Cancel</Button>
                 <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="primary" Click="ApplyButtonClicked">Apply</Button>
-                <Panel></Panel>
+                <Panel />
             </DockPanel>
         </StackPanel>
     </Border>

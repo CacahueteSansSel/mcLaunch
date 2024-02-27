@@ -8,10 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj" />
-      <ProjectReference Include="..\mcLaunch.Core\mcLaunch.Core.csproj" />
-      <ProjectReference Include="..\mcLaunch.GitHub\mcLaunch.GitHub.csproj" />
-      <ProjectReference Include="..\mcLaunch\mcLaunch.csproj" />
+        <ProjectReference Include="..\Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj"/>
+        <ProjectReference Include="..\mcLaunch.Core\mcLaunch.Core.csproj"/>
+        <ProjectReference Include="..\mcLaunch.GitHub\mcLaunch.GitHub.csproj"/>
+        <ProjectReference Include="..\mcLaunch\mcLaunch.csproj"/>
     </ItemGroup>
 
 </Project>

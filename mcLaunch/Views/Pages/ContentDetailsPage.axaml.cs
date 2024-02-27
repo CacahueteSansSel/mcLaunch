@@ -2,32 +2,24 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Contents;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Contents;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
-using Modrinth.Models;
 
 namespace mcLaunch.Views.Pages;
 
 public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 {
-    bool isInstalling = false;
-    public MinecraftContent ShownContent { get; private set; }
-    public Box? TargetBox { get; private set; }
-
-    public string Title => $"({ShownContent.Type}) {ShownContent.Name} from {ShownContent.Author} " +
-                           $"on {ShownContent.ModPlatformId}";
+    private bool isInstalling;
 
     public ContentDetailsPage()
     {
@@ -79,7 +71,10 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             ModLicenseBadge.Text = shownContent.GetLicenseDisplayName();
             ModLicenseBadge.IsVisible = true;
         }
-        else ModLicenseBadge.IsVisible = false;
+        else
+        {
+            ModLicenseBadge.IsVisible = false;
+        }
 
         ModOpenSource.IsVisible = shownContent.IsOpenSource;
         ModClosedSource.IsVisible = !shownContent.IsOpenSource;
@@ -100,12 +95,21 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
             TestButton.IsVisible = true;
         }
-        else TestButton.IsVisible = false;
+        else
+        {
+            TestButton.IsVisible = false;
+        }
 
         DefaultBackground.IsVisible = shownContent.BackgroundPath == null;
     }
 
-    async void FetchAdditionalInfos()
+    public MinecraftContent ShownContent { get; }
+    public Box? TargetBox { get; }
+
+    public string Title => $"({ShownContent.Type}) {ShownContent.Name} from {ShownContent.Author} " +
+                           $"on {ShownContent.ModPlatformId}";
+
+    private async void FetchAdditionalInfos()
     {
         LoadCircle.IsVisible = true;
 
@@ -127,7 +131,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         UninstallButton.IsEnabled = isInstalled;
     }
 
-    async void CreateModpackFromVersion(IVersion incomingVersion)
+    private async void CreateModpackFromVersion(IVersion incomingVersion)
     {
         ContentVersion version = (ContentVersion) incomingVersion;
 
@@ -174,10 +178,10 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             return;
         }
 
-        if (!await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, 
+        if (!await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent,
                 version.Id, false))
         {
-            Navigation.ShowPopup(new MessageBoxPopup("Error", 
+            Navigation.ShowPopup(new MessageBoxPopup("Error",
                 $"{ShownContent.Name} failed to download : the content may lack any download url"));
 
             LoadingButtonFrame.IsVisible = false;
@@ -199,7 +203,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
         if (TargetBox != null && !TargetBox.HasWorlds && ShownContent.Type == MinecraftContentType.DataPack)
         {
-            Navigation.ShowPopup(new MessageBoxPopup("Cannot download datapack", 
+            Navigation.ShowPopup(new MessageBoxPopup("Cannot download datapack",
                 "You need to have at least one world to download a datapack"));
 
             return;
@@ -223,9 +227,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
                 TargetBox.Manifest.Version);
 
         if (ShownContent.Type == MinecraftContentType.DataPack)
-        {
             versions = versions.Where(version => version.ModLoader == "datapack").ToArray();
-        }
 
         if (versions.Length == 0)
         {
@@ -263,11 +265,11 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         SetInstalled(false);
     }
 
-    async Task FinishInstallAsync()
+    private async Task FinishInstallAsync()
     {
         if (TargetBox == null) return;
 
-        bool success = await TargetBox.UpdateModAsync(ShownContent, false);
+        bool success = await TargetBox.UpdateModAsync(ShownContent);
 
         if (!success)
         {
@@ -326,7 +328,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         PlatformSpecific.OpenUrl(ShownContent.Url);
     }
 
-    async void CreateFastLaunchModpackFromVersion(IVersion incomingVersion)
+    private async void CreateFastLaunchModpackFromVersion(IVersion incomingVersion)
     {
         Navigation.ShowPopup(new StatusPopup("Preparing launch",
             $"Preparing launching Fast Launch box for {ShownContent.Name}..."));

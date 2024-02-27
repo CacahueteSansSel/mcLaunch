@@ -5,9 +5,9 @@
              mc:Ignorable="d" d:DesignWidth="620" d:DesignHeight="450"
              x:Class="mcLaunch.Installer.Pages.WelcomePage">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
-    
+
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Vertical" Spacing="3">
             <TextBlock Classes="title" FontSize="25" Margin="0 0 0 10">Install mcLaunch</TextBlock>

@@ -1,5 +1,4 @@
 ﻿using Cacahuete.MinecraftLib.Http;
-using Cacahuete.MinecraftLib.Models;
 using Cacahuete.MinecraftLib.Models.Fabric;
 
 namespace Cacahuete.MinecraftLib.Core.ModLoaders;
@@ -14,16 +13,11 @@ public class QuiltModLoaderSupport : ModLoaderSupport
     public override string Type { get; set; } = "modded";
     public override ModLoaderVersion LatestVersion { get; set; }
 
-    public QuiltModLoaderSupport()
-    {
-        
-    }
-
     public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion)
     {
         QuiltLoaderManifest[]? versions = await Api.GetAsync<QuiltLoaderManifest[]>(
             $"{Url}/v3/versions/loader/{minecraftVersion}",
-            patchDateTimes: true);
+            true);
 
         if (versions == null) return null;
 

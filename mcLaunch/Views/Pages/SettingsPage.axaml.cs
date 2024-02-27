@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Reflection;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.Settings;
-using mcLaunch.Views.Windows;
 
 namespace mcLaunch.Views.Pages;
 
 public partial class SettingsPage : UserControl, ITopLevelPageControl
 {
-    public string Title => $"Settings";
-    
     public SettingsPage()
     {
         InitializeComponent();
-        
+
         Utilities.Settings.Load();
         SetSettings(Utilities.Settings.Instance.GetAllGroups());
 
@@ -25,10 +19,12 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
         CommitText.Text = CurrentBuild.Commit;
     }
 
+    public string Title => "Settings";
+
     public void SetSettings(SettingsGroup[] groups)
     {
         SettingsRoot.Children.Clear();
-        
+
         foreach (SettingsGroup group in groups)
         {
             SettingsSection section = new SettingsSection(group);
@@ -43,6 +39,6 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
 
     private void CrashLauncherButtonClicked(object? sender, RoutedEventArgs e)
     {
-        throw new System.Exception("That's an user-triggered exception");
+        throw new Exception("That's an user-triggered exception");
     }
 }

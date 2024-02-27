@@ -5,9 +5,6 @@ namespace Cacahuete.MinecraftLib.Core;
 
 public class MinecraftFolder
 {
-    public string Path { get; private set; }
-    public string CompletePath => System.IO.Path.GetFullPath(Path);
-
     public MinecraftFolder(string path)
     {
         Path = path;
@@ -15,21 +12,26 @@ public class MinecraftFolder
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
     }
 
+    public string Path { get; }
+    public string CompletePath => System.IO.Path.GetFullPath(Path);
+
     public bool HasVersion(string id)
-        => Directory.Exists($"{Path}/versions/{id}") && File.Exists($"{Path}/versions/{id}/{id}.jar");
+    {
+        return Directory.Exists($"{Path}/versions/{id}") && File.Exists($"{Path}/versions/{id}/{id}.jar");
+    }
 
     public MinecraftVersion? GetVersion(string id)
-        => JsonSerializer.Deserialize<MinecraftVersion>(File.ReadAllText($"{Path}/versions/{id}/{id}.json"));
+    {
+        return JsonSerializer.Deserialize<MinecraftVersion>(File.ReadAllText($"{Path}/versions/{id}/{id}.json"));
+    }
 
     public MinecraftVersion[] GetLocalVersions()
     {
         List<MinecraftVersion> versions = new();
 
         foreach (string versionDirectory in Directory.GetDirectories($"{Path}/versions"))
-        {
             versions.Add(JsonSerializer.Deserialize<MinecraftVersion>(
                 File.ReadAllText($"{versionDirectory}/{System.IO.Path.GetFileName(versionDirectory)}.json"))!);
-        }
 
         return versions.ToArray();
     }

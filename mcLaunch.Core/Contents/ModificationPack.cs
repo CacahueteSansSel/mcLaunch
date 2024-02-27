@@ -4,29 +4,27 @@ namespace mcLaunch.Core.Contents;
 
 public abstract class ModificationPack
 {
+    public ModificationPack()
+    {
+    }
+
+    public ModificationPack(string filename)
+    {
+    }
+
     public abstract string Name { get; init; }
     public abstract string Author { get; init; }
     public abstract string Version { get; init; }
     public abstract string? Id { get; init; }
     public abstract string? Description { get; init; }
-    
+
     public abstract string MinecraftVersion { get; init; }
     public abstract string ModloaderId { get; init; }
     public abstract string ModloaderVersion { get; init; }
-    
+
     public abstract SerializedMinecraftContent[] Modifications { get; set; }
-    
+
     public abstract AdditionalFile[] AdditionalFiles { get; set; }
-
-    public ModificationPack()
-    {
-        
-    }
-
-    public ModificationPack(string filename)
-    {
-        
-    }
 
     public abstract Task InstallModificationAsync(Box targetBox, SerializedMinecraftContent mod);
 

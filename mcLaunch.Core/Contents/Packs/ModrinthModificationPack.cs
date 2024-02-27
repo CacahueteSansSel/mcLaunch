@@ -14,22 +14,11 @@ namespace mcLaunch.Core.Contents.Packs;
 
 public class ModrinthModificationPack : ModificationPack
 {
-    private ModelModrinthIndex manifest;
-    private ZipArchiveEntry[] overridesEntries;
-    public override string Name { get; init; }
-    public override string Author { get; init; }
-    public override string Version { get; init; }
-    public override string? Id { get; init; }
-    public override string? Description { get; init; }
-    public override string MinecraftVersion { get; init; }
-    public override string ModloaderId { get; init; }
-    public override string ModloaderVersion { get; init; }
-    public override SerializedMinecraftContent[] Modifications { get; set; }
-    public override AdditionalFile[] AdditionalFiles { get; set; }
+    private readonly ModelModrinthIndex manifest;
+    private readonly ZipArchiveEntry[] overridesEntries;
 
     public ModrinthModificationPack()
     {
-        
     }
 
     public ModrinthModificationPack(string filename)
@@ -53,16 +42,29 @@ public class ModrinthModificationPack : ModificationPack
         {
             ModloaderId = "fabric";
             ModloaderVersion = manifest.Dependencies.FabricLoader;
-        } else if (!string.IsNullOrEmpty(manifest.Dependencies.Forge))
+        }
+        else if (!string.IsNullOrEmpty(manifest.Dependencies.Forge))
         {
             ModloaderId = "forge";
             ModloaderVersion = manifest.Dependencies.Forge;
-        } else if (!string.IsNullOrEmpty(manifest.Dependencies.QuiltLoader))
+        }
+        else if (!string.IsNullOrEmpty(manifest.Dependencies.QuiltLoader))
         {
             ModloaderId = "quilt";
             ModloaderVersion = manifest.Dependencies.QuiltLoader;
         }
     }
+
+    public override string Name { get; init; }
+    public override string Author { get; init; }
+    public override string Version { get; init; }
+    public override string? Id { get; init; }
+    public override string? Description { get; init; }
+    public override string MinecraftVersion { get; init; }
+    public override string ModloaderId { get; init; }
+    public override string ModloaderVersion { get; init; }
+    public override SerializedMinecraftContent[] Modifications { get; set; }
+    public override AdditionalFile[] AdditionalFiles { get; set; }
 
     public async Task<ModrinthModificationPack> SetupAsync()
     {
@@ -89,19 +91,22 @@ public class ModrinthModificationPack : ModificationPack
                     {
                         try
                         {
-                            ver = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetByVersionNumberAsync(id, version);
+                            ver = await ModrinthMinecraftContentPlatform.Instance.Client.Version
+                                .GetByVersionNumberAsync(id, version);
                         }
                         catch (Exception e)
                         {
                             Version[] versions =
-                                await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetProjectVersionListAsync(id,
-                                    gameVersions: new[] {MinecraftVersion}, loaders: new[] {ModloaderId});
+                                await ModrinthMinecraftContentPlatform.Instance.Client.Version
+                                    .GetProjectVersionListAsync(id,
+                                        gameVersions: new[] {MinecraftVersion}, loaders: new[] {ModloaderId});
 
                             ver = versions.FirstOrDefault(v => v.GameVersions.Contains(MinecraftVersion));
 
                             if (ver == null)
                             {
-                                Debug.WriteLine($"Failed to download mod {file.Downloads[0]} {file.Path} : failed to find any version compatible with {MinecraftVersion}");
+                                Debug.WriteLine(
+                                    $"Failed to download mod {file.Downloads[0]} {file.Path} : failed to find any version compatible with {MinecraftVersion}");
                                 continue;
                             }
                         }
@@ -110,7 +115,6 @@ public class ModrinthModificationPack : ModificationPack
                     }
 
                     if (ver == null)
-                    {
                         try
                         {
                             ver = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetAsync(version);
@@ -119,10 +123,12 @@ public class ModrinthModificationPack : ModificationPack
                         {
                             try
                             {
-                                ContentVersion[] versions = await ModrinthMinecraftContentPlatform.Instance.GetContentVersionsAsync(
-                                    MinecraftContent.CreateIdOnly(id), ModloaderId, MinecraftVersion);
-                            
-                                ver = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetAsync(versions[0].Id);
+                                ContentVersion[] versions =
+                                    await ModrinthMinecraftContentPlatform.Instance.GetContentVersionsAsync(
+                                        MinecraftContent.CreateIdOnly(id), ModloaderId, MinecraftVersion);
+
+                                ver = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetAsync(
+                                    versions[0].Id);
                             }
                             catch
                             {
@@ -130,21 +136,22 @@ public class ModrinthModificationPack : ModificationPack
                                 continue;
                             }
                         }
-                    }
 
                     Regex rootMcVerRegex = new Regex("\\d+\\.\\d+");
                     string rootMcVer = rootMcVerRegex.Match(MinecraftVersion).Value;
 
                     if (!ver.GameVersions.Contains(MinecraftVersion) && !ver.GameVersions.Contains(rootMcVer))
                     {
-                        Version[] versions = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetProjectVersionListAsync(id,
-                            gameVersions: new[] {MinecraftVersion}, loaders: new[] {ModloaderId});
+                        Version[] versions = await ModrinthMinecraftContentPlatform.Instance.Client.Version
+                            .GetProjectVersionListAsync(id,
+                                gameVersions: new[] {MinecraftVersion}, loaders: new[] {ModloaderId});
 
                         ver = versions.FirstOrDefault(v => v.GameVersions.Contains(MinecraftVersion));
 
                         if (ver == null)
                         {
-                            Debug.WriteLine($"Failed to download mod {file.Downloads[0]} {file.Path} : failed to find any version compatible with {MinecraftVersion}");
+                            Debug.WriteLine(
+                                $"Failed to download mod {file.Downloads[0]} {file.Path} : failed to find any version compatible with {MinecraftVersion}");
                             continue;
                         }
                     }
@@ -156,8 +163,6 @@ public class ModrinthModificationPack : ModificationPack
                         PlatformId = "modrinth",
                         VersionId = version
                     });
-
-                    continue;
                 }
             }
 
@@ -170,7 +175,7 @@ public class ModrinthModificationPack : ModificationPack
             new AdditionalFile
             {
                 Path = entry.FullName.Replace("overrides/", "").Replace("client-overrides/", ""),
-                Data = entry.Open().ReadToEndAndClose(entry.Length),
+                Data = entry.Open().ReadToEndAndClose(entry.Length)
             }).ToArray();
 
         return this;
@@ -200,28 +205,22 @@ public class ModrinthModificationPack : ModificationPack
         };
 
         if (box.ModLoader is ForgeModLoaderSupport)
-        {
             index.Dependencies = new ModelModrinthIndex.ModelDependencies
             {
                 Forge = box.Manifest.ModLoaderVersion
             };
-        } else if (box.ModLoader is FabricModLoaderSupport)
-        {
+        else if (box.ModLoader is FabricModLoaderSupport)
             index.Dependencies = new ModelModrinthIndex.ModelDependencies
             {
                 FabricLoader = box.Manifest.ModLoaderVersion
             };
-        } else if (box.ModLoader is QuiltModLoaderSupport)
-        {
+        else if (box.ModLoader is QuiltModLoaderSupport)
             index.Dependencies = new ModelModrinthIndex.ModelDependencies
             {
                 QuiltLoader = box.Manifest.ModLoaderVersion
             };
-        }
         else
-        {
             index.Dependencies = new ModelModrinthIndex.ModelDependencies();
-        }
 
         index.Dependencies.Minecraft = box.Manifest.Version;
 
@@ -233,48 +232,51 @@ public class ModrinthModificationPack : ModificationPack
                 // Include any non-Modrinth mod to the overrides
                 ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{mod.Filenames[0]}");
                 await using Stream entryStream = overrideEntry.Open();
-                using FileStream modFileStream = new FileStream(box.Folder.CompletePath + $"/{mod.Filenames[0]}", FileMode.Open);
+                using FileStream modFileStream =
+                    new FileStream(box.Folder.CompletePath + $"/{mod.Filenames[0]}", FileMode.Open);
 
                 await modFileStream.CopyToAsync(entryStream);
-                
+
                 continue;
             }
-            
+
             Version modVersion = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetAsync(mod.VersionId);
             var primaryVersionFile = modVersion.Files.First(f => f.Primary);
 
             ModelModrinthIndex.ModelFile fileModel = new()
             {
                 Path = mod.Filenames[0],
-                Downloads = new []{primaryVersionFile.Url},
+                Downloads = new[] {primaryVersionFile.Url},
                 Hashes = new ModelModrinthIndex.ModelFile.ModelHashes
                 {
                     Sha1 = primaryVersionFile.Hashes.Sha1,
                     Sha512 = primaryVersionFile.Hashes.Sha512
                 },
-                FileSize = (uint)primaryVersionFile.Size
+                FileSize = (uint) primaryVersionFile.Size
             };
 
             files.Add(fileModel);
         }
+
         index.Files = files.ToArray();
 
         foreach (string file in box.GetAdditionalFiles())
         {
             string completePath = $"{box.Path}/minecraft/{file}";
             if (!File.Exists(completePath)) continue;
-            
+
             ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
             await using Stream entryStream = overrideEntry.Open();
             using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
 
             await modFileStream.CopyToAsync(entryStream);
         }
+
         foreach (string modFile in box.GetUnlistedMods())
         {
             string completePath = $"{box.Path}/minecraft/{modFile}";
             if (!File.Exists(completePath)) continue;
-            
+
             ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{modFile}");
             await using Stream entryStream = overrideEntry.Open();
             using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
@@ -287,7 +289,7 @@ public class ModrinthModificationPack : ModificationPack
             WriteIndented = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
-        
+
         ZipArchiveEntry entry = zip.CreateEntry("modrinth.index.json");
         await using Stream manifestStream = entry.Open();
         await JsonSerializer.SerializeAsync(manifestStream, index, options);

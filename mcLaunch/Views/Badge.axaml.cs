@@ -1,7 +1,6 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -14,14 +13,27 @@ public partial class Badge : UserControl
         AvaloniaProperty.RegisterAttached<Badge, UserControl, string>(
             nameof(Text),
             "Editor",
-            inherits: true);
-    
-    
+            true);
+
+
     public static readonly StyledProperty<IImage> IconProperty =
         AvaloniaProperty.Register<Badge, IImage>(nameof(Icon));
 
-    string text;
-    IImage icon;
+    private IImage icon;
+
+    private string text;
+
+    public Badge()
+    {
+        InitializeComponent();
+    }
+
+    public Badge(string text, string iconName)
+    {
+        InitializeComponent();
+
+        DataContext = new Data(text, iconName);
+    }
 
     public string Text
     {
@@ -43,28 +55,16 @@ public partial class Badge : UserControl
         }
     }
 
-    public Badge()
-    {
-        InitializeComponent();
-    }
-
-    public Badge(string text, string iconName)
-    {
-        InitializeComponent();
-
-        DataContext = new Data(text, iconName);
-    }
-
     public class Data
     {
-        public string Text { get; set; }
-        public Bitmap Icon { get; set; }
-
         public Data(string text, string iconName)
         {
             Text = text;
 
             Icon = new Bitmap(AssetLoader.Open(new Uri($"avares:resources/icons/{iconName}.png")));
         }
+
+        public string Text { get; set; }
+        public Bitmap Icon { get; set; }
     }
 }

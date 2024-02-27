@@ -3,7 +3,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
@@ -12,8 +11,8 @@ namespace mcLaunch.Views.Windows;
 
 public partial class VersionSelectWindow : Window
 {
-    ManifestMinecraftVersion[] versions;
-    ManifestMinecraftVersion? selectedVersion;
+    private ManifestMinecraftVersion? selectedVersion;
+    private readonly ManifestMinecraftVersion[] versions;
 
     public VersionSelectWindow()
     {
@@ -35,7 +34,7 @@ public partial class VersionSelectWindow : Window
         Title = title;
     }
 
-    ManifestMinecraftVersion[] RunSearch(string? query)
+    private ManifestMinecraftVersion[] RunSearch(string? query)
     {
         if (string.IsNullOrWhiteSpace(query))
             return versions;

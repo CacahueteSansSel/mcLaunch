@@ -11,16 +11,16 @@ namespace mcLaunch.Installer.Core;
 
 public class SoftwareInstaller
 {
-    public InstallerParameters Parameters { get; private set; }
-    public bool CopyInstaller { get; set; } = true;
-    public event Action? OnExtractionStarted;
-
     public SoftwareInstaller(InstallerParameters parameters)
     {
         Parameters = parameters;
     }
 
-    async Task RunPostInstallTasks()
+    public InstallerParameters Parameters { get; }
+    public bool CopyInstaller { get; set; } = true;
+    public event Action? OnExtractionStarted;
+
+    private async Task RunPostInstallTasks()
     {
         if (!OperatingSystem.IsWindows()) return;
 
@@ -62,7 +62,9 @@ public class SoftwareInstaller
     {
         string platform = OperatingSystem.IsWindows()
             ? "windows"
-            : (OperatingSystem.IsLinux() ? "linux" : "unknown");
+            : OperatingSystem.IsLinux()
+                ? "linux"
+                : "unknown";
 
         GitHubReleaseAsset platformAsset = Parameters.ReleaseToDownload.Assets
             .First(asset => asset.Name.ToLower() == $"mclaunch-{platform}.zip");
@@ -82,7 +84,6 @@ public class SoftwareInstaller
             string filename = $"{Parameters.TargetDirectory}/{entry.FullName}";
 
             if (File.Exists(filename))
-            {
                 try
                 {
                     File.Delete(filename);
@@ -90,7 +91,6 @@ public class SoftwareInstaller
                 catch (Exception e)
                 {
                 }
-            }
         }
 
         archive.ExtractToDirectory(Parameters.TargetDirectory, true);
@@ -101,7 +101,7 @@ public class SoftwareInstaller
             File.Copy(Environment.GetCommandLineArgs()[0],
                 $"{Parameters.TargetDirectory}/installer/installer" + (OperatingSystem.IsWindows() ? ".exe" : ""),
                 true);
-            
+
             if (!OperatingSystem.IsWindows())
                 File.SetUnixFileMode($"{Parameters.TargetDirectory}/installer/installer", UnixFileMode.UserExecute);
         }

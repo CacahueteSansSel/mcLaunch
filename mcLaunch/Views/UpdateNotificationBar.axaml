@@ -6,14 +6,15 @@
              Height="60"
              x:Class="mcLaunch.Views.UpdateNotificationBar">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
-    <Border Background="{DynamicResource Background}" BorderThickness="1" BorderBrush="{DynamicResource BackgroundLighter}">
+    <Border Background="{DynamicResource Background}" BorderThickness="1"
+            BorderBrush="{DynamicResource BackgroundLighter}">
         <DockPanel VerticalAlignment="Center" Margin="10 0 10 0">
             <StackPanel VerticalAlignment="Center" DockPanel.Dock="Left" Orientation="Vertical">
                 <TextBlock DockPanel.Dock="Left">An update for mcLaunch is available</TextBlock>
                 <StackPanel Orientation="Horizontal" Spacing="10" Height="30">
-                    <Image Source="/resources/logo_big.png" Height="15" VerticalAlignment="Center"></Image>
+                    <Image Source="/resources/logo_big.png" Height="15" VerticalAlignment="Center" />
                     <TextBlock x:Name="VersionNameText" VerticalAlignment="Center" FontWeight="SemiBold">v0.2.0</TextBlock>
                 </StackPanel>
             </StackPanel>
@@ -21,7 +22,7 @@
                 <Button Classes="secondary" Click="IgnoreButtonClicked">Hide</Button>
                 <Button Classes="primary" Click="UpdateButtonClicked">See more details</Button>
             </StackPanel>
-            <Panel></Panel>
+            <Panel />
         </DockPanel>
     </Border>
 </UserControl>

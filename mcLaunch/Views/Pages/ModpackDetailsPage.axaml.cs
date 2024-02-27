@@ -1,16 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
-using Cacahuete.MinecraftLib.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Core;
-using mcLaunch.Core.Managers;
 using mcLaunch.Core.Contents;
+using mcLaunch.Core.Core;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 
@@ -18,10 +14,8 @@ namespace mcLaunch.Views.Pages;
 
 public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
 {
-    public string Title => $"{modpack.Name} by {modpack.Author} on {modpack.ModPlatformId}";
-    
-    private PlatformModpack modpack;
-    
+    private readonly PlatformModpack modpack;
+
     public ModpackDetailsPage()
     {
         InitializeComponent();
@@ -48,7 +42,10 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
                 ? $"{supportedMinecraftVersions[0]}"
                 : $"{supportedMinecraftVersions[0]} - {supportedMinecraftVersions.Last()}";
         }
-        else ModpackVersionsBadge.IsVisible = false;
+        else
+        {
+            ModpackVersionsBadge.IsVisible = false;
+        }
 
         string[] supportedModloaders = this.modpack.FetchModLoaders();
         ModpackPlatformBadge.Text = string.Join(", ", supportedModloaders);
@@ -56,17 +53,19 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
         ModpackPlatformBadge.IsVisible = supportedModloaders.Length > 0;
     }
 
+    public string Title => $"{modpack.Name} by {modpack.Author} on {modpack.ModPlatformId}";
+
     private void CloneButtonClicked(object? sender, RoutedEventArgs e)
     {
         CloneButton.IsVisible = false;
-        
+
         Navigation.ShowPopup(new VersionSelectionPopup(modpack, CreateModpack));
     }
 
     private async void CreateModpack(IVersion version)
     {
         if (version is not PlatformModpack.ModpackVersion modpackVersion) return;
-        
+
         Navigation.HidePopup();
         Navigation.ShowPopup(new StatusPopup($"Cloning {modpack.Name}", "Please wait for the modpack to be cloned"));
         StatusPopup.Instance.Status = "Downloading...";
@@ -77,9 +76,9 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
             StatusPopup.Instance.Status = $"{msg}";
             StatusPopup.Instance.StatusPercent = percent;
         });
-        
+
         StatusPopup.Instance.ShowDownloadBanner = false;
-        
+
         Navigation.HidePopup();
 
         Navigation.Push(new BoxDetailsPage(box));

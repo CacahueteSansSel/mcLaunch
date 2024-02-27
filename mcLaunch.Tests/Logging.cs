@@ -26,7 +26,7 @@ public static class Logging
                 Console.ForegroundColor = ConsoleColor.Blue;
                 break;
         }
-                
+
         Console.Write(type.ToString());
         Console.ResetColor();
         Console.WriteLine($"] {message}");

@@ -6,14 +6,13 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.BoxDetails.ScreenshotListSubControl">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <ScrollViewer>
         <Panel>
-            <WrapPanel x:Name="Container">
-            
-            </WrapPanel>
-            <views:NothingToShowBanner x:Name="NtsBanner" Footer="Your in-game screenshots will show here" IsVisible="False"></views:NothingToShowBanner>
+            <WrapPanel x:Name="Container" />
+            <views:NothingToShowBanner x:Name="NtsBanner" Footer="Your in-game screenshots will show here"
+                                       IsVisible="False" />
         </Panel>
     </ScrollViewer>
 </UserControl>

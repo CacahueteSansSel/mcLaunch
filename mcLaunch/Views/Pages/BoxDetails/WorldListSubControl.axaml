@@ -6,26 +6,25 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.BoxDetails.WorldListSubControl">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <StackPanel>
         <DockPanel>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
-                <TextBlock Classes="light" Opacity="0.25" 
-                           HorizontalAlignment="Right" Text="{Binding .}">
-                </TextBlock>
-                <TextBlock Classes="light" Margin="3 0 0 0" Opacity="0.25" 
+                <TextBlock Classes="light" Opacity="0.25"
+                           HorizontalAlignment="Right" Text="{Binding .}" />
+                <TextBlock Classes="light" Margin="3 0 0 0" Opacity="0.25"
                            HorizontalAlignment="Right">
                     WORLDS
                 </TextBlock>
             </StackPanel>
-            <Panel></Panel>
+            <Panel />
         </DockPanel>
         <Border x:Name="QuickPlayBanner" IsVisible="False" Padding="15" Classes="frame-without-shadow">
             <DockPanel>
                 <TextBlock VerticalAlignment="Center">This version of Minecraft supports launching worlds directly : select a world to launch into it</TextBlock>
             </DockPanel>
         </Border>
-        <views:WorldList x:Name="WorldsList" Margin="0 10 0 0"></views:WorldList>
+        <views:WorldList x:Name="WorldsList" Margin="0 10 0 0" />
     </StackPanel>
 </UserControl>

@@ -1,8 +1,6 @@
 ﻿using System;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Cacahuete.MinecraftLib.Auth;
 using mcLaunch.Core.Managers;
@@ -14,8 +12,6 @@ namespace mcLaunch.Views.Pages;
 
 public partial class OnBoardingPage : UserControl, ITopLevelPageControl
 {
-    public string Title => $"mcLaunch";
-    
     public OnBoardingPage()
     {
         InitializeComponent();
@@ -31,28 +27,29 @@ public partial class OnBoardingPage : UserControl, ITopLevelPageControl
         }
     }
 
+    public string Title => "mcLaunch";
+
     private async void LoginWithMicrosoftButton(object? sender, RoutedEventArgs e)
     {
         MainWindowDataContext.Instance.ShowLoadingPopup();
         bool wasStatusPopupShown = false;
 
-        MinecraftAuthenticationResult? auth = await AuthenticationManager.AuthenticateAsync(result =>
-        {
-            Dispatcher.UIThread.Post(() =>
+        MinecraftAuthenticationResult? auth = await AuthenticationManager.AuthenticateAsync(
+            result =>
             {
-                Navigation.ShowPopup(new BrowserDeviceCodePopup(result));
-            });
-        }, (name, stepIndex, stepCount) =>
-        {
-            if (!wasStatusPopupShown)
+                Dispatcher.UIThread.Post(() => { Navigation.ShowPopup(new BrowserDeviceCodePopup(result)); });
+            }, (name, stepIndex, stepCount) =>
             {
-                Navigation.ShowPopup(new StatusPopup("Logging in...", "Please wait while we are logging you in..."));
-                wasStatusPopupShown = true;
-            }
+                if (!wasStatusPopupShown)
+                {
+                    Navigation.ShowPopup(new StatusPopup("Logging in...",
+                        "Please wait while we are logging you in..."));
+                    wasStatusPopupShown = true;
+                }
 
-            StatusPopup.Instance.Status = name;
-            StatusPopup.Instance.StatusPercent = (float) stepIndex / stepCount;
-        });
+                StatusPopup.Instance.Status = name;
+                StatusPopup.Instance.StatusPercent = (float) stepIndex / stepCount;
+            });
 
         if (auth != null && auth.IsSuccess)
         {
@@ -67,7 +64,7 @@ public partial class OnBoardingPage : UserControl, ITopLevelPageControl
                 $"An error occurred : {auth.Message}\nClear the cache and try to reconnect ?", async () =>
                 {
                     await AuthenticationManager.DisconnectAsync();
-                    
+
                     LoginWithMicrosoftButton(null, null);
                 }));
         }

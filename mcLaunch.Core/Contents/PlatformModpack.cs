@@ -1,8 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using System.Web;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Cacahuete.MinecraftLib.Models;
 using Markdig;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
@@ -13,25 +10,22 @@ namespace mcLaunch.Core.Contents;
 
 public class PlatformModpack : ReactiveObject, IVersionContent
 {
-    string? longDescriptionBody;
-    Bitmap? icon;
-    Bitmap? background;
-    MinecraftContentPlatform? platform;
-    bool isInstalledOnCurrentBox;
-    
-    public string? Name { get; set; }
+    private Bitmap? background;
+    private Bitmap? icon;
+    private bool isInstalledOnCurrentBox;
+    private string? longDescriptionBody;
     public string Id { get; set; }
     public string Author { get; set; }
     public string? ShortDescription { get; set; }
     public string? Changelog { get; set; }
     public string? Url { get; set; }
-    public IEnumerable<IVersion> ContentVersions => Versions;
 
     public string? LongDescriptionBody
     {
         get => longDescriptionBody;
         set => this.RaiseAndSetIfChanged(ref longDescriptionBody, value);
     }
+
     public string? IconPath { get; set; }
     public string? BackgroundPath { get; set; }
     public ModpackVersion[] Versions { get; set; }
@@ -63,12 +57,7 @@ public class PlatformModpack : ReactiveObject, IVersionContent
         set => Platform = ModPlatformManager.Platform.GetModPlatform(value);
     }
 
-    [JsonIgnore]
-    public MinecraftContentPlatform? Platform
-    {
-        get => platform;
-        set => platform = value;
-    }
+    [JsonIgnore] public MinecraftContentPlatform? Platform { get; set; }
 
     public string DownloadCountFormatted => !IsDownloadCountValid ? "-" : DownloadCount.Value.ToDisplay();
     public TimeSpan LastUpdatedSpan => !IsLastUpdatedValid ? TimeSpan.Zero : DateTime.Now - LastUpdated.Value;
@@ -76,11 +65,14 @@ public class PlatformModpack : ReactiveObject, IVersionContent
     public bool IsDownloadCountValid => DownloadCount.HasValue;
     public bool IsLastUpdatedValid => LastUpdated.HasValue;
 
+    public string? Name { get; set; }
+    public IEnumerable<IVersion> ContentVersions => Versions;
+
     public bool IsSimilar(string name, string author)
     {
-        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(author)) 
+        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(author))
             return false;
-        
+
         string nameNormalized = Name.NormalizeTitle();
         string authorNormalized = Author.NormalizeUsername();
         string otherNameNormalized = name.NormalizeTitle();
@@ -91,12 +83,14 @@ public class PlatformModpack : ReactiveObject, IVersionContent
     }
 
     public bool IsSimilar(PlatformModpack other)
-        => IsSimilar(other.Name, other.Author);
+    {
+        return IsSimilar(other.Name, other.Author);
+    }
 
-    async Task<Stream> LoadIconStreamAsync()
+    private async Task<Stream> LoadIconStreamAsync()
     {
         if (IconPath == null) return null;
-        
+
         HttpClient client = new HttpClient();
 
         try
@@ -117,20 +111,17 @@ public class PlatformModpack : ReactiveObject, IVersionContent
         string cacheName = $"icon-mod-{Platform.Name}-{Id}";
         if (CacheManager.HasBitmap(cacheName))
         {
-            await Task.Run(() =>
-            {
-                Icon = CacheManager.LoadBitmap(cacheName);
-            });
+            await Task.Run(() => { Icon = CacheManager.LoadBitmap(cacheName); });
 
             return;
         }
 
         if (IconPath == null) return;
-        
+
         await using (var imageStream = await LoadIconStreamAsync())
         {
             if (imageStream == null) return;
-            
+
             Icon = await Task.Run(() =>
             {
                 try
@@ -142,15 +133,15 @@ public class PlatformModpack : ReactiveObject, IVersionContent
                     return null;
                 }
             });
-            
+
             CacheManager.Store(Icon, cacheName);
         }
     }
 
-    async Task<Stream> LoadBackgroundStreamAsync()
+    private async Task<Stream> LoadBackgroundStreamAsync()
     {
         if (BackgroundPath == null) return null;
-        
+
         HttpClient client = new HttpClient();
 
         try
@@ -171,20 +162,17 @@ public class PlatformModpack : ReactiveObject, IVersionContent
         string cacheName = $"bkg-mod-{Platform.Name}-{Id}";
         if (CacheManager.HasBitmap(cacheName))
         {
-            await Task.Run(() =>
-            {
-                Background = CacheManager.LoadBitmap(cacheName);
-            });
+            await Task.Run(() => { Background = CacheManager.LoadBitmap(cacheName); });
 
             return;
         }
 
         if (BackgroundPath == null) return;
-        
+
         await using (var imageStream = await LoadBackgroundStreamAsync())
         {
             if (imageStream == null) return;
-            
+
             Background = await Task.Run(() =>
             {
                 try
@@ -196,7 +184,7 @@ public class PlatformModpack : ReactiveObject, IVersionContent
                     return null;
                 }
             });
-            
+
             CacheManager.Store(Background, cacheName);
         }
     }
@@ -204,17 +192,17 @@ public class PlatformModpack : ReactiveObject, IVersionContent
     public string[] FetchAndSortSupportedMinecraftVersions()
     {
         if (Versions == null) return Array.Empty<string>();
-        
+
         List<Version> mcVersions = new();
 
         foreach (ModpackVersion? modpackVersion in Versions)
         {
-            if (modpackVersion == null || !Version.TryParse(modpackVersion.MinecraftVersion, out Version version)) 
+            if (modpackVersion == null || !Version.TryParse(modpackVersion.MinecraftVersion, out Version version))
                 continue;
-            
+
             if (!mcVersions.Contains(version)) mcVersions.Add(version);
         }
-        
+
         mcVersions.Sort();
         return mcVersions.Select(v => v.ToString()).ToArray();
     }
@@ -224,13 +212,13 @@ public class PlatformModpack : ReactiveObject, IVersionContent
         List<string> modloadersNames = new();
 
         if (Versions == null) return [];
-        
+
         foreach (ModpackVersion? modpackVersion in Versions)
         {
             if (modpackVersion == null || string.IsNullOrEmpty(modpackVersion.ModLoader)) continue;
 
             string capModLoaderName = modpackVersion.ModLoader.Capitalize();
-            
+
             if (!modloadersNames.Contains(capModLoaderName))
                 modloadersNames.Add(capModLoaderName);
         }
@@ -238,22 +226,22 @@ public class PlatformModpack : ReactiveObject, IVersionContent
         return modloadersNames.ToArray();
     }
 
+    public void TransformLongDescriptionToHtml()
+    {
+        if (string.IsNullOrWhiteSpace(LongDescriptionBody))
+            return;
+
+        LongDescriptionBody = Markdown.ToHtml(LongDescriptionBody,
+            new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
+    }
+
     public class ModpackVersion : IVersion
     {
+        public string? ModpackFileUrl { get; set; }
+        public string? ModpackFileHash { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
         public string? MinecraftVersion { get; set; }
-        public string? ModpackFileUrl { get; set; }
-        public string? ModpackFileHash { get; set; }
         public string? ModLoader { get; set; }
-    }
-
-    public void TransformLongDescriptionToHtml()
-    {
-        if (string.IsNullOrWhiteSpace(LongDescriptionBody)) 
-            return;
-
-        LongDescriptionBody = Markdown.ToHtml(LongDescriptionBody, 
-            new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
     }
 }

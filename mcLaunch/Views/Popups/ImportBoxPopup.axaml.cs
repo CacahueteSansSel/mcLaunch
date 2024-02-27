@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -37,11 +35,11 @@ public partial class ImportBoxPopup : UserControl
         if (files.Length == 0) return;
 
         BoxBinaryModificationPack bb = new(files[0]);
-        
+
         Navigation.HidePopup();
         Navigation.ShowPopup(new StatusPopup($"Importing {bb.Name}", "Please wait for the modpack to be imported"));
         StatusPopup.Instance.ShowDownloadBanner = true;
-        
+
         Box box = await BoxManager.CreateFromModificationPack(bb, (msg, percent) =>
         {
             StatusPopup.Instance.Status = msg;
@@ -55,11 +53,10 @@ public partial class ImportBoxPopup : UserControl
         }
         catch (Exception exception)
         {
-            
         }
-        
+
         Navigation.HidePopup();
-        
+
         Navigation.Push(new BoxDetailsPage(box));
         MainPage.Instance.PopulateBoxList();
     }
@@ -70,22 +67,23 @@ public partial class ImportBoxPopup : UserControl
         if (files.Length == 0) return;
 
         CurseForgeModificationPack modpack = new CurseForgeModificationPack(files[0]);
-        
+
         Navigation.HidePopup();
-        Navigation.ShowPopup(new StatusPopup($"Importing {modpack.Name}", "Please wait for the modpack to be imported"));
+        Navigation.ShowPopup(new StatusPopup($"Importing {modpack.Name}",
+            "Please wait for the modpack to be imported"));
         StatusPopup.Instance.ShowDownloadBanner = true;
-        
+
         Box box = await BoxManager.CreateFromModificationPack(modpack, (msg, percent) =>
         {
             StatusPopup.Instance.Status = msg;
             StatusPopup.Instance.StatusPercent = percent;
         });
-        
+
         Navigation.HidePopup();
-        
-        Bitmap bmp = new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/default_cf_modpack_logo.png")));
+
+        Bitmap bmp = new Bitmap(AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_cf_modpack_logo.png")));
         box.SetAndSaveIcon(bmp);
-        
+
         Navigation.Push(new BoxDetailsPage(box));
         MainPage.Instance.PopulateBoxList();
     }
@@ -96,22 +94,23 @@ public partial class ImportBoxPopup : UserControl
         if (files.Length == 0) return;
 
         ModrinthModificationPack modpack = new ModrinthModificationPack(files[0]);
-        
+
         Navigation.HidePopup();
-        Navigation.ShowPopup(new StatusPopup($"Importing {modpack.Name}", "Please wait for the modpack to be imported"));
+        Navigation.ShowPopup(new StatusPopup($"Importing {modpack.Name}",
+            "Please wait for the modpack to be imported"));
 
         StatusPopup.Instance.Status = "Resolving modifications...";
 
         await modpack.SetupAsync();
-        
+
         StatusPopup.Instance.ShowDownloadBanner = true;
-        
+
         Box box = await BoxManager.CreateFromModificationPack(modpack, (msg, percent) =>
         {
             StatusPopup.Instance.Status = $"{msg}";
             StatusPopup.Instance.StatusPercent = percent;
         });
-        
+
         Navigation.HidePopup();
 
         if (File.Exists($"{box.Path}/minecraft/icon.png"))
@@ -121,7 +120,7 @@ public partial class ImportBoxPopup : UserControl
         }
         else
         {
-            Bitmap bmp = new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/default_box_logo.png")));
+            Bitmap bmp = new Bitmap(AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_box_logo.png")));
             box.SetAndSaveIcon(bmp);
         }
 

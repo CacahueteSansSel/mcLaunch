@@ -1,24 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Avalonia.Threading;
-using CurseForge.Models.Mods;
-using DynamicData;
-using mcLaunch.Core;
-using mcLaunch.Core.Contents.Platforms;
-using mcLaunch.Models;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Contents;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Contents;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
 using ReactiveUI;
@@ -33,6 +23,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
             false,
             true
         );
+
     public static readonly AttachedProperty<MinecraftContentType> ContentTypeProperty
         = AvaloniaProperty.RegisterAttached<MinecraftContentList, UserControl, MinecraftContentType>(
             nameof(ContentType),
@@ -40,13 +31,10 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
             true
         );
 
-    Box lastBox;
-    string lastQuery;
     private List<MinecraftContent> fullContentList = new();
 
-    public bool HideInstalledBadges { get; set; }
-    public MinecraftContentType ContentType { get; set; }
-    public MinecraftContent[] Contents => ((Data) DataContext).Contents;
+    private Box lastBox;
+    private string lastQuery;
 
     public MinecraftContentList()
     {
@@ -55,6 +43,32 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         LoadMoreButton.IsVisible = false;
 
         DataContext = new Data();
+    }
+
+    public bool HideInstalledBadges { get; set; }
+    public MinecraftContentType ContentType { get; set; }
+    public MinecraftContent[] Contents => ((Data) DataContext).Contents;
+
+    public void OnContentAdded(MinecraftContent content)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            Data ctx = (Data) DataContext;
+
+            List<MinecraftContent> contents = new List<MinecraftContent>(ctx.Contents);
+            contents.Add(content);
+            ctx.Contents = contents.ToArray();
+        });
+    }
+
+    public void OnContentRemoved(string contentId)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            Data ctx = (Data) DataContext;
+
+            ctx.Contents = ctx.Contents.Where(content => content.Id != contentId).ToArray();
+        });
     }
 
     public void SetBox(Box box)
@@ -88,12 +102,12 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     public void SetQuery(string? query)
     {
         Data ctx = (Data) DataContext;
-        ctx.Contents = string.IsNullOrWhiteSpace(query) 
-            ? fullContentList.ToArray() 
+        ctx.Contents = string.IsNullOrWhiteSpace(query)
+            ? fullContentList.ToArray()
             : fullContentList.Where(mod => mod.MatchesQuery(query)).ToArray();
     }
 
-    void ApplyContentAttributes()
+    private void ApplyContentAttributes()
     {
         if (lastBox == null) return;
 
@@ -139,7 +153,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         LoadMoreButton.IsVisible = ctx.Contents.Length >= 10;
     }
 
-    async Task<MinecraftContent[]> SearchContentsAsync(Box box, string query)
+    private async Task<MinecraftContent[]> SearchContentsAsync(Box box, string query)
     {
         Data ctx = (Data) DataContext;
 
@@ -150,24 +164,6 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         lastQuery = query;
 
         return mods.Items.ToArray();
-    }
-
-    public class Data : ReactiveObject
-    {
-        MinecraftContent[] contents;
-        int page;
-
-        public MinecraftContent[] Contents
-        {
-            get => contents;
-            set => this.RaiseAndSetIfChanged(ref contents, value);
-        }
-
-        public int Page
-        {
-            get => page;
-            set => this.RaiseAndSetIfChanged(ref page, value);
-        }
     }
 
     private async void LoadMoreButtonClicked(object? sender, RoutedEventArgs e)
@@ -199,33 +195,29 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         }
     }
 
-    public void OnContentAdded(MinecraftContent content)
-    {
-        Dispatcher.UIThread.Post(() =>
-        {
-            Data ctx = (Data) DataContext;
-
-            List<MinecraftContent> contents = new List<MinecraftContent>(ctx.Contents);
-            contents.Add(content);
-            ctx.Contents = contents.ToArray();
-        });
-    }
-
-    public void OnContentRemoved(string contentId)
-    {
-        Dispatcher.UIThread.Post(() =>
-        {
-            Data ctx = (Data) DataContext;
-
-            ctx.Contents = ctx.Contents.Where(content => content.Id != contentId).ToArray();
-        });
-    }
-
     protected override void OnUnloaded(RoutedEventArgs e)
     {
         if (lastBox != null && lastBox.EventListener == this)
             lastBox.EventListener = null;
-        
+
         base.OnUnloaded(e);
+    }
+
+    public class Data : ReactiveObject
+    {
+        private MinecraftContent[] contents;
+        private int page;
+
+        public MinecraftContent[] Contents
+        {
+            get => contents;
+            set => this.RaiseAndSetIfChanged(ref contents, value);
+        }
+
+        public int Page
+        {
+            get => page;
+            set => this.RaiseAndSetIfChanged(ref page, value);
+        }
     }
 }

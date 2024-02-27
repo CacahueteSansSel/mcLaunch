@@ -1,8 +1,5 @@
 ﻿using System.Diagnostics;
 using System.IO;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
 namespace mcLaunch.Installer.Pages;
 
@@ -16,7 +13,7 @@ public partial class InstalledPage : InstallerPage
     public override void OnShow()
     {
         base.OnShow();
-        
+
         MainWindow.Instance.HidePreviousButtons();
     }
 

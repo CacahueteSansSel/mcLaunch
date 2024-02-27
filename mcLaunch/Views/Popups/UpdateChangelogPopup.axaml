@@ -7,23 +7,24 @@
              Width="450" Height="500"
              x:Class="mcLaunch.Views.Popups.UpdateChangelogPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">
             <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                 <TextBlock x:Name="TitleText" Classes="title" TextWrapping="Wrap" FontSize="25">New update available !</TextBlock>
                 <StackPanel Orientation="Horizontal" Spacing="10" Height="35">
-                    <Image Source="/resources/logo_big.png" Height="15" VerticalAlignment="Center"></Image>
+                    <Image Source="/resources/logo_big.png" Height="15" VerticalAlignment="Center" />
                     <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" Text="{Binding Name}" />
                 </StackPanel>
             </StackPanel>
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" Margin="10 0 0 0" Classes="secondary" Click="CancelButtonClicked">Cancel</Button>
                 <Button DockPanel.Dock="Right" Classes="primary" Click="UpdateButtonClicked">Update now</Button>
-                <Panel></Panel>
+                <Panel />
             </DockPanel>
-            <Border Margin="0 5 0 0" Padding="5" Classes="frame-without-shadow" Background="{DynamicResource BackgroundDarker}">
+            <Border Margin="0 5 0 0" Padding="5" Classes="frame-without-shadow"
+                    Background="{DynamicResource BackgroundDarker}">
                 <avalonia:MarkdownScrollViewer x:Name="MarkdownArea" Markdown="{Binding MarkdownBody}" />
             </Border>
         </DockPanel>

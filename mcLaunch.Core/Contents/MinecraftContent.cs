@@ -1,27 +1,55 @@
-﻿using System.Diagnostics;
-using System.Text.Json.Serialization;
-using System.Web;
-using System.Windows.Input;
+﻿using System.Text.Json.Serialization;
 using Avalonia.Media.Imaging;
 using Markdig;
-using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Contents.Platforms;
+using mcLaunch.Core.Utilities;
 using ReactiveUI;
 
 namespace mcLaunch.Core.Contents;
 
 public class MinecraftContent : ReactiveObject
 {
-    public static MinecraftContent CreateIdOnly(string id) => new() {Id = id};
+    private Bitmap? background;
+    private IconCollection icon;
+    private bool isInstalledOnCurrentBox;
 
-    string? longDescriptionBody;
-    IconCollection icon;
-    Bitmap? background;
-    MinecraftContentPlatform? platform;
-    bool isInstalledOnCurrentBox;
+    private string? longDescriptionBody;
+
+    public MinecraftContent(Stream inputStream)
+    {
+        BinaryReader rd = new(inputStream);
+
+        Name = rd.ReadNullableString();
+        Id = rd.ReadString();
+        Author = rd.ReadString();
+        ShortDescription = rd.ReadNullableString();
+        Changelog = rd.ReadNullableString();
+        Url = rd.ReadNullableString();
+        IconUrl = rd.ReadNullableString();
+        LatestVersion = rd.ReadNullableString();
+        LatestMinecraftVersion = rd.ReadNullableString();
+        DownloadCount = rd.ReadInt32();
+        if (DownloadCount == 0) DownloadCount = null;
+        LastUpdated = DateTime.FromBinary(rd.ReadInt64());
+        License = rd.ReadNullableString();
+        string? platformId = rd.ReadNullableString();
+
+        try
+        {
+            Type = (MinecraftContentType) rd.ReadByte();
+        }
+        catch (Exception e)
+        {
+            // Doing this to ensure compatibility with older cache
+            Type = MinecraftContentType.Modification;
+        }
+    }
+
+    public MinecraftContent()
+    {
+    }
 
     public string? Name { get; set; }
     public string Id { get; set; }
@@ -87,12 +115,7 @@ public class MinecraftContent : ReactiveObject
         set => Platform = ModPlatformManager.Platform.GetModPlatform(value);
     }
 
-    [JsonIgnore]
-    public MinecraftContentPlatform? Platform
-    {
-        get => platform;
-        set => platform = value;
-    }
+    [JsonIgnore] public MinecraftContentPlatform? Platform { get; set; }
 
     public string DownloadCountFormatted => !IsDownloadCountValid ? "-" : DownloadCount.Value.ToDisplay();
     public TimeSpan LastUpdatedSpan => !IsLastUpdatedValid ? TimeSpan.Zero : DateTime.Now - LastUpdated.Value;
@@ -100,45 +123,15 @@ public class MinecraftContent : ReactiveObject
     public bool IsDownloadCountValid => DownloadCount.HasValue;
     public bool IsLastUpdatedValid => LastUpdated.HasValue;
 
-    public MinecraftContent(Stream inputStream)
+    public static MinecraftContent CreateIdOnly(string id)
     {
-        BinaryReader rd = new(inputStream);
-
-        Name = rd.ReadNullableString();
-        Id = rd.ReadString();
-        Author = rd.ReadString();
-        ShortDescription = rd.ReadNullableString();
-        Changelog = rd.ReadNullableString();
-        Url = rd.ReadNullableString();
-        IconUrl = rd.ReadNullableString();
-        LatestVersion = rd.ReadNullableString();
-        LatestMinecraftVersion = rd.ReadNullableString();
-        DownloadCount = rd.ReadInt32();
-        if (DownloadCount == 0) DownloadCount = null;
-        LastUpdated = DateTime.FromBinary(rd.ReadInt64());
-        License = rd.ReadNullableString();
-        string? platformId = rd.ReadNullableString();
-
-        try
-        {
-            Type = (MinecraftContentType) rd.ReadByte();
-        }
-        catch (Exception e)
-        {
-            // Doing this to ensure compatibility with older cache
-            Type = MinecraftContentType.Modification;
-        }
-    }
-
-    public MinecraftContent()
-    {
-        
+        return new MinecraftContent {Id = id};
     }
 
     public void WriteToStream(Stream stream)
     {
         BinaryWriter wr = new(stream);
-        
+
         wr.WriteNullableString(Name);
         wr.Write(Id);
         wr.Write(Author);
@@ -152,7 +145,7 @@ public class MinecraftContent : ReactiveObject
         wr.Write(LastUpdated?.ToBinary() ?? 0);
         wr.WriteNullableString(License);
         wr.WriteNullableString(Platform?.Name);
-        wr.Write((byte)Type);
+        wr.Write((byte) Type);
     }
 
     public void TransformLongDescriptionToHtml()
@@ -179,17 +172,26 @@ public class MinecraftContent : ReactiveObject
     }
 
     public bool IsSimilar(MinecraftContent other)
-        => IsSimilar(other.Name, other.Author);
+    {
+        return IsSimilar(other.Name, other.Author);
+    }
 
     public bool IsSimilar(BoxStoredContent other)
-        => IsSimilar(other.Name, other.Author);
+    {
+        return IsSimilar(other.Name, other.Author);
+    }
 
     public bool MatchesQuery(string query)
-        => Name.Contains(query, StringComparison.InvariantCultureIgnoreCase)
-           || Author.Contains(query, StringComparison.InvariantCultureIgnoreCase)
-           || ModPlatformId.Contains(query, StringComparison.InvariantCultureIgnoreCase);
+    {
+        return Name.Contains(query, StringComparison.InvariantCultureIgnoreCase)
+               || Author.Contains(query, StringComparison.InvariantCultureIgnoreCase)
+               || ModPlatformId.Contains(query, StringComparison.InvariantCultureIgnoreCase);
+    }
 
-    public string GetLicenseDisplayName() => License ?? "Unknown";
+    public string GetLicenseDisplayName()
+    {
+        return License ?? "Unknown";
+    }
 
     public void SetDefaultIcon()
     {
@@ -211,7 +213,7 @@ public class MinecraftContent : ReactiveObject
             SetDefaultIcon();
     }
 
-    async Task<Stream> LoadBackgroundStreamAsync()
+    private async Task<Stream> LoadBackgroundStreamAsync()
     {
         if (BackgroundPath == null) return null;
 

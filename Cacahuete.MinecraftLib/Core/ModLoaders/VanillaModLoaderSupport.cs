@@ -6,11 +6,12 @@ public class VanillaModLoaderSupport : ModLoaderSupport
     public override string Name { get; set; } = "Vanilla";
     public override string Type { get; set; } = "vanilla";
     public override ModLoaderVersion LatestVersion { get; set; }
+
     public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion)
     {
         return new ModLoaderVersion[]
         {
-            new ModLoaderVersion
+            new()
             {
                 MinecraftVersion = minecraftVersion,
                 Name = minecraftVersion

@@ -13,6 +13,7 @@ public class InstallerParameters
 
     public void SetDefaultTargetDirectory()
     {
-        TargetDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)}{Path.DirectorySeparatorChar}mcLaunch";
+        TargetDirectory =
+            $"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)}{Path.DirectorySeparatorChar}mcLaunch";
     }
 }

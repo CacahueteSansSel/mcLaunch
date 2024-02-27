@@ -1,14 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
 namespace mcLaunch.Views.Pages.BoxDetails;
 
 public partial class ReadmeSubControl : SubControl
 {
-    public override string Title => "README";
-    
     public ReadmeSubControl()
     {
         InitializeComponent();
@@ -21,8 +16,9 @@ public partial class ReadmeSubControl : SubControl
         DataContext = readmeText;
     }
 
+    public override string Title => "README";
+
     public override async Task PopulateAsync()
     {
-        
     }
 }

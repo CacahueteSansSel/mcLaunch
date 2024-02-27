@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Packs;
@@ -12,8 +10,8 @@ namespace mcLaunch.Views.Popups;
 
 public partial class ExportBoxPopup : UserControl
 {
-    private Box box;
-    
+    private readonly Box box;
+
     public ExportBoxPopup()
     {
         InitializeComponent();
@@ -22,19 +20,19 @@ public partial class ExportBoxPopup : UserControl
     public ExportBoxPopup(Box box)
     {
         InitializeComponent();
-        
+
         this.box = box;
     }
 
-    async void ExportAsync<T>(string extension, string extensionDesc) where T : ModificationPack, new()
+    private async void ExportAsync<T>(string extension, string extensionDesc) where T : ModificationPack, new()
     {
         SaveFileDialog sfd = new SaveFileDialog();
         sfd.Title = $"Export {box.Manifest.Name}";
-        sfd.Filters = new List<FileDialogFilter>()
+        sfd.Filters = new List<FileDialogFilter>
         {
             new()
             {
-                Extensions = new List<string>()
+                Extensions = new List<string>
                 {
                     extension
                 },
@@ -49,7 +47,7 @@ public partial class ExportBoxPopup : UserControl
             $"Exporting {box.Manifest.Name} to {extensionDesc}"));
 
         T bb = new();
-        await bb.ExportAsync(box, filename); 
+        await bb.ExportAsync(box, filename);
 
         Navigation.HidePopup();
         Navigation.ShowPopup(new MessageBoxPopup("Success !",

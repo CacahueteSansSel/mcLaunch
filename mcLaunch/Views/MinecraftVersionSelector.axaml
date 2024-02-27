@@ -6,7 +6,7 @@
              MinWidth="250" Height="45"
              x:Class="mcLaunch.Views.MinecraftVersionSelector">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="15 0 15 0" VerticalAlignment="Center">
@@ -15,7 +15,7 @@
             </Button>
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Spacing="5">
                 <TextBlock ClipToBounds="True" Opacity="0.7">Minecraft</TextBlock>
-                <TextBlock Text="{Binding Id}"></TextBlock>
+                <TextBlock Text="{Binding Id}" />
             </StackPanel>
         </DockPanel>
     </Border>

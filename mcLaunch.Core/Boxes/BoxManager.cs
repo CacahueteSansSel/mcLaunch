@@ -4,30 +4,27 @@ using System.Text.RegularExpressions;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Cacahuete.MinecraftLib.Core;
-using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
-using mcLaunch.Core.Core;
-using mcLaunch.Core.Utilities;
-using mcLaunch.Core.Managers;
-using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Platforms;
+using mcLaunch.Core.Core;
+using mcLaunch.Core.Managers;
+using mcLaunch.Core.MinecraftFormats;
+using mcLaunch.Core.Utilities;
 
 namespace mcLaunch.Core.Boxes;
 
 public static class BoxManager
 {
-    static MinecraftFolder systemFolder = new(AppdataFolderManager.GetValidPath("system"));
-
-    static AssetsDownloader assetsDownloader = new(systemFolder);
-    static LibrariesDownloader librariesDownloader = new(systemFolder);
-    static JVMDownloader jvmDownloader = new(systemFolder);
-
     public static string BoxesPath => AppdataFolderManager.GetValidPath("boxes");
-    public static MinecraftFolder SystemFolder => systemFolder;
-    public static AssetsDownloader AssetsDownloader => assetsDownloader;
-    public static LibrariesDownloader LibrariesDownloader => librariesDownloader;
-    public static JVMDownloader JVMDownloader => jvmDownloader;
+    public static MinecraftFolder SystemFolder { get; } = new(AppdataFolderManager.GetValidPath("system"));
+
+    public static AssetsDownloader AssetsDownloader { get; } = new(SystemFolder);
+
+    public static LibrariesDownloader LibrariesDownloader { get; } = new(SystemFolder);
+
+    public static JVMDownloader JVMDownloader { get; } = new(SystemFolder);
+
     public static int BoxCount => Directory.GetDirectories(BoxesPath).Length;
 
     public static Box[] LoadLocalBoxes(bool includeTemp = false)
@@ -44,17 +41,17 @@ public static class BoxManager
         {
             // Don't load invalid boxes
             if (!File.Exists($"{boxPath}/box.json")) continue;
-            
+
             Box box = new Box(boxPath);
             if (box.Manifest.Type == BoxType.Temporary && !includeTemp) continue;
-            
+
             boxes.Add(box);
         }
 
         return boxes.ToArray();
     }
 
-    static async Task PostProcessBoxAsync(Box box, BoxManifest manifest)
+    private static async Task PostProcessBoxAsync(Box box, BoxManifest manifest)
     {
         switch (manifest.ModLoaderId)
         {
@@ -63,12 +60,14 @@ public static class BoxManager
 
                 try
                 {
-                    MinecraftContent fabricApi = await ModrinthMinecraftContentPlatform.Instance.GetContentAsync("P7dR8mSH");
+                    MinecraftContent fabricApi =
+                        await ModrinthMinecraftContentPlatform.Instance.GetContentAsync("P7dR8mSH");
 
                     ContentVersion[] versions = await ModrinthMinecraftContentPlatform.Instance.GetContentVersionsAsync(
                         fabricApi, "fabric", manifest.Version);
 
-                    await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(box, fabricApi, versions[0].Id, false);
+                    await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(box, fabricApi, versions[0].Id,
+                        false);
                 }
                 catch (Exception e)
                 {
@@ -89,7 +88,7 @@ public static class BoxManager
         {
             Bitmap? icon = manifest.Icon.IconLarge ?? manifest.Icon.IconSmall;
             await Task.Run(() => icon!.Save($"{path}/icon.png"));
-            
+
             manifest.Icon = await IconCollection.FromFileAsync($"{path}/icon.png");
         }
 
@@ -184,7 +183,7 @@ public static class BoxManager
     {
         // TODO: maybe use the modpack's own extension (.mrpack for Modrinth) instead of .zip
         string modpackTempFilename = Path.GetFullPath($"temp/{pack.Id}.zip");
-        
+
         DownloadManager.Begin($"{pack.Name} ({version.Name})");
         DownloadManager.Add(version.ModpackFileUrl, modpackTempFilename, version.ModpackFileHash, EntryAction.Download);
         DownloadManager.End();
@@ -193,25 +192,23 @@ public static class BoxManager
         {
             progressCallback?.Invoke($"Downloading modpack ({Path.GetFileName(status)})", percent / 2);
         }
-        
+
         DownloadManager.OnDownloadProgressUpdate += ProgressUpdate;
 
         await DownloadManager.ProcessAll();
-        
+
         DownloadManager.OnDownloadProgressUpdate -= ProgressUpdate;
-        
+
         progressCallback?.Invoke("Initializing Minecraft", 0.5f);
 
         ModificationPack modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
 
-        Box box = await CreateFromModificationPack(modpack, (status, percent) =>
-        {
-            progressCallback?.Invoke(status, 0.5f + percent);
-        });
-        
+        Box box = await CreateFromModificationPack(modpack,
+            (status, percent) => { progressCallback?.Invoke(status, 0.5f + percent); });
+
         if (pack.Icon != null) box.SetAndSaveIcon(pack.Icon);
         if (pack.Background != null) box.SetAndSaveBackground(pack.Background);
-        
+
         box.SaveManifest();
 
         return box;
@@ -221,7 +218,7 @@ public static class BoxManager
         bool downloadAllAfter = true)
     {
         if (!JVMDownloader.HasJVM(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
-                (version.JavaVersion?.Component ?? "jre-legacy")))
+                version.JavaVersion?.Component ?? "jre-legacy"))
         {
             DownloadManager.Begin(customName ?? $"Java {version.JavaVersion.MajorVersion}");
             await JVMDownloader.DownloadForCurrentPlatformAsync(version.JavaVersion.Component);
@@ -230,9 +227,9 @@ public static class BoxManager
 
         DownloadManager.Begin(customName ?? $"Minecraft {version.Id}");
 
-        await systemFolder.InstallVersionAsync(version);
-        await assetsDownloader.DownloadAsync(version, null);
-        await librariesDownloader.DownloadAsync(version, null);
+        await SystemFolder.InstallVersionAsync(version);
+        await AssetsDownloader.DownloadAsync(version, null);
+        await LibrariesDownloader.DownloadAsync(version, null);
 
         DownloadManager.End();
 

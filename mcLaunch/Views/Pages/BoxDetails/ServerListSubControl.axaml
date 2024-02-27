@@ -6,21 +6,20 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.BoxDetails.ServerListSubControl">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <StackPanel>
         <DockPanel>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
-                <TextBlock Classes="light" Opacity="0.25" 
-                           HorizontalAlignment="Right" Text="{Binding .}">
-                </TextBlock>
-                <TextBlock Classes="light" Margin="3 0 0 0" Opacity="0.25" 
+                <TextBlock Classes="light" Opacity="0.25"
+                           HorizontalAlignment="Right" Text="{Binding .}" />
+                <TextBlock Classes="light" Margin="3 0 0 0" Opacity="0.25"
                            HorizontalAlignment="Right">
                     SERVERS
                 </TextBlock>
             </StackPanel>
-            <Panel></Panel>
+            <Panel />
         </DockPanel>
-        <views:ServerList x:Name="ServersList" Margin="0 10 0 0"></views:ServerList>
+        <views:ServerList x:Name="ServersList" Margin="0 10 0 0" />
     </StackPanel>
 </UserControl>

@@ -7,31 +7,34 @@
              Background="{DynamicResource BackgroundDarker}"
              x:Class="mcLaunch.Views.Pages.ContentSearchPage">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Panel>
-        <Image x:Name="DefaultBackground" Stretch="UniformToFill" Source="/resources/background_default.png"></Image>
-        <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}"></Image>
+        <Image x:Name="DefaultBackground" Stretch="UniformToFill" Source="/resources/background_default.png" />
+        <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}" />
         <ScrollViewer>
             <StackPanel>
                 <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
-                    <views:BackButton></views:BackButton>
+                    <views:BackButton />
                 </StackPanel>
                 <Border Classes="frame" Margin="0 10 0 100" Width="888">
                     <StackPanel Margin="1" Orientation="Vertical">
                         <StackPanel Margin="29 0 29 0" Orientation="Vertical">
                             <StackPanel Classes="smoothShowLeft" Orientation="Horizontal">
                                 <TextBlock x:Name="TitleText" Classes="title" Margin="0 20 0 0" FontSize="32">Install more mods on</TextBlock>
-                                <TextBlock Classes="title" Margin="8 20 0 0" FontSize="32" Text="{Binding Manifest.Name}"></TextBlock>
+                                <TextBlock Classes="title" Margin="8 20 0 0" FontSize="32"
+                                           Text="{Binding Manifest.Name}" />
                             </StackPanel>
                             <DockPanel Margin="0 20 0 0">
-                                <Button IsDefault="True" Classes="secondary" DockPanel.Dock="Right" Margin="5 0 0 0" Click="SearchButtonClicked">
-                                    <Image Width="16" Height="16" Source="/resources/icons/search.png"></Image>
+                                <Button IsDefault="True" Classes="secondary" DockPanel.Dock="Right" Margin="5 0 0 0"
+                                        Click="SearchButtonClicked">
+                                    <Image Width="16" Height="16" Source="/resources/icons/search.png" />
                                 </Button>
-                                <TextBox x:Name="SearchBoxInput" VerticalContentAlignment="Center" Watermark="Search here"></TextBox>
+                                <TextBox x:Name="SearchBoxInput" VerticalContentAlignment="Center"
+                                         Watermark="Search here" />
                             </DockPanel>
                         </StackPanel>
-                        <views:MinecraftContentList x:Name="ModList" Margin="38 10 38 20"></views:MinecraftContentList>
+                        <views:MinecraftContentList x:Name="ModList" Margin="38 10 38 20" />
                     </StackPanel>
                 </Border>
             </StackPanel>

@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.DataContexts;
 using mcLaunch.Views.Pages;
-using ReactiveUI;
 
 namespace mcLaunch.Views.Popups;
 
@@ -26,15 +22,12 @@ public partial class FastLaunchPopup : UserControl
         InitializeComponent();
         DataContext = new MinecraftVersionSelectionDataContext();
 
-        VersionSelector.OnVersionChanged += version =>
-        {
-            FetchModLoadersLatestVersions(version.Id);
-        };
-        
+        VersionSelector.OnVersionChanged += version => { FetchModLoadersLatestVersions(version.Id); };
+
         FetchModLoadersLatestVersions(VersionSelector.Version.Id);
     }
 
-    async void FetchModLoadersLatestVersions(string versionId)
+    private async void FetchModLoadersLatestVersions(string versionId)
     {
         LaunchButton.IsEnabled = false;
         MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext;
@@ -63,7 +56,7 @@ public partial class FastLaunchPopup : UserControl
         string name = $"Minecraft {minecraftVersion.Id}";
 
         Navigation.HidePopup();
-        Navigation.ShowPopup(new StatusPopup("Preparing launch", 
+        Navigation.ShowPopup(new StatusPopup("Preparing launch",
             $"Preparing launching {name}..."));
         StatusPopup.Instance.ShowDownloadBanner = true;
 
@@ -79,7 +72,7 @@ public partial class FastLaunchPopup : UserControl
             return;
         }
 
-        BoxManifest newBoxManifest = new BoxManifest(name, null, "FastLaunch", modloader.Id, modloaderVersions[0].Name, 
+        BoxManifest newBoxManifest = new BoxManifest(name, null, "FastLaunch", modloader.Id, modloaderVersions[0].Name,
             null, minecraftVersion, BoxType.Temporary);
 
         string path = await BoxManager.Create(newBoxManifest);

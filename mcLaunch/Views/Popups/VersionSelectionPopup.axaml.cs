@@ -1,46 +1,42 @@
 ﻿using System;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using mcLaunch.Core.Core;
 using mcLaunch.Core.Contents;
+using mcLaunch.Core.Core;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Popups;
 
 public partial class VersionSelectionPopup : UserControl
 {
-    private Action<IVersion> versionSelectedCallback;
     private IVersion? selectedVersion;
+    private readonly Action<IVersion> versionSelectedCallback;
 
     public VersionSelectionPopup()
     {
         InitializeComponent();
 
         if (Design.IsDesignMode)
-        {
-            DataContext = new PlatformModpack()
+            DataContext = new PlatformModpack
             {
                 Name = "hello world",
                 Versions = new[]
                 {
-                    new PlatformModpack.ModpackVersion()
+                    new PlatformModpack.ModpackVersion
                     {
                         MinecraftVersion = "1.18.2",
                         ModLoader = "Fabric",
                         Name = "1.0.0"
                     },
-                    new PlatformModpack.ModpackVersion()
+                    new PlatformModpack.ModpackVersion
                     {
                         MinecraftVersion = "1.16.5",
                         ModLoader = "Fabric",
                         Name = "0.0.0"
                     }
-                },
+                }
             };
-        }
     }
 
     public VersionSelectionPopup(IVersionContent content, Action<IVersion> callback)
@@ -66,7 +62,7 @@ public partial class VersionSelectionPopup : UserControl
             Close();
     }
 
-    void Close()
+    private void Close()
     {
         Navigation.HidePopup();
         versionSelectedCallback?.Invoke(selectedVersion);

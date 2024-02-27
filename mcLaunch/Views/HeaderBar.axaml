@@ -9,10 +9,13 @@
              IsHitTestVisible="False">
     <Panel>
         <DockPanel>
-            <Image x:Name="Logo" DockPanel.Dock="Left" VerticalAlignment="Top" IsHitTestVisible="False" Source="/resources/logo_beta.png" Height="35" Margin="15 5 0 0"></Image>
-            <Image x:Name="OfflineBadge" IsVisible="False" DockPanel.Dock="Left" VerticalAlignment="Top" IsHitTestVisible="False" Source="/resources/header_bar_badge_offline.png" Height="17" Margin="15 13.5 0 0"></Image>
+            <Image x:Name="Logo" DockPanel.Dock="Left" VerticalAlignment="Top" IsHitTestVisible="False"
+                   Source="/resources/logo_beta.png" Height="35" Margin="15 5 0 0" />
+            <Image x:Name="OfflineBadge" IsVisible="False" DockPanel.Dock="Left" VerticalAlignment="Top"
+                   IsHitTestVisible="False" Source="/resources/header_bar_badge_offline.png" Height="17"
+                   Margin="15 13.5 0 0" />
             <TextBlock x:Name="TitleText" VerticalAlignment="Center" Margin="15 0 0 5" IsHitTestVisible="False">Title</TextBlock>
-            <Panel></Panel>
+            <Panel />
         </DockPanel>
     </Panel>
 </UserControl>

@@ -10,6 +10,6 @@ public class QuiltModLoaderVersion : ModLoaderVersion
         string url =
             $"{QuiltModLoaderSupport.Url}/v3/versions/loader/{minecraftVersionId}/{Name}/profile/json";
 
-        return await Api.GetAsync<MinecraftVersion>(url, patchDateTimes: true);
+        return await Api.GetAsync<MinecraftVersion>(url, true);
     }
 }

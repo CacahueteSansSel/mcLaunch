@@ -1,13 +1,10 @@
-﻿using System.Collections.Concurrent;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
-using Avalonia.Media;
+﻿using System.Text.Json.Serialization;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
+using mcLaunch.Core.Contents;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Contents;
 using mcLaunch.Core.Utilities;
 using ReactiveUI;
 
@@ -15,69 +12,10 @@ namespace mcLaunch.Core.Boxes;
 
 public class BoxManifest : ReactiveObject
 {
-    ManifestMinecraftVersion version;
-    IconCollection? icon;
-    Bitmap? background;
-    MinecraftVersion setUpVersion;
-
-    public int? ManifestVersion { get; set; }
-    public string Name { get; set; }
-    public string Id { get; set; }
-    public string Description { get; set; }
-    public string Author { get; set; }
-    public string Version { get; set; }
-    public string ModLoaderId { get; set; }
-    public string ModLoaderVersion { get; set; }
-    public string DescriptionLine => $"{ModLoaderId.ToUpper()} {Version}";
-    [JsonPropertyName("Modifications")] // For compatibility reasons
-    public List<BoxStoredContent> Content { get; set; } = [];
-    [JsonIgnore]
-    public IEnumerable<BoxStoredContent> ContentModifications =>
-        Content.Where(content => content.Type == MinecraftContentType.Modification);
-    [JsonIgnore]
-    public IEnumerable<BoxStoredContent> ContentResourcepacks =>
-        Content.Where(content => content.Type == MinecraftContentType.ResourcePack);
-    [JsonIgnore]
-    public IEnumerable<BoxStoredContent> ContentDatapacks =>
-        Content.Where(content => content.Type == MinecraftContentType.DataPack);
-    [JsonIgnore]
-    public IEnumerable<BoxStoredContent> ContentShaders =>
-        Content.Where(content => content.Type == MinecraftContentType.ShaderPack);
-    [JsonIgnore]
-    public IEnumerable<BoxStoredContent> ContentWorlds =>
-        Content.Where(content => content.Type == MinecraftContentType.World);
-    [JsonIgnore]
-    public string ModificationCount => Content.Count.ToString();
-    [JsonIgnore]
-    public string ResourcepacksCount => ContentResourcepacks.Count().ToString();
-    [JsonIgnore]
-    public string DatapacksCount => ContentDatapacks.Count().ToString();
-    [JsonIgnore]
-    public string ShadersCount => ShadersCount.Count().ToString();
-    [JsonIgnore]
-    public string ContentWorldsCount => ContentWorlds.Count().ToString();
-    public DateTime LastLaunchTime { get; set; }
-    public BoxType Type { get; set; }
-    
-    [JsonIgnore]
-    public string FileHash { get; set; }
-
-    [JsonIgnore]
-    public IconCollection? Icon
-    {
-        get => icon;
-        set => this.RaiseAndSetIfChanged(ref icon, value);
-    }
-
-    [JsonIgnore]
-    public Bitmap? Background
-    {
-        get => background;
-        set => this.RaiseAndSetIfChanged(ref background, value);
-    }
-
-    [JsonIgnore] public ModLoaderSupport? ModLoader => ModLoaderManager.Get(ModLoaderId);
-    public List<BoxBackup> Backups { get; set; } = [];
+    private Bitmap? background;
+    private IconCollection? icon;
+    private MinecraftVersion setUpVersion;
+    private ManifestMinecraftVersion version;
 
     public BoxManifest()
     {
@@ -100,19 +38,88 @@ public class BoxManifest : ReactiveObject
         Version = version.Id;
     }
 
+    public int? ManifestVersion { get; set; }
+    public string Name { get; set; }
+    public string Id { get; set; }
+    public string Description { get; set; }
+    public string Author { get; set; }
+    public string Version { get; set; }
+    public string ModLoaderId { get; set; }
+    public string ModLoaderVersion { get; set; }
+    public string DescriptionLine => $"{ModLoaderId.ToUpper()} {Version}";
+
+    [JsonPropertyName("Modifications")] // For compatibility reasons
+    public List<BoxStoredContent> Content { get; set; } = [];
+
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentModifications =>
+        Content.Where(content => content.Type == MinecraftContentType.Modification);
+
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentResourcepacks =>
+        Content.Where(content => content.Type == MinecraftContentType.ResourcePack);
+
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentDatapacks =>
+        Content.Where(content => content.Type == MinecraftContentType.DataPack);
+
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentShaders =>
+        Content.Where(content => content.Type == MinecraftContentType.ShaderPack);
+
+    [JsonIgnore]
+    public IEnumerable<BoxStoredContent> ContentWorlds =>
+        Content.Where(content => content.Type == MinecraftContentType.World);
+
+    [JsonIgnore] public string ModificationCount => Content.Count.ToString();
+
+    [JsonIgnore] public string ResourcepacksCount => ContentResourcepacks.Count().ToString();
+
+    [JsonIgnore] public string DatapacksCount => ContentDatapacks.Count().ToString();
+
+    [JsonIgnore] public string ShadersCount => ShadersCount.Count().ToString();
+
+    [JsonIgnore] public string ContentWorldsCount => ContentWorlds.Count().ToString();
+
+    public DateTime LastLaunchTime { get; set; }
+    public BoxType Type { get; set; }
+
+    [JsonIgnore] public string FileHash { get; set; }
+
+    [JsonIgnore]
+    public IconCollection? Icon
+    {
+        get => icon;
+        set => this.RaiseAndSetIfChanged(ref icon, value);
+    }
+
+    [JsonIgnore]
+    public Bitmap? Background
+    {
+        get => background;
+        set => this.RaiseAndSetIfChanged(ref background, value);
+    }
+
+    [JsonIgnore] public ModLoaderSupport? ModLoader => ModLoaderManager.Get(ModLoaderId);
+    public List<BoxBackup> Backups { get; set; } = [];
+
     public bool HasContentStrict(string id, string versionId, string platformId)
-        => Content.FirstOrDefault(m => m.Id == id
-                                             && m.PlatformId == platformId
-                                             && m.VersionId == versionId) != null;
+    {
+        return Content.FirstOrDefault(m => m.Id == id
+                                           && m.PlatformId == platformId
+                                           && m.VersionId == versionId) != null;
+    }
 
     public bool HasContentStrict(string id, string platformId)
-        => Content.FirstOrDefault(m => m.Id == id
-                                             && m.PlatformId == platformId) != null;
+    {
+        return Content.FirstOrDefault(m => m.Id == id
+                                           && m.PlatformId == platformId) != null;
+    }
 
     public bool HasContentSoft(MinecraftContent content)
     {
         if (content == null) return false;
-        
+
         BoxStoredContent? storedContent =
             Content.FirstOrDefault(m => content.IsSimilar(m) || HasContentStrict(content.Id, content.ModPlatformId));
 
@@ -120,15 +127,22 @@ public class BoxManifest : ReactiveObject
     }
 
     public BoxStoredContent? GetContent(string id)
-        => Content.FirstOrDefault(content => content.Id == id);
+    {
+        return Content.FirstOrDefault(content => content.Id == id);
+    }
 
     public BoxStoredContent? GetContentByVersion(string versionId)
-        => Content.FirstOrDefault(content => content.VersionId == versionId);
+    {
+        return Content.FirstOrDefault(content => content.VersionId == versionId);
+    }
 
     public BoxStoredContent[] GetContents(MinecraftContentType type)
-        => Content.Where(c => c.Type == type).ToArray();
+    {
+        return Content.Where(c => c.Type == type).ToArray();
+    }
 
-    public void AddContent(string id, MinecraftContentType type, string versionId, string platformId, string[] filenames)
+    public void AddContent(string id, MinecraftContentType type, string versionId, string platformId,
+        string[] filenames)
     {
         if (filenames.Length == 0) return;
         if (HasContentStrict(id, versionId, platformId)) return;
@@ -187,7 +201,7 @@ public class BoxManifest : ReactiveObject
             ModLoaderVersion[]? versions = await modLoader.GetVersionsAsync(Version);
             ModLoaderVersion version = versions.FirstOrDefault(v => v.Name == ModLoaderVersion);
             if (version == null) version = versions[0];
-            
+
             MinecraftVersion? mlMcVersion = await version.GetMinecraftVersionAsync(Version);
 
             // Merging
@@ -195,8 +209,8 @@ public class BoxManifest : ReactiveObject
                 mlMcVersion = mlMcVersion.Merge(mcVersion);
 
             // Install & setup this patched version for the modloader
-            await BoxManager.SetupVersionAsync(mlMcVersion, customName: $"{modLoader.Name} {version.Name}",
-                downloadAllAfter: false);
+            await BoxManager.SetupVersionAsync(mlMcVersion, $"{modLoader.Name} {version.Name}",
+                false);
 
             setUpVersion = mlMcVersion;
 
@@ -210,7 +224,10 @@ public class BoxManifest : ReactiveObject
         return mcVersion;
     }
 
-    public override string ToString() => $"Manifest {Id} {Name}";
+    public override string ToString()
+    {
+        return $"Manifest {Id} {Name}";
+    }
 }
 
 public class BoxStoredContent
@@ -229,9 +246,9 @@ public class BoxStoredContent
         {
             if (Path.IsPathFullyQualified(file))
                 throw new Exception("Mod filename is absolute : was the manifest updated to Manifest Version 2 ?");
-            
+
             string path = $"{boxRootPath}/{file.TrimStart('/')}";
-            
+
             if (File.Exists(path)) File.Delete(path);
         }
     }
@@ -239,17 +256,8 @@ public class BoxStoredContent
 
 public class BoxBackup
 {
-    public string Name { get; set; }
-    public BoxBackupType Type { get; set; }
-    public DateTime CreationTime { get; set; }
-    public string Filename { get; set; }
-
-    [JsonIgnore] public bool IsCompleteBackup => Type == BoxBackupType.Complete;
-    [JsonIgnore] public bool IsPartialBackup => Type == BoxBackupType.Partial;
-
     public BoxBackup()
     {
-        
     }
 
     public BoxBackup(string name, BoxBackupType type, DateTime creationTime, string filename)
@@ -259,6 +267,14 @@ public class BoxBackup
         CreationTime = creationTime;
         Filename = filename;
     }
+
+    public string Name { get; set; }
+    public BoxBackupType Type { get; set; }
+    public DateTime CreationTime { get; set; }
+    public string Filename { get; set; }
+
+    [JsonIgnore] public bool IsCompleteBackup => Type == BoxBackupType.Complete;
+    [JsonIgnore] public bool IsPartialBackup => Type == BoxBackupType.Partial;
 }
 
 public enum BoxBackupType

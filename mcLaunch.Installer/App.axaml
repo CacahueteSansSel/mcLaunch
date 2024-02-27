@@ -3,7 +3,7 @@
              x:Class="mcLaunch.Installer.App"
              RequestedThemeVariant="Dark">
     <Application.Styles>
-        <FluentTheme/>
+        <FluentTheme />
     </Application.Styles>
     <Application.Resources>
         <SolidColorBrush x:Key="Background">#282828</SolidColorBrush>

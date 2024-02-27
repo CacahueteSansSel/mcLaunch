@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Avalonia;
+﻿using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
@@ -13,8 +10,8 @@ namespace mcLaunch.Views.Popups;
 
 public partial class EditBoxPopup : UserControl
 {
-    Box box;
-    
+    private readonly Box box;
+
     public EditBoxPopup()
     {
         InitializeComponent();
@@ -50,19 +47,19 @@ public partial class EditBoxPopup : UserControl
     {
         box.Manifest.Name = BoxNameTb.Text;
         box.Manifest.Author = AuthorNameTb.Text;
-        if (BoxIconImage.Source != null) 
-            box.SetAndSaveIcon((Bitmap)BoxIconImage.Source);
+        if (BoxIconImage.Source != null)
+            box.SetAndSaveIcon((Bitmap) BoxIconImage.Source);
 
         if (!CancelButton.IsVisible && box.Manifest.Type == BoxType.Temporary)
             box.Manifest.Type = BoxType.Default;
-        
+
         box.SaveManifest();
-        
+
         MainPage.Instance.PopulateBoxList();
-        
+
         Navigation.Pop();
         Navigation.Push(new BoxDetailsPage(box));
-        
+
         Navigation.HidePopup();
     }
 }

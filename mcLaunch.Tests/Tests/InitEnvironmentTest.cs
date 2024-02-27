@@ -1,5 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
 using mcLaunch.Core.Managers;
 
 namespace mcLaunch.Tests.Tests;
@@ -7,12 +6,12 @@ namespace mcLaunch.Tests.Tests;
 public class InitEnvironmentTest : TestBase
 {
     public override string Name => "Init mcLaunch Environment";
-    
+
     public override async Task<TestResult> RunAsync()
     {
-        if (!await Test("Initializing managers", InitManagers)) 
+        if (!await Test("Initializing managers", InitManagers))
             return TestFailure();
-        if (!await Test("Fetching Minecraft versions", FetchingMinecraftVersions)) 
+        if (!await Test("Fetching Minecraft versions", FetchingMinecraftVersions))
             return TestFailure();
 
         return TestResult.Ok;
@@ -26,11 +25,11 @@ public class InitEnvironmentTest : TestBase
             return TestResult.Error("Minecraft versions manifest is null");
         if (MinecraftManager.ManifestVersions.Length == 0)
             return TestResult.Error("Minecraft versions list is empty");
-        
+
         return TestResult.Ok;
     }
 
-    async Task<TestResult> InitManagers()
+    private async Task<TestResult> InitManagers()
     {
         AppBuilder app = AppBuilder.Configure<App>()
             .UsePlatformDetect()

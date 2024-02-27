@@ -1,5 +1,4 @@
-﻿using System.Runtime.Intrinsics.Arm;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using Avalonia;
 using Avalonia.Media.Imaging;
@@ -12,18 +11,6 @@ public class IconCollection
 {
     public const int SmallIconSize = 48;
     public const int LargeIconSize = 384;
-    
-    public static IconCollection? Default { get; set; } = new() {IsDefaultIcon = true};
-
-    public Uri? ResourceUri { get; private set; }
-    public string? Url { get; private set; }
-    public bool IsLocalFile { get; private set; }
-
-    public Bitmap? IconSmall { get; private set; }
-    public Bitmap? IconLarge { get; private set; }
-    public bool IsDefaultIcon { get; private set; }
-    public int IconSmallSize { get; private set; } = SmallIconSize;
-    public int IconLargeSize { get; private set; } = LargeIconSize;
 
     private IconCollection(string url, bool isFile)
     {
@@ -38,18 +25,38 @@ public class IconCollection
 
     private IconCollection()
     {
-        
     }
 
-    public static IconCollection FromUrl(string url) => new(url, false);
+    public static IconCollection? Default { get; set; } = new() {IsDefaultIcon = true};
+
+    public Uri? ResourceUri { get; }
+    public string? Url { get; }
+    public bool IsLocalFile { get; }
+
+    public Bitmap? IconSmall { get; private set; }
+    public Bitmap? IconLarge { get; private set; }
+    public bool IsDefaultIcon { get; private set; }
+    public int IconSmallSize { get; private set; } = SmallIconSize;
+    public int IconLargeSize { get; private set; } = LargeIconSize;
+
+    public static IconCollection FromUrl(string url)
+    {
+        return new IconCollection(url, false);
+    }
 
     public static IconCollection FromResources(string path)
-        => new(new Uri($"avares://mcLaunch/resources/{path}"));
+    {
+        return new IconCollection(new Uri($"avares://mcLaunch/resources/{path}"));
+    }
 
-    public static async Task<IconCollection> FromFileAsync(string filename, int largeSize = LargeIconSize, int smallSize = SmallIconSize)
-        => await new IconCollection(filename, true).WithCustomSizes(largeSize, smallSize).DownloadAllAsync();
+    public static async Task<IconCollection> FromFileAsync(string filename, int largeSize = LargeIconSize,
+        int smallSize = SmallIconSize)
+    {
+        return await new IconCollection(filename, true).WithCustomSizes(largeSize, smallSize).DownloadAllAsync();
+    }
 
-    public static async Task<IconCollection> FromBitmapAsync(Bitmap bitmap, int largeSize = LargeIconSize, int smallSize = SmallIconSize)
+    public static async Task<IconCollection> FromBitmapAsync(Bitmap bitmap, int largeSize = LargeIconSize,
+        int smallSize = SmallIconSize)
     {
         IconCollection icon = new();
 
@@ -70,13 +77,13 @@ public class IconCollection
         return this;
     }
 
-    async Task<Stream> LoadStreamAsync()
+    private async Task<Stream> LoadStreamAsync()
     {
-        if (ResourceUri != null) 
+        if (ResourceUri != null)
             return AssetLoader.Open(ResourceUri);
 
         if (Url == null)
-            return AssetLoader.Open(new Uri($"avares://mcLaunch/resources/default_mod_logo.png"));
+            return AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_mod_logo.png"));
 
         if (IsLocalFile)
         {
@@ -114,7 +121,7 @@ public class IconCollection
         {
             IsDefaultIcon = true;
 
-            return AssetLoader.Open(new Uri($"avares://mcLaunch/resources/default_mod_logo.png"));
+            return AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_mod_logo.png"));
         }
     }
 
@@ -151,12 +158,9 @@ public class IconCollection
             }
         });
 
-        if (!isResource && !IsLocalFile)
-        {
-            CacheManager.Store(IconSmall, cacheName);
-        }
-        
-        
+        if (!isResource && !IsLocalFile) CacheManager.Store(IconSmall, cacheName);
+
+
         if (!isResource || IsLocalFile) await imageStream.DisposeAsync();
     }
 
@@ -193,11 +197,8 @@ public class IconCollection
             }
         });
 
-        if (!isResource && !IsLocalFile)
-        {
-            CacheManager.Store(IconLarge, cacheName);
-        }
-        
+        if (!isResource && !IsLocalFile) CacheManager.Store(IconLarge, cacheName);
+
         if (!isResource || IsLocalFile) await imageStream.DisposeAsync();
     }
 

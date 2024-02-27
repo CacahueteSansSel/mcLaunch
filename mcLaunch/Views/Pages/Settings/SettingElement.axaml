@@ -5,13 +5,13 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="36" Height="36"
              x:Class="mcLaunch.Views.Pages.Settings.SettingElement">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <DockPanel VerticalAlignment="Center">
         <TextBlock x:Name="Label" VerticalAlignment="Center" Classes="light" Margin="15 0 0 0">hello</TextBlock>
         <Panel x:Name="Contents" DockPanel.Dock="Right" Margin="0 0 5 0">
-            <CheckBox x:Name="BooleanCheckbox" Checked="BooleanCheckboxChecked" Unchecked="BooleanCheckboxUnchecked"></CheckBox>
+            <CheckBox x:Name="BooleanCheckbox" Checked="BooleanCheckboxChecked" Unchecked="BooleanCheckboxUnchecked" />
         </Panel>
-        <Panel></Panel>
+        <Panel />
     </DockPanel>
 </UserControl>

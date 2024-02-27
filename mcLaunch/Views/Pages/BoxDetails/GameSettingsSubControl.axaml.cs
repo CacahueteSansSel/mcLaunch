@@ -1,10 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.Settings;
@@ -14,12 +10,12 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 
 public partial class GameSettingsSubControl : SubControl
 {
-    public override string Title => "SETTINGS";
-    
     public GameSettingsSubControl()
     {
         InitializeComponent();
     }
+
+    public override string Title => "SETTINGS";
 
     public override async Task PopulateAsync()
     {
@@ -39,7 +35,7 @@ public partial class GameSettingsSubControl : SubControl
     {
         if (Box.Options == null) return;
         DefaultsManager.SetDefaultMinecraftOptions(Box.Options);
-        
+
         Navigation.ShowPopup(new MessageBoxPopup("Successful", "These options have been set to default"));
     }
 }

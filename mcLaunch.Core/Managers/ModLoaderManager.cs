@@ -33,9 +33,14 @@ public static class ModLoaderManager
         All.Add(new QuiltModLoaderSupport());
     }
 
-    public static bool IsModLoaderName(string name) =>
-        All.Any(ml => string.Equals(ml.Id, name, StringComparison.CurrentCultureIgnoreCase)
-                      || ml.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+    public static bool IsModLoaderName(string name)
+    {
+        return All.Any(ml => string.Equals(ml.Id, name, StringComparison.CurrentCultureIgnoreCase)
+                             || ml.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+    }
 
-    public static ModLoaderSupport? Get(string id) => All.FirstOrDefault(ml => ml.Id == id);
+    public static ModLoaderSupport? Get(string id)
+    {
+        return All.FirstOrDefault(ml => ml.Id == id);
+    }
 }

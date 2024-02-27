@@ -6,14 +6,13 @@
              mc:Ignorable="d" d:DesignWidth="365" d:DesignHeight="208"
              x:Class="mcLaunch.Views.PictureFrame">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Panel>
         <Button Classes="picture" Margin="5" Height="200" Padding="2" Click="PictureClicked">
-            <Image x:Name="Picture" Source="/resources/default_screenshot.png"></Image>
+            <Image x:Name="Picture" Source="/resources/default_screenshot.png" />
         </Button>
-        <Panel x:Name="Overlay" Background="Black" Opacity="0.5">
-        </Panel>
-        <views:LoadingCircle x:Name="LoadCircle" Opacity="1" IsHitTestVisible="False"></views:LoadingCircle>
+        <Panel x:Name="Overlay" Background="Black" Opacity="0.5" />
+        <views:LoadingCircle x:Name="LoadCircle" Opacity="1" IsHitTestVisible="False" />
     </Panel>
 </UserControl>

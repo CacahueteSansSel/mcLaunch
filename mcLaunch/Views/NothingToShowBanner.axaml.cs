@@ -1,6 +1,5 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
 namespace mcLaunch.Views;
 
@@ -9,10 +8,14 @@ public partial class NothingToShowBanner : UserControl
     public static readonly AttachedProperty<string> TextProperty =
         AvaloniaProperty.RegisterAttached<Badge, UserControl, string>(
             nameof(Footer),
-            null,
-            inherits: true);
+            "");
 
-    string footer;
+    private string footer;
+
+    public NothingToShowBanner()
+    {
+        InitializeComponent();
+    }
 
     public string Footer
     {
@@ -24,10 +27,5 @@ public partial class NothingToShowBanner : UserControl
 
             FooterText.IsVisible = value != null;
         }
-    }
-    
-    public NothingToShowBanner()
-    {
-        InitializeComponent();
     }
 }

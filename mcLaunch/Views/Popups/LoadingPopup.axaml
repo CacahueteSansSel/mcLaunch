@@ -7,11 +7,11 @@
              Width="450" Height="150"
              x:Class="mcLaunch.Views.Popups.LoadingPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">
-            <views:LoadingCircle/>
+            <views:LoadingCircle />
         </DockPanel>
     </Border>
 </UserControl>

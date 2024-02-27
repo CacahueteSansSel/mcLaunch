@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
-using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Managers;
 using mcLaunch.Core.Contents;
+using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 
@@ -16,15 +13,10 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 
 public partial class ContentsSubControl : SubControl
 {
-    private bool isAnyUpdate = false;
-    private bool isUpdating = false;
-    private bool canUpdate = false;
-    private List<MinecraftContent> updatableContentsList = new();
-
-    public override string Title => ContentNamePlural.ToUpper();
-    public MinecraftContentType ContentType { get; set; }
-    public string ContentName => ContentType.ToString();
-    public string ContentNamePlural => $"{ContentName}s";
+    private readonly bool canUpdate;
+    private bool isAnyUpdate;
+    private bool isUpdating;
+    private readonly List<MinecraftContent> updatableContentsList = new();
 
     public ContentsSubControl()
     {
@@ -41,6 +33,11 @@ public partial class ContentsSubControl : SubControl
         ContentCountText.Text = string.Empty;
         SearchBox.Watermark = $"Search {ContentNamePlural.ToLower()}";
     }
+
+    public override string Title => ContentNamePlural.ToUpper();
+    public MinecraftContentType ContentType { get; set; }
+    public string ContentName => ContentType.ToString();
+    public string ContentNamePlural => $"{ContentName}s";
 
     public override async Task PopulateAsync()
     {
@@ -197,10 +194,7 @@ public partial class ContentsSubControl : SubControl
             StatusPopup.Instance.Status = $"Updating {mod.Name} ({index}/{updatableContentsList.Count})";
             StatusPopup.Instance.StatusPercent = (float) index / updatableContentsList.Count;
 
-            if (!await Box.UpdateModAsync(mod, false))
-            {
-                failedModUpdates++;
-            }
+            if (!await Box.UpdateModAsync(mod)) failedModUpdates++;
 
             index++;
         }
@@ -209,10 +203,8 @@ public partial class ContentsSubControl : SubControl
         Navigation.HidePopup();
 
         if (failedModUpdates > 0)
-        {
             Navigation.ShowPopup(new MessageBoxPopup("Warning",
                 $"{failedModUpdates} {ContentName}{(failedModUpdates > 1 ? "s" : "")} failed to update"));
-        }
 
         isUpdating = false;
         UpdateAllButton.IsVisible = false;

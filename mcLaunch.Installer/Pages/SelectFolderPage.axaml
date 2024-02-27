@@ -5,9 +5,9 @@
              mc:Ignorable="d" d:DesignWidth="620" d:DesignHeight="450"
              x:Class="mcLaunch.Installer.Pages.SelectFolderPage">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
-    
+
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Vertical" Spacing="3">
             <TextBlock Classes="title" FontSize="25" Margin="0 0 0 10">Where should mcLaunch be installed ?</TextBlock>
@@ -16,8 +16,11 @@
             <Border Classes="frame" Margin="0 10 0 0">
                 <DockPanel VerticalAlignment="Center" Margin="5">
                     <TextBlock VerticalAlignment="Center" Margin="10 0 20 0" DockPanel.Dock="Left">Installation Directory</TextBlock>
-                    <Button x:Name="SelectFolderButton" Margin="5 0 0 0" Click="SelectFolderButtonClicked" DockPanel.Dock="Right" Classes="secondary">Select</Button>
-                    <TextBox x:Name="TargetPathInput" VerticalContentAlignment="Center"></TextBox>
+                    <Button x:Name="SelectFolderButton" Margin="5 0 0 0" Click="SelectFolderButtonClicked"
+                            DockPanel.Dock="Right" Classes="secondary">
+                        Select
+                    </Button>
+                    <TextBox x:Name="TargetPathInput" VerticalContentAlignment="Center" />
                 </DockPanel>
             </Border>
         </StackPanel>

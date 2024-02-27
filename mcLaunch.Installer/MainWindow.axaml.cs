@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO.Compression;
 using System.Net.Http.Headers;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -9,32 +7,32 @@ using mcLaunch.GitHub;
 using mcLaunch.GitHub.Models;
 using mcLaunch.Installer.Core;
 using mcLaunch.Installer.Pages;
-using mcLaunch.Installer.Win32;
 
 namespace mcLaunch.Installer;
 
 public partial class MainWindow : Window
 {
-    public static MainWindow Instance { get; private set; }
+    private int pageCounter;
 
-    InstallerPage[] pages;
-    int pageCounter = 0;
-
-    public InstallerParameters Parameters { get; set; } = new();
+    private InstallerPage[] pages;
 
     public MainWindow()
     {
         Instance = this;
         InitializeComponent();
-        
+
         Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch.Installer", "1.0.0"));
-        
+
         Parameters.SetDefaultTargetDirectory();
 
         FetchLatestVersion();
     }
 
-    async void FetchLatestVersion()
+    public static MainWindow Instance { get; private set; }
+
+    public InstallerParameters Parameters { get; set; } = new();
+
+    private async void FetchLatestVersion()
     {
         GitHubRelease? release = await GitHubRepository.GetLatestReleaseAsync();
         if (release == null)
@@ -42,7 +40,7 @@ public partial class MainWindow : Window
             Environment.Exit(1);
             return;
         }
-        
+
         Parameters.ReleaseToDownload = release;
 
         if (Environment.GetCommandLineArgs().Length == 2)
@@ -58,33 +56,31 @@ public partial class MainWindow : Window
                 new InstallationPage().SetUpdate(),
                 new InstalledPage()
             };
-            
+
             SetupPageContainer.Content = pages[0];
             pages[0].OnShow();
-            
+
             return;
         }
 
         if (OperatingSystem.IsWindows())
-        {
-            pages = [
+            pages =
+            [
                 new WelcomePage(),
                 new SelectFolderPage(),
                 new CheckboxesSettingsPage(),
                 new InstallationPage(),
                 new InstalledPage()
             ];
-        }
         else
-        {
-            pages = [
+            pages =
+            [
                 new WelcomePage(),
                 new SelectFolderPage(),
                 new InstallationPage(),
                 new InstalledPage()
             ];
-        }
-        
+
         SetupPageContainer.Content = pages[0];
         pages[0].OnShow();
 
@@ -106,16 +102,16 @@ public partial class MainWindow : Window
     public void Previous()
     {
         if (pageCounter <= 0) return;
-        
+
         pages[pageCounter].OnHide();
 
         pageCounter--;
         InstallerPage page = pages[pageCounter];
         SetupPageContainer.Content = page;
         page.IsVisible = true;
-        
+
         PreviousButton.IsVisible = pageCounter > 0;
-        
+
         page.OnShow();
     }
 
@@ -127,16 +123,16 @@ public partial class MainWindow : Window
             Environment.Exit(0);
             return;
         }
-        
+
         pages[pageCounter].OnHide();
 
         pageCounter++;
         InstallerPage page = pages[pageCounter];
         SetupPageContainer.Content = page;
-        
+
         PreviousButton.IsVisible = true;
         NextButton.Content = pageCounter + 1 >= pages.Length ? "Finish" : "Next";
-        
+
         page.OnShow();
     }
 

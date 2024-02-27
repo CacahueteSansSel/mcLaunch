@@ -7,7 +7,7 @@
              Width="800" Height="450"
              x:Class="mcLaunch.Views.Popups.OptionalModsPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">
@@ -16,10 +16,10 @@
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" Classes="primary" Click="OKButtonClicked">Install</Button>
                 <Button DockPanel.Dock="Right" Classes="secondary" Margin="0 0 10 0" Click="CancelButtonClicked">Ignore</Button>
-                <Panel></Panel>
+                <Panel />
             </DockPanel>
             <ScrollViewer>
-                <views:MinecraftContentList x:Name="ModList" IsHitTestVisible="False"></views:MinecraftContentList>
+                <views:MinecraftContentList x:Name="ModList" IsHitTestVisible="False" />
             </ScrollViewer>
         </DockPanel>
     </Border>

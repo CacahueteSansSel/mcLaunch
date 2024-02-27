@@ -5,8 +5,8 @@ namespace Cacahuete.MinecraftLib.Download;
 
 public class HttpResourceDownloader : ResourceDownloader
 {
-    HttpClient client = new();
-    
+    private readonly HttpClient client = new();
+
     public override async Task<bool> DownloadAsync(string url, string target, string? hash)
     {
         CurrentTargetSource = url;
@@ -19,15 +19,15 @@ public class HttpResourceDownloader : ResourceDownloader
             string localFileHash = Convert.ToHexString(
                 SHA1.HashData(await File.ReadAllBytesAsync(target))).ToLower();
 
-            if (localFileHash == hash.ToLower()) 
+            if (localFileHash == hash.ToLower())
                 return true;
         }
-        
+
         if (hash == null && File.Exists(target)) return true;
 
         HttpResponseMessage resp = await client.GetAsync(url);
         resp.EnsureSuccessStatusCode();
-        
+
         await File.WriteAllBytesAsync(target, await resp.Content.ReadAsByteArrayAsync());
 
         return true;

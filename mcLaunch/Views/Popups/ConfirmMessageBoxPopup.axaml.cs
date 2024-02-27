@@ -1,17 +1,15 @@
 ﻿using System;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Popups;
 
 public partial class ConfirmMessageBoxPopup : UserControl
 {
-    Action confirmCallback;
-    Action? cancelCallback;
-    
+    private readonly Action? cancelCallback;
+    private readonly Action confirmCallback;
+
     public ConfirmMessageBoxPopup()
     {
         InitializeComponent();
@@ -40,13 +38,13 @@ public partial class ConfirmMessageBoxPopup : UserControl
 
     public class Data
     {
-        public string Title { get; set; }
-        public string Text { get; set; }
-
         public Data(string title, string text)
         {
             Title = title;
             Text = text;
         }
+
+        public string Title { get; set; }
+        public string Text { get; set; }
     }
 }

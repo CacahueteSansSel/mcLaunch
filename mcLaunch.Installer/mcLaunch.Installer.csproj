@@ -9,58 +9,58 @@
         <PublishSingleFile>true</PublishSingleFile>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove=".gitignore" />
+        <None Remove=".gitignore"/>
     </ItemGroup>
 
     <ItemGroup>
-        <TrimmerRootDescriptor Include="Roots.xml" />
+        <TrimmerRootDescriptor Include="Roots.xml"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.4" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
+        <PackageReference Include="Avalonia" Version="11.0.4"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.4"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.4" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.4" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.4"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.4"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="resources\" />
+        <Folder Include="resources\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="resources\icon.ico" />
-      <AvaloniaResource Include="resources\icon.ico" />
-      <None Remove="resources\background_onboarding.png" />
-      <AvaloniaResource Include="resources\background_onboarding.png" />
-      <None Remove="resources\logo_big.png" />
-      <AvaloniaResource Include="resources\logo_big.png" />
-      <None Remove="resources\fonts\JetBrainsMono-Regular.ttf" />
-      <AvaloniaResource Include="resources\fonts\JetBrainsMono-Regular.ttf" />
-      <None Remove="resources\fonts\LexendDeca-Black.ttf" />
-      <AvaloniaResource Include="resources\fonts\LexendDeca-Black.ttf" />
-      <None Remove="resources\fonts\LexendDeca-Bold.ttf" />
-      <AvaloniaResource Include="resources\fonts\LexendDeca-Bold.ttf" />
-      <None Remove="resources\fonts\LexendDeca-ExtraBold.ttf" />
-      <AvaloniaResource Include="resources\fonts\LexendDeca-ExtraBold.ttf" />
-      <None Remove="resources\fonts\LexendDeca-ExtraLight.ttf" />
-      <AvaloniaResource Include="resources\fonts\LexendDeca-ExtraLight.ttf" />
-      <None Remove="resources\fonts\LexendDeca-Light.ttf" />
-      <AvaloniaResource Include="resources\fonts\LexendDeca-Light.ttf" />
-      <None Remove="resources\fonts\LexendDeca-Medium.ttf" />
-      <AvaloniaResource Include="resources\fonts\LexendDeca-Medium.ttf" />
-      <None Remove="resources\fonts\LexendDeca-Regular.ttf" />
-      <AvaloniaResource Include="resources\fonts\LexendDeca-Regular.ttf" />
-      <None Remove="resources\fonts\LexendDeca-SemiBold.ttf" />
-      <AvaloniaResource Include="resources\fonts\LexendDeca-SemiBold.ttf" />
-      <None Remove="resources\fonts\LexendDeca-Thin.ttf" />
-      <AvaloniaResource Include="resources\fonts\LexendDeca-Thin.ttf" />
-      <None Remove="resources\sidebar.png" />
-      <AvaloniaResource Include="resources\sidebar.png" />
+        <None Remove="resources\icon.ico"/>
+        <AvaloniaResource Include="resources\icon.ico"/>
+        <None Remove="resources\background_onboarding.png"/>
+        <AvaloniaResource Include="resources\background_onboarding.png"/>
+        <None Remove="resources\logo_big.png"/>
+        <AvaloniaResource Include="resources\logo_big.png"/>
+        <None Remove="resources\fonts\JetBrainsMono-Regular.ttf"/>
+        <AvaloniaResource Include="resources\fonts\JetBrainsMono-Regular.ttf"/>
+        <None Remove="resources\fonts\LexendDeca-Black.ttf"/>
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Black.ttf"/>
+        <None Remove="resources\fonts\LexendDeca-Bold.ttf"/>
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Bold.ttf"/>
+        <None Remove="resources\fonts\LexendDeca-ExtraBold.ttf"/>
+        <AvaloniaResource Include="resources\fonts\LexendDeca-ExtraBold.ttf"/>
+        <None Remove="resources\fonts\LexendDeca-ExtraLight.ttf"/>
+        <AvaloniaResource Include="resources\fonts\LexendDeca-ExtraLight.ttf"/>
+        <None Remove="resources\fonts\LexendDeca-Light.ttf"/>
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Light.ttf"/>
+        <None Remove="resources\fonts\LexendDeca-Medium.ttf"/>
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Medium.ttf"/>
+        <None Remove="resources\fonts\LexendDeca-Regular.ttf"/>
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Regular.ttf"/>
+        <None Remove="resources\fonts\LexendDeca-SemiBold.ttf"/>
+        <AvaloniaResource Include="resources\fonts\LexendDeca-SemiBold.ttf"/>
+        <None Remove="resources\fonts\LexendDeca-Thin.ttf"/>
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Thin.ttf"/>
+        <None Remove="resources\sidebar.png"/>
+        <AvaloniaResource Include="resources\sidebar.png"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\mcLaunch.GitHub\mcLaunch.GitHub.csproj" />
+        <ProjectReference Include="..\mcLaunch.GitHub\mcLaunch.GitHub.csproj"/>
     </ItemGroup>
 </Project>

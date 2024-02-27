@@ -5,30 +5,31 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.DownloadBanner">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame-without-shadow" Margin="10 10 5 10" BoxShadow="" Height="43"
             Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right"
             ClipToBounds="True">
         <Panel>
-            <ProgressBar x:Name="DBBar" MinWidth="0" Height="43" Opacity="0.15" Value="{Binding Progress}"></ProgressBar>
+            <ProgressBar x:Name="DBBar" MinWidth="0" Height="43" Opacity="0.15" Value="{Binding Progress}" />
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <StackPanel Orientation="Vertical" Width="40" VerticalAlignment="Center" Spacing="4">
-                    <Image Width="16" Height="16" Source="/resources/icons/download.png"></Image>
+                    <Image Width="16" Height="16" Source="/resources/icons/download.png" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="{Binding ResourceName}" Margin="0 0 15 0" FontSize="12">-</TextBlock>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding ResourceDetailsText}" Margin="0 0 15 0" FontSize="10">-</TextBlock>
-                        <TextBlock x:Name="FileNameText" IsVisible="False" Opacity="0.75" Text="{Binding ResourceFileText}" Margin="0 0 15 0" FontSize="10">-</TextBlock>
+                        <TextBlock x:Name="FileNameText" IsVisible="False" Opacity="0.75"
+                                   Text="{Binding ResourceFileText}" Margin="0 0 15 0" FontSize="10">
+                            -
+                        </TextBlock>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
             <TextBlock Text="{Binding ResourceCount}" TextAlignment="Right" VerticalAlignment="Bottom" Classes="title"
                        FontSize="20"
-                       Margin="0 0 5 3" Opacity="0.2">
-                        
-            </TextBlock>
+                       Margin="0 0 5 3" Opacity="0.2" />
         </Panel>
     </Border>
 </UserControl>

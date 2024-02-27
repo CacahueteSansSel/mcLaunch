@@ -5,20 +5,21 @@
              mc:Ignorable="d"
              x:Class="mcLaunch.Views.Badge">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
-        
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+
         <Style Selector="Border.badge">
-            <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"></Setter>
-            <Setter Property="Padding" Value="5 0 5 0"></Setter>
-            <Setter Property="Height" Value="20"></Setter>
-            <Setter Property="CornerRadius" Value="2"></Setter>
-            <Setter Property="BorderThickness" Value="1"></Setter>
-            <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLightest}"></Setter>
+            <Setter Property="Background" Value="{DynamicResource BackgroundLighter}" />
+            <Setter Property="Padding" Value="5 0 5 0" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="CornerRadius" Value="2" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLightest}" />
         </Style>
     </UserControl.Styles>
     <Border Classes="badge">
         <StackPanel Orientation="Horizontal">
-            <Image x:Name="IconImage" VerticalAlignment="Center" Width="12" Height="12" Source="/resources/icons/edit.png"></Image>
+            <Image x:Name="IconImage" VerticalAlignment="Center" Width="12" Height="12"
+                   Source="/resources/icons/edit.png" />
             <TextBlock x:Name="Label" Margin="5 0 0 0" Classes="light">Editor</TextBlock>
         </StackPanel>
     </Border>

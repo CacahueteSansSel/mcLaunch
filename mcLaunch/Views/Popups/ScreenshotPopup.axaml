@@ -6,29 +6,31 @@
              Width="700" Height="403"
              x:Class="mcLaunch.Views.Popups.ScreenshotPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <Panel Margin="10">
-            <Image x:Name="Picture" Source="/resources/default_screenshot.png" PointerEntered="EnterScreenshot" PointerExited="LeaveScreenshot"></Image>
-            <DockPanel x:Name="Overlay" IsVisible="False"  PointerEntered="EnterScreenshot" PointerExited="LeaveScreenshot">
+            <Image x:Name="Picture" Source="/resources/default_screenshot.png" PointerEntered="EnterScreenshot"
+                   PointerExited="LeaveScreenshot" />
+            <DockPanel x:Name="Overlay" IsVisible="False" PointerEntered="EnterScreenshot"
+                       PointerExited="LeaveScreenshot">
                 <StackPanel Margin="10" DockPanel.Dock="Right">
                     <Button Classes="transparent" Click="CloseButtonClicked">
-                        <Image Source="/resources/icons/close.png" Width="15"></Image>
+                        <Image Source="/resources/icons/close.png" Width="15" />
                     </Button>
                 </StackPanel>
                 <StackPanel Margin="10" Spacing="10" Orientation="Horizontal" DockPanel.Dock="Bottom">
                     <Button Classes="transparent" Margin="0" Click="OpenButtonClicked">
-                        <Image Source="/resources/icons/open.png" Width="15" Height="15"></Image>
+                        <Image Source="/resources/icons/open.png" Width="15" Height="15" />
                     </Button>
                     <Button Classes="transparent" Margin="0" Click="OpenFolderButtonClicked">
-                        <Image Source="/resources/icons/folder.png" Width="15" Height="15"></Image>
+                        <Image Source="/resources/icons/folder.png" Width="15" Height="15" />
                     </Button>
                     <Button Classes="transparent" Margin="0" Click="SetAsBoxBackgroundButtonClicked">
-                        <Image Source="/resources/icons/screenshot.png" Width="15" Height="15"></Image>
+                        <Image Source="/resources/icons/screenshot.png" Width="15" Height="15" />
                     </Button>
                 </StackPanel>
-                <Panel></Panel>
+                <Panel />
             </DockPanel>
         </Panel>
     </Border>

@@ -1,21 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Managers;
-using ReactiveUI;
 
 namespace mcLaunch.Views.Pages;
 
 public partial class MainPage : UserControl, ITopLevelPageControl
 {
-    public static MainPage Instance { get; private set; }
-    public string Title => $"Your boxes";
-
     private AnonymitySession anonSession;
     private List<Box>? loadedBoxes;
 
@@ -29,10 +23,13 @@ public partial class MainPage : UserControl, ITopLevelPageControl
         PopulateBoxList();
     }
 
+    public static MainPage Instance { get; private set; }
+    public string Title => "Your boxes";
+
     protected override void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
-        
+
         DiscordManager.SetPresenceBoxList();
     }
 

@@ -1,39 +1,11 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using mcLaunch.Core.Managers;
+﻿using Avalonia.Controls;
 using ReactiveUI;
 
 namespace mcLaunch.Views.Popups;
 
 public partial class StatusPopup : UserControl
 {
-    public static StatusPopup Instance { get; private set; }
-    Data dctx;
-
-    public string Status
-    {
-        get => dctx.StatusText;
-        set => dctx.StatusText = value;
-    }
-
-    public float StatusPercent
-    {
-        get => dctx.StatusPercent / 100f;
-        set => dctx.StatusPercent = (int)(value * 100);
-    }
-
-    public bool ShowDownloadBanner
-    {
-        get => DownloadBannerContainer.IsVisible;
-        set
-        {
-            DownloadBannerContainer.IsVisible = value;
-            
-            if (value) DownloadBanner.ForceToShow();
-            else DownloadBanner.ResetForceToShown();
-        }
-    }
+    private readonly Data dctx;
 
     public StatusPopup()
     {
@@ -52,7 +24,7 @@ public partial class StatusPopup : UserControl
             DataContext = dctx;
         }
     }
-    
+
     public StatusPopup(string title, string text)
     {
         Instance = this;
@@ -69,12 +41,38 @@ public partial class StatusPopup : UserControl
         DataContext = dctx;
     }
 
+    public static StatusPopup Instance { get; private set; }
+
+    public string Status
+    {
+        get => dctx.StatusText;
+        set => dctx.StatusText = value;
+    }
+
+    public float StatusPercent
+    {
+        get => dctx.StatusPercent / 100f;
+        set => dctx.StatusPercent = (int) (value * 100);
+    }
+
+    public bool ShowDownloadBanner
+    {
+        get => DownloadBannerContainer.IsVisible;
+        set
+        {
+            DownloadBannerContainer.IsVisible = value;
+
+            if (value) DownloadBanner.ForceToShow();
+            else DownloadBanner.ResetForceToShown();
+        }
+    }
+
     public class Data : ReactiveObject
     {
-        string title;
-        string text;
-        string statusText;
-        int statusPercent;
+        private int statusPercent;
+        private string statusText;
+        private string text;
+        private string title;
 
         public string Title
         {

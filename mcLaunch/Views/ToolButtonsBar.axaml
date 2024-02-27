@@ -7,62 +7,62 @@
              Height="65" Background="{DynamicResource Background}"
              x:Class="mcLaunch.Views.ToolButtonsBar">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <DockPanel>
-        <Panel DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource BackgroundLighter}"></Panel>
+        <Panel DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource BackgroundLighter}" />
         <DockPanel>
             <StackPanel Orientation="Horizontal" Margin="20 0 0 0" Spacing="10">
                 <Button DockPanel.Dock="Left" ToolTip.Tip="New box" Classes="primary square"
                         Click="NewBoxButtonClicked">
-                    <Image Source="/resources/icons/plus.png" Width="13" Height="13"></Image>
+                    <Image Source="/resources/icons/plus.png" Width="13" Height="13" />
                 </Button>
                 <Button DockPanel.Dock="Left" ToolTip.Tip="Import a box/Minecraft instance"
                         Classes="secondary square" Click="ImportBoxButtonClicked">
-                    <Image Source="/resources/icons/import.png" Width="13" Height="13"></Image>
+                    <Image Source="/resources/icons/import.png" Width="13" Height="13" />
                 </Button>
                 <Button DockPanel.Dock="Left" ToolTip.Tip="Fast launch"
                         Classes="secondary square" Click="FastLaunchButtonClicked">
-                    <Image Source="/resources/icons/thunderbolt.png" Width="13" Height="13"></Image>
+                    <Image Source="/resources/icons/thunderbolt.png" Width="13" Height="13" />
                 </Button>
-                <views:SeparatorLine></views:SeparatorLine>
+                <views:SeparatorLine />
                 <Button DockPanel.Dock="Left" ToolTip.Tip="View Boxes"
                         Classes="secondary square" Click="ViewBoxesButtonClicked">
-                    <Image Source="/resources/icons/vanilla.png" Width="13" Height="13"></Image>
+                    <Image Source="/resources/icons/vanilla.png" Width="13" Height="13" />
                 </Button>
-                <views:SeparatorLine></views:SeparatorLine>
+                <views:SeparatorLine />
                 <Button DockPanel.Dock="Left" ToolTip.Tip="Browse modpacks" Classes="secondary square"
                         Click="BrowseModpacksButtonClicked">
-                    <Image Source="/resources/icons/browse_modpacks.png" Width="13" Height="13"></Image>
+                    <Image Source="/resources/icons/browse_modpacks.png" Width="13" Height="13" />
                 </Button>
                 <Button DockPanel.Dock="Left" ToolTip.Tip="Browse mods" Classes="secondary square"
                         Click="BrowseModsButtonClicked">
-                    <Image Source="/resources/icons/browse_mods.png" Width="13" Height="13"></Image>
+                    <Image Source="/resources/icons/browse_mods.png" Width="13" Height="13" />
                 </Button>
             </StackPanel>
             <Button DockPanel.Dock="Right" Margin="0 0 20 0" Classes="secondary square" ToolTip.Tip="Manage settings"
                     Click="SettingsButtonClicked">
-                <Image Source="/resources/icons/cog.png" Width="16" Height="16"></Image>
+                <Image Source="/resources/icons/cog.png" Width="16" Height="16" />
             </Button>
             <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary square" ToolTip.Tip="Manage defaults"
                     Click="DefaultsButtonClicked">
-                <Image Source="/resources/icons/game_settings.png" Width="13" Height="13"></Image>
+                <Image Source="/resources/icons/game_settings.png" Width="13" Height="13" />
             </Button>
             <Border Classes="frame-without-shadow" Margin="5 10 10 10" BoxShadow=""
                     Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="{Binding HeadIcon}" Margin="10 7 7 7"></Image>
+                    <Image Source="{Binding HeadIcon}" Margin="10 7 7 7" />
                     <StackPanel Margin="5 0 0 0" VerticalAlignment="Center">
-                        <TextBlock Classes="light" Text="{Binding Account.Username}"></TextBlock>
+                        <TextBlock Classes="light" Text="{Binding Account.Username}" />
                     </StackPanel>
                     <Button Margin="10 0 10 0" Classes="transparent square" ToolTip.Tip="Disconnect"
                             Click="DisconnectButtonClicked">
-                        <Image Width="16" Height="16" Source="/resources/icons/logout.png"></Image>
+                        <Image Width="16" Height="16" Source="/resources/icons/logout.png" />
                     </Button>
                 </StackPanel>
             </Border>
-            <views:DownloadBanner DockPanel.Dock="Right" Width="200"></views:DownloadBanner>
-            <Panel></Panel>
+            <views:DownloadBanner DockPanel.Dock="Right" Width="200" />
+            <Panel />
         </DockPanel>
     </DockPanel>
 </UserControl>

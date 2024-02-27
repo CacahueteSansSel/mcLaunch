@@ -13,8 +13,8 @@ public static class AuthenticationManager
     public static bool IsInitialized => Platform != null;
     public static CredentialsCache Cache { get; private set; }
 
-    public static event Action<MinecraftAuthenticationResult> OnLogin; 
-    public static event Action OnDisconnect; 
+    public static event Action<MinecraftAuthenticationResult> OnLogin;
+    public static event Action OnDisconnect;
 
     public static void Init(string microsoftAppId, string credentialsKey)
     {
@@ -26,7 +26,7 @@ public static class AuthenticationManager
     {
         await Platform.DisconnectAsync();
         Account = null;
-        
+
         OnDisconnect?.Invoke();
     }
 
@@ -39,17 +39,19 @@ public static class AuthenticationManager
     public static async Task<MinecraftAuthenticationResult?> TryLoginAsync()
     {
         Account = await Platform.TryLoginAsync();
-        
+
         if (Account != null) OnLogin?.Invoke(Account);
 
         return Account;
     }
 
-    public static async Task<MinecraftAuthenticationResult?> AuthenticateAsync(Action<BrowserLoginCallbackParameters> deviceCodeCallback = null, AuthenticationPlatform.ProgressCallback progressCallback = null)
+    public static async Task<MinecraftAuthenticationResult?> AuthenticateAsync(
+        Action<BrowserLoginCallbackParameters> deviceCodeCallback = null,
+        AuthenticationPlatform.ProgressCallback progressCallback = null)
     {
         Platform.WithBrowserLoginCallback(deviceCodeCallback);
         Account = await Platform.AuthenticateAsync(progressCallback);
-        
+
         if (Account != null) OnLogin?.Invoke(Account);
 
         return Account;

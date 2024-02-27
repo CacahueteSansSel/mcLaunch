@@ -3,7 +3,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:mcLaunch.Views"
-        xmlns:popups="clr-namespace:mcLaunch.Views.Popups"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="450"
         x:Class="mcLaunch.MainWindow"
         Title="mcLaunch"
@@ -14,25 +13,22 @@
         Background="{DynamicResource BackgroundDarker}"
         RenderOptions.BitmapInterpolationMode="HighQuality">
     <Window.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>
-    
+
     <Panel>
         <DockPanel>
-            <views:HeaderBar x:Name="TopHeaderBar" ZIndex="10" IsHitTestVisible="False" DockPanel.Dock="Top"></views:HeaderBar>
-            <views:ToolButtonsBar x:Name="TopBar" ZIndex="10" IsVisible="{Binding ShowDecorations}" IsEnabled="{Binding ShowDecorations}" DockPanel.Dock="Top"></views:ToolButtonsBar>
-            <views:UpdateNotificationBar x:Name="UpdateBar" IsVisible="False" DockPanel.Dock="Top"></views:UpdateNotificationBar>
+            <views:HeaderBar x:Name="TopHeaderBar" ZIndex="10" IsHitTestVisible="False" DockPanel.Dock="Top" />
+            <views:ToolButtonsBar x:Name="TopBar" ZIndex="10" IsVisible="{Binding ShowDecorations}"
+                                  IsEnabled="{Binding ShowDecorations}" DockPanel.Dock="Top" />
+            <views:UpdateNotificationBar x:Name="UpdateBar" IsVisible="False" DockPanel.Dock="Top" />
             <!-- <views:BottomStatusBar x:Name="BottomBar" ZIndex="10" IsVisible="False" IsEnabled="{Binding ShowDecorations}" DockPanel.Dock="Bottom"></views:BottomStatusBar> -->
-            <ContentControl Content="{Binding CurrentPage}">
-                
-            </ContentControl>
+            <ContentControl Content="{Binding CurrentPage}" />
         </DockPanel>
-        
+
         <Panel IsHitTestVisible="{Binding IsPopup}">
-            <Panel IsEnabled="{Binding IsPopup}" IsVisible="{Binding IsPopup}" Background="black" Opacity="0.5"></Panel>
-            <TransitioningContentControl Content="{Binding CurrentPopup}">
-                
-            </TransitioningContentControl>
+            <Panel IsEnabled="{Binding IsPopup}" IsVisible="{Binding IsPopup}" Background="black" Opacity="0.5" />
+            <TransitioningContentControl Content="{Binding CurrentPopup}" />
         </Panel>
     </Panel>
 </Window>

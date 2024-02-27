@@ -5,13 +5,8 @@ namespace Cacahuete.MinecraftLib.Core;
 
 public class QuickPlayManager
 {
-    MinecraftFolder folder;
-    string path;
-
-    public string[] Profiles 
-        => Directory.GetFiles(path, "*.json")
-            .Select(f => Path.GetFileNameWithoutExtension(f))
-            .ToArray();
+    private MinecraftFolder folder;
+    private readonly string path;
 
     public QuickPlayManager(MinecraftFolder folder)
     {
@@ -20,6 +15,11 @@ public class QuickPlayManager
 
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
     }
+
+    public string[] Profiles
+        => Directory.GetFiles(path, "*.json")
+            .Select(f => Path.GetFileNameWithoutExtension(f))
+            .ToArray();
 
     public string Create(QuickPlayWorldType worldType, QuickPlayGameMode gamemode, string worldName)
     {
@@ -33,16 +33,21 @@ public class QuickPlayManager
         };
 
         string path = $"{this.path}/{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.json";
-        
-        File.WriteAllText(path, JsonSerializer.Serialize(new [] {profile}));
+
+        File.WriteAllText(path, JsonSerializer.Serialize(new[] {profile}));
 
         return path;
     }
 
-    public void Delete(string name) => File.Delete($"{path}/{name}.json");
+    public void Delete(string name)
+    {
+        File.Delete($"{path}/{name}.json");
+    }
 
     public QuickPlayProfile[]? Get(string name)
-        => JsonSerializer.Deserialize<QuickPlayProfile[]>(File.ReadAllText($"{path}/{name}"));
+    {
+        return JsonSerializer.Deserialize<QuickPlayProfile[]>(File.ReadAllText($"{path}/{name}"));
+    }
 }
 
 public enum QuickPlayWorldType

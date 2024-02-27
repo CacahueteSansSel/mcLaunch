@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Avalonia;
 using Avalonia.Platform;
 
 namespace mcLaunch.Utilities;

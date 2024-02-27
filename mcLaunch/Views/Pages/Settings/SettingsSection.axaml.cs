@@ -1,6 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 
 namespace mcLaunch.Views.Pages.Settings;
 
@@ -17,7 +15,7 @@ public partial class SettingsSection : UserControl
         SettingsRoot.Children.Clear();
 
         Title.Text = group.Name;
-        
+
         foreach (Setting setting in group.Settings)
         {
             SettingElement element = new SettingElement(setting);

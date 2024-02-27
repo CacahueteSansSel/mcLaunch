@@ -1,20 +1,14 @@
 ﻿using System;
 using System.IO;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Managers;
-using mcLaunch.Models;
 using mcLaunch.Utilities;
-using mcLaunch.Views.Pages;
 
 namespace mcLaunch.Views.Popups;
 
 public partial class DataMigrationPopup : UserControl
 {
-    public static bool IsActive { get; private set; }
-    
     public DataMigrationPopup()
     {
         InitializeComponent();
@@ -23,6 +17,8 @@ public partial class DataMigrationPopup : UserControl
             .Replace('/', Path.DirectorySeparatorChar)
             .Replace('\\', Path.DirectorySeparatorChar);
     }
+
+    public static bool IsActive { get; private set; }
 
     protected override void OnLoaded(RoutedEventArgs e)
     {
@@ -48,8 +44,9 @@ public partial class DataMigrationPopup : UserControl
             statusPopup.Status = status;
             statusPopup.StatusPercent = percent;
         });
-        
-        Navigation.ShowPopup(new MessageBoxPopup("Migration successful", "All data have been migrated to the target location"));
+
+        Navigation.ShowPopup(new MessageBoxPopup("Migration successful",
+            "All data have been migrated to the target location"));
     }
 
     private void CancelButtonClicked(object? sender, RoutedEventArgs e)

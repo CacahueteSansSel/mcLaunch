@@ -6,29 +6,31 @@
              Height="20"
              x:Class="mcLaunch.Views.AttentionBadge">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
-        
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+
         <Style Selector="Border.ripple">
             <Style.Animations>
                 <Animation Duration="0:0:1" Easing="CubicEaseOut" IterationCount="Infinite">
                     <KeyFrame Cue="0%">
-                        <Setter Property="ScaleTransform.ScaleX" Value="0"/>
-                        <Setter Property="ScaleTransform.ScaleY" Value="0"/>
+                        <Setter Property="ScaleTransform.ScaleX" Value="0" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="0" />
                     </KeyFrame>
                     <KeyFrame Cue="100%">
-                        <Setter Property="ScaleTransform.ScaleX" Value="4"/>
-                        <Setter Property="ScaleTransform.ScaleY" Value="4"/>
-                        <Setter Property="Opacity" Value="0"/>
+                        <Setter Property="ScaleTransform.ScaleX" Value="4" />
+                        <Setter Property="ScaleTransform.ScaleY" Value="4" />
+                        <Setter Property="Opacity" Value="0" />
                     </KeyFrame>
                 </Animation>
             </Style.Animations>
         </Style>
     </UserControl.Styles>
-    <Border Background="{DynamicResource BackgroundDarker}" CornerRadius="10" BorderThickness="1" BorderBrush="{DynamicResource BackgroundLighter}" Padding="5 0 5 0">
+    <Border Background="{DynamicResource BackgroundDarker}" CornerRadius="10" BorderThickness="1"
+            BorderBrush="{DynamicResource BackgroundLighter}" Padding="5 0 5 0">
         <StackPanel Orientation="Horizontal">
             <Panel>
-                <Border Background="{DynamicResource WarningAccent}" Width="7" Height="7" CornerRadius="4"></Border>
-                <Border Classes="ripple" Background="{DynamicResource WarningAccent}" Width="7" Height="7" CornerRadius="4"></Border>
+                <Border Background="{DynamicResource WarningAccent}" Width="7" Height="7" CornerRadius="4" />
+                <Border Classes="ripple" Background="{DynamicResource WarningAccent}" Width="7" Height="7"
+                        CornerRadius="4" />
             </Panel>
             <TextBlock x:Name="Label" Margin="5 0 0 0" Classes="light">Editor</TextBlock>
         </StackPanel>

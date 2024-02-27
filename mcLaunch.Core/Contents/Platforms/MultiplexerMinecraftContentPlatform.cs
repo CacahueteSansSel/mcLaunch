@@ -1,12 +1,11 @@
-﻿using mcLaunch.Core.Managers;
-using mcLaunch.Core.Boxes;
+﻿using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 
 namespace mcLaunch.Core.Contents.Platforms;
 
 public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
 {
-    List<MinecraftContentPlatform> _platforms;
+    private readonly List<MinecraftContentPlatform> _platforms;
 
     public MultiplexerMinecraftContentPlatform(params MinecraftContentPlatform[] platforms)
     {
@@ -22,7 +21,8 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
 
         foreach (MinecraftContentPlatform platform in _platforms)
         {
-            PaginatedResponse<MinecraftContent> modsFromPlatform = await platform.GetContentsAsync(page, box, searchQuery, contentType);
+            PaginatedResponse<MinecraftContent> modsFromPlatform =
+                await platform.GetContentsAsync(page, box, searchQuery, contentType);
 
             foreach (MinecraftContent mod in modsFromPlatform.Items)
             {
@@ -61,7 +61,8 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
         return new PaginatedResponse<PlatformModpack>(page, modpacks.Count / 20, modpacks.ToArray());
     }
 
-    public override async Task<PaginatedResponse<ContentDependency>> GetContentDependenciesAsync(string id, string modLoaderId,
+    public override async Task<PaginatedResponse<ContentDependency>> GetContentDependenciesAsync(string id,
+        string modLoaderId,
         string versionId, string minecraftVersionId)
     {
         MinecraftContent mod = await GetContentAsync(id);
@@ -83,7 +84,9 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
 
     public override Task<ContentVersion[]> GetContentVersionsAsync(MinecraftContent content, string? modLoaderId,
         string? minecraftVersionId)
-        => content.Platform!.GetContentVersionsAsync(content, modLoaderId, minecraftVersionId);
+    {
+        return content.Platform!.GetContentVersionsAsync(content, modLoaderId, minecraftVersionId);
+    }
 
     public override async Task<PlatformModpack> GetModpackAsync(string id)
     {
@@ -99,7 +102,8 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
     public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent content, string versionId,
         bool installOptional)
     {
-        MinecraftContentPlatform? platform = content.Platform ?? _platforms.FirstOrDefault(p => p.Name == content.ModPlatformId);
+        MinecraftContentPlatform? platform =
+            content.Platform ?? _platforms.FirstOrDefault(p => p.Name == content.ModPlatformId);
 
         if (platform == null || !_platforms.Contains(platform)) return false;
 

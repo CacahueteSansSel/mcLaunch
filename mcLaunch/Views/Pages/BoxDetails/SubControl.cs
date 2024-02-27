@@ -9,6 +9,6 @@ public abstract class SubControl : UserControl
     public BoxDetailsPage ParentPage { get; set; }
     public Box Box { get; set; }
     public virtual string Title { get; }
-    
+
     public abstract Task PopulateAsync();
 }

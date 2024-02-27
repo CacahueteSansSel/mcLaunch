@@ -3,20 +3,18 @@ using System.Formats.Tar;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text.Json;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using DynamicData;
+using mcLaunch.Core.Contents;
+using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
-using mcLaunch.Core.Contents;
-using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Utilities;
 using Modrinth.Exceptions;
-using ReactiveUI;
 using SharpNBT;
 using AuthenticationManager = mcLaunch.Core.Managers.AuthenticationManager;
 
@@ -24,31 +22,10 @@ namespace mcLaunch.Core.Boxes;
 
 public class Box : IEquatable<Box>
 {
-    private string manifestPath;
-    private bool exposeLauncher = false;
+    private bool exposeLauncher;
     private string launcherVersion = "0.0.0";
-    FileSystemWatcher watcher;
-    public bool UseDedicatedGraphics { get; set; }
-    public string Path { get; }
-    public MinecraftFolder Folder { get; }
-    public Minecraft Minecraft { get; private set; }
-    public Process MinecraftProcess { get; }
-    public MinecraftVersion Version { get; private set; }
-    public MinecraftOptions? Options { get; private set; }
-    public QuickPlayManager QuickPlay { get; private set; }
-    public BoxManifest Manifest { get; private set; }
-    public ModLoaderSupport? ModLoader => ModLoaderManager.Get(Manifest.ModLoaderId);
-    public Version MinecraftVersion => new(Manifest.Version);
-    public bool SupportsQuickPlay => MinecraftVersion >= new Version("1.20");
-    public IBoxEventListener? EventListener { get; set; }
-
-    public bool IsRunning => MinecraftProcess != null && !MinecraftProcess.HasExited;
-    public bool HasReadmeFile => File.Exists($"{Folder.Path}/README.md");
-    public bool HasLicenseFile => File.Exists($"{Folder.Path}/LICENSE.md");
-    public bool HasCrashReports => Directory.Exists($"{Folder.Path}/crash-reports") 
-                                   && Directory.GetFiles($"{Folder.Path}/crash-reports").Length > 0;
-
-    public bool HasWorlds => Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
+    private readonly string manifestPath;
+    private FileSystemWatcher watcher;
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
@@ -63,9 +40,7 @@ public class Box : IEquatable<Box>
         CreateWatcher();
 
         if (File.Exists($"{Folder.CompletePath}/options.txt"))
-        {
             Options = new MinecraftOptions($"{Folder.CompletePath}/options.txt");
-        }
 
         QuickPlay = new QuickPlayManager(Folder);
     }
@@ -79,9 +54,7 @@ public class Box : IEquatable<Box>
         CreateWatcher();
 
         if (File.Exists($"{Folder.CompletePath}/options.txt"))
-        {
             Options = new MinecraftOptions($"{Folder.CompletePath}/options.txt");
-        }
 
         QuickPlay = new QuickPlayManager(Folder);
 
@@ -90,7 +63,35 @@ public class Box : IEquatable<Box>
             LoadIcon();
     }
 
-    void CreateWatcher()
+    public bool UseDedicatedGraphics { get; set; }
+    public string Path { get; }
+    public MinecraftFolder Folder { get; }
+    public Minecraft Minecraft { get; private set; }
+    public Process MinecraftProcess { get; }
+    public MinecraftVersion Version { get; private set; }
+    public MinecraftOptions? Options { get; private set; }
+    public QuickPlayManager QuickPlay { get; }
+    public BoxManifest Manifest { get; private set; }
+    public ModLoaderSupport? ModLoader => ModLoaderManager.Get(Manifest.ModLoaderId);
+    public Version MinecraftVersion => new(Manifest.Version);
+    public bool SupportsQuickPlay => MinecraftVersion >= new Version("1.20");
+    public IBoxEventListener? EventListener { get; set; }
+
+    public bool IsRunning => MinecraftProcess != null && !MinecraftProcess.HasExited;
+    public bool HasReadmeFile => File.Exists($"{Folder.Path}/README.md");
+    public bool HasLicenseFile => File.Exists($"{Folder.Path}/LICENSE.md");
+
+    public bool HasCrashReports => Directory.Exists($"{Folder.Path}/crash-reports")
+                                   && Directory.GetFiles($"{Folder.Path}/crash-reports").Length > 0;
+
+    public bool HasWorlds => Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
+
+    public bool Equals(Box? other)
+    {
+        return other?.Manifest.Id == Manifest.Id;
+    }
+
+    private void CreateWatcher()
     {
         if (!Directory.Exists(Folder.CompletePath))
             Directory.CreateDirectory(Folder.CompletePath);
@@ -104,7 +105,7 @@ public class Box : IEquatable<Box>
     private async void OnFileDeleted(object sender, FileSystemEventArgs e)
     {
         if (DownloadManager.IsProcessing) return;
-        
+
         string relativePath = e.FullPath.Replace(Folder.CompletePath, "")
             .Trim('\\').Trim('/')
             .Replace('\\', '/');
@@ -133,7 +134,7 @@ public class Box : IEquatable<Box>
     private async void OnFileCreated(object sender, FileSystemEventArgs e)
     {
         if (DownloadManager.IsProcessing) return;
-        
+
         string relativePath = e.FullPath.Replace(Folder.CompletePath, "")
             .Trim('\\').Trim('/')
             .Replace('\\', '/');
@@ -164,7 +165,7 @@ public class Box : IEquatable<Box>
         }
     }
 
-    async void LoadIcon()
+    private async void LoadIcon()
     {
         try
         {
@@ -177,10 +178,14 @@ public class Box : IEquatable<Box>
     }
 
     public bool HasBackup(string name)
-        => Manifest.Backups.Any(backup => backup.Name == name);
+    {
+        return Manifest.Backups.Any(backup => backup.Name == name);
+    }
 
     public BoxBackup? GetBackup(string name)
-        => Manifest.Backups.FirstOrDefault(backup => backup.Name == name);
+    {
+        return Manifest.Backups.FirstOrDefault(backup => backup.Name == name);
+    }
 
     public async Task<BoxBackup?> CreateBackupAsync(string name)
     {
@@ -190,27 +195,27 @@ public class Box : IEquatable<Box>
         string fullPath = $"{Path}/{path}";
 
         Directory.CreateDirectory($"{Path}/backups");
-        
+
         File.Copy($"{Path}/box.json", $"{Folder.CompletePath}/box.json");
-        if (File.Exists($"{Path}/icon.png")) 
+        if (File.Exists($"{Path}/icon.png"))
             File.Copy($"{Path}/icon.png", $"{Folder.CompletePath}/icon.png");
-        if (File.Exists($"{Path}/background.png")) 
+        if (File.Exists($"{Path}/background.png"))
             File.Copy($"{Path}/background.png", $"{Folder.CompletePath}/background.png");
 
-        await TarFile.CreateFromDirectoryAsync(Folder.CompletePath, 
+        await TarFile.CreateFromDirectoryAsync(Folder.CompletePath,
             fullPath, false);
-        
-        if (File.Exists($"{Folder.CompletePath}/box.json")) 
+
+        if (File.Exists($"{Folder.CompletePath}/box.json"))
             File.Delete($"{Folder.CompletePath}/box.json");
-        if (File.Exists($"{Folder.CompletePath}/icon.png")) 
+        if (File.Exists($"{Folder.CompletePath}/icon.png"))
             File.Delete($"{Folder.CompletePath}/icon.png");
-        if (File.Exists($"{Folder.CompletePath}/background.png")) 
+        if (File.Exists($"{Folder.CompletePath}/background.png"))
             File.Delete($"{Folder.CompletePath}/background.png");
 
         BoxBackup backup = new(name, BoxBackupType.Complete, DateTime.Now, path);
         Manifest.Backups.Add(backup);
         SaveManifest();
-        
+
         return backup;
     }
 
@@ -223,11 +228,11 @@ public class Box : IEquatable<Box>
         {
             case BoxBackupType.Complete:
                 List<BoxBackup> backups = Manifest.Backups;
-                
+
                 string archiveFullPath = $"{Path}/{backup.Filename}";
                 if (!File.Exists(archiveFullPath)) return false;
 
-                await TarFile.ExtractToDirectoryAsync(archiveFullPath, 
+                await TarFile.ExtractToDirectoryAsync(archiveFullPath,
                     Folder.CompletePath, true);
 
                 if (File.Exists($"{Folder.CompletePath}/box.json"))
@@ -235,31 +240,33 @@ public class Box : IEquatable<Box>
                     File.Copy($"{Folder.CompletePath}/box.json", $"{Path}/box.json", true);
                     File.Delete($"{Folder.CompletePath}/box.json");
                 }
+
                 if (File.Exists($"{Folder.CompletePath}/icon.png"))
                 {
                     File.Copy($"{Folder.CompletePath}/icon.png", $"{Path}/icon.png", true);
                     File.Delete($"{Folder.CompletePath}/icon.png");
                 }
+
                 if (File.Exists($"{Folder.CompletePath}/background.png"))
                 {
                     File.Copy($"{Folder.CompletePath}/background.png", $"{Path}/background.png", true);
                     File.Delete($"{Folder.CompletePath}/background.png");
                 }
-                
+
                 // Ensure the backups are still listed even when restoring an earlier backup
                 ReloadManifest(true);
                 Manifest.Backups = backups;
                 SaveManifest();
-                
+
                 // Reload icon and background
                 LoadIcon();
                 LoadBackground();
-                
+
                 return true;
             case BoxBackupType.Partial:
                 break;
         }
-        
+
         return false;
     }
 
@@ -270,12 +277,12 @@ public class Box : IEquatable<Box>
         foreach (string worldPath in Directory.GetDirectories($"{Folder.Path}/saves"))
         {
             string datapackFolderPath = $"{worldPath}/datapacks";
-            if (!Directory.Exists(datapackFolderPath)) 
+            if (!Directory.Exists(datapackFolderPath))
                 Directory.CreateDirectory(datapackFolderPath);
 
             string finalPath = FileSystemUtilities.NormalizePath($"{datapackFolderPath}/" +
                                                                  $"{System.IO.Path.GetFileName(filename)}");
-            
+
             File.Copy(filename, finalPath, true);
             paths.Add(finalPath.Replace(Folder.CompletePath, "")
                 .TrimStart(System.IO.Path.DirectorySeparatorChar));
@@ -283,7 +290,7 @@ public class Box : IEquatable<Box>
 
         BoxStoredContent? content = Manifest.GetContentByVersion(versionId);
         if (content != null) content.Filenames = [..content.Filenames, ..paths.ToArray()];
-        
+
         return paths.ToArray();
     }
 
@@ -302,7 +309,10 @@ public class Box : IEquatable<Box>
         watcher.EnableRaisingEvents = isWatching;
     }
 
-    public string? ReadReadmeFile() => HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
+    public string? ReadReadmeFile()
+    {
+        return HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
+    }
 
     public void ReloadManifest(bool force = false)
     {
@@ -382,7 +392,7 @@ public class Box : IEquatable<Box>
 
             // Add the mod to the list
             Manifest.AddContent(version.Content.Id, MinecraftContentType.Modification, version.Id,
-                version.Content.ModPlatformId, new[] { modFilename });
+                version.Content.ModPlatformId, new[] {modFilename});
 
             save = true;
         }
@@ -390,13 +400,13 @@ public class Box : IEquatable<Box>
         return save;
     }
 
-    async void RunPostDeserializationChecks()
+    private async void RunPostDeserializationChecks()
     {
         if (await Manifest?.RunPostDeserializationChecks())
             SaveManifest();
     }
 
-    async Task SetupVersionAsync()
+    private async Task SetupVersionAsync()
     {
         if (Version != null) return;
         Version = await Manifest.Setup();
@@ -415,22 +425,21 @@ public class Box : IEquatable<Box>
 
         ContentVersion version = versions[0];
 
-        PaginatedResponse<MinecraftContentPlatform.ContentDependency> deps = await ModPlatformManager.Platform.GetContentDependenciesAsync(
-            mod.Id,
-            mod.Type == MinecraftContentType.Modification ? Manifest.ModLoaderId : null, 
-            version.Id, Manifest.Version);
+        PaginatedResponse<MinecraftContentPlatform.ContentDependency> deps =
+            await ModPlatformManager.Platform.GetContentDependenciesAsync(
+                mod.Id,
+                mod.Type == MinecraftContentType.Modification ? Manifest.ModLoaderId : null,
+                version.Id, Manifest.Version);
 
         foreach (MinecraftContentPlatform.ContentDependency dep in deps.Items)
         {
-            if (dep?.Content == null || dep.Type == MinecraftContentPlatform.DependencyRelationType.Incompatible) 
+            if (dep?.Content == null || dep.Type == MinecraftContentPlatform.DependencyRelationType.Incompatible)
                 continue;
-            
+
             if (!Manifest.HasContentStrict(dep.Content.Id, mod.ModPlatformId)
                 && Manifest.HasContentSoft(dep.Content))
-            {
                 // The dependency is installed from another platform
                 continue;
-            }
 
             if (Manifest.HasContentStrict(dep.Content.Id, mod.ModPlatformId)
                 && Manifest.GetContent(dep.Content.Id).VersionId != dep.VersionId)
@@ -446,10 +455,8 @@ public class Box : IEquatable<Box>
                 catch (ModrinthApiException e)
                 {
                     if (e.Response.StatusCode == HttpStatusCode.NotFound)
-                    {
                         // It seems that this version doesn't work anymore, so we ignore it
                         continue;
-                    }
 
                     throw;
                 }
@@ -466,7 +473,6 @@ public class Box : IEquatable<Box>
         List<MinecraftWorld> worlds = new();
 
         foreach (string folder in Directory.GetDirectories($"{Folder.Path}/saves"))
-        {
             try
             {
                 worlds.Add(new MinecraftWorld(System.IO.Path.GetFullPath(folder)));
@@ -475,22 +481,20 @@ public class Box : IEquatable<Box>
             {
                 // ignored
             }
-        }
 
         return worlds.ToArray();
     }
 
     public MinecraftServer[] LoadServers()
     {
-        if (!File.Exists($"{Folder.Path}/servers.dat")) 
+        if (!File.Exists($"{Folder.Path}/servers.dat"))
             return Array.Empty<MinecraftServer>();
 
         List<MinecraftServer> servers = new();
         CompoundTag tag = NbtFile.Read($"{Folder.Path}/servers.dat", FormatOptions.Java);
-        ListTag serversTag = (ListTag)tag["servers"];
+        ListTag serversTag = (ListTag) tag["servers"];
 
         foreach (CompoundTag server in serversTag)
-        {
             try
             {
                 servers.Add(new MinecraftServer(server));
@@ -499,14 +503,13 @@ public class Box : IEquatable<Box>
             {
                 // ignored
             }
-        }
 
         return servers.ToArray();
     }
 
     public MinecraftCrashReport[] LoadCrashReports()
     {
-        if (!Directory.Exists($"{Folder.Path}/crash-reports")) 
+        if (!Directory.Exists($"{Folder.Path}/crash-reports"))
             return Array.Empty<MinecraftCrashReport>();
 
         return Directory.GetFiles($"{Folder.Path}/crash-reports")
@@ -636,13 +639,15 @@ public class Box : IEquatable<Box>
 
                 FileStream fs = new FileStream(realFilename, FileMode.Open);
 
-                ContentVersion? modVersion = await ModrinthMinecraftContentPlatform.Instance.GetContentVersionFromData(fs);
+                ContentVersion? modVersion =
+                    await ModrinthMinecraftContentPlatform.Instance.GetContentVersionFromData(fs);
                 if (modVersion == null) continue;
-                
+
                 fs.Close();
 
                 Manifest.RemoveContent(mod.Id, this);
-                bool success = await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(this, modVersion.Content,
+                bool success = await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(this,
+                    modVersion.Content,
                     modVersion.Id, false);
 
                 if (success) migratedMods.Add(modVersion.Content);
@@ -671,11 +676,13 @@ public class Box : IEquatable<Box>
 
                 await using FileStream fs = new FileStream(realFilename, FileMode.Open);
 
-                ContentVersion? modVersion = await CurseForgeMinecraftContentPlatform.Instance.GetContentVersionFromData(fs);
+                ContentVersion? modVersion =
+                    await CurseForgeMinecraftContentPlatform.Instance.GetContentVersionFromData(fs);
                 if (modVersion == null) continue;
 
                 Manifest.RemoveContent(mod.Id, this);
-                bool success = await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(this, modVersion.Content,
+                bool success = await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(this,
+                    modVersion.Content,
                     modVersion.Id, false);
 
                 if (success) migratedMods.Add(modVersion.Content);
@@ -686,13 +693,19 @@ public class Box : IEquatable<Box>
     }
 
     public bool HasContentStrict(MinecraftContent mod)
-        => Manifest.HasContentStrict(mod.Id, mod.Platform.Name);
+    {
+        return Manifest.HasContentStrict(mod.Id, mod.Platform.Name);
+    }
 
     public bool HasContentSoft(MinecraftContent mod)
-        => Manifest.HasContentSoft(mod);
+    {
+        return Manifest.HasContentSoft(mod);
+    }
 
     public void SaveManifest()
-        => File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
+    {
+        File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
+    }
 
     // Launch Minecraft normally
     public Process Run()
@@ -715,15 +728,12 @@ public class Box : IEquatable<Box>
     public Process Run(MinecraftWorld world)
     {
         string profilePath = QuickPlay.Create(QuickPlayWorldType.Singleplayer,
-            (QuickPlayGameMode)world.GameMode, world.FolderName);
+            (QuickPlayGameMode) world.GameMode, world.FolderName);
 
         return Minecraft
             .WithSingleplayerQuickPlay(profilePath, world.FolderName)
             .Run();
     }
-
-    public bool Equals(Box? other)
-        => other?.Manifest.Id == Manifest.Id;
 
     public override bool Equals(object? obj)
     {
@@ -731,7 +741,12 @@ public class Box : IEquatable<Box>
     }
 
     public override int GetHashCode()
-        => Manifest.Id.GetHashCode();
+    {
+        return Manifest.Id.GetHashCode();
+    }
 
-    public override string ToString() => $"Box {Manifest.Id} {Manifest.Name}";
+    public override string ToString()
+    {
+        return $"Box {Manifest.Id} {Manifest.Name}";
+    }
 }

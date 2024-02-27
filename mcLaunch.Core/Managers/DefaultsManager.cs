@@ -17,7 +17,9 @@ public static class DefaultsManager
     }
 
     public static MinecraftOptions? LoadDefaultMinecraftOptions()
-        => File.Exists($"{DefaultsPath}/options.txt") ? new MinecraftOptions($"{DefaultsPath}/options.txt") : null;
+    {
+        return File.Exists($"{DefaultsPath}/options.txt") ? new MinecraftOptions($"{DefaultsPath}/options.txt") : null;
+    }
 
     public static void ClearDefaultOptions()
     {

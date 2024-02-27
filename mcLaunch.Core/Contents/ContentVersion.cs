@@ -2,8 +2,12 @@
 
 namespace mcLaunch.Core.Contents;
 
-public class ContentVersion(MinecraftContent content, string id, string name, 
-    string minecraftVersion, string? modLoader) : IVersion
+public class ContentVersion(
+    MinecraftContent content,
+    string id,
+    string name,
+    string minecraftVersion,
+    string? modLoader) : IVersion
 {
     public MinecraftContent Content { get; set; } = content;
     public string Id { get; set; } = id;

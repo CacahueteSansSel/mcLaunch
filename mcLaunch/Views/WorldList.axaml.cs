@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using mcLaunch.Core;
-using mcLaunch.Core.Managers;
-using mcLaunch.Core.Contents;
-using mcLaunch.Core.Contents.Platforms;
-using mcLaunch.Models;
-using mcLaunch.Utilities;
-using mcLaunch.Views.Pages;
+﻿using Avalonia.Controls;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.MinecraftFormats;
+using mcLaunch.Utilities;
+using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
 using ReactiveUI;
 
@@ -22,18 +10,16 @@ namespace mcLaunch.Views;
 
 public partial class WorldList : UserControl
 {
-    Box lastBox;
-    string lastQuery;
+    private Box lastBox;
+    private string lastQuery;
     private BoxDetailsPage launchPage;
-
-    public bool HideInstalledBadges { get; set; }
 
     public WorldList()
     {
         InitializeComponent();
 
         DataContext = new Data();
-        
+
         /*
         SetWorlds(new []
         {
@@ -49,6 +35,8 @@ public partial class WorldList : UserControl
         });
         */
     }
+
+    public bool HideInstalledBadges { get; set; }
 
     public void SetBox(Box box)
     {
@@ -74,10 +62,24 @@ public partial class WorldList : UserControl
         LoadCircle.IsVisible = isLoading;
     }
 
+    private void WorldSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (e.AddedItems.Count > 0 && launchPage != null && launchPage.Box.SupportsQuickPlay)
+        {
+            MinecraftWorld world = (MinecraftWorld) e.AddedItems[0];
+
+            Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Launch world {world.Name} ?",
+                $"Minecraft will start and automatically launch the world {world.Name}",
+                () => { launchPage.Run(world: world); }));
+        }
+
+        WorldsList.UnselectAll();
+    }
+
     public class Data : ReactiveObject
     {
-        MinecraftWorld[] worlds;
-        int page;
+        private int page;
+        private MinecraftWorld[] worlds;
 
         public MinecraftWorld[] Worlds
         {
@@ -90,19 +92,5 @@ public partial class WorldList : UserControl
             get => page;
             set => this.RaiseAndSetIfChanged(ref page, value);
         }
-    }
-
-    private void WorldSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (e.AddedItems.Count > 0 && launchPage != null && launchPage.Box.SupportsQuickPlay)
-        {
-            MinecraftWorld world = (MinecraftWorld) e.AddedItems[0];
-
-            Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Launch world {world.Name} ?",
-                $"Minecraft will start and automatically launch the world {world.Name}",
-                () => { launchPage.Run(world: world); }));
-        }
-        
-        WorldsList.UnselectAll();
     }
 }

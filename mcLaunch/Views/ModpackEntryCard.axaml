@@ -10,17 +10,17 @@
              Classes="smoothShow"
              x:Class="mcLaunch.Views.ModpackEntryCard">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
 
         <Style Selector="views|ModpackEntryCard">
-            <Setter Property="ClipToBounds" Value="True"></Setter>
-            <Setter Property="CornerRadius" Value="4"></Setter>
-            <Setter Property="BorderThickness" Value="1"></Setter>
-            <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
         </Style>
 
         <Style Selector="views|ModpackEntryCard:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"></Setter>
+            <Setter Property="Background" Value="{DynamicResource BackgroundLighter}" />
         </Style>
     </UserControl.Styles>
     <Panel>
@@ -35,24 +35,25 @@
                 </Border.Background>
                 <Canvas Height="120">
                     <Border Canvas.Left="40" Canvas.Top="60" ClipToBounds="True" CornerRadius="4">
-                        <Image Stretch="Fill" Width="80" Height="80" Source="{Binding Icon}"></Image>
+                        <Image Stretch="Fill" Width="80" Height="80" Source="{Binding Icon}" />
                     </Border>
                     <StackPanel Canvas.Left="135" Canvas.Top="60" Width="250" ClipToBounds="True">
-                        <TextBlock Classes="title" FontSize="20" Text="{Binding Name}"></TextBlock>
+                        <TextBlock Classes="title" FontSize="20" Text="{Binding Name}" />
                         <StackPanel Orientation="Horizontal" Margin="0 0 0 3">
                             <TextBlock FontSize="12" Classes="light" Margin="0 0 0 0">by</TextBlock>
-                            <TextBlock FontSize="12" Classes="title" Margin="5 0 0 0" Text="{Binding Author}"></TextBlock>
+                            <TextBlock FontSize="12" Classes="title" Margin="5 0 0 0" Text="{Binding Author}" />
                         </StackPanel>
                     </StackPanel>
                 </Canvas>
             </Border>
             <StackPanel Margin="20 30 20 20">
                 <StackPanel Orientation="Horizontal" Spacing="2">
-                    <views:Badge x:Name="PlatformBadge" Icon="/resources/icons/vanilla.png"></views:Badge>
-                    <views:Badge x:Name="VersionBadge" Icon="/resources/icons/vanilla.png"></views:Badge>
-                    <views:Badge x:Name="ModLoaderBadge" Icon="/resources/icons/vanilla.png"></views:Badge>
+                    <views:Badge x:Name="PlatformBadge" Icon="/resources/icons/vanilla.png" />
+                    <views:Badge x:Name="VersionBadge" Icon="/resources/icons/vanilla.png" />
+                    <views:Badge x:Name="ModLoaderBadge" Icon="/resources/icons/vanilla.png" />
                 </StackPanel>
-                <TextBlock Margin="0 5 0 0" Height="65" TextWrapping="Wrap" Classes="light" Text="{Binding ShortDescription}"></TextBlock>
+                <TextBlock Margin="0 5 0 0" Height="65" TextWrapping="Wrap" Classes="light"
+                           Text="{Binding ShortDescription}" />
             </StackPanel>
         </StackPanel>
     </Panel>

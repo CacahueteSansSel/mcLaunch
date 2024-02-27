@@ -2,7 +2,7 @@
 
 public static class IdGenerator
 {
-    const string IdCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private const string IdCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public static string Generate(int length = 8)
     {

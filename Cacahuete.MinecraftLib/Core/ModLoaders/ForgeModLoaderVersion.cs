@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text.Json;
-using Cacahuete.MinecraftLib.Http;
 using Cacahuete.MinecraftLib.Models;
 
 namespace Cacahuete.MinecraftLib.Core.ModLoaders;
@@ -14,10 +13,10 @@ public class ForgeModLoaderVersion : ModLoaderVersion
 
     public override async Task<MinecraftVersion?> GetMinecraftVersionAsync(string minecraftVersionId)
     {
-        string[] installerUrls = new[]
+        string[] installerUrls =
         {
             $"https://maven.minecraftforge.net/net/minecraftforge/forge/{FullName}/forge-{FullName}-installer.jar",
-            $"https://maven.minecraftforge.net/net/minecraftforge/forge/{FullName}-{MinecraftVersion}/forge-{FullName}-{MinecraftVersion}-installer.jar",
+            $"https://maven.minecraftforge.net/net/minecraftforge/forge/{FullName}-{MinecraftVersion}/forge-{FullName}-{MinecraftVersion}-installer.jar"
         };
         string versionName = $"{MinecraftVersion}-forge-{Name}";
 
@@ -45,7 +44,7 @@ public class ForgeModLoaderVersion : ModLoaderVersion
 
                 await File.WriteAllBytesAsync(fullPath, await resp.Content.ReadAsByteArrayAsync());
                 success = true;
-                
+
                 break;
             }
 
@@ -53,7 +52,7 @@ public class ForgeModLoaderVersion : ModLoaderVersion
         }
 
         // TODO: Implement a new way for installing Forge
-        
+
         string wrapperJarPath = Path.GetFullPath($"{SystemFolderPath}/forge/target/wrapper.jar");
         string classPathSeparator = OperatingSystem.IsWindows() ? ";" : ":";
 

@@ -1,15 +1,13 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 
 namespace mcLaunch.Views.Pages;
 
 public partial class StartingPage : UserControl, ITopLevelPageControl
 {
-    public string Title => "mcLaunch";
-    
     public StartingPage()
     {
         InitializeComponent();
     }
+
+    public string Title => "mcLaunch";
 }

@@ -40,8 +40,8 @@ public class FileSystemUtilities
         {
             new FilePickerFileType("Image")
             {
-                Patterns = new[] { "*.png", "*.jpg", "*.jpeg" },
-                MimeTypes = new[] { "image/png", "image/jpeg" }
+                Patterns = new[] {"*.png", "*.jpg", "*.jpeg"},
+                MimeTypes = new[] {"image/png", "image/jpeg"}
             }
         });
 

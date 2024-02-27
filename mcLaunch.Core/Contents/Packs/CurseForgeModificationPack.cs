@@ -1,28 +1,16 @@
 ﻿using System.IO.Compression;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents.Platforms;
+using mcLaunch.Core.Utilities;
 
 namespace mcLaunch.Core.Contents.Packs;
 
 public class CurseForgeModificationPack : ModificationPack
 {
-    public override string Name { get; init; }
-    public override string Author { get; init; }
-    public override string Version { get; init; }
-    public override string? Id { get; init; }
-    public override string? Description { get; init; }
-    public override string MinecraftVersion { get; init; }
-    public override string ModloaderId { get; init; }
-    public override string ModloaderVersion { get; init; }
-    public override SerializedMinecraftContent[] Modifications { get; set; }
-    public override AdditionalFile[] AdditionalFiles { get; set; }
-
     public CurseForgeModificationPack()
     {
-        
     }
 
     public CurseForgeModificationPack(string filename) : base(filename)
@@ -41,7 +29,7 @@ public class CurseForgeModificationPack : ModificationPack
         Version = manifest.Version;
         MinecraftVersion = manifest.Minecraft.Version;
         Description = "Imported from a CurseForge modpack";
-        
+
         string[] modloaderVersionTokens = manifest.Minecraft.Modloaders[0].Id.Split('-');
         ModloaderId = modloaderVersionTokens[0];
         ModloaderVersion = modloaderVersionTokens[1];
@@ -54,13 +42,25 @@ public class CurseForgeModificationPack : ModificationPack
             IsRequired = file.IsRequired
         }).ToArray();
 
-        AdditionalFiles = overridesEntries.Where(entry => entry.FullName.Contains('.')).Select(entry => new AdditionalFile
-        {
-            Path = entry.FullName.Replace("overrides/", ""),
-            Data = entry.Open().ReadToEndAndClose(entry.Length),
-        }).ToArray();
+        AdditionalFiles = overridesEntries.Where(entry => entry.FullName.Contains('.')).Select(entry =>
+            new AdditionalFile
+            {
+                Path = entry.FullName.Replace("overrides/", ""),
+                Data = entry.Open().ReadToEndAndClose(entry.Length)
+            }).ToArray();
     }
-    
+
+    public override string Name { get; init; }
+    public override string Author { get; init; }
+    public override string Version { get; init; }
+    public override string? Id { get; init; }
+    public override string? Description { get; init; }
+    public override string MinecraftVersion { get; init; }
+    public override string ModloaderId { get; init; }
+    public override string ModloaderVersion { get; init; }
+    public override SerializedMinecraftContent[] Modifications { get; set; }
+    public override AdditionalFile[] AdditionalFiles { get; set; }
+
     public override async Task InstallModificationAsync(Box targetBox, SerializedMinecraftContent mod)
     {
         await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(targetBox, new MinecraftContent
@@ -103,10 +103,11 @@ public class CurseForgeModificationPack : ModificationPack
                 // Include any non-CurseForge mod to the overrides
                 ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{mod.Filenames[0]}");
                 await using Stream entryStream = overrideEntry.Open();
-                using FileStream modFileStream = new FileStream(box.Folder.CompletePath + $"/{mod.Filenames[0]}", FileMode.Open);
+                using FileStream modFileStream =
+                    new FileStream(box.Folder.CompletePath + $"/{mod.Filenames[0]}", FileMode.Open);
 
                 await modFileStream.CopyToAsync(entryStream);
-                
+
                 continue;
             }
 
@@ -119,24 +120,26 @@ public class CurseForgeModificationPack : ModificationPack
 
             files.Add(file);
         }
+
         manifest.Files = files.ToArray();
-        
+
         foreach (string file in box.GetAdditionalFiles())
         {
             string completePath = $"{box.Path}/minecraft/{file}";
             if (!File.Exists(completePath)) continue;
-            
+
             ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
             await using Stream entryStream = overrideEntry.Open();
             using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
 
             await modFileStream.CopyToAsync(entryStream);
         }
+
         foreach (string modFile in box.GetUnlistedMods())
         {
             string completePath = $"{box.Path}/minecraft/{modFile}";
             if (!File.Exists(completePath)) continue;
-            
+
             ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{modFile}");
             await using Stream entryStream = overrideEntry.Open();
             using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
@@ -149,7 +152,7 @@ public class CurseForgeModificationPack : ModificationPack
             WriteIndented = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
-        
+
         ZipArchiveEntry entry = zip.CreateEntry("manifest.json");
         await using Stream manifestStream = entry.Open();
         await JsonSerializer.SerializeAsync(manifestStream, manifest, options);

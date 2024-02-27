@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Http;
@@ -70,9 +69,7 @@ public class MinecraftVersion
     {
         if (!Directory.Exists(targetDirectoryPath)) Directory.CreateDirectory(targetDirectoryPath);
         if (!File.Exists($"{targetDirectoryPath}/{Id}.json"))
-        {
             await File.WriteAllTextAsync($"{targetDirectoryPath}/{Id}.json", JsonSerializer.Serialize(this));
-        }
 
         if (CustomClientUrl != null && File.Exists($"{targetDirectoryPath}/{Id}.jar"))
             return;
@@ -82,11 +79,16 @@ public class MinecraftVersion
             CustomClientUrl == null ? Downloads.Client.Hash : null);
     }
 
-    public Task<AssetIndex?> GetAssetIndexAsync() => Api.GetAsync<AssetIndex>(AssetIndex.Url);
+    public Task<AssetIndex?> GetAssetIndexAsync()
+    {
+        return Api.GetAsync<AssetIndex>(AssetIndex.Url);
+    }
 
     /// <summary>
-    /// Merges the two <see cref="MinecraftVersion"/> and gives the priority to the callee for non-list elements that cannot
-    /// be merged. If this <see cref="MinecraftVersion"/> have null fields, they will be set to the other's fields value instead
+    ///     Merges the two <see cref="MinecraftVersion" /> and gives the priority to the callee for non-list elements that
+    ///     cannot
+    ///     be merged. If this <see cref="MinecraftVersion" /> have null fields, they will be set to the other's fields value
+    ///     instead
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -104,20 +106,20 @@ public class MinecraftVersion
                 JVM = new List<object>((Arguments ?? ModelArguments.Default).JVM)
                     .AddsOnce(other.Arguments.JVM ?? ModelArguments.Default.JVM).ToArray()
             },
-            AssetIndex = this.AssetIndex ?? other.AssetIndex,
-            Assets = this.Assets ?? other.Assets,
-            ComplianceLevel = this.ComplianceLevel,
-            Downloads = this.Downloads ?? other.Downloads,
-            Id = this.Id ?? other.Id,
-            JavaVersion = this.JavaVersion ?? other.JavaVersion,
-            Libraries = new List<ModelLibrary>(this.Libraries).Adds(other.Libraries).ToArray(),
-            Logging = this.Logging ?? other.Logging,
-            MainClass = this.MainClass ?? other.MainClass,
-            MinimumLauncherVersion = this.MinimumLauncherVersion ?? other.MinimumLauncherVersion,
-            Type = this.Type ?? other.Type,
-            Time = this.Time ?? other.Time,
-            ReleaseTime = this.ReleaseTime ?? other.ReleaseTime,
-            MinecraftArguments = this.MinecraftArguments ?? other.MinecraftArguments
+            AssetIndex = AssetIndex ?? other.AssetIndex,
+            Assets = Assets ?? other.Assets,
+            ComplianceLevel = ComplianceLevel,
+            Downloads = Downloads ?? other.Downloads,
+            Id = Id ?? other.Id,
+            JavaVersion = JavaVersion ?? other.JavaVersion,
+            Libraries = new List<ModelLibrary>(Libraries).Adds(other.Libraries).ToArray(),
+            Logging = Logging ?? other.Logging,
+            MainClass = MainClass ?? other.MainClass,
+            MinimumLauncherVersion = MinimumLauncherVersion ?? other.MinimumLauncherVersion,
+            Type = Type ?? other.Type,
+            Time = Time ?? other.Time,
+            ReleaseTime = ReleaseTime ?? other.ReleaseTime,
+            MinecraftArguments = MinecraftArguments ?? other.MinecraftArguments
         };
     }
 
@@ -163,7 +165,10 @@ public class MinecraftVersion
                                                 && Name.Contains(':')
                                                 && !string.IsNullOrEmpty(Url);
 
-        public string GetFinalJarFilename() => new LibraryName(Name).JarFilename;
+        public string GetFinalJarFilename()
+        {
+            return new LibraryName(Name).JarFilename;
+        }
 
         public string? DeduceUrl()
         {
@@ -263,7 +268,9 @@ public class MinecraftVersion
 
         [JsonPropertyName("jvm")] public object[]? JVM { get; set; }
 
-        bool RuleSatisfied(JsonElement ruleJson)
+        public static ModelArguments Default { get; set; }
+
+        private bool RuleSatisfied(JsonElement ruleJson)
         {
             if (!ruleJson.TryGetProperty("action", out JsonElement actionJson)) return false;
             if (actionJson.GetString() != "allow")
@@ -276,28 +283,23 @@ public class MinecraftVersion
             {
                 if (osJson.TryGetProperty("name", out JsonElement osNameJson)
                     && osNameJson.GetString() != Utilities.GetPlatformIdentifier())
-                {
                     return false;
-                }
 
                 if (osJson.TryGetProperty("arch", out JsonElement osArchJson)
                     && osArchJson.GetString() != Utilities.GetArchitecture())
-                {
                     return false;
-                }
             }
 
             return true;
         }
 
-        string FormatArgument(string? arg, Dictionary<string, string> replacements)
+        private string FormatArgument(string? arg, Dictionary<string, string> replacements)
         {
             if (arg == null) return "\"\"";
 
             bool ignoreWhitespaces = false;
 
             if (arg.Contains('$'))
-            {
                 foreach (var kv in replacements)
                 {
                     string toReplace = $"${{{kv.Key}}}";
@@ -311,7 +313,6 @@ public class MinecraftVersion
                     string newValue = string.IsNullOrEmpty(value) ? "\"\"" : value;
                     arg = arg.Replace(toReplace, newValue);
                 }
-            }
 
             if ((arg.Contains(" ") && !ignoreWhitespaces) || string.IsNullOrWhiteSpace(arg)) arg = $"\"{arg}\"";
 
@@ -324,15 +325,12 @@ public class MinecraftVersion
             List<string> processedArgs = new();
 
             if (JVM != null)
-            {
                 foreach (object arg in JVM)
                 {
                     if (arg is not JsonElement elmt) continue;
 
                     if (elmt.ValueKind == JsonValueKind.String)
-                    {
                         final += FormatArgument(elmt.GetString(), replacements) + " ";
-                    }
 
                     if (elmt.ValueKind == JsonValueKind.Object
                         && elmt.TryGetProperty("rules", out JsonElement rulesJson)
@@ -341,13 +339,11 @@ public class MinecraftVersion
                         bool abort = false;
 
                         foreach (JsonElement rule in rulesJson.EnumerateArray())
-                        {
                             if (!RuleSatisfied(rule))
                             {
                                 abort = true;
                                 break;
                             }
-                        }
 
                         if (abort) continue;
 
@@ -369,12 +365,10 @@ public class MinecraftVersion
                         }
                     }
                 }
-            }
 
             final += middle + " ";
 
             if (Game != null)
-            {
                 foreach (object arg in Game)
                 {
                     if (arg is not JsonElement elmt) continue;
@@ -385,12 +379,9 @@ public class MinecraftVersion
 
                     final += FormatArgument(elmt.GetString(), replacements) + " ";
                 }
-            }
 
             return final.Trim();
         }
-
-        public static ModelArguments Default { get; set; }
     }
 
     public class ModelAssetIndex

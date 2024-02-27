@@ -8,7 +8,7 @@ public class XblAuthResponse
     public DateTime NotAfter { get; set; }
     public string Token { get; set; }
     public Dictionary<string, ModelClaim[]> DisplayClaims { get; set; }
-    
+
     public string Identity { get; set; }
     public int XErr { get; set; }
     public string Message { get; set; }
@@ -18,7 +18,6 @@ public class XblAuthResponse
 
     public class ModelClaim
     {
-        [JsonPropertyName("uhs")]
-        public string Uhs { get; set; }
+        [JsonPropertyName("uhs")] public string Uhs { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace mcLaunch.Installer.Win32;
@@ -8,10 +9,27 @@ namespace mcLaunch.Installer.Win32;
 
 public class Shortcut
 {
-    private static Type m_type = Type.GetTypeFromProgID("WScript.Shell");
-    private static object m_shell = Activator.CreateInstance(m_type);
+    private static readonly Type m_type = Type.GetTypeFromProgID("WScript.Shell");
+    private static readonly object m_shell = Activator.CreateInstance(m_type);
 
-    [ComImport, TypeLibType((short) 0x1040), Guid("F935DC23-1CF0-11D0-ADB9-00C04FD58A0B")]
+    public static void Create(string fileName, string targetPath, string arguments, string workingDirectory,
+        string description, string hotkey, string iconPath)
+    {
+        IWshShortcut shortcut = (IWshShortcut) m_type.InvokeMember("CreateShortcut",
+            BindingFlags.InvokeMethod, null, m_shell, new object[] {fileName});
+        shortcut.Description = description;
+        shortcut.Hotkey = hotkey;
+        shortcut.TargetPath = targetPath;
+        shortcut.WorkingDirectory = workingDirectory;
+        shortcut.Arguments = arguments;
+        if (!string.IsNullOrEmpty(iconPath))
+            shortcut.IconLocation = iconPath;
+        shortcut.Save();
+    }
+
+    [ComImport]
+    [TypeLibType(0x1040)]
+    [Guid("F935DC23-1CF0-11D0-ADB9-00C04FD58A0B")]
     private interface IWshShortcut
     {
         [DispId(0)]
@@ -28,7 +46,8 @@ public class Shortcut
             [return: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3e8)]
             get;
-            [param: In, MarshalAs(UnmanagedType.BStr)]
+            [param: In]
+            [param: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3e8)]
             set;
         }
@@ -39,7 +58,8 @@ public class Shortcut
             [return: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3e9)]
             get;
-            [param: In, MarshalAs(UnmanagedType.BStr)]
+            [param: In]
+            [param: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3e9)]
             set;
         }
@@ -50,7 +70,8 @@ public class Shortcut
             [return: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3ea)]
             get;
-            [param: In, MarshalAs(UnmanagedType.BStr)]
+            [param: In]
+            [param: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3ea)]
             set;
         }
@@ -61,7 +82,8 @@ public class Shortcut
             [return: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3eb)]
             get;
-            [param: In, MarshalAs(UnmanagedType.BStr)]
+            [param: In]
+            [param: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3eb)]
             set;
         }
@@ -69,7 +91,8 @@ public class Shortcut
         [DispId(0x3ec)]
         string RelativePath
         {
-            [param: In, MarshalAs(UnmanagedType.BStr)]
+            [param: In]
+            [param: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3ec)]
             set;
         }
@@ -80,7 +103,8 @@ public class Shortcut
             [return: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3ed)]
             get;
-            [param: In, MarshalAs(UnmanagedType.BStr)]
+            [param: In]
+            [param: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3ed)]
             set;
         }
@@ -93,30 +117,17 @@ public class Shortcut
             [return: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3ef)]
             get;
-            [param: In, MarshalAs(UnmanagedType.BStr)]
+            [param: In]
+            [param: MarshalAs(UnmanagedType.BStr)]
             [DispId(0x3ef)]
             set;
         }
 
-        [TypeLibFunc((short) 0x40), DispId(0x7d0)]
-        void Load([In, MarshalAs(UnmanagedType.BStr)] string PathLink);
+        [TypeLibFunc(0x40)]
+        [DispId(0x7d0)]
+        void Load([In] [MarshalAs(UnmanagedType.BStr)] string PathLink);
 
         [DispId(0x7d1)]
         void Save();
-    }
-
-    public static void Create(string fileName, string targetPath, string arguments, string workingDirectory,
-        string description, string hotkey, string iconPath)
-    {
-        IWshShortcut shortcut = (IWshShortcut) m_type.InvokeMember("CreateShortcut",
-            System.Reflection.BindingFlags.InvokeMethod, null, m_shell, new object[] {fileName});
-        shortcut.Description = description;
-        shortcut.Hotkey = hotkey;
-        shortcut.TargetPath = targetPath;
-        shortcut.WorkingDirectory = workingDirectory;
-        shortcut.Arguments = arguments;
-        if (!string.IsNullOrEmpty(iconPath))
-            shortcut.IconLocation = iconPath;
-        shortcut.Save();
     }
 }

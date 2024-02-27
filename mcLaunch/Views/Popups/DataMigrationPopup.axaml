@@ -6,7 +6,7 @@
              Width="700" Height="360"
              x:Class="mcLaunch.Views.Popups.DataMigrationPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">
@@ -20,9 +20,9 @@
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" Classes="primary" Click="StartMigrationButtonClicked">Start migration</Button>
                 <Button DockPanel.Dock="Right" Classes="secondary" Margin="0 0 10 0" Click="CancelButtonClicked">Cancel</Button>
-                <Panel></Panel>
+                <Panel />
             </DockPanel>
-            <Panel></Panel>
+            <Panel />
         </DockPanel>
     </Border>
 </UserControl>

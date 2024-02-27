@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,32 +11,37 @@ namespace mcLaunch.Utilities;
 
 public class Settings
 {
-    public static Settings? Instance { get; private set; }
-
-    [Setting(Name = "Expose launcher name to Minecraft", Group = "Minecraft")]
-    public bool ExposeLauncherNameToMinecraft { get; set; } = true;
-    [Setting(Name = "Enable snapshots versions of Minecraft", Group = "Minecraft")]
-    public bool EnableSnapshots { get; set; }
-    [Setting(Name = "Force dedicated graphics", Group = "Minecraft")]
-    public bool ForceDedicatedGraphics { get; set; } = true;
-    [Setting(Name = "Anonymize box name & icons", Group = "Display")]
-    public bool AnonymizeBoxIdentity { get; set; }
-    [Setting(Name = "Use Discord's Rich Presence", Group = "Discord")]
-    public bool UseDiscordRpc { get; set; } = true;
-    [Setting(Name = "Show box infos on Discord's Rich Presence", Group = "Discord")]
-    public bool ShowBoxInfosOnDiscordRpc { get; set; }
-
     public Settings()
     {
         Instance = this;
     }
+
+    public static Settings? Instance { get; private set; }
+
+    [Setting(Name = "Expose launcher name to Minecraft", Group = "Minecraft")]
+    public bool ExposeLauncherNameToMinecraft { get; set; } = true;
+
+    [Setting(Name = "Enable snapshots versions of Minecraft", Group = "Minecraft")]
+    public bool EnableSnapshots { get; set; }
+
+    [Setting(Name = "Force dedicated graphics", Group = "Minecraft")]
+    public bool ForceDedicatedGraphics { get; set; } = true;
+
+    [Setting(Name = "Anonymize box name & icons", Group = "Display")]
+    public bool AnonymizeBoxIdentity { get; set; }
+
+    [Setting(Name = "Use Discord's Rich Presence", Group = "Discord")]
+    public bool UseDiscordRpc { get; set; } = true;
+
+    [Setting(Name = "Show box infos on Discord's Rich Presence", Group = "Discord")]
+    public bool ShowBoxInfosOnDiscordRpc { get; set; }
 
     public Settings WithDefaults()
     {
         ExposeLauncherNameToMinecraft = true;
         ForceDedicatedGraphics = true;
         UseDiscordRpc = true;
-        
+
         return this;
     }
 
@@ -49,7 +53,7 @@ public class Settings
         {
             SettingAttribute? attribute = property.GetCustomAttribute<SettingAttribute>();
             if (attribute == null) continue;
-            
+
             settings.Add(Get(property.Name));
         }
 
@@ -63,11 +67,8 @@ public class Settings
 
         foreach (Setting setting in all)
         {
-            if (!groups.ContainsKey(setting.GroupName))
-            {
-                groups.Add(setting.GroupName, new List<Setting>());
-            }
-            
+            if (!groups.ContainsKey(setting.GroupName)) groups.Add(setting.GroupName, new List<Setting>());
+
             groups[setting.GroupName].Add(setting);
         }
 
@@ -97,7 +98,7 @@ public class Settings
             Instance = new Settings().WithDefaults();
             return;
         }
-        
+
         Instance = JsonSerializer.Deserialize<Settings>(
             File.ReadAllText(AppdataFolderManager.GetPath("settings.json")))!;
     }

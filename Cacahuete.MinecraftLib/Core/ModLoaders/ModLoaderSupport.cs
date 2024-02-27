@@ -27,7 +27,7 @@ public class ModLoaderVersion
 {
     public string Name { get; set; }
     public string MinecraftVersion { get; set; }
-    
+
     public virtual async Task<MinecraftVersion?> GetMinecraftVersionAsync(string minecraftVersionId)
     {
         return null;

@@ -5,16 +5,16 @@
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="600"
              x:Class="mcLaunch.Views.Pages.OnBoardingPage">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Panel>
-        <Image Stretch="UniformToFill" IsHitTestVisible="False" Source="/resources/background_onboarding_2.png"></Image>
+        <Image Stretch="UniformToFill" IsHitTestVisible="False" Source="/resources/background_onboarding_2.png" />
         <DockPanel>
-            <Panel DockPanel.Dock="Top" Height="50" IsHitTestVisible="False"></Panel>
+            <Panel DockPanel.Dock="Top" Height="50" IsHitTestVisible="False" />
             <StackPanel VerticalAlignment="Center" Margin="0 0 0 50">
                 <Border Classes="frame" Padding="10" Width="888">
                     <StackPanel Margin="1" Orientation="Vertical">
-                        <Image Source="/resources/banner.png"></Image>
+                        <Image Source="/resources/banner.png" />
                         <TextBlock Classes="title" FontSize="25" Margin="10 10 0 0">Welcome to mcLaunch !</TextBlock>
                         <TextBlock Classes="light" FontSize="15" Margin="10 10 0 0">The next generation Minecraft launcher</TextBlock>
                         <TextBlock Classes="light" FontSize="15" TextWrapping="Wrap" Margin="10 10 0 0">In order to use mcLaunch, you need to have bought Minecraft Java Edition and you need to login to your Microsoft account. Click below to connect your Microsoft account to this instance of the launcher.</TextBlock>

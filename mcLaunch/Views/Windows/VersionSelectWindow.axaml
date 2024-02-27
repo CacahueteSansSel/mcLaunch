@@ -10,14 +10,16 @@
         Icon="/resources/icon.ico"
         Background="{DynamicResource BackgroundDarker}">
     <Window.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>
     <Border Classes="frame">
         <DockPanel Margin="5">
             <DockPanel DockPanel.Dock="Top">
-                <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" Watermark="Search version" TextChanged="SearchVersionTextBoxTextChanged"></TextBox>
+                <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" Watermark="Search version"
+                         TextChanged="SearchVersionTextBoxTextChanged" />
             </DockPanel>
-            <Button DockPanel.Dock="Bottom" x:Name="SelectButton" HorizontalAlignment="Right" Margin="0 20 0 0" Classes="primary"
+            <Button DockPanel.Dock="Bottom" x:Name="SelectButton" HorizontalAlignment="Right" Margin="0 20 0 0"
+                    Classes="primary"
                     Click="SelectVersionButtonClicked" IsVisible="False" IsDefault="True">
                 Select
             </Button>
@@ -25,8 +27,8 @@
                      SelectionChanged="VersionSelectionChanged" DoubleTapped="VersionListDoubleTapped">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
-                        <Setter Property="CornerRadius" Value="4"></Setter>
-                        <Setter Property="Margin" Value="4"></Setter>
+                        <Setter Property="CornerRadius" Value="4" />
+                        <Setter Property="Margin" Value="4" />
                     </Style>
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
@@ -34,9 +36,9 @@
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <TextBlock>Minecraft</TextBlock>
-                                <TextBlock Text="{Binding Id}"></TextBlock>
+                                <TextBlock Text="{Binding Id}" />
                             </StackPanel>
-                            <TextBlock Classes="light" Opacity="0.5" Text="{Binding Type}"></TextBlock>
+                            <TextBlock Classes="light" Opacity="0.5" Text="{Binding Type}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

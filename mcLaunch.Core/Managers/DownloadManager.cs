@@ -1,19 +1,17 @@
-﻿using System.Diagnostics;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Download;
-using System;
-using System.Security.Cryptography;
 using mcLaunch.Core.Utilities;
 
 namespace mcLaunch.Core.Managers;
 
 public static class DownloadManager
 {
-    static string? currentSectionName;
-    static List<DownloadEntry> currentSectionEntries = [];
-    static List<DownloadSection> sections = [];
+    private static string? currentSectionName;
+    private static List<DownloadEntry> currentSectionEntries = [];
+    private static readonly List<DownloadSection> sections = [];
     private static HttpClient client;
 
     public static DownloadSection? CurrentSection { get; private set; }
@@ -78,13 +76,14 @@ public static class DownloadManager
         currentSectionEntries.Add(new DownloadEntry {Source = source, Target = target, Hash = hash, Action = action});
     }
 
-    static async Task DownloadEntryAsync(DownloadEntry entry, DownloadSection section, int sectionIndex, int progress)
+    private static async Task DownloadEntryAsync(DownloadEntry entry, DownloadSection section, int sectionIndex,
+        int progress)
     {
         try
         {
             // Some files can have empty source link, we ignore those
             if (string.IsNullOrWhiteSpace(entry.Source)) return;
-            
+
             if (File.Exists(entry.Target) && entry.Hash != null)
             {
                 string localFileHash = Convert.ToHexString(
@@ -132,12 +131,13 @@ public static class DownloadManager
                 if ((now - lastSecond).TotalSeconds > 0)
                 {
                     long delta = bytesInSecond - lastBytesInSecond;
-                    
+
                     if (delta > 0 && blockSize < size) blockSize += 10; // Faster, increase block size
                     else if (blockSize > 25) blockSize -= 10; // Slower, decrease block size
 
                     bytesInSecond = 0;
                 }
+
                 lastSecond = now;
 
                 b += input;
@@ -159,14 +159,14 @@ public static class DownloadManager
         }
     }
 
-    static Task ExtractEntryAsync(DownloadEntry entry)
+    private static Task ExtractEntryAsync(DownloadEntry entry)
     {
         if (!Directory.Exists(entry.Target)) Directory.CreateDirectory(entry.Target);
 
         return Task.Run(() => ZipFile.ExtractToDirectory(entry.Source, entry.Target, true));
     }
 
-    static async Task ChmodEntryAsync(DownloadEntry entry)
+    private static async Task ChmodEntryAsync(DownloadEntry entry)
     {
         string perms = entry.Source;
         string file = entry.Target;
@@ -187,20 +187,20 @@ public static class DownloadManager
 
             int progress = 0;
             float progressPercent = 0f;
-            await Parallel.ForEachAsync(section.Entries.Where(entry => entry.Action == EntryAction.Download), 
+            await Parallel.ForEachAsync(section.Entries.Where(entry => entry.Action == EntryAction.Download),
                 async (entry, token) =>
-            {
-                await DownloadEntryAsync(entry, section, sectionIndex, progress);
-
-                progress++;
-                float percent = (float) progress / section.Entries.Count;
-
-                if (progressPercent < percent)
                 {
-                    progressPercent = percent;
-                    OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
-                }
-            });
+                    await DownloadEntryAsync(entry, section, sectionIndex, progress);
+
+                    progress++;
+                    float percent = (float) progress / section.Entries.Count;
+
+                    if (progressPercent < percent)
+                    {
+                        progressPercent = percent;
+                        OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
+                    }
+                });
 
             foreach (DownloadEntry entry in section.Entries.Where(entry => entry.Action != EntryAction.Download))
             {
@@ -213,7 +213,7 @@ public static class DownloadManager
                         await ChmodEntryAsync(entry);
                         break;
                 }
-                
+
                 progress++;
                 float percent = (float) progress / section.Entries.Count;
 

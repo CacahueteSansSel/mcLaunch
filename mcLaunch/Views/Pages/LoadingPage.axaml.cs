@@ -1,15 +1,13 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 
 namespace mcLaunch.Views.Pages;
 
 public partial class LoadingPage : UserControl, ITopLevelPageControl
 {
-    public string Title => "Please wait";
-
     public LoadingPage()
     {
         InitializeComponent();
     }
+
+    public string Title => "Please wait";
 }

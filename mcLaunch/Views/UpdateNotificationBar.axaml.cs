@@ -1,10 +1,7 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.GitHub;
 using mcLaunch.GitHub.Models;
-using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 

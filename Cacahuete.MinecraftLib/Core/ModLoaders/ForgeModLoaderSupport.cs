@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
-using Cacahuete.MinecraftLib.Http;
+﻿using Cacahuete.MinecraftLib.Http;
 using Cacahuete.MinecraftLib.Models.Forge;
 
 namespace Cacahuete.MinecraftLib.Core.ModLoaders;
@@ -8,6 +6,13 @@ namespace Cacahuete.MinecraftLib.Core.ModLoaders;
 public class ForgeModLoaderSupport : ModLoaderSupport
 {
     public const string PromosUrl = "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json";
+
+    public ForgeModLoaderSupport(string jvmExecutablePath, string systemFolderPath)
+    {
+        JvmExecutablePath = jvmExecutablePath;
+        SystemFolderPath = systemFolderPath;
+    }
+
     public override string Id { get; } = "forge";
     public override string Name { get; set; } = "Forge";
     public override string Type { get; set; } = "modded";
@@ -16,12 +21,6 @@ public class ForgeModLoaderSupport : ModLoaderSupport
     public string JvmExecutablePath { get; }
     public string SystemFolderPath { get; }
 
-    public ForgeModLoaderSupport(string jvmExecutablePath, string systemFolderPath)
-    {
-        JvmExecutablePath = jvmExecutablePath;
-        SystemFolderPath = systemFolderPath;
-    }
-    
     public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion)
     {
         ForgePromotionsManifest promos = await Api.GetAsync<ForgePromotionsManifest>(PromosUrl);
@@ -34,17 +33,22 @@ public class ForgeModLoaderSupport : ModLoaderSupport
         try
         {
             forgeRecommendedVersion = promos.Promos.GetProperty(keyRecommended).GetString();
-        } catch {}
+        }
+        catch
+        {
+        }
 
         try
         {
             forgeLatestVersion = promos.Promos.GetProperty(keyLatest).GetString();
-        } catch {}
+        }
+        catch
+        {
+        }
 
         List<ForgeModLoaderVersion> versions = new();
-        
+
         if (forgeLatestVersion != null)
-        {
             versions.Add(new ForgeModLoaderVersion
             {
                 MinecraftVersion = minecraftVersion,
@@ -52,9 +56,7 @@ public class ForgeModLoaderSupport : ModLoaderSupport
                 JvmExecutablePath = JvmExecutablePath,
                 SystemFolderPath = SystemFolderPath
             });
-        }
         if (forgeRecommendedVersion != null)
-        {
             versions.Add(new ForgeModLoaderVersion
             {
                 MinecraftVersion = minecraftVersion,
@@ -62,7 +64,6 @@ public class ForgeModLoaderSupport : ModLoaderSupport
                 JvmExecutablePath = JvmExecutablePath,
                 SystemFolderPath = SystemFolderPath
             });
-        }
 
         return versions.ToArray();
     }

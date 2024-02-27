@@ -1,29 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using mcLaunch.Core;
-using mcLaunch.Core.Managers;
-using mcLaunch.Core.Contents;
-using mcLaunch.Core.Contents.Platforms;
-using mcLaunch.Models;
-using mcLaunch.Utilities;
-using mcLaunch.Views.Pages;
+﻿using Avalonia.Controls;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.MinecraftFormats;
-using mcLaunch.Views.Popups;
+using mcLaunch.Utilities;
+using mcLaunch.Views.Pages;
 using ReactiveUI;
 
 namespace mcLaunch.Views;
 
 public partial class CrashReportList : UserControl
 {
-    Box lastBox;
-    string lastQuery;
+    private Box lastBox;
+    private string lastQuery;
     private BoxDetailsPage launchPage;
 
     public CrashReportList()
@@ -57,10 +44,21 @@ public partial class CrashReportList : UserControl
         LoadCircle.IsVisible = isLoading;
     }
 
+    private void ReportsSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (e.AddedItems.Count > 0)
+        {
+            MinecraftCrashReport world = (MinecraftCrashReport) e.AddedItems[0];
+            PlatformSpecific.OpenFile(world.CompletePath);
+        }
+
+        ReportsList.UnselectAll();
+    }
+
     public class Data : ReactiveObject
     {
-        MinecraftCrashReport[] reports;
-        int page;
+        private int page;
+        private MinecraftCrashReport[] reports;
 
         public MinecraftCrashReport[] Reports
         {
@@ -73,16 +71,5 @@ public partial class CrashReportList : UserControl
             get => page;
             set => this.RaiseAndSetIfChanged(ref page, value);
         }
-    }
-
-    private void ReportsSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (e.AddedItems.Count > 0)
-        {
-            MinecraftCrashReport world = (MinecraftCrashReport) e.AddedItems[0];
-            PlatformSpecific.OpenFile(world.CompletePath);
-        }
-        
-        ReportsList.UnselectAll();
     }
 }

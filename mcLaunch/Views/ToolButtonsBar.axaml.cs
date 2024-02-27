@@ -2,28 +2,21 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Auth;
-using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
-using mcLaunch.Views.Windows;
 using ReactiveUI;
 
 namespace mcLaunch.Views;
 
 public partial class ToolButtonsBar : UserControl
 {
-    public Data UIDataContext => (Data) DataContext;
-    
     public ToolButtonsBar()
     {
         InitializeComponent();
@@ -39,6 +32,8 @@ public partial class ToolButtonsBar : UserControl
         }
     }
 
+    public Data UIDataContext => (Data) DataContext;
+
     private async void NewBoxButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.ShowPopup(new NewBoxPopup());
@@ -48,16 +43,90 @@ public partial class ToolButtonsBar : UserControl
     {
         Navigation.ShowPopup(new ImportBoxPopup());
     }
-    
+
+    private async void DisconnectButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        await AuthenticationManager.DisconnectAsync();
+
+        MainWindowDataContext.Instance.Reset();
+        MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
+    }
+
+    private void SettingsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        MainWindowDataContext.Instance.Push<SettingsPage>();
+    }
+
+    private void BrowseModpacksButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        MainWindowDataContext.Instance.Push<BrowseModpacksPage>();
+    }
+
+    private void DefaultsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        MainWindowDataContext.Instance.Push<DefaultsPage>();
+    }
+
+    private void BrowseModsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        MainWindowDataContext.Instance.Push<BrowseModsPage>();
+    }
+
+    private void FastLaunchButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new FastLaunchPopup());
+    }
+
+    private void ViewBoxesButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        MainWindowDataContext.Instance.Reset();
+        MainWindowDataContext.Instance.Push<MainPage>();
+    }
+
     public class Data : ReactiveObject
     {
         private MinecraftAuthenticationResult? account;
         private Bitmap head;
-        
-        int progress;
-        string resourceName = "No pending download";
-        string resourceDetailsText = "-";
-        string resourceCount;
+
+        private int progress;
+        private string resourceCount;
+        private string resourceDetailsText = "-";
+        private string resourceName = "No pending download";
+
+        public Data()
+        {
+            AuthenticationManager.OnLogin += async result =>
+            {
+                Account = result;
+                string headIconCacheName = $"user-{account.Uuid}";
+
+                if (CacheManager.HasBitmap(headIconCacheName))
+                {
+                    await Task.Run(() => { HeadIcon = CacheManager.LoadBitmap(headIconCacheName); });
+
+                    return;
+                }
+
+                using (var imageStream = await LoadIconStreamAsync(result))
+                {
+                    if (imageStream == null) return;
+
+                    HeadIcon = await Task.Run(() =>
+                    {
+                        try
+                        {
+                            return Bitmap.DecodeToWidth(imageStream, 400);
+                        }
+                        catch (Exception e)
+                        {
+                            return null;
+                        }
+                    });
+
+                    CacheManager.Store(HeadIcon, headIconCacheName);
+                }
+            };
+        }
 
         public int Progress
         {
@@ -95,48 +164,10 @@ public partial class ToolButtonsBar : UserControl
             set => this.RaiseAndSetIfChanged(ref head, value);
         }
 
-        public Data()
-        {
-            AuthenticationManager.OnLogin += async result =>
-            {
-                Account = result;
-                string headIconCacheName = $"user-{account.Uuid}";
-                
-                if (CacheManager.HasBitmap(headIconCacheName))
-                {
-                    await Task.Run(() =>
-                    {
-                        HeadIcon = CacheManager.LoadBitmap(headIconCacheName);
-                    });
-
-                    return;
-                }
-                
-                using (var imageStream = await LoadIconStreamAsync(result))
-                {
-                    if (imageStream == null) return;
-            
-                    HeadIcon = await Task.Run(() =>
-                    {
-                        try
-                        {
-                            return Bitmap.DecodeToWidth(imageStream, 400);
-                        }
-                        catch (Exception e)
-                        {
-                            return null;
-                        }
-                    });
-            
-                    CacheManager.Store(HeadIcon, headIconCacheName);
-                }
-            };
-        }
-        
-        async Task<Stream> LoadIconStreamAsync(MinecraftAuthenticationResult? account)
+        private async Task<Stream> LoadIconStreamAsync(MinecraftAuthenticationResult? account)
         {
             if (account == null) return null;
-        
+
             HttpClient client = new HttpClient();
 
             try
@@ -151,44 +182,5 @@ public partial class ToolButtonsBar : UserControl
                 return null;
             }
         }
-    }
-
-    private async void DisconnectButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        await AuthenticationManager.DisconnectAsync();
-        
-        MainWindowDataContext.Instance.Reset();
-        MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
-    }
-
-    private void SettingsButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        MainWindowDataContext.Instance.Push<SettingsPage>();
-    }
-
-    private void BrowseModpacksButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        MainWindowDataContext.Instance.Push<BrowseModpacksPage>();
-    }
-
-    private void DefaultsButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        MainWindowDataContext.Instance.Push<DefaultsPage>();
-    }
-
-    private void BrowseModsButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        MainWindowDataContext.Instance.Push<BrowseModsPage>();
-    }
-
-    private void FastLaunchButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        Navigation.ShowPopup(new FastLaunchPopup());
-    }
-
-    private void ViewBoxesButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        MainWindowDataContext.Instance.Reset();
-        MainWindowDataContext.Instance.Push<MainPage>();
     }
 }

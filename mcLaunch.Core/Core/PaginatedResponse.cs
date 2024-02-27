@@ -2,12 +2,6 @@ namespace mcLaunch.Core.Core;
 
 public class PaginatedResponse<T>
 {
-    public static PaginatedResponse<T> Empty => new(0, 0, Array.Empty<T>());
-    public int PageIndex { get; }
-    public int TotalPageCount { get; }
-    public List<T> Items { get; }
-    public int Length => Items.Count;
-    
     public PaginatedResponse(int pageIndex, int totalPageCount, T[] items)
     {
         PageIndex = pageIndex;
@@ -21,4 +15,10 @@ public class PaginatedResponse<T>
         TotalPageCount = totalPageCount;
         Items = [item];
     }
+
+    public static PaginatedResponse<T> Empty => new(0, 0, Array.Empty<T>());
+    public int PageIndex { get; }
+    public int TotalPageCount { get; }
+    public List<T> Items { get; }
+    public int Length => Items.Count;
 }

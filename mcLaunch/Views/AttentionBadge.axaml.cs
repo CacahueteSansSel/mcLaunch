@@ -1,6 +1,5 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
 namespace mcLaunch.Views;
 
@@ -10,9 +9,14 @@ public partial class AttentionBadge : UserControl
         AvaloniaProperty.RegisterAttached<Badge, UserControl, string>(
             nameof(Text),
             "Editor",
-            inherits: true);
+            true);
 
-    string text;
+    private string text;
+
+    public AttentionBadge()
+    {
+        InitializeComponent();
+    }
 
     public string Text
     {
@@ -22,10 +26,5 @@ public partial class AttentionBadge : UserControl
             text = value;
             Label.Text = value;
         }
-    }
-    
-    public AttentionBadge()
-    {
-        InitializeComponent();
     }
 }

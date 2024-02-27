@@ -7,7 +7,7 @@
              Width="450" Height="500"
              x:Class="mcLaunch.Views.Popups.ImportBoxPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">
@@ -15,7 +15,7 @@
             <TextBlock DockPanel.Dock="Top" Margin="0 20 0 0" TextWrapping="WrapWithOverflow">Please select the format of the Minecraft instance to import</TextBlock>
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" Classes="secondary" Click="ClosePopupButtonClicked">Close</Button>
-                <Panel></Panel>
+                <Panel />
             </DockPanel>
             <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Spacing="10" Margin="0 20 0 0">
                 <Button Classes="secondary" Width="370" Click="ImportDdLaunchBoxButtonClicked">
@@ -34,7 +34,8 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Classes="title">Modrinth modpack</TextBlock>
-                            <views:Badge Text="Experimental" IsHitTestVisible="False" Icon="/resources/icons/cog.png" Margin="5 -1 0 0"></views:Badge>
+                            <views:Badge Text="Experimental" IsHitTestVisible="False" Icon="/resources/icons/cog.png"
+                                         Margin="5 -1 0 0" />
                         </StackPanel>
                         <TextBlock Classes="light">A modpack from Modrinth</TextBlock>
                     </StackPanel>

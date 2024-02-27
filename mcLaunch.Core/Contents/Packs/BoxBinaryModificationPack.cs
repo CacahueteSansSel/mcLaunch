@@ -6,43 +6,79 @@ namespace mcLaunch.Core.Contents.Packs;
 
 public class BoxBinaryModificationPack : ModificationPack
 {
-    private SerializedBox boxBinary;
-    
+    private readonly SerializedBox boxBinary;
+
+    public BoxBinaryModificationPack()
+    {
+    }
+
+    public BoxBinaryModificationPack(string filename) : base(filename)
+    {
+        boxBinary = new SerializedBox(filename);
+
+        List<SerializedMinecraftContent> mods = new();
+        foreach (Mod mod in boxBinary.Mods)
+            mods.Add(new SerializedMinecraftContent
+            {
+                IsRequired = true,
+                ModId = mod.Id,
+                PlatformId = mod.Platform,
+                VersionId = mod.Version
+            });
+        Modifications = mods.ToArray();
+
+        List<AdditionalFile> files = new();
+        foreach (FSFile file in boxBinary.Files)
+            files.Add(new AdditionalFile
+            {
+                Path = file.AbsFilename,
+                Data = file.Data
+            });
+        AdditionalFiles = files.ToArray();
+    }
+
     public override string Name
     {
         get => boxBinary.Name;
         init => boxBinary.Name = value;
     }
+
     public override string Author
     {
         get => boxBinary.Author;
         init => boxBinary.Author = value;
     }
+
     public override string Version
     {
         get => string.Empty;
         init => throw new NotImplementedException();
     }
+
     public override string? Id
     {
         get => boxBinary.Id;
         init => boxBinary.Id = value;
     }
+
     public override string? Description
     {
         get => boxBinary.Description;
         init => boxBinary.Description = value;
     }
+
     public override string MinecraftVersion
     {
         get => boxBinary.Version;
         init => boxBinary.Version = value;
     }
+
     public override string ModloaderId
     {
         get => boxBinary.ModLoaderId;
         init => boxBinary.ModLoaderId = value;
     }
+
     public override string ModloaderVersion
     {
         get => boxBinary.ModLoaderVersion;
@@ -54,40 +90,6 @@ public class BoxBinaryModificationPack : ModificationPack
     public byte[] IconData => boxBinary.IconData;
     public byte[] BackgroundData => boxBinary.BackgroundData;
 
-    public BoxBinaryModificationPack()
-    {
-        
-    }
-    
-    public BoxBinaryModificationPack(string filename) : base(filename)
-    {
-        boxBinary = new SerializedBox(filename);
-
-        List<SerializedMinecraftContent> mods = new();
-        foreach (Mod mod in boxBinary.Mods)
-        {
-            mods.Add(new SerializedMinecraftContent
-            {
-                IsRequired = true,
-                ModId = mod.Id,
-                PlatformId = mod.Platform,
-                VersionId = mod.Version
-            });
-        }
-        Modifications = mods.ToArray();
-
-        List<AdditionalFile> files = new();
-        foreach (FSFile file in boxBinary.Files)
-        {
-            files.Add(new AdditionalFile
-            {
-                Path = file.AbsFilename,
-                Data = file.Data
-            });
-        }
-        AdditionalFiles = files.ToArray();
-    }
-    
     public override async Task InstallModificationAsync(Box targetBox, SerializedMinecraftContent mod)
     {
         await ModPlatformManager.Platform.InstallContentAsync(targetBox, new MinecraftContent
@@ -120,7 +122,6 @@ public class BoxBinaryModificationPack : ModificationPack
 
         List<Mod> mods = new();
         foreach (BoxStoredContent mod in box.Manifest.Content)
-        {
             mods.Add(new Mod
             {
                 Id = mod.Id,
@@ -128,7 +129,6 @@ public class BoxBinaryModificationPack : ModificationPack
                 Platform = mod.PlatformId,
                 Version = mod.VersionId
             });
-        }
         bb.Mods = mods.ToArray();
 
         List<FSFile> files = new();
@@ -136,30 +136,32 @@ public class BoxBinaryModificationPack : ModificationPack
         {
             string completePath = $"{box.Path}/minecraft/{file}";
             if (!File.Exists(completePath)) continue;
-            
+
             byte[] data = await File.ReadAllBytesAsync(completePath);
-            
+
             files.Add(new FSFile
             {
                 AbsFilename = file,
                 Data = data
             });
         }
+
         foreach (string modFile in box.GetUnlistedMods())
         {
             string completePath = $"{box.Path}/minecraft/{modFile}";
             if (!File.Exists(completePath)) continue;
-            
+
             byte[] data = await File.ReadAllBytesAsync(completePath);
-            
+
             files.Add(new FSFile
             {
                 AbsFilename = modFile,
                 Data = data
             });
         }
+
         bb.Files = files.ToArray();
-        
+
         bb.Save(filename);
     }
 }

@@ -10,14 +10,15 @@
         Background="{DynamicResource BackgroundDarker}"
         Title="mcLaunch crashed">
     <Window.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>
     <Border CornerRadius="4">
         <DockPanel Margin="30">
             <StackPanel DockPanel.Dock="Left">
-                <Image Source="/resources/icon_crash.png" Width="140"></Image>
+                <Image Source="/resources/icon_crash.png" Width="140" />
             </StackPanel>
-            <StackPanel Margin="0 0 10 0" Spacing="10" Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom">
+            <StackPanel Margin="0 0 10 0" Spacing="10" Orientation="Horizontal" HorizontalAlignment="Right"
+                        DockPanel.Dock="Bottom">
                 <Button Classes="secondary" Click="RestartButtonClicked">Close</Button>
                 <Button Classes="primary" Click="ReportToGitHubButtonClicked">Report to GitHub</Button>
             </StackPanel>
@@ -30,8 +31,11 @@
                 <TextBlock Classes="title" FontSize="20" DockPanel.Dock="Top">mcLaunch crashed</TextBlock>
                 <TextBlock Classes="title" Margin="0 10 0 0" DockPanel.Dock="Top">Please report this problem to Cacahuète Dev</TextBlock>
                 <Panel Margin="0 10 0 20">
-                    <TextBox IsReadOnly="True" Text="{Binding}"></TextBox>
-                    <Button Classes="transparent" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="CopyButtonClicked">Copy</Button>
+                    <TextBox IsReadOnly="True" Text="{Binding}" />
+                    <Button Classes="transparent" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                            Click="CopyButtonClicked">
+                        Copy
+                    </Button>
                 </Panel>
             </DockPanel>
         </DockPanel>

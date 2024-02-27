@@ -11,7 +11,7 @@ public abstract class TestBase
 
     protected string LatestTestFailure { get; private set; }
     protected MinecraftFolder SystemFolder => Runner.MinecraftFolder;
-    
+
     public abstract Task<TestResult> RunAsync();
 
     protected async Task<bool> Test(string name, Func<Task<TestResult>> test)
@@ -23,7 +23,7 @@ public abstract class TestBase
             TestResult result = await test.Invoke();
 
             if (!result.IsSuccess) throw new TestFailedException(name, result.Message);
-            
+
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Success");
             Console.ResetColor();
@@ -32,12 +32,12 @@ public abstract class TestBase
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Failure");
-            
+
             Console.ResetColor();
             Console.WriteLine($"    --> {e.GetType().FullName} {e.Message}");
 
             LatestTestFailure = $"{e.GetType().FullName} {e.Message}";
-            
+
             if (Debugger.IsAttached) throw;
 
             return false;
@@ -52,13 +52,19 @@ public abstract class TestBase
     }
 
     protected TestResult Success(string? message = null)
-        => new(true, message, this);
+    {
+        return new TestResult(true, message, this);
+    }
 
     protected TestResult Failure(string message)
-        => new(false, message, this);
+    {
+        return new TestResult(false, message, this);
+    }
 
     protected TestResult TestFailure()
-        => new(false, LatestTestFailure, this);
+    {
+        return new TestResult(false, LatestTestFailure, this);
+    }
 }
 
 public class TestFailedException(string testName, string? message) : Exception($"Test '{testName}' failed: {message}");

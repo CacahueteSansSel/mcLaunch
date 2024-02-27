@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using mcLaunch.Core;
-using mcLaunch.Core.Managers;
-using mcLaunch.Core.Contents;
-using mcLaunch.Core.Contents.Platforms;
-using mcLaunch.Models;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Utilities;
@@ -24,10 +13,8 @@ namespace mcLaunch.Views;
 public partial class ServerList : UserControl
 {
     private Box lastBox;
-    private BoxDetailsPage launchPage;
     private string lastQuery;
-
-    public bool HideInstalledBadges { get; set; }
+    private BoxDetailsPage launchPage;
 
     public ServerList()
     {
@@ -37,7 +24,9 @@ public partial class ServerList : UserControl
         if (Design.IsDesignMode) SetDefaultServers();
     }
 
-    async void SetDefaultServers()
+    public bool HideInstalledBadges { get; set; }
+
+    private async void SetDefaultServers()
     {
         await SetServersAsync([
             new MinecraftServer
@@ -71,7 +60,7 @@ public partial class ServerList : UserControl
         NtsBanner.IsVisible = servers.Length == 0;
     }
 
-    async Task LoadServerIconsAsync(MinecraftServer[] servers)
+    private async Task LoadServerIconsAsync(MinecraftServer[] servers)
     {
         Data ctx = (Data) DataContext;
 
@@ -88,24 +77,6 @@ public partial class ServerList : UserControl
         LoadCircle.IsVisible = isLoading;
     }
 
-    public class Data : ReactiveObject
-    {
-        MinecraftServer[] servers;
-        int page;
-
-        public MinecraftServer[] Servers
-        {
-            get => servers;
-            set => this.RaiseAndSetIfChanged(ref servers, value);
-        }
-
-        public int Page
-        {
-            get => page;
-            set => this.RaiseAndSetIfChanged(ref page, value);
-        }
-    }
-
     private void WorldSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (e.AddedItems.Count > 0 && launchPage != null)
@@ -118,5 +89,23 @@ public partial class ServerList : UserControl
         }
 
         ServersList.UnselectAll();
+    }
+
+    public class Data : ReactiveObject
+    {
+        private int page;
+        private MinecraftServer[] servers;
+
+        public MinecraftServer[] Servers
+        {
+            get => servers;
+            set => this.RaiseAndSetIfChanged(ref servers, value);
+        }
+
+        public int Page
+        {
+            get => page;
+            set => this.RaiseAndSetIfChanged(ref page, value);
+        }
     }
 }

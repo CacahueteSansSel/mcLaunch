@@ -1,6 +1,4 @@
-﻿using Avalonia.Controls;
-
-namespace mcLaunch.Views;
+﻿namespace mcLaunch.Views;
 
 public interface ITopLevelPageControl
 {

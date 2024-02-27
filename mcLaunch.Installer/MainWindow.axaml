@@ -11,16 +11,15 @@
         Icon="/resources/icon.ico"
         Background="{DynamicResource BackgroundDarker}">
     <Window.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>
     <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Image DockPanel.Dock="Left" Source="resources/sidebar.png"></Image>
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="10" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Right">
+        <Image DockPanel.Dock="Left" Source="resources/sidebar.png" />
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="10" Margin="10"
+                    VerticalAlignment="Center" HorizontalAlignment="Right">
             <Button x:Name="PreviousButton" IsVisible="False" Click="PreviousButtonClicked" Classes="secondary">Previous</Button>
             <Button x:Name="NextButton" Click="NextButtonClicked" Classes="primary">Next</Button>
         </StackPanel>
-        <ContentControl Margin="10" Width="600" x:Name="SetupPageContainer">
-            
-        </ContentControl>
+        <ContentControl Margin="10" Width="600" x:Name="SetupPageContainer" />
     </DockPanel>
 </Window>

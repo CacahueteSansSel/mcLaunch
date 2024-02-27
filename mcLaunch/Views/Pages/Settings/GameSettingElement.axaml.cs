@@ -1,7 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Utilities;
 
@@ -9,9 +8,6 @@ namespace mcLaunch.Views.Pages.Settings;
 
 public partial class GameSettingElement : UserControl
 {
-    public Box Box { get; }
-    public string SettingKey { get; }
-
     public GameSettingElement()
     {
         InitializeComponent();
@@ -30,12 +26,13 @@ public partial class GameSettingElement : UserControl
 
         if (BooleanCheckbox.IsVisible) BooleanCheckbox.IsChecked = (bool) box.Options[settingKey];
         if (IntFloatSlider.IsVisible)
-        {
             IntFloatSlider.Value = box.Options[settingKey] is int
                 ? (int) box.Options[settingKey]
                 : (float) box.Options[settingKey];
-        }
     }
+
+    public Box Box { get; }
+    public string SettingKey { get; }
 
     private void BooleanCheckboxChecked(object? sender, RoutedEventArgs e)
     {

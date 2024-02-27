@@ -1,9 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Windows;
@@ -21,7 +17,7 @@ public partial class CrashWindow : Window
     public CrashWindow(string crashReportText)
     {
         InitializeComponent();
-        
+
         VersionText.Text = CurrentBuild.Version.ToString();
         CommitText.Text = CurrentBuild.Commit;
         DataContext = crashReportText;
@@ -30,7 +26,7 @@ public partial class CrashWindow : Window
     private void CopyButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (DataContext == null) return;
-        
+
         Clipboard.SetTextAsync((string) DataContext);
     }
 

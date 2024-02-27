@@ -1,38 +1,37 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
+using mcLaunch.Core.Contents;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.Contents;
 using mcLaunch.Managers;
 
 namespace mcLaunch.Views.Pages;
 
 public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
 {
-    public int PageIndex { get; private set; }
+    private string lastMinecraftVersion = string.Empty;
 
-    public string Title => $"Browse modpacks";
-    
-    string lastQuery = string.Empty;
-    string lastMinecraftVersion = string.Empty;
-    
+    private string lastQuery = string.Empty;
+
     public BrowseModpacksPage()
     {
         InitializeComponent();
-        
+
         if (!Design.IsDesignMode) LoadModpacksAsync();
     }
+
+    public int PageIndex { get; private set; }
+
+    public string Title => "Browse modpacks";
 
     protected override void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
-        
+
         DiscordManager.SetPresenceModpacksList();
     }
 
-    async void Search(int page, string query, string minecraftVersion)
+    private async void Search(int page, string query, string minecraftVersion)
     {
         BoxContainer.Children.Clear();
         LoadingCircleIcon.IsVisible = true;
@@ -41,14 +40,18 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
         lastQuery = query;
         lastMinecraftVersion = minecraftVersion;
 
-        PaginatedResponse<PlatformModpack> packs = await ModPlatformManager.Platform.GetModpacksAsync(page, query, minecraftVersion);
+        PaginatedResponse<PlatformModpack> packs =
+            await ModPlatformManager.Platform.GetModpacksAsync(page, query, minecraftVersion);
         foreach (PlatformModpack modpack in packs.Items)
             BoxContainer.Children.Add(new ModpackEntryCard(modpack));
-        
+
         LoadingCircleIcon.IsVisible = false;
     }
 
-    async void LoadModpacksAsync() => Search(0, "", "");
+    private async void LoadModpacksAsync()
+    {
+        Search(0, "", "");
+    }
 
     private void SearchButtonClicked(object? sender, RoutedEventArgs e)
     {
@@ -58,8 +61,9 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
     private async void LoadMoreButtonClicked(object? sender, RoutedEventArgs e)
     {
         PageIndex++;
-        
-        PaginatedResponse<PlatformModpack> additionalPacks = await ModPlatformManager.Platform.GetModpacksAsync(PageIndex, 
+
+        PaginatedResponse<PlatformModpack> additionalPacks = await ModPlatformManager.Platform.GetModpacksAsync(
+            PageIndex,
             lastQuery, lastMinecraftVersion);
 
         foreach (PlatformModpack modpack in additionalPacks.Items)

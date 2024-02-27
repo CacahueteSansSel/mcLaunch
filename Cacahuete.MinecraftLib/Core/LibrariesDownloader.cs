@@ -1,18 +1,13 @@
-﻿using System.IO.Compression;
-using System.Net;
-using Cacahuete.MinecraftLib.Models;
+﻿using Cacahuete.MinecraftLib.Models;
 
 namespace Cacahuete.MinecraftLib.Core;
 
 public class LibrariesDownloader
 {
-    Dictionary<string, string> libVersions = new();
-    public string Path { get; }
-    public string NativesPath { get; }
+    private readonly Dictionary<string, string> libVersions = new();
 
-    public List<string> ClassPath { get; private set; } = new();
-
-    public LibrariesDownloader(MinecraftFolder folder, string path = "libraries", string nativesPath = "bin") : this($"{folder.Path}/{path}")
+    public LibrariesDownloader(MinecraftFolder folder, string path = "libraries", string nativesPath = "bin") : this(
+        $"{folder.Path}/{path}")
     {
         NativesPath = $"{folder.Path}/{nativesPath}/{Guid.NewGuid().ToString().Replace("-", "")}";
     }
@@ -21,9 +16,14 @@ public class LibrariesDownloader
     {
         Path = absolutePath;
 
-        if (!Directory.Exists(Path)) 
+        if (!Directory.Exists(Path))
             Directory.CreateDirectory(Path);
     }
+
+    public string Path { get; }
+    public string NativesPath { get; }
+
+    public List<string> ClassPath { get; } = new();
 
     public LibrariesDownloader WithLibrary(string name, string version)
     {
@@ -32,7 +32,7 @@ public class LibrariesDownloader
         return this;
     }
 
-    async Task<string> DownloadAsync(MinecraftVersion.ModelLibrary library)
+    private async Task<string> DownloadAsync(MinecraftVersion.ModelLibrary library)
     {
         if (!library.NeedsToDeduceUrlFromName) return null;
 
@@ -43,7 +43,7 @@ public class LibrariesDownloader
         string url = library.DeduceUrl()!;
         string dir = path.Replace(filename, "").Trim('/');
 
-        if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path))) 
+        if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path)))
             ClassPath.Add(System.IO.Path.GetFullPath(path));
 
         if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
@@ -53,7 +53,7 @@ public class LibrariesDownloader
         return path;
     }
 
-    async Task<string> DownloadArtifactAsync(FileArtifact artifact)
+    private async Task<string> DownloadArtifactAsync(FileArtifact artifact)
     {
         if (artifact == null) return null;
 
@@ -62,7 +62,7 @@ public class LibrariesDownloader
         string filename = System.IO.Path.GetFileName(path);
         string dir = path.Replace(filename, "").Trim('/');
 
-        if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path))) 
+        if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path)))
             ClassPath.Add(System.IO.Path.GetFullPath(path));
 
         if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
@@ -72,7 +72,7 @@ public class LibrariesDownloader
         return path;
     }
 
-    string? GetLatestLwjglVersion(MinecraftVersion version)
+    private string? GetLatestLwjglVersion(MinecraftVersion version)
     {
         string? versionString = null;
         ulong versionInt = 0;
@@ -85,7 +85,7 @@ public class LibrariesDownloader
 
             string versionNumbers = new string(name.Version.Where(char.IsNumber).ToArray());
             ulong curVersionInt = ulong.Parse(versionNumbers);
-            
+
             if (curVersionInt > versionInt)
             {
                 versionInt = curVersionInt;
@@ -106,7 +106,7 @@ public class LibrariesDownloader
         {
             // Try to force the latest LWJGL version
             string? latestLwjglVersion = GetLatestLwjglVersion(version);
-            if (latestLwjglVersion != null) 
+            if (latestLwjglVersion != null)
                 WithLibrary("lwjgl", latestLwjglVersion);
         }
 
@@ -114,16 +114,14 @@ public class LibrariesDownloader
         {
             List<string> nativeJars = new();
             LibraryName name = new LibraryName(lib.Name);
-            
+
             bool skip = false;
             foreach (var kv in libVersions)
-            {
                 if (name.Name.StartsWith(kv.Key) && name.Version != null && name.Version != kv.Value)
                 {
                     skip = true;
                     break;
                 }
-            }
 
             if (skip) continue;
 
@@ -133,10 +131,10 @@ public class LibrariesDownloader
                 foreach (var rule in lib.Rules)
                 {
                     bool satisfied = rule.Os == null || rule.Os.CheckIfSatisfied();
-                    
+
                     // Invert the boolean value if it's a "disallow" rule
                     if (rule.Action == "disallow") satisfied = !satisfied;
-                    
+
                     if (!satisfied)
                     {
                         abort = true;
@@ -174,22 +172,19 @@ public class LibrariesDownloader
                         if (!string.IsNullOrEmpty(path)) nativeJars.Add(path);
                     }
                 }
-            
+
                 await DownloadArtifactAsync(lib.Downloads.Artifact);
 
                 // extracting dlls
                 if (!Directory.Exists(NativesPath)) Directory.CreateDirectory(NativesPath);
 
-                foreach (string jar in nativeJars)
-                {
-                    await Context.Downloader.ExtractAsync(jar, NativesPath);
-                }
+                foreach (string jar in nativeJars) await Context.Downloader.ExtractAsync(jar, NativesPath);
             }
 
             cur++;
             percentCallback?.Invoke(cur / (float) version.Libraries.Length);
         }
-        
+
         libVersions.Clear();
     }
 }

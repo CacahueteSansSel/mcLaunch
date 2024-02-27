@@ -14,9 +14,9 @@ public static class Utilities
             case PlatformID.WinCE:
                 return "windows";
             case PlatformID.Unix:
-                if (OperatingSystem.IsMacOS()) 
+                if (OperatingSystem.IsMacOS())
                     return "osx";
-                
+
                 return "linux";
             case PlatformID.MacOSX:
                 return "osx";
@@ -24,7 +24,7 @@ public static class Utilities
                 return "unknown";
         }
     }
-    
+
     public static string GetJavaPlatformIdentifier()
     {
         switch (Environment.OSVersion.Platform)
@@ -35,15 +35,15 @@ public static class Utilities
             case PlatformID.WinCE:
                 return $"windows-{GetArchitecture()}";
             case PlatformID.Unix:
-                if (OperatingSystem.IsMacOS()) 
+                if (OperatingSystem.IsMacOS())
                     return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "mac-os-arm64" : "mac-os";
-                
+
                 return RuntimeInformation.ProcessArchitecture == Architecture.X86 ? "linux-i386" : "linux";
             default:
                 return "unknown";
         }
     }
-    
+
     public static string GetArchitecture()
     {
         switch (RuntimeInformation.ProcessArchitecture)

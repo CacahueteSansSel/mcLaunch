@@ -1,14 +1,14 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
-        <Border Padding="20"  Background="white">
+        <Border Padding="20" Background="white">
             <StackPanel Orientation="Vertical">
                 <Border Classes="frame">
                     <StackPanel Orientation="Horizontal">
                         <Button Classes="primary" Margin="5">Primary !</Button>
                         <Button Classes="secondary" Margin="5">Secondary !</Button>
                         <Button Classes="transparent" Margin="5">Transparent !</Button>
-                        <ProgressBar Value="70"></ProgressBar>
+                        <ProgressBar Value="70" />
                     </StackPanel>
                 </Border>
                 <Border Classes="frame-light" Margin="0 10 0 0">
@@ -16,39 +16,39 @@
                         <Button Classes="primary" Margin="5">Primary !</Button>
                         <Button Classes="secondary" Margin="5">Secondary !</Button>
                         <Button Classes="transparent" Margin="5">Transparent !</Button>
-                        <ProgressBar Value="70"></ProgressBar>
+                        <ProgressBar Value="70" />
                     </StackPanel>
                 </Border>
             </StackPanel>
         </Border>
     </Design.PreviewWith>
-        
+
     <Style Selector="StackPanel.smoothShowLeft">
         <Style.Animations>
             <Animation Duration="0:0:.5" Easing="QuinticEaseInOut" IterationCount="1">
                 <KeyFrame Cue="0%">
-                    <Setter Property="TranslateTransform.X" Value="-10"/>
-                    <Setter Property="Opacity" Value="0"/>
+                    <Setter Property="TranslateTransform.X" Value="-10" />
+                    <Setter Property="Opacity" Value="0" />
                 </KeyFrame>
                 <KeyFrame Cue="100%">
-                    <Setter Property="TranslateTransform.X" Value="0"/>
-                    <Setter Property="Opacity" Value="1"/>
+                    <Setter Property="TranslateTransform.X" Value="0" />
+                    <Setter Property="Opacity" Value="1" />
                 </KeyFrame>
             </Animation>
         </Style.Animations>
     </Style>
-    
+
     <Style Selector="Button.picture">
-        <Setter Property="BorderBrush" Value="{DynamicResource Background}"></Setter>
-        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}"></Setter>
+        <Setter Property="BorderBrush" Value="{DynamicResource Background}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}" />
     </Style>
-    
+
     <Style Selector="TextBlock.id">
-        <Setter Property="FontFamily" Value="/resources/fonts/JetBrainsMono-Regular.ttf#JetBrains Mono"></Setter>
+        <Setter Property="FontFamily" Value="/resources/fonts/JetBrainsMono-Regular.ttf#JetBrains Mono" />
     </Style>
-    
+
     <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
-        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
         <Setter Property="Background" Value="{DynamicResource BackgroundDarkest}" />
     </Style>
 
@@ -57,125 +57,125 @@
     </Style>
 
     <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
-        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}" />
         <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThicknessFocused}" />
     </Style>
-    
+
     <Style Selector="TextBox:pressed /template/ ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource Background}"></Setter>
-        <Setter Property="BorderBrush" Value="red"></Setter>
+        <Setter Property="Background" Value="{DynamicResource Background}" />
+        <Setter Property="BorderBrush" Value="red" />
     </Style>
 
     <Style Selector="TextBox /template/ Border#PART_BorderElement">
-        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLightest}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLightest}" />
         <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThicknessFocused}" />
     </Style>
-    
+
     <Style Selector="TextBox">
-        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}"></Setter>
-        <Setter Property="CornerRadius" Value="4"></Setter>
-        <Setter Property="BorderThickness" Value="1"></Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
     </Style>
-    
+
     <Style Selector="Border.frame">
-        <Setter Property="Background" Value="{DynamicResource Background}"></Setter>
-        <Setter Property="CornerRadius" Value="4"></Setter>
-        <Setter Property="BorderThickness" Value="1"></Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
-        <Setter Property="BoxShadow" Value="0 3 10 1 #AA000000"></Setter>
+        <Setter Property="Background" Value="{DynamicResource Background}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
+        <Setter Property="BoxShadow" Value="0 3 10 1 #AA000000" />
     </Style>
-    
+
     <Style Selector="Border.frame-light">
-        <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"></Setter>
-        <Setter Property="CornerRadius" Value="4"></Setter>
-        <Setter Property="BorderThickness" Value="1"></Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource Background}"></Setter>
-        <Setter Property="BoxShadow" Value="0 3 10 1 #55000000"></Setter>
+        <Setter Property="Background" Value="{DynamicResource BackgroundLighter}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Background}" />
+        <Setter Property="BoxShadow" Value="0 3 10 1 #55000000" />
     </Style>
-    
+
     <Style Selector="TextBlock.title">
-        <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-SemiBold.ttf#Lexend Deca"></Setter>
+        <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-SemiBold.ttf#Lexend Deca" />
     </Style>
-    
+
     <Style Selector="TextBlock.light">
-        <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-Light.ttf#Lexend Deca"></Setter>
+        <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-Light.ttf#Lexend Deca" />
     </Style>
-    
+
     <Style Selector="Window">
-        <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-Regular.ttf#Lexend Deca"></Setter>
+        <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-Regular.ttf#Lexend Deca" />
     </Style>
 
     <Style Selector="Button.primary">
-        <Setter Property="Background" Value="{DynamicResource DarkerAccent}"></Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}"></Setter>
-        <Setter Property="Padding" Value="20 10 20 10"></Setter>
+        <Setter Property="Background" Value="{DynamicResource DarkerAccent}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}" />
+        <Setter Property="Padding" Value="20 10 20 10" />
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="Background" Duration="0:0:0.2"/>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
             </Transitions>
         </Setter>
     </Style>
-    
+
     <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource MiddleAccent}"></Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}"></Setter>
-    </Style>    
-    
+        <Setter Property="Background" Value="{DynamicResource MiddleAccent}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}" />
+    </Style>
+
     <Style Selector="Button.primary:pressed /template/ ContentPresenter">
-        <Setter Property="RenderTransform" Value="scale(0.99)"></Setter>
-    </Style>    
-    
+        <Setter Property="RenderTransform" Value="scale(0.99)" />
+    </Style>
+
     <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
-        <Setter Property="TextBlock.Foreground" Value="White"/>
+        <Setter Property="TextBlock.Foreground" Value="White" />
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
             </Transitions>
         </Setter>
     </Style>
 
     <Style Selector="Button.secondary">
-        <Setter Property="Background" Value="{DynamicResource BackgroundMiddle}"></Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
-        <Setter Property="Padding" Value="20 10 20 10"></Setter>
+        <Setter Property="Background" Value="{DynamicResource BackgroundMiddle}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
+        <Setter Property="Padding" Value="20 10 20 10" />
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="Background" Duration="0:0:0.2"/>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
             </Transitions>
         </Setter>
     </Style>
 
     <Style Selector="Button.square">
-        <Setter Property="Padding" Value="10"></Setter>
-        <Setter Property="Height" Value="39"></Setter>
-        <Setter Property="Width" Value="39"></Setter>
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Height" Value="39" />
+        <Setter Property="Width" Value="39" />
     </Style>
-    
+
     <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource Background}"></Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}"></Setter>
+        <Setter Property="Background" Value="{DynamicResource Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
     </Style>
 
     <Style Selector="Button.transparent">
-        <Setter Property="Background" Value="#AA232323"></Setter>
-        <Setter Property="Padding" Value="10"></Setter>
+        <Setter Property="Background" Value="#AA232323" />
+        <Setter Property="Padding" Value="10" />
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="Background" Duration="0:0:0.2"/>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
             </Transitions>
         </Setter>
     </Style>
-    
+
     <Style Selector="Button.transparent:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="#AA3C3C3C"></Setter>
+        <Setter Property="Background" Value="#AA3C3C3C" />
     </Style>
-    
+
     <Style Selector="ProgressBar:horizontal">
-        <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}"></Setter>
+        <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}" />
     </Style>
 </Styles>

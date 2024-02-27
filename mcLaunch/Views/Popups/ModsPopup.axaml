@@ -7,7 +7,7 @@
              Width="800" Height="450"
              x:Class="mcLaunch.Views.Popups.ModsPopup">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">
@@ -15,10 +15,10 @@
             <TextBlock x:Name="DescriptionText" DockPanel.Dock="Top" TextWrapping="Wrap" Classes="light">mods</TextBlock>
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" Classes="primary" Click="OKButtonClicked">Ok</Button>
-                <Panel></Panel>
+                <Panel />
             </DockPanel>
             <ScrollViewer>
-                <views:MinecraftContentList x:Name="ModList" IsHitTestVisible="False"></views:MinecraftContentList>
+                <views:MinecraftContentList x:Name="ModList" IsHitTestVisible="False" />
             </ScrollViewer>
         </DockPanel>
     </Border>

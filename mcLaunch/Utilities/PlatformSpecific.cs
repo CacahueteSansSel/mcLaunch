@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using mcLaunch.Core.Boxes;
 
 namespace mcLaunch.Utilities;
 
@@ -14,12 +13,12 @@ public static class PlatformSpecific
 
         return File.Exists($"{binaryFolder}/{name}{(OperatingSystem.IsWindows() ? ".exe" : "")}");
     }
-    
+
     public static void LaunchProcess(string name, string arguments, string verb = "", bool hidden = false)
     {
         string fullPath = Environment.GetCommandLineArgs()[0];
         string binaryFolder = fullPath.Replace(Path.GetFileName(fullPath), "").Trim();
-        
+
         Process.Start(new ProcessStartInfo
         {
             FileName = $"{binaryFolder}/{name}{(OperatingSystem.IsWindows() ? ".exe" : "")}",
@@ -31,7 +30,7 @@ public static class PlatformSpecific
             UseShellExecute = false
         });
     }
-    
+
     public static void OpenFolder(string path)
     {
         if (OperatingSystem.IsWindows())
@@ -46,12 +45,9 @@ public static class PlatformSpecific
             return;
         }
 
-        if (OperatingSystem.IsLinux())
-        {
-            Process.Start("xdg-open", path);
-        }
+        if (OperatingSystem.IsLinux()) Process.Start("xdg-open", path);
     }
-    
+
     public static void OpenFile(string path)
     {
         if (OperatingSystem.IsWindows())
@@ -70,12 +66,9 @@ public static class PlatformSpecific
             return;
         }
 
-        if (OperatingSystem.IsLinux())
-        {
-            Process.Start("xdg-open", path);
-        }
+        if (OperatingSystem.IsLinux()) Process.Start("xdg-open", path);
     }
-    
+
     public static void OpenUrl(string url)
     {
         if (OperatingSystem.IsWindows())
@@ -94,9 +87,6 @@ public static class PlatformSpecific
             return;
         }
 
-        if (OperatingSystem.IsLinux())
-        {
-            Process.Start("xdg-open", url);
-        }
+        if (OperatingSystem.IsLinux()) Process.Start("xdg-open", url);
     }
 }

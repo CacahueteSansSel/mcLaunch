@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
-using Cacahuete.MinecraftLib.Http;
-using Cacahuete.MinecraftLib.Models.Forge;
+﻿using Cacahuete.MinecraftLib.Http;
 using Cacahuete.MinecraftLib.Models.NeoForge;
 
 namespace Cacahuete.MinecraftLib.Core.ModLoaders;
@@ -14,6 +11,12 @@ public class NeoForgeModLoaderSupport : ModLoaderSupport
     public const string NewerMavenQueryUrl
         = "https://maven.neoforged.net/api/maven/latest/version/releases/net/neoforged/neoforge?filter={0}";
 
+    public NeoForgeModLoaderSupport(string jvmExecutablePath, string systemFolderPath)
+    {
+        JvmExecutablePath = jvmExecutablePath;
+        SystemFolderPath = systemFolderPath;
+    }
+
     public override string Id { get; } = "neoforge";
     public override string Name { get; set; } = "NeoForge";
     public override string Type { get; set; } = "modded";
@@ -21,12 +24,6 @@ public class NeoForgeModLoaderSupport : ModLoaderSupport
 
     public string JvmExecutablePath { get; }
     public string SystemFolderPath { get; }
-
-    public NeoForgeModLoaderSupport(string jvmExecutablePath, string systemFolderPath)
-    {
-        JvmExecutablePath = jvmExecutablePath;
-        SystemFolderPath = systemFolderPath;
-    }
 
     public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion)
     {

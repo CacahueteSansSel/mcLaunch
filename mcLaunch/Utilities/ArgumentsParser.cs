@@ -4,7 +4,7 @@ namespace mcLaunch.Utilities;
 
 public class ArgumentsParser
 {
-    private Dictionary<string, string> dict = new();
+    private readonly Dictionary<string, string> dict = new();
 
     public ArgumentsParser(string[] args)
     {
@@ -17,17 +17,21 @@ public class ArgumentsParser
             {
                 dict.Add(current.TrimStart('-'), next);
                 i++;
-                
+
                 continue;
             }
-            
+
             dict.Add(current.TrimStart('-'), string.Empty);
         }
     }
 
     public string Get(string key, string defaultValue = null)
-        => dict.ContainsKey(key) ? dict[key] : defaultValue;
+    {
+        return dict.ContainsKey(key) ? dict[key] : defaultValue;
+    }
 
     public bool Contains(string key)
-        => dict.ContainsKey(key);
+    {
+        return dict.ContainsKey(key);
+    }
 }

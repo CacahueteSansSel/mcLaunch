@@ -22,7 +22,7 @@ public static class BinaryReaderWriterExtensions
         }
 
         byte[] encodedString = Encoding.UTF8.GetBytes(str);
-        
+
         wr.Write7BitEncodedInt(encodedString.Length);
         wr.Write(encodedString);
     }

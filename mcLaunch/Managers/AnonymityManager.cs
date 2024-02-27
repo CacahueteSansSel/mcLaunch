@@ -13,20 +13,23 @@ public static class AnonymityManager
 
     public static void Init()
     {
-        using Stream fileStream = AssetLoader.Open(new Uri("avares://mcLaunch/resources/settings/anonymized_names.txt"));
+        using Stream fileStream =
+            AssetLoader.Open(new Uri("avares://mcLaunch/resources/settings/anonymized_names.txt"));
         StreamReader reader = new(fileStream);
 
         anonNames = reader.ReadToEnd().Split("\r\n");
     }
 
     public static AnonymitySession CreateSession()
-        => new(anonNames);
+    {
+        return new AnonymitySession(anonNames);
+    }
 }
 
 public class AnonymitySession
 {
-    private List<string> initialNames;
     private List<string> availableNames;
+    private readonly List<string> initialNames;
 
     public AnonymitySession(string[] names)
     {
@@ -36,11 +39,11 @@ public class AnonymitySession
 
     public string TakeName()
     {
-        if (availableNames.Count == 0) 
+        if (availableNames.Count == 0)
             availableNames = new List<string>(initialNames);
 
         int index = Random.Shared.Next(0, availableNames.Count);
-        string word = availableNames[(int)MathF.Min(index, availableNames.Count - 1)];
+        string word = availableNames[(int) MathF.Min(index, availableNames.Count - 1)];
         availableNames.Remove(word);
 
         return word;

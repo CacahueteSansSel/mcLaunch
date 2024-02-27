@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
@@ -17,7 +14,6 @@ using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.DataContexts;
 using mcLaunch.Views.Pages;
-using ReactiveUI;
 
 namespace mcLaunch.Views.Popups;
 
@@ -34,17 +30,14 @@ public partial class NewBoxPopup : UserControl
             new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
         BoxIconImage.Source = bmp;
 
-        if (AuthenticationManager.Account != null)
-        {
-            AuthorNameTb.Text = AuthenticationManager.Account.Username;
-        }
+        if (AuthenticationManager.Account != null) AuthorNameTb.Text = AuthenticationManager.Account.Username;
 
         VersionSelector.OnVersionChanged += version => { FetchModLoadersLatestVersions(version.Id); };
 
         FetchModLoadersLatestVersions(VersionSelector.Version.Id);
     }
 
-    async void FetchModLoadersLatestVersions(string versionId)
+    private async void FetchModLoadersLatestVersions(string versionId)
     {
         CreateButton.IsEnabled = false;
         MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext!;
@@ -70,7 +63,7 @@ public partial class NewBoxPopup : UserControl
     {
         if (string.IsNullOrWhiteSpace(BoxNameTb.Text) || string.IsNullOrWhiteSpace(AuthorNameTb.Text))
             return;
-        
+
         string boxName = BoxNameTb.Text;
         string boxAuthor = AuthorNameTb.Text;
         ManifestMinecraftVersion minecraftVersion = VersionSelector.Version;
@@ -79,9 +72,7 @@ public partial class NewBoxPopup : UserControl
         if (string.IsNullOrWhiteSpace(boxName)
             || string.IsNullOrWhiteSpace(boxAuthor)
             || minecraftVersion == null)
-        {
             return;
-        }
 
         Navigation.HidePopup();
         Navigation.ShowPopup(new StatusPopup($"Creating {boxName}", "We are creating the box... Please wait..."));
@@ -115,7 +106,7 @@ public partial class NewBoxPopup : UserControl
         StatusPopup.Instance.ShowDownloadBanner = true;
 
         await BoxManager.Create(newBoxManifest);
-        
+
         StatusPopup.Instance.ShowDownloadBanner = false;
         Navigation.HidePopup();
 
@@ -126,11 +117,11 @@ public partial class NewBoxPopup : UserControl
     {
         OpenFileDialog ofd = new OpenFileDialog();
         ofd.Title = "Select the icon image...";
-        ofd.Filters = new List<FileDialogFilter>()
+        ofd.Filters = new List<FileDialogFilter>
         {
             new()
             {
-                Extensions = new List<string>()
+                Extensions = new List<string>
                 {
                     "png"
                 },

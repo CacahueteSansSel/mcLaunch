@@ -4,10 +4,10 @@
 // MIT Licensed
 
 /// <summary>
-/// MurmurHash2 by jibit
+///     MurmurHash2 by jibit
 /// </summary>
 /// <remarks>
-/// https://github.com/jitbit/MurmurHash.net/
+///     https://github.com/jitbit/MurmurHash.net/
 /// </remarks>
 public static class MurmurHash2
 {
@@ -22,8 +22,8 @@ public static class MurmurHash2
         int currentIndex = 0;
         while (length >= 4)
         {
-            uint k = (uint) (data[currentIndex++] | data[currentIndex++] << 8 | data[currentIndex++] << 16 |
-                             data[currentIndex++] << 24);
+            uint k = (uint) (data[currentIndex++] | (data[currentIndex++] << 8) | (data[currentIndex++] << 16) |
+                             (data[currentIndex++] << 24));
             k *= m;
             k ^= k >> r;
             k *= m;
@@ -36,12 +36,12 @@ public static class MurmurHash2
         switch (length)
         {
             case 3:
-                h ^= (ushort) (data[currentIndex++] | data[currentIndex++] << 8);
+                h ^= (ushort) (data[currentIndex++] | (data[currentIndex++] << 8));
                 h ^= (uint) (data[currentIndex] << 16);
                 h *= m;
                 break;
             case 2:
-                h ^= (ushort) (data[currentIndex++] | data[currentIndex] << 8);
+                h ^= (ushort) (data[currentIndex++] | (data[currentIndex] << 8));
                 h *= m;
                 break;
             case 1:
@@ -65,10 +65,7 @@ public static class MurmurHash2
         {
             byte b = array[i];
 
-            if (!(b == 9 || b == 10 || b == 13 || b == 32))
-            {
-                normalArray.Add(b);
-            }
+            if (!(b == 9 || b == 10 || b == 13 || b == 32)) normalArray.Add(b);
         }
 
         return Hash(normalArray.ToArray(), 1, normalArray.Count);

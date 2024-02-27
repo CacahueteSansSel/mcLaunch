@@ -1,17 +1,13 @@
 ﻿using System;
 using System.IO;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using Cacahuete.MinecraftLib.Download;
 using mcLaunch.Installer.Core;
 
 namespace mcLaunch.Installer.Pages;
 
 public partial class InstallationPage : InstallerPage
 {
-    SoftwareInstaller installer;
-    
+    private readonly SoftwareInstaller installer;
+
     public InstallationPage()
     {
         InitializeComponent();
@@ -25,7 +21,7 @@ public partial class InstallationPage : InstallerPage
     {
         TitleText.Text = "Updating mcLaunch";
         installer.CopyInstaller = false;
-        
+
         return this;
     }
 

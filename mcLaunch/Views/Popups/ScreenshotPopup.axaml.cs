@@ -1,9 +1,6 @@
-﻿using System.Diagnostics;
-using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
@@ -12,9 +9,9 @@ namespace mcLaunch.Views.Popups;
 
 public partial class ScreenshotPopup : UserControl
 {
-    string filename;
-    Box box;
-    
+    private readonly Box box;
+    private readonly string filename;
+
     public ScreenshotPopup()
     {
         InitializeComponent();
@@ -23,7 +20,7 @@ public partial class ScreenshotPopup : UserControl
     public ScreenshotPopup(string filename, Box box)
     {
         InitializeComponent();
-        
+
         this.filename = filename;
         this.box = box;
 
@@ -57,7 +54,7 @@ public partial class ScreenshotPopup : UserControl
 
     private void SetAsBoxBackgroundButtonClicked(object? sender, RoutedEventArgs e)
     {
-        box.SetAndSaveBackground((Bitmap)Picture.Source);
+        box.SetAndSaveBackground((Bitmap) Picture.Source);
         Navigation.HidePopup();
     }
 }

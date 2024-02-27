@@ -15,7 +15,9 @@ public class VersionManifest
     [JsonIgnore] public ManifestMinecraftVersion[] Snapshots => Versions.Where(ver => ver.Type == "snapshot").ToArray();
 
     public ManifestMinecraftVersion? Get(string versionId)
-        => Versions.FirstOrDefault(ver => ver.Id == versionId);
+    {
+        return Versions.FirstOrDefault(ver => ver.Id == versionId);
+    }
 }
 
 public class LatestVersion

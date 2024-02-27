@@ -7,21 +7,22 @@
              Background="{DynamicResource BackgroundDarker}"
              x:Class="mcLaunch.Views.Pages.DefaultsPage">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Panel>
-        <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}"></Image>
+        <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}" />
         <ScrollViewer>
             <StackPanel>
                 <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
-                    <views:BackButton></views:BackButton>
+                    <views:BackButton />
                     <TextBlock Classes="title" Margin="15 0 0 0" FontSize="30">Defaults</TextBlock>
                 </StackPanel>
                 <Border Width="888" Margin="0 10 0 0" Classes="frame">
-                    <StackPanel x:Name="SettingsRoot" Margin="20" Spacing="10" >
+                    <StackPanel x:Name="SettingsRoot" Margin="20" Spacing="10">
                         <Border Padding="10" Classes="frame-without-shadow">
                             <DockPanel>
-                                <Button x:Name="DefaultOptionsDeleteButton" DockPanel.Dock="Right" Classes="secondary" Click="DeleteButtonClicked">
+                                <Button x:Name="DefaultOptionsDeleteButton" DockPanel.Dock="Right" Classes="secondary"
+                                        Click="DeleteButtonClicked">
                                     Delete
                                 </Button>
                                 <StackPanel>

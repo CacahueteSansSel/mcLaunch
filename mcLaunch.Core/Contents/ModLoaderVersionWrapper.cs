@@ -5,12 +5,15 @@ namespace mcLaunch.Core.Contents;
 
 public class ModLoaderSupportWrapper : IVersionContent
 {
-    private ModLoaderSupport modLoader;
+    private readonly ModLoaderSupport modLoader;
 
     public ModLoaderSupportWrapper(ModLoaderSupport modLoader)
     {
         this.modLoader = modLoader;
     }
+
+    public string Name => modLoader.Name;
+    public IEnumerable<IVersion> ContentVersions { get; private set; }
 
     public async Task FetchVersionsAsync(string minecraftVersion)
     {
@@ -19,14 +22,11 @@ public class ModLoaderSupportWrapper : IVersionContent
 
         ContentVersions = versions.Select(version => new ModLoaderVersionWrapper(version, modLoader.Name)).ToArray();
     }
-
-    public string Name => modLoader.Name;
-    public IEnumerable<IVersion> ContentVersions { get; private set; }
 }
 
 public class ModLoaderVersionWrapper : IVersion
 {
-    private ModLoaderVersion mlVersion;
+    private readonly ModLoaderVersion mlVersion;
     private string modLoaderName;
 
     public ModLoaderVersionWrapper(ModLoaderVersion mlVersion, string modLoaderName)

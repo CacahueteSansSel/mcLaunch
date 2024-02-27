@@ -6,7 +6,7 @@ namespace Cacahuete.MinecraftLib.Auth;
 
 public static class Jwt
 {
-    static string DecodeBase64(string input)
+    private static string DecodeBase64(string input)
     {
         string fixedBase64 = input.Replace('-', '+').Replace('_', '/');
         int fraction = fixedBase64.Length % 4;

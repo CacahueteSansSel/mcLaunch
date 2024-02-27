@@ -6,10 +6,10 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.WorldList">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
 
         <Style Selector="ListBox">
-            <Setter Property="Background" Value="transparent"></Setter>
+            <Setter Property="Background" Value="transparent" />
         </Style>
     </UserControl.Styles>
     <Panel>
@@ -18,35 +18,31 @@
                      SelectionChanged="WorldSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
-                        <Setter Property="CornerRadius" Value="4"></Setter>
-                        <Setter Property="Margin" Value="4"></Setter>
+                        <Setter Property="CornerRadius" Value="4" />
+                        <Setter Property="Margin" Value="4" />
                     </Style>
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <DockPanel>
-                            <Image Source="{Binding Icon}" DockPanel.Dock="Left" Width="40" Height="40"></Image>
-                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-
-                            </StackPanel>
+                            <Image Source="{Binding Icon}" DockPanel.Dock="Left" Width="40" Height="40" />
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" />
                             <StackPanel Margin="10 0 10 0" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Classes="title" Text="{Binding Name}"></TextBlock>
+                                    <TextBlock Classes="title" Text="{Binding Name}" />
                                     <views:Badge IsVisible="{Binding IsCheats}" Margin="10 0 0 0" Text="Commands"
-                                                 Icon="/resources/icons/mod.png">
-                                    </views:Badge>
+                                                 Icon="/resources/icons/mod.png" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Classes="title" FontSize="12" Margin="0 0 0 0" Text="{Binding GameMode}"></TextBlock>
+                                    <TextBlock Classes="title" FontSize="12" Margin="0 0 0 0" Text="{Binding GameMode}" />
                                     <TextBlock Classes="title" FontSize="12" Margin="4 0 0 0">mode</TextBlock>
                                     <TextBlock Classes="light" FontSize="12" Margin="0 0 0 0">, Minecraft</TextBlock>
-                                    <TextBlock Classes="light" FontSize="12" Margin="4 0 0 0" Text="{Binding Version}"></TextBlock>
+                                    <TextBlock Classes="light" FontSize="12" Margin="4 0 0 0" Text="{Binding Version}" />
                                     <TextBlock Classes="light" FontSize="12" Margin="0 0 0 0">, last opened </TextBlock>
                                     <TextBlock Classes="title" FontSize="12" Margin="4 0 0 0"
-                                               Text="{Binding LastPlayed}">
-                                    </TextBlock>
+                                               Text="{Binding LastPlayed}" />
                                 </StackPanel>
-                                <TextBlock Classes="light" Text="{Binding ShortDescription}" Opacity="0.7"></TextBlock>
+                                <TextBlock Classes="light" Text="{Binding ShortDescription}" Opacity="0.7" />
                             </StackPanel>
                         </DockPanel>
                     </DataTemplate>
@@ -54,6 +50,6 @@
             </ListBox>
         </StackPanel>
         <views:LoadingCircle x:Name="LoadCircle" IsVisible="False" IsHitTestVisible="False" />
-        <views:NothingToShowBanner x:Name="NtsBanner" IsVisible="False" Footer="Your box's worlds will be shown here"></views:NothingToShowBanner>
+        <views:NothingToShowBanner x:Name="NtsBanner" IsVisible="False" Footer="Your box's worlds will be shown here" />
     </Panel>
 </UserControl>

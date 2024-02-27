@@ -1,7 +1,5 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
 
@@ -9,8 +7,6 @@ namespace mcLaunch.Views.Pages;
 
 public partial class DefaultsPage : UserControl, ITopLevelPageControl
 {
-    public string Title => $"Manage defaults";
-    
     public DefaultsPage()
     {
         InitializeComponent();
@@ -20,10 +16,12 @@ public partial class DefaultsPage : UserControl, ITopLevelPageControl
         DefaultOptionsDeleteButton.IsEnabled = options != null;
     }
 
+    public string Title => "Manage defaults";
+
     private void DeleteButtonClicked(object? sender, RoutedEventArgs e)
     {
         DefaultsManager.ClearDefaultOptions();
-        
+
         DefaultOptionsStatusText.Text = "No default options set";
         DefaultOptionsDeleteButton.IsEnabled = false;
     }

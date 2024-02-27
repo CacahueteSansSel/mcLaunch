@@ -6,9 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.BoxDetails.ReadmeSubControl">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
-    <mdxaml:MarkdownScrollViewer x:Name="MarkdownArea" Margin="0 0 0 0" Markdown="{Binding .}">
-        
-    </mdxaml:MarkdownScrollViewer>
+    <mdxaml:MarkdownScrollViewer x:Name="MarkdownArea" Margin="0 0 0 0" Markdown="{Binding .}" />
 </UserControl>

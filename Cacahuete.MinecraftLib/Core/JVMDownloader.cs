@@ -9,10 +9,7 @@ public class JVMDownloader
 {
     public const string ManifestUrl =
         "https://piston-meta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
-    public MinecraftFolder SystemFolder { get; private set; }
-    public string BasePath { get; private set; }
-    public event Action<string, JsonNode, string, string> GotJVMManifest;
-    
+
     public JVMDownloader(MinecraftFolder systemFolder) : this($"{systemFolder.CompletePath}/runtime")
     {
         SystemFolder = systemFolder;
@@ -23,27 +20,39 @@ public class JVMDownloader
         BasePath = customPath;
     }
 
+    public MinecraftFolder SystemFolder { get; private set; }
+    public string BasePath { get; }
+    public event Action<string, JsonNode, string, string> GotJVMManifest;
+
     public Task DownloadForCurrentPlatformAsync(string name)
-        => DownloadAsync(Utilities.GetJavaPlatformIdentifier(), name);
+    {
+        return DownloadAsync(Utilities.GetJavaPlatformIdentifier(), name);
+    }
 
     public string GetJVMPath(string platform, string name)
-        => $"{BasePath}/{name}/{platform}";
+    {
+        return $"{BasePath}/{name}/{platform}";
+    }
 
     public string GetJVMExecutablePath(string platform, string name)
-        => $"{BasePath}/{name}/{platform}/bin/{(OperatingSystem.IsWindows() ? "javaw.exe" : "java")}";
+    {
+        return $"{BasePath}/{name}/{platform}/bin/{(OperatingSystem.IsWindows() ? "javaw.exe" : "java")}";
+    }
 
     public bool HasJVM(string platform, string name)
-        => Directory.Exists(GetJVMPath(platform, name));
+    {
+        return Directory.Exists(GetJVMPath(platform, name));
+    }
 
     public async Task DownloadAsync(string platform, string name)
     {
         string targetPath = GetJVMPath(platform, name);
         if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
-        
+
         JsonNode? root = await Api.GetNodeAsync(ManifestUrl);
 
         JsonNode platformNode = root[platform];
-        JsonArray jvmNode = (JsonArray)platformNode[name];
+        JsonArray jvmNode = (JsonArray) platformNode[name];
 
         JVMEntry jvm = jvmNode[0].Deserialize<JVMEntry>()!;
 

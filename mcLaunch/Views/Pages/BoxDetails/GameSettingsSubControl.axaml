@@ -5,7 +5,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.BoxDetails.GameSettingsSubControl">
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/AppStyles.axaml"></StyleInclude>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <ScrollViewer>
         <StackPanel>
@@ -15,9 +15,7 @@
                     <TextBlock VerticalAlignment="Center">Liking these options ? Set these options as default for your new boxes in the future</TextBlock>
                 </DockPanel>
             </Border>
-            <StackPanel Margin="0 15 0 0" x:Name="Container">
-            
-            </StackPanel>
+            <StackPanel Margin="0 15 0 0" x:Name="Container" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>

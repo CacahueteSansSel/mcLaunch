@@ -11,11 +11,11 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <OutputPath>..\mcLaunch\bin\Debug\</OutputPath>
+        <OutputPath>..\mcLaunch\bin\Debug\</OutputPath>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <OutputPath>bin/Release/</OutputPath>
+        <OutputPath>bin/Release/</OutputPath>
     </PropertyGroup>
 
 </Project>

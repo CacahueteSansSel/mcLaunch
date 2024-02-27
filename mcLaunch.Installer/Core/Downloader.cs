@@ -9,12 +9,12 @@ namespace mcLaunch.Installer.Core;
 public static class Downloader
 {
     public static event Action<string, float> OnDownloadProgressUpdate;
-    
+
     public static async Task<MemoryStream> DownloadToMemoryAsync(string url, long? expectedSize = null)
     {
         HttpClient client = new();
         client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("mcLaunch.Installer", "1.0.0"));
-        
+
         HttpResponseMessage resp = await client.GetAsync(url,
             HttpCompletionOption.ResponseHeadersRead);
         resp.EnsureSuccessStatusCode();

@@ -1,20 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.Media.Imaging;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
-using mcLaunch.Views.Pages;
 
 namespace mcLaunch.Views.Popups;
 
 public partial class NewBackupPopup : UserControl
 {
-    Box box;
-    
+    private readonly Box box;
+
     public NewBackupPopup()
     {
         InitializeComponent();
@@ -36,21 +30,18 @@ public partial class NewBackupPopup : UserControl
     private async void CreateBackupButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (string.IsNullOrWhiteSpace(BackupNameTb.Text)) return;
-        
+
         CreateBackupButtonText.IsVisible = false;
         LoadingCircle.IsVisible = true;
 
         IsEnabled = false;
-        
+
         bool isComplete = CompleteBackupRadioButton.IsChecked ?? false;
 
         BoxBackup? backup = null;
 
-        if (isComplete)
-        {
-            backup = await box.CreateBackupAsync(BackupNameTb.Text);
-        }
-        
+        if (isComplete) backup = await box.CreateBackupAsync(BackupNameTb.Text);
+
         Navigation.HidePopup();
 
         if (backup == null)
@@ -58,7 +49,8 @@ public partial class NewBackupPopup : UserControl
             Navigation.ShowPopup(new MessageBoxPopup("Backup failed", "Failed to create backup"));
             return;
         }
-        
-        Navigation.ShowPopup(new MessageBoxPopup("Backup created", $"Your backup {backup.Name} for {box.Manifest.Name} has been created"));
+
+        Navigation.ShowPopup(new MessageBoxPopup("Backup created",
+            $"Your backup {backup.Name} for {box.Manifest.Name} has been created"));
     }
 }

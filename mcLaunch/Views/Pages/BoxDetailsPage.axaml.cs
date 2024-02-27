@@ -1,26 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Logging;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-using Avalonia.Platform.Storage;
 using Cacahuete.MinecraftLib.Models;
-using mcLaunch.Core.Managers;
-using mcLaunch.Core.Contents;
-using mcLaunch.Core.Utilities;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Contents;
 using mcLaunch.Core.MinecraftFormats;
-using mcLaunch.Core.Contents.Packs;
+using mcLaunch.Core.Utilities;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.BoxDetails;
@@ -32,14 +24,6 @@ namespace mcLaunch.Views.Pages;
 
 public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 {
-    public static BoxDetailsPage? LastOpened { get; private set; }
-
-    public Box Box { get; }
-    public SubControl SubControl { get; private set; }
-
-    public string Title =>
-        $"{Box.Manifest.Name} by {Box.Manifest.Author} on {Box.Manifest.ModLoaderId} {Box.Manifest.Version}";
-
     public BoxDetailsPage()
     {
         InitializeComponent();
@@ -73,7 +57,15 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         RunBoxChecks();
     }
 
-    async void RunBoxChecks()
+    public static BoxDetailsPage? LastOpened { get; private set; }
+
+    public Box Box { get; }
+    public SubControl SubControl { get; private set; }
+
+    public string Title =>
+        $"{Box.Manifest.Name} by {Box.Manifest.Author} on {Box.Manifest.ModLoaderId} {Box.Manifest.Version}";
+
+    private async void RunBoxChecks()
     {
         SubControlButtons.IsEnabled = false;
         LoadingIcon.IsVisible = true;
@@ -101,7 +93,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     {
         Box?.SetWatching(true);
         Reload();
-        
+
         DiscordManager.SetPresenceBox(Box);
 
         base.OnLoaded(e);
@@ -140,7 +132,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         PopulateSubControl();
     }
 
-    async void PopulateSubControl()
+    private async void PopulateSubControl()
     {
         if (SubControl == null) return;
 
@@ -151,7 +143,9 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     }
 
     public async void Run(string? serverAddress = null, string? serverPort = null, MinecraftWorld? world = null)
-        => await RunAsync(serverAddress, serverPort, world);
+    {
+        await RunAsync(serverAddress, serverPort, world);
+    }
 
     public async Task RunAsync(string? serverAddress = null, string? serverPort = null, MinecraftWorld? world = null)
     {
@@ -193,11 +187,9 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         // RegExp for mod dependencies error (Forge) : /(Failure message): .+/g
 
         if (PlatformSpecific.ProcessExists("mcLaunch.MinecraftGuard"))
-        {
             PlatformSpecific.LaunchProcess("mcLaunch.MinecraftGuard",
                 $"{java.Id.ToString()} {Box.Manifest.Id} {Box.Manifest.Type.ToString().ToLower()}",
                 hidden: true);
-        }
 
         Environment.Exit(0);
     }
@@ -211,11 +203,11 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     {
         OpenFileDialog ofd = new OpenFileDialog();
         ofd.Title = "Select the background image...";
-        ofd.Filters = new List<FileDialogFilter>()
+        ofd.Filters = new List<FileDialogFilter>
         {
             new()
             {
-                Extensions = new List<string>()
+                Extensions = new List<string>
                 {
                     "png"
                 },
@@ -386,11 +378,11 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         ModLoaderSupportWrapper modLoaderSupportWrapper = new(Box.ModLoader);
 
         await modLoaderSupportWrapper.FetchVersionsAsync(Box.Manifest.Version);
-        
+
         Navigation.ShowPopup(new VersionSelectionPopup(modLoaderSupportWrapper, version =>
         {
             if (version is not ModLoaderVersionWrapper mlVersion) return;
-            
+
             Navigation.ShowPopup(new ConfirmMessageBoxPopup("Warning",
                 "Changing the mod loader version can break some mods and other important things. " +
                 "Proceed with caution ! Do you wish to continue ?",

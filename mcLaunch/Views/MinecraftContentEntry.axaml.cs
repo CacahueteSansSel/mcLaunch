@@ -1,13 +1,10 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-using mcLaunch.Core.Core;
-using mcLaunch.Core.Managers;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Platforms;
+using mcLaunch.Core.Core;
+using mcLaunch.Core.Managers;
 
 namespace mcLaunch.Views;
 
@@ -16,14 +13,7 @@ public partial class MinecraftContentEntry : UserControl
     public static readonly AttachedProperty<MinecraftContent> ModProperty =
         AvaloniaProperty.RegisterAttached<MinecraftContent, UserControl, MinecraftContent>(
             nameof(Mod),
-            null,
-            inherits: true);
-
-    public MinecraftContent Mod
-    {
-        get => (MinecraftContent) DataContext;
-        set => DataContext = value;
-    }
+            null);
 
     public MinecraftContentEntry()
     {
@@ -45,5 +35,11 @@ public partial class MinecraftContentEntry : UserControl
                 Platform = new ModrinthMinecraftContentPlatform()
             };
         }
+    }
+
+    public MinecraftContent Mod
+    {
+        get => (MinecraftContent) DataContext;
+        set => DataContext = value;
     }
 }

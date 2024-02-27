@@ -2,12 +2,6 @@
 
 public class LibraryName
 {
-    public string Package { get; }
-    public string Name { get; }
-    public string Version { get; }
-
-    public string JarFilename => $"{Name}-{Version}.jar";
-
     public LibraryName(string raw)
     {
         string[] tokens = raw.Split(':');
@@ -17,6 +11,12 @@ public class LibraryName
 
         if (tokens.Length > 2) Version = tokens[2];
     }
+
+    public string Package { get; }
+    public string Name { get; }
+    public string Version { get; }
+
+    public string JarFilename => $"{Name}-{Version}.jar";
 
     public string BuildMavenUrl(string baseUrl)
     {

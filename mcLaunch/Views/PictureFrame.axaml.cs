@@ -2,7 +2,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
@@ -12,9 +11,9 @@ namespace mcLaunch.Views;
 
 public partial class PictureFrame : UserControl
 {
-    string? filename;
-    Box? box;
-    
+    private readonly Box? box;
+    private string? filename;
+
     public PictureFrame()
     {
         InitializeComponent();
@@ -25,7 +24,7 @@ public partial class PictureFrame : UserControl
         InitializeComponent();
 
         this.box = box;
-        
+
         SetLoadingCircle(true);
         LoadAsync(filename);
     }
@@ -38,10 +37,10 @@ public partial class PictureFrame : UserControl
         SetLoadingCircle(false);
     }
 
-    async void LoadAsync(string filename)
+    private async void LoadAsync(string filename)
     {
         this.filename = filename;
-        
+
         Bitmap bmp = await Task.Run(() =>
             new Bitmap(filename).CreateScaledBitmap(new PixelSize(1280, 720), BitmapInterpolationMode.MediumQuality));
 
@@ -58,7 +57,7 @@ public partial class PictureFrame : UserControl
     private void PictureClicked(object? sender, RoutedEventArgs e)
     {
         if (filename == null) return;
-        
+
         Navigation.ShowPopup(new ScreenshotPopup(filename, box));
     }
 }

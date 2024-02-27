@@ -16,7 +16,7 @@ public static class CurrentBuild
             {
                 using Stream stream = AssetLoader.Open(new Uri("avares://mcLaunch/resources/commit"));
                 using StreamReader rd = new(stream);
-                
+
                 return rd.ReadToEnd();
             }
             catch (Exception e)

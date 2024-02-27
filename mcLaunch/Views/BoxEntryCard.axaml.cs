@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using mcLaunch.Models;
 using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Utilities;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
@@ -24,18 +20,8 @@ public partial class BoxEntryCard : UserControl
         AvaloniaProperty.RegisterDirect<BoxEntryCard, Box>(nameof(Box), card => card.box,
             (card, box) => card.SetBox(box));
 
-    private AnonymitySession anonSession;
+    private readonly AnonymitySession anonSession;
     private Box box;
-
-    public Box Box
-    {
-        get => box;
-        set
-        {
-            box = value;
-            SetBox(box);
-        }
-    }
 
     public BoxEntryCard()
     {
@@ -48,6 +34,16 @@ public partial class BoxEntryCard : UserControl
         this.anonSession = anonSession;
 
         SetBox(box);
+    }
+
+    public Box Box
+    {
+        get => box;
+        set
+        {
+            box = value;
+            SetBox(box);
+        }
     }
 
     protected override async void OnLoaded(RoutedEventArgs e)
@@ -78,17 +74,13 @@ public partial class BoxEntryCard : UserControl
         DataContext = box.Manifest;
 
         if (Settings.Instance != null && Settings.Instance.AnonymizeBoxIdentity)
-        {
             BoxNameText.Text = anonSession.TakeName();
-        }
 
         VersionBadge.Text = box.Manifest.Version;
         ModLoaderBadge.Text = box.ModLoader?.Name ?? "Unknown";
         if (box.ModLoader != null)
-        {
             ModLoaderBadge.Icon =
                 new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{box.ModLoader.Id}.png")));
-        }
 
         Regex snapshotVersionRegex = new Regex("\\d.w\\d.a");
 

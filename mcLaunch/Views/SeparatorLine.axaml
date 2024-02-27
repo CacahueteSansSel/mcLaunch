@@ -4,5 +4,5 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="100"
              x:Class="mcLaunch.Views.SeparatorLine">
-    <Border Width="2" Height="30" Background="{DynamicResource BackgroundLighter}" CornerRadius="1"></Border>
+    <Border Width="2" Height="30" Background="{DynamicResource BackgroundLighter}" CornerRadius="1" />
 </UserControl>

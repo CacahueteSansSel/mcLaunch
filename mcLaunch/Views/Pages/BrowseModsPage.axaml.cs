@@ -1,26 +1,24 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Managers;
 
 namespace mcLaunch.Views.Pages;
 
 public partial class BrowseModsPage : UserControl, ITopLevelPageControl
 {
-    public string Title => $"Browse mods";
-
     public BrowseModsPage()
     {
         InitializeComponent();
-        
+
         ModList.Search(null, string.Empty);
     }
+
+    public string Title => "Browse mods";
 
     protected override void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
-        
+
         DiscordManager.SetPresenceModsList();
     }
 
