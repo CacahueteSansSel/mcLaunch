@@ -47,6 +47,14 @@ public partial class ModpackEntryCard : UserControl
 
         // Download additional infos for the modpack
         modpack = await ModPlatformManager.Platform.GetModpackAsync(modpack.Id);
+        if (modpack == null)
+        {
+            IsEnabled = false;
+            IsVisible = false;
+            
+            return;
+        }
+        
         modpack.Icon = icon;
 
         await modpack.DownloadBackgroundAsync();
