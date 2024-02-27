@@ -75,17 +75,17 @@ $ dotnet run
 # Credits
 
 Libraries used by the project :
-+ Avalonia (UI Library)
-+ ReactiveUI (UI Library)
-+ Modrinth.Net (for Modrinth)
-+ CurseForge.NET (for CurseForge)
-+ K4os.Compression.LZ4 (compression, used by the Box Binary format)
-+ ReverseMarkdown (to render mod pages)
-+ Markdown.Avalonia (to render mod pages)
-+ SharpNBT (for reading world's level.dat files)
-+ Markdig (to render mod pages)
-+ Spectre.Console (used by mcLaunch.Server)
-+ Jdenticon-net (for generating anonymized box icons)
++ [Avalonia](https://github.com/AvaloniaUI/Avalonia) (UI Library)
++ [ReactiveUI](https://github.com/reactiveui/ReactiveUI) (UI Library)
++ [Modrinth.Net](https://github.com/Zechiax/Modrinth.Net) (for Modrinth support in the launcher)
++ [CurseForge.NET](https://github.com/Raxdiam/CurseForge.NET) (for CurseForge support in the launcher)
++ [K4os.Compression.LZ4](https://github.com/MiloszKrajewski/K4os.Compression.LZ4) (compression, used by the Box Binary format)
++ [ReverseMarkdown](https://github.com/mysticmind/reversemarkdown-net) (to render mod pages)
++ [Markdown.Avalonia](https://github.com/whistyun/Markdown.Avalonia) (to render mod pages)
++ [SharpNBT](https://github.com/ForeverZer0/SharpNBT) (for reading world's level.dat files)
++ [Markdig](https://github.com/xoofx/markdig) (to render mod pages)
++ [Jdenticon-net](https://github.com/dmester/jdenticon-net) (for generating anonymized box icons)
++ [DiscordRichPresence](https://github.com/Lachee/discord-rpc-csharp) (for Discord Rich Presence)
 
 This project takes huge inspiration of :
 + [portablemc](https://github.com/mindstorm38/portablemc) (general Minecraft launcher stuff + Forge installer wrapper code)
