@@ -29,43 +29,7 @@ Download `mcLaunch-linux.zip` from [the latest release](https://github.com/Cacah
 
 Make sure to have the [**.NET 8.0 SDK**](https://dotnet.microsoft.com/en-us/download) installed, then clone the project.
 
-## Set your own credentials keys
-
-mcLaunch needs to have credentials keys for communicating with CurseForge, logging in via Microsoft, and encryption. Those are stored in the `credentials` folder inside mcLaunch's internal resources (`mcLaunch/resources/credentials`) and **are not included in the repository by default**. These are needed and **will prevent mcLaunch from building** if they are not present.
-
-mcLaunch have a default CurseForge API key specially delivered for mcLaunch, and a Microsoft Azure App ID. They are shipped only in the release builds. Please don't try to extract and use these for malicious purposes, as it will just prevent the users of mcLaunch for playing properly.
-
-### CurseForge
-
-Get an App ID for CurseForge's 3rd Party API (if you can't have this key, see the next section) and write the key in `mcLaunch/resources/credentials/curseforge.txt`. You will need to accept [their ToS](https://support.curseforge.com/en/support/solutions/articles/9000207405-curse-forge-3rd-party-api-terms-and-conditions?locale=fr).
-
-#### Without CurseForge
-
-If you want to build the launcher without CurseForge support, edit the file `mcLaunch/App.axaml.cs` and remove the whole statement at line 36, and the comma at the end of line 35 :
-
-```
-34 |  ModPlatformManager.Init(new MultiplexerModPlatform(
-35 | -       new ModrinthModPlatform().WithIcon("modrinth"),
-36 | -       new CurseForgeModPlatform(Credentials.Get("curseforge")).WithIcon("curseforge")
-35 | +       new ModrinthModPlatform().WithIcon("modrinth")
-37 |  ));
-```
-
-### Microsoft Azure
-
-You will need to create your own Microsoft Azure application ([see here](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app)) that mcLaunch will use to login with Microsoft and launch Minecraft. You will need to accept [their ToS](https://docs.microsoft.com/en-us/legal/microsoft-identity-platform/terms-of-use).
-
-After that, write your App ID in `mcLaunch/resources/credentials/azure.txt`.
-
-### Main Encryption Key
-
-This key is used to encrypt sensitive data. You can write anything you want in this file, and it will be used like a password for encryption.
-
-Write anything you want in `mcLaunch/resources/credentials/tokens.txt`.
-
-## Build the project
-
-Then, you can run the project :
+Then, you can build and run the project :
 ```shell
 $ cd mcLaunch
 $ dotnet build
