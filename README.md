@@ -1,5 +1,7 @@
 ![The mcLaunch banner](mcLaunch/resources/banner.png)
 [![.NET](https://github.com/CacahueteSansSel/mcLaunch/actions/workflows/dotnet.yml/badge.svg?branch=main)](https://github.com/CacahueteSansSel/mcLaunch/actions/workflows/dotnet.yml)
+![GitHub License](https://img.shields.io/github/license/CacahueteSansSel/mcLaunch)
+![GitHub Release](https://img.shields.io/github/v/release/CacahueteSansSel/mcLaunch)
 
 > This project is in beta, some things just don't work or aren't implemented yet !
 
