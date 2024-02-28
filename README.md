@@ -39,6 +39,12 @@ $ dotnet build
 $ dotnet run
 ```
 
+# About forking mcLaunch
+If you fork mcLaunch and plan to create a derivative work out of it, you will need to do some changes :
++ You will need to remove every logos of mcLaunch and mentions of the mcLaunch name to replace with your own
++ You will need to replace the CurseForge API key and the Microsoft Azure App ID with your own created specifically for your derivative work
++ This derivative work will need to be open-source too, and with the same license, [according to it](LICENSE).
+
 # Credits
 
 Libraries used by the project :
