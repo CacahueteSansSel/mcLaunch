@@ -14,7 +14,23 @@ public static class ForgeInstaller
         string minecraftFolderPath, string jvmExecutablePath, string tempPath)
     {
         // Install the vanilla minecraft version files (jar & json)
-        await Context.Downloader.BeginSectionAsync($"Forge {installerFile.Name}");
+        await Context.Downloader.BeginSectionAsync($"Forge {installerFile.Name.Trim()}");
+
+        if (!installerFile.IsV2)
+        {
+            string targetFilename =
+                $"{minecraftFolderPath}/libraries/{installerFile.EmbeddedForgeJarLibraryName!.MavenFilename}";
+            string folder = targetFilename.Replace(Path.GetFileName(targetFilename), 
+                string.Empty).Trim();
+
+            if (!Directory.Exists(folder)) 
+                Directory.CreateDirectory(folder);
+            
+            installerFile.ExtractFile(installerFile.EmbeddedForgeJarPath!, targetFilename);
+
+            await Context.Downloader.EndSectionAsync();
+            return new ForgeInstallResult(installerFile.Version);
+        }
 
         string forgeVersionPath = $"{minecraftFolderPath}/versions/{installerFile.Version.Id}";
         string vanillaVersionPath = $"{minecraftFolderPath}/versions/{installerFile.MinecraftVersionId}";
@@ -45,13 +61,13 @@ public static class ForgeInstaller
         Dictionary<string, string> variables = new(installerFile.DataVariables);
         variables.Add("SIDE", "client");
         variables.Add("MINECRAFT_JAR", $"{forgeVersionPath}/{installerFile.Version.Id}.jar");
-        
+
         // Extract any needed file in the temp folder
         foreach (var kv in installerFile.DataVariables)
         {
             string value = kv.Value.Replace("\\", "/").TrimStart('\\', '/');
             if (!installerFile.HasFile(value)) continue;
-            
+
             string folder = value.Replace(Path.GetFileName(value), "").Trim();
 
             if (!Directory.Exists($"{tempPath}/{folder}"))
@@ -102,7 +118,7 @@ public static class ForgeInstaller
             foreach (var kv in variables)
             {
                 if (!args[i].Contains($"{{{kv.Key}}}")) continue;
-                
+
                 finalArgs[i] = args[i].Replace($"{{{kv.Key}}}", kv.Value);
                 break;
             }

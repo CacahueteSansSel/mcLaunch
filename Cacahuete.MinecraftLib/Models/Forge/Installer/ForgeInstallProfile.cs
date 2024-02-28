@@ -22,6 +22,10 @@ public class ForgeInstallProfile
     [JsonPropertyName("mirrorList")]
     public string? MirrorList { get; set; }
     public JsonNode? Data { get; set; }
+    
+    public ModelOldInstall Install { get; set; }
+    [JsonPropertyName("versionInfo")]
+    public MinecraftVersion VersionInfo { get; set; }
 
     public class ModelProcessor
     {
@@ -35,5 +39,22 @@ public class ForgeInstallProfile
     {
         public string Client { get; set; }
         public string Server { get; set; }
+    }
+
+    public class ModelOldInstall
+    {
+        [JsonPropertyName("profileName")]
+        public string ProfileName { get; set; }
+        public string Target { get; set; }
+        public string Path { get; set; }
+        public string Version { get; set; }
+        [JsonPropertyName("filePath")]
+        public string FilePath { get; set; }
+        public string Minecraft { get; set; }
+        [JsonPropertyName("mirrorList")]
+        public string MirrorList { get; set; }
+        public string Logo { get; set; }
+        [JsonPropertyName("modList")]
+        public string ModList { get; set; }
     }
 }

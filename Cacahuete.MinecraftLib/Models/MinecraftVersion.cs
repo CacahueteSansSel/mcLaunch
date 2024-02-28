@@ -29,9 +29,9 @@ public class MinecraftVersion
 
     [JsonPropertyName("type")] public string Type { get; set; }
 
-    [JsonPropertyName("time")] public DateTime? Time { get; set; }
+    [JsonPropertyName("time")] public string? Time { get; set; }
 
-    [JsonPropertyName("releaseTime")] public DateTime? ReleaseTime { get; set; }
+    [JsonPropertyName("releaseTime")] public string? ReleaseTime { get; set; }
 
     [JsonPropertyName("minimumLauncherVersion")]
     public int? MinimumLauncherVersion { get; set; }

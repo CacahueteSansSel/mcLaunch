@@ -9,6 +9,7 @@ namespace Cacahuete.MinecraftLib.Core.ModLoaders.Forge;
 
 public class ForgeInstallerFile : IDisposable
 {
+    public const string DefaultMavenRepositoryUrl = "https://libraries.minecraft.net/";
     private ZipArchive _archive;
     
     public string Name { get; private set; }
@@ -16,8 +17,10 @@ public class ForgeInstallerFile : IDisposable
     public List<PostProcessor> Processors { get; } = [];
     public List<LibraryEntry> Libraries { get; } = [];
     public string? EmbeddedForgeJarPath { get; private set; }
+    public LibraryName? EmbeddedForgeJarLibraryName { get; private set; }
     public MinecraftVersion Version { get; private set; }
     public Dictionary<string, string> DataVariables { get; } = [];
+    public bool IsV2 { get; private set; }
 
     public ForgeInstallerFile(string jarFilename)
     {
@@ -27,7 +30,7 @@ public class ForgeInstallerFile : IDisposable
         ForgeInstallProfile? installProfile = JsonSerializer.Deserialize<ForgeInstallProfile>(profileJson,
             new JsonSerializerOptions
             {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             });
         if (installProfile == null) return;
         
@@ -66,11 +69,26 @@ public class ForgeInstallerFile : IDisposable
 
     void ParseProfileV1(ForgeInstallProfile profile)
     {
-        // TODO: V1 Profile parsing
+        IsV2 = false;
+        
+        Name = profile.Install.Version.Replace("forge", "");
+        MinecraftVersionId = profile.Install.Minecraft;
+        Version = profile.VersionInfo;
+
+        foreach (MinecraftVersion.ModelLibrary library in Version.Libraries)
+        {
+            if (string.IsNullOrEmpty(library.Url))
+                library.Url = DefaultMavenRepositoryUrl;
+        }
+
+        EmbeddedForgeJarPath = profile.Install.FilePath;
+        EmbeddedForgeJarLibraryName = new LibraryName(profile.Install.Path);
     }
 
     void ParseProfileV2(ForgeInstallProfile profile)
     {
+        IsV2 = true;
+        
         Name = profile.Version;
         MinecraftVersionId = profile.Minecraft;
         Version = JsonSerializer.Deserialize<MinecraftVersion>(_archive
