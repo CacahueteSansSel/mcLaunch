@@ -16,7 +16,7 @@ public static class ForgeInstaller
         // Install the vanilla minecraft version files (jar & json)
         await Context.Downloader.BeginSectionAsync($"Forge {installerFile.Name.Trim()}");
 
-        if (!installerFile.IsV2)
+        if (installerFile.EmbeddedForgeJarPath != null)
         {
             string targetFilename =
                 $"{minecraftFolderPath}/libraries/{installerFile.EmbeddedForgeJarLibraryName!.MavenFilename}";
@@ -28,8 +28,11 @@ public static class ForgeInstaller
             
             installerFile.ExtractFile(installerFile.EmbeddedForgeJarPath!, targetFilename);
 
-            await Context.Downloader.EndSectionAsync();
-            return new ForgeInstallResult(installerFile.Version);
+            if (!installerFile.IsV2)
+            {
+                await Context.Downloader.EndSectionAsync();
+                return new ForgeInstallResult(installerFile.Version);
+            }
         }
 
         string forgeVersionPath = $"{minecraftFolderPath}/versions/{installerFile.Version.Id}";

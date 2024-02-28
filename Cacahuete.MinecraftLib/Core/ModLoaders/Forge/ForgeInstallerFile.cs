@@ -109,7 +109,7 @@ public class ForgeInstallerFile : IDisposable
             
             Libraries.Add(new LibraryEntry(name, 
                 library.Downloads.Artifact.Path, 
-                isLocalLib ? name.MavenFilename : library.Downloads.Artifact.Url, 
+                isLocalLib ? $"maven/{name.MavenFilename}" : library.Downloads.Artifact.Url, 
                 isLocalLib));
         }
 
@@ -124,6 +124,7 @@ public class ForgeInstallerFile : IDisposable
         if (profile.Path != null)
         {
             LibraryName forgeName = new(profile.Path);
+            EmbeddedForgeJarLibraryName = forgeName;
             EmbeddedForgeJarPath = $"maven/{forgeName.MavenFilename}";
         }
     }
