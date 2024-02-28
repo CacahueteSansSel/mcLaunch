@@ -14,7 +14,7 @@ public static class ForgeInstaller
         string minecraftFolderPath, string jvmExecutablePath, string tempPath)
     {
         // Install the vanilla minecraft version files (jar & json)
-        await Context.Downloader.BeginSectionAsync($"Forge {installerFile.Name.Trim()}");
+        await Context.Downloader.BeginSectionAsync($"Forge {installerFile.Name.Trim()}", false);
 
         if (installerFile.EmbeddedForgeJarPath != null)
         {
@@ -30,7 +30,7 @@ public static class ForgeInstaller
 
             if (!installerFile.IsV2)
             {
-                await Context.Downloader.EndSectionAsync();
+                await Context.Downloader.EndSectionAsync(false);
                 return new ForgeInstallResult(installerFile.Version);
             }
         }
@@ -58,12 +58,14 @@ public static class ForgeInstaller
             await Context.Downloader.DownloadAsync(library.ArtifactUrl, targetLibPath, null);
         }
 
-        await Context.Downloader.EndSectionAsync();
+        await Context.Downloader.EndSectionAsync(false);
         await Context.Downloader.FlushAsync();
 
         Dictionary<string, string> variables = new(installerFile.DataVariables);
         variables.Add("SIDE", "client");
         variables.Add("MINECRAFT_JAR", $"{forgeVersionPath}/{installerFile.Version.Id}.jar");
+        
+        await Context.Downloader.BeginSectionAsync($"Installing Forge {installerFile.Name.Trim()}", true);
 
         // Extract any needed file in the temp folder
         foreach (var kv in installerFile.DataVariables)
@@ -81,6 +83,7 @@ public static class ForgeInstaller
             variables[kv.Key] = $"{tempPath}/{value}";
         }
 
+        int processorCount = 0;
         foreach (ForgeInstallerFile.PostProcessor processor in installerFile.Processors)
         {
             ForgeInstallerFile.LibraryEntry? library = installerFile.GetProcessorLibrary(processor);
@@ -106,7 +109,13 @@ public static class ForgeInstaller
 
             Process process = Process.Start(processStartInfo)!;
             await process.WaitForExitAsync();
+
+            await Context.Downloader.SetSectionProgressAsync(processor.JarName.Name,
+                (float) processorCount / installerFile.Processors.Count);
+            processorCount++;
         }
+
+        await Context.Downloader.EndSectionAsync(true);
 
         return new ForgeInstallResult(installerFile.Version);
     }

@@ -53,9 +53,9 @@ public class ForgeModLoaderVersion : ModLoaderVersion
 
             if (successfulInstallerUrl == null) throw new Exception("unable to find the Forge installer URL");
 
-            await Context.Downloader.BeginSectionAsync($"Forge {Name} installer");
+            await Context.Downloader.BeginSectionAsync($"Forge {Name} installer", false);
             await Context.Downloader.DownloadAsync(successfulInstallerUrl, fullPath, null);
-            await Context.Downloader.EndSectionAsync();
+            await Context.Downloader.EndSectionAsync(false);
             
             await Context.Downloader.FlushAsync();
         }

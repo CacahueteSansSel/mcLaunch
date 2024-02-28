@@ -258,19 +258,37 @@ public static class DownloadManager
             return true;
         }
 
-        public override async Task BeginSectionAsync(string sectionName)
+        public override async Task BeginSectionAsync(string sectionName, bool immediate)
         {
+            if (immediate)
+            {
+                CurrentSection = new DownloadSection {Entries = [], Name = sectionName};
+                OnDownloadSectionStarting?.Invoke(sectionName, 0);
+                return;
+            }
+            
             Begin(sectionName);
         }
 
-        public override async Task EndSectionAsync()
+        public override async Task EndSectionAsync(bool immediate)
         {
+            if (immediate)
+            {
+                OnDownloadFinished?.Invoke();
+                return;
+            }
+            
             End();
         }
 
         public override async Task FlushAsync()
         {
             await ProcessAll();
+        }
+
+        public override async Task SetSectionProgressAsync(string itemName, float progressPercent)
+        {
+            OnDownloadProgressUpdate?.Invoke(itemName, progressPercent, 0);
         }
     }
 }
