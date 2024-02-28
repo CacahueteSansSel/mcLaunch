@@ -257,6 +257,21 @@ public static class DownloadManager
 
             return true;
         }
+
+        public override async Task BeginSectionAsync(string sectionName)
+        {
+            Begin(sectionName);
+        }
+
+        public override async Task EndSectionAsync()
+        {
+            End();
+        }
+
+        public override async Task FlushAsync()
+        {
+            await ProcessAll();
+        }
     }
 }
 

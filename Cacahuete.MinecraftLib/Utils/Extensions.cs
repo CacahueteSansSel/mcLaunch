@@ -1,4 +1,7 @@
-﻿namespace Cacahuete.MinecraftLib.Utils;
+﻿using System.IO.Compression;
+using System.Text;
+
+namespace Cacahuete.MinecraftLib.Utils;
 
 public static class Extensions
 {
@@ -17,4 +20,21 @@ public static class Extensions
         list.AddRange(array.Where(e => !list.Contains(e)));
         return list;
     }
+
+    public static bool Exists(this ZipArchive zip, string path)
+        => zip.GetEntry(path) != null;
+
+    public static byte[] ReadAllBytes(this ZipArchive zip, string path)
+    {
+        ZipArchiveEntry entry = zip.GetEntry(path)!;
+        using Stream stream = entry.Open();
+
+        using MemoryStream memoryStream = new();
+        stream.CopyTo(memoryStream);
+
+        return memoryStream.ToArray();
+    }
+
+    public static string ReadAllText(this ZipArchive zip, string path)
+        => Encoding.UTF8.GetString(ReadAllBytes(zip, path));
 }

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using Cacahuete.MinecraftLib.Core.ModLoaders.Forge;
 using Cacahuete.MinecraftLib.Models;
 
 namespace Cacahuete.MinecraftLib.Core.ModLoaders;
@@ -36,46 +37,31 @@ public class ForgeModLoaderVersion : ModLoaderVersion
 
         if (!File.Exists(fullPath))
         {
-            bool success = false;
+            string? successfulInstallerUrl = null;
             foreach (string installerUrl in installerUrls)
             {
-                HttpResponseMessage resp = await client.GetAsync(installerUrl);
+                CancellationTokenSource cancelSource = new();
+                HttpResponseMessage resp = await client.GetAsync(installerUrl, 
+                    HttpCompletionOption.ResponseHeadersRead, cancelSource.Token);
                 if (!resp.IsSuccessStatusCode) continue;
-
-                await File.WriteAllBytesAsync(fullPath, await resp.Content.ReadAsByteArrayAsync());
-                success = true;
-
+                
+                await cancelSource.CancelAsync();
+                successfulInstallerUrl = installerUrl;
+                
                 break;
             }
 
-            if (!success) throw new Exception("unable to find the Forge installer URL");
+            if (successfulInstallerUrl == null) throw new Exception("unable to find the Forge installer URL");
+
+            await Context.Downloader.BeginSectionAsync($"Forge {Name} installer");
+            await Context.Downloader.DownloadAsync(successfulInstallerUrl, fullPath, null);
+            await Context.Downloader.EndSectionAsync();
+            
+            await Context.Downloader.FlushAsync();
         }
 
-        // TODO: Implement a new way for installing Forge
-
-        string wrapperJarPath = Path.GetFullPath($"{SystemFolderPath}/forge/target/wrapper.jar");
-        string classPathSeparator = OperatingSystem.IsWindows() ? ";" : ":";
-
-        string args =
-            $"-cp {wrapperJarPath}{classPathSeparator}{Path.GetFullPath(fullPath)} portablemc.wrapper.Main \"{SystemFolderPath}\" {versionName}";
-
-        if (!File.Exists(JvmExecutablePath)) JvmExecutablePath = "java";
-
-        Process forgeInstaller = Process.Start(new ProcessStartInfo
-        {
-            Arguments = args,
-            FileName = JvmExecutablePath,
-            WorkingDirectory = SystemFolderPath,
-            UseShellExecute = true,
-            CreateNoWindow = true
-        });
-
-        await forgeInstaller.WaitForExitAsync();
-
-        string versionFilename = $"{SystemFolderPath}/versions/{versionName}/{versionName}.json";
-        if (!File.Exists(versionFilename)) return null;
-
-        return JsonSerializer.Deserialize<MinecraftVersion>(
-            await File.ReadAllTextAsync(versionFilename));
+        ForgeInstallResult result = await ForgeInstaller.InstallAsync(new ForgeInstallerFile(fullPath), 
+            SystemFolderPath, JvmExecutablePath, $"{SystemFolderPath}/temp");
+        return result.MinecraftVersion;
     }
 }

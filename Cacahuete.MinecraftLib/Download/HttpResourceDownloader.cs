@@ -43,4 +43,19 @@ public class HttpResourceDownloader : ResourceDownloader
     {
         return false;
     }
+
+    public override async Task BeginSectionAsync(string sectionName)
+    {
+        // Not supported: only used by downloaders with a download queue
+    }
+
+    public override async Task EndSectionAsync()
+    {
+        // Not supported: only used by downloaders with a download queue
+    }
+
+    public override async Task FlushAsync()
+    {
+        // Not supported: only used by downloaders with a download queue
+    }
 }

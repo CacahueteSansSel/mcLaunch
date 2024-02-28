@@ -10,4 +10,7 @@ public abstract class ResourceDownloader
     public abstract Task<bool> DownloadAsync(string url, string target, string? expectedHash);
     public abstract Task<bool> ExtractAsync(string sourceArchive, string targetDir);
     public abstract Task<bool> ChmodAsync(string target, string perms);
+    public abstract Task BeginSectionAsync(string sectionName);
+    public abstract Task EndSectionAsync();
+    public abstract Task FlushAsync();
 }
