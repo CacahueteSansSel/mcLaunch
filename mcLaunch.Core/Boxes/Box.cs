@@ -539,7 +539,8 @@ public class Box : IEquatable<Box>
         Minecraft = new Minecraft(Version, Folder)
             .WithSystemFolder(BoxManager.SystemFolder)
             .WithUseDedicatedGraphics(UseDedicatedGraphics)
-            .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher)
+            .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher 
+                                                                    && (ModLoader?.SupportsLauncherExposure ?? true))
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
             .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader);
 

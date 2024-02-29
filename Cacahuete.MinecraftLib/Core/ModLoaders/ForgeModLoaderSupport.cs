@@ -16,6 +16,7 @@ public class ForgeModLoaderSupport : ModLoaderSupport
     public override string Id { get; } = "forge";
     public override string Name { get; set; } = "Forge";
     public override string Type { get; set; } = "modded";
+    public override bool SupportsLauncherExposure => false;
     public override ModLoaderVersion LatestVersion { get; set; }
 
     public string JvmExecutablePath { get; }
