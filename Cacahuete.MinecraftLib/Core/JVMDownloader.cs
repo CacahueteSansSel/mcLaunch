@@ -34,10 +34,15 @@ public class JVMDownloader
         return $"{BasePath}/{name}/{platform}";
     }
 
-    public string GetJVMExecutablePath(string platform, string name)
+    public string GetAndPrepareJvmExecPath(string platform, string name)
     {
         if (OperatingSystem.IsMacOS())
-            return $"{BasePath}/{name}/{platform}/jre.bundle/Contents/Home/bin/java";
+        {
+            string path = $"{BasePath}/{name}/{platform}/jre.bundle/Contents/Home/bin/java";
+            File.SetUnixFileMode(path, UnixFileMode.UserExecute);
+            
+            return path;
+        }
         
         return $"{BasePath}/{name}/{platform}/bin/{(OperatingSystem.IsWindows() ? "javaw.exe" : "java")}";
     }
