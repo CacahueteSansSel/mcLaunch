@@ -11,8 +11,7 @@ public partial class HeaderBar : UserControl
     {
         InitializeComponent();
 
-        Logo.SetValue(DockPanel.DockProperty, OperatingSystem.IsMacOS() ? Dock.Right : Dock.Left);
-        Logo.Margin = new Thickness(15, 5, OperatingSystem.IsMacOS() ? -150 : 0, 0);
+        MacosButtonsMargin.IsVisible = OperatingSystem.IsMacOS();
 
         Api.OnNetworkError += OnApiNetworkError;
         Api.OnNetworkSuccess += OnApiNetworkSuccess;

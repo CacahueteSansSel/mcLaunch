@@ -10,6 +10,8 @@ using Cacahuete.MinecraftLib.Http;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
+using mcLaunch.GitHub;
+using mcLaunch.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
@@ -28,9 +30,11 @@ public partial class MainWindow : Window
         SetTitle("mcLaunch");
 
         if (OperatingSystem.IsLinux())
+        {
             // Hide the top header bar on Linux, because we can't have borderless windows on Linux with Avalonia
             // apparently
             TopHeaderBar.IsVisible = false;
+        }
 
         UpdateBar.IsVisible = false;
         Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch", CurrentBuild.Version.ToString()));

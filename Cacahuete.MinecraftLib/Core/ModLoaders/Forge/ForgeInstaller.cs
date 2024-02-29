@@ -15,6 +15,9 @@ public static class ForgeInstaller
     {
         // Install the vanilla minecraft version files (jar & json)
         await Context.Downloader.BeginSectionAsync($"{slug} {installerFile.Name.Trim()}", false);
+        
+        // An attempt to fix the "java opens in TextEdit" bug
+        if (OperatingSystem.IsMacOS()) File.SetUnixFileMode(jvmExecutablePath, UnixFileMode.UserExecute);
 
         if (installerFile.EmbeddedForgeJarPath != null)
         {
@@ -103,9 +106,9 @@ public static class ForgeInstaller
                 ForgeInstallerFile.LibraryEntry? library = installerFile.GetProcessorLibrary(processor);
                 if (library is null) continue;
 
-                string libraryFilename = $"{minecraftFolderPath}/libraries/{library.ArtifactPath}";
+                string libraryFilename = $"libraries/{library.ArtifactPath}";
 
-                using var zip = new ZipArchive(new FileStream(libraryFilename, FileMode.Open));
+                using var zip = new ZipArchive(new FileStream($"{minecraftFolderPath}/{libraryFilename}", FileMode.Open));
                 var dict = MetaInfParser.Parse(zip);
                 string mainClass = dict["Main-Class"];
                 string procClassPath = string.Join(Path.PathSeparator, processor.Classpath
@@ -116,7 +119,8 @@ public static class ForgeInstaller
                 ProcessStartInfo processStartInfo = new()
                 {
                     FileName = jvmExecutablePath,
-                    Arguments = $"-cp {libraryFilename}{Path.PathSeparator}{procClassPath} {mainClass}" +
+                    WorkingDirectory = minecraftFolderPath,
+                    Arguments = $"-cp \"{libraryFilename}{Path.PathSeparator}{procClassPath}\" {mainClass}" +
                                 $" {string.Join(' ', arguments)}",
                     UseShellExecute = false
                 };
@@ -162,13 +166,14 @@ public static class ForgeInstaller
             {
                 if (!args[i].Contains($"{{{kv.Key}}}")) continue;
 
-                finalArgs[i] = args[i].Replace($"{{{kv.Key}}}", kv.Value);
+                finalArgs[i] = args[i].Replace($"{{{kv.Key}}}", kv.Value.Contains(' ') 
+                    ? $"\"{kv.Value}\"" : kv.Value);
                 break;
             }
 
             // We need to transform every maven thing into proper paths
             if (finalArgs[i].StartsWith('[') && finalArgs[i].EndsWith(']'))
-                finalArgs[i] = $"{minecraftFolderPath}/libraries/{new LibraryName(finalArgs[i]).MavenFilename}";
+                finalArgs[i] = $"\"{minecraftFolderPath}/libraries/{new LibraryName(finalArgs[i]).MavenFilename}\"";
         }
 
         return finalArgs;

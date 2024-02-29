@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.Settings;
+using mcLaunch.Views.Windows;
 
 namespace mcLaunch.Views.Pages;
 
@@ -40,5 +41,10 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
     private void CrashLauncherButtonClicked(object? sender, RoutedEventArgs e)
     {
         throw new Exception("That's an user-triggered exception");
+    }
+
+    private void AboutButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        new AboutWindow().Show(MainWindow.Instance);
     }
 }

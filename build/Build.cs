@@ -90,7 +90,8 @@ class Build : NukeBuild
             })!.WaitForExit();
 
             // macOS
-            BuildMacOSBundle();
+            BuildMacOSBundle(outputDirPath, "arm64"); // Apple Silicon
+            BuildMacOSBundle(outputDirPath, "x64"); // Intel
 
             // Linux
             Process.Start(new ProcessStartInfo
@@ -152,7 +153,7 @@ class Build : NukeBuild
     /// - Microsoft VSCode           https://nuke.build/vscode
     public static int Main() => Execute<Build>(x => x.Publish);
 
-    void BuildMacOSBundle()
+    void BuildMacOSBundle(string outputDir, string arch = "arm64")
     {
         /*
             Process.Start(new ProcessStartInfo
@@ -163,7 +164,7 @@ class Build : NukeBuild
             })!.WaitForExit();
             */
 
-        string path = Solution.Directory / "output" / "macos" / "mcLaunch.app";
+        string path = Solution.Directory / "output" / "macos" / arch / "mcLaunch.app";
         Directory.CreateDirectory(path);
         Directory.CreateDirectory($"{path}/Contents/MacOS");
         Directory.CreateDirectory($"{path}/Contents/Resources");
@@ -172,7 +173,7 @@ class Build : NukeBuild
         {
             FileName = "dotnet",
             WorkingDirectory = Solution.GetProject("mcLaunch")!.Directory,
-            Arguments = $"publish -c Release -r osx-arm64 -p:PublishSingleFile=true --sc -o \"{path}/Contents/MacOS\""
+            Arguments = $"publish -c Release -r osx-{arch} -p:PublishSingleFile=true --sc -o \"{path}/Contents/MacOS\""
         })!.WaitForExit();
 
         if (!OperatingSystem.IsWindows())
@@ -184,5 +185,7 @@ class Build : NukeBuild
             $"{path}/Contents/Info.plist", true);
         File.Copy(Solution.GetProject("mcLaunch")!.Directory / "resources" / "Icons.icns",
             $"{path}/Contents/Resources/mcLaunch.icns", true);
+        
+        ZipFile.CreateFromDirectory(path, $"{outputDir}/mcLaunch-{arch}.app");
     }
 }

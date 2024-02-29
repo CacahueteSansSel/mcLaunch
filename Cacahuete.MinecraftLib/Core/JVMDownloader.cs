@@ -34,8 +34,16 @@ public class JVMDownloader
         return $"{BasePath}/{name}/{platform}";
     }
 
-    public string GetJVMExecutablePath(string platform, string name)
+    public string GetAndPrepareJvmExecPath(string platform, string name)
     {
+        if (OperatingSystem.IsMacOS())
+        {
+            string path = $"{BasePath}/{name}/{platform}/jre.bundle/Contents/Home/bin/java";
+            //File.SetUnixFileMode(path, UnixFileMode.UserExecute);
+            
+            return path;
+        }
+        
         return $"{BasePath}/{name}/{platform}/bin/{(OperatingSystem.IsWindows() ? "javaw.exe" : "java")}";
     }
 
@@ -75,6 +83,16 @@ public class JVMDownloader
                     if (file.Executable) await Context.Downloader.ChmodAsync(fullPath, "+x");
                     break;
             }
+        }
+
+        if (OperatingSystem.IsMacOS())
+        {
+            // On macOS, we have a .bundle folder
+            // We need to make the java executable inside this bundle folder executable
+
+            string macosJavaPath = $"{targetPath}/jre.bundle/Contents/Home/bin/java";
+            
+            await Context.Downloader.ChmodAsync(macosJavaPath, "+x");
         }
     }
 }

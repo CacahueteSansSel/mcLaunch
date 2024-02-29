@@ -41,11 +41,11 @@ public static class PlatformSpecific
 
         if (OperatingSystem.IsMacOS())
         {
-            Process.Start("open", path);
+            Process.Start("open", $"\"{path}\"");
             return;
         }
 
-        if (OperatingSystem.IsLinux()) Process.Start("xdg-open", path);
+        if (OperatingSystem.IsLinux()) Process.Start("xdg-open", $"\"{path}\"");
     }
 
     public static void OpenFile(string path)
@@ -62,11 +62,11 @@ public static class PlatformSpecific
 
         if (OperatingSystem.IsMacOS())
         {
-            Process.Start("open", path);
+            Process.Start("open", $"\"{path}\"");
             return;
         }
 
-        if (OperatingSystem.IsLinux()) Process.Start("xdg-open", path);
+        if (OperatingSystem.IsLinux()) Process.Start("xdg-open", $"\"{path}\"");
     }
 
     public static void OpenUrl(string url)
