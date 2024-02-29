@@ -120,7 +120,7 @@ public static class ForgeInstaller
                 {
                     FileName = jvmExecutablePath,
                     WorkingDirectory = minecraftFolderPath,
-                    Arguments = $"-cp {libraryFilename}{Path.PathSeparator}{procClassPath} {mainClass}" +
+                    Arguments = $"-cp \"{libraryFilename}{Path.PathSeparator}{procClassPath}\" {mainClass}" +
                                 $" {string.Join(' ', arguments)}",
                     UseShellExecute = false
                 };
