@@ -18,10 +18,6 @@ public partial class VersionSelectWindow : Window
     {
         InitializeComponent();
 
-#if DEBUG
-        this.AttachDevTools();
-#endif
-
         versions = Settings.Instance.EnableSnapshots
             ? MinecraftManager.Manifest!.Versions
             : MinecraftManager.ManifestVersions;

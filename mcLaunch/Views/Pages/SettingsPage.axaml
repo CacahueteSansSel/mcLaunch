@@ -18,7 +18,7 @@
                     <TextBlock Classes="title" Margin="15 0 0 0" FontSize="30">Settings</TextBlock>
                 </StackPanel>
                 <StackPanel x:Name="SettingsRoot" Margin="0 10 0 0" Spacing="10" Width="888" />
-                <StackPanel Margin="0 20 0 0" Spacing="5" Width="888" Orientation="Vertical">
+                <StackPanel Margin="0 20 0 20" Spacing="5" Width="888" Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="10"
                                 HorizontalAlignment="Left">
                         <Image Source="/resources/logo_big.png" Height="20" HorizontalAlignment="Left" />
@@ -29,6 +29,7 @@
                     <TextBlock>Licensed under the GNU General Public License v3.0</TextBlock>
                     <TextBlock>Minecraft is the property of Mojang Studios, and they are not affiliated with this project</TextBlock>
                     <StackPanel Orientation="Horizontal" Spacing="5">
+                        <Button Classes="secondary" Click="AboutButtonClicked" Margin="0 0 5 0">About</Button>
                         <Button Classes="secondary" Click="OpenGithubRepoButtonClicked">GitHub</Button>
                         <Button Classes="secondary" Click="CrashLauncherButtonClicked">Crash</Button>
                     </StackPanel>

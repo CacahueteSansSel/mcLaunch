@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="400"
+        Width="300" Height="400" CanResize="False"
+        x:Class="mcLaunch.Views.Windows.AboutWindow"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
+        Title="About mcLaunch"
+        Icon="/resources/icon.ico"
+        Background="{DynamicResource BackgroundDarker}">
+    <Window.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+    </Window.Styles>
+    <Border Classes="frame">
+        <Panel>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" Spacing="5">
+                <Image Source="/resources/icon.png" Margin="0 0 0 20" Width="128"></Image>
+                <TextBlock x:Name="VersionText" TextAlignment="Center" FontSize="17">mcLaunch v0.0.0</TextBlock>
+                <TextBlock TextAlignment="Center" Classes="light" Margin="0 0 0 20" FontSize="15" TextWrapping="Wrap">A Minecraft launcher that puts your Minecraft in a box 📦</TextBlock>
+                <TextBlock x:Name="BuildInfoText" TextAlignment="Center" Classes="light" FontSize="12">commit xxxx • linux • .NET 8.0.0</TextBlock>
+                <Button Click="GitHubButtonClicked" HorizontalAlignment="Center" Classes="secondary" Margin="0 20 0 0">GitHub</Button>
+            </StackPanel>
+        </Panel>
+    </Border>
+</Window>

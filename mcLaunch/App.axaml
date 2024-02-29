@@ -1,6 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="mcLaunch.App"
+             Name="mcLaunch"
              RequestedThemeVariant="Dark">
     <Application.Styles>
         <FluentTheme>
@@ -25,4 +26,9 @@
         <SolidColorBrush x:Key="DarkerAccent">#006035</SolidColorBrush>
         <SolidColorBrush x:Key="WarningAccent">#AF3400</SolidColorBrush>
     </Application.Resources>
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="About mcLaunch" Command="{Binding AboutCommand}" />
+        </NativeMenu>
+    </NativeMenu.Menu>
 </Application>

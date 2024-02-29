@@ -10,6 +10,8 @@ using Cacahuete.MinecraftLib.Http;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
+using mcLaunch.GitHub;
+using mcLaunch.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;

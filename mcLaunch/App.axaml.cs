@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reactive;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia;
@@ -10,6 +11,8 @@ using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Managers;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
+using mcLaunch.Views.Windows;
+using ReactiveUI;
 
 namespace mcLaunch;
 
@@ -54,9 +57,26 @@ public class App : Application
     {
         InitManagers();
 
+        DataContext = new AppDataContext();
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             desktop.MainWindow = new MainWindow();
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    public class AppDataContext
+    {
+        public ReactiveCommand<Unit, Unit> AboutCommand { get; set; }
+
+        public AppDataContext()
+        {
+            AboutCommand = ReactiveCommand.Create(ShowAboutWindow);
+        }
+
+        void ShowAboutWindow()
+        {
+            new AboutWindow().Show(MainWindow.Instance);
+        }
     }
 }
