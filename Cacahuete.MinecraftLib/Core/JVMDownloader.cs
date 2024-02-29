@@ -76,5 +76,15 @@ public class JVMDownloader
                     break;
             }
         }
+
+        if (OperatingSystem.IsMacOS())
+        {
+            // On macOS, we have a .bundle folder
+            // We need to make the java executable inside this bundle folder executable
+
+            string macosJavaPath = $"{targetPath}/jre.bundle/Contents/Home/bin/java";
+            
+            await Context.Downloader.ChmodAsync(macosJavaPath, "+x");
+        }
     }
 }
