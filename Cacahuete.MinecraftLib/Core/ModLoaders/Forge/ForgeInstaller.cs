@@ -166,7 +166,8 @@ public static class ForgeInstaller
             {
                 if (!args[i].Contains($"{{{kv.Key}}}")) continue;
 
-                finalArgs[i] = args[i].Replace($"{{{kv.Key}}}", kv.Value);
+                finalArgs[i] = args[i].Replace($"{{{kv.Key}}}", kv.Value.Contains(' ') 
+                    ? $"\"{kv.Value}\"" : kv.Value);
                 break;
             }
 
