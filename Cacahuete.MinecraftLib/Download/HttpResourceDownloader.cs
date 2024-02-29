@@ -63,4 +63,9 @@ public class HttpResourceDownloader : ResourceDownloader
     {
         // Not supported: only used by downloaders with a download queue
     }
+
+    public override async Task WaitForPendingProcessesAsync()
+    {
+        // Not supported: only used by downloaders with a download queue
+    }
 }

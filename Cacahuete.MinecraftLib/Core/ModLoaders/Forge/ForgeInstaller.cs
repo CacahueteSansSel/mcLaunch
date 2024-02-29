@@ -10,7 +10,7 @@ namespace Cacahuete.MinecraftLib.Core.ModLoaders.Forge;
 
 public static class ForgeInstaller
 {
-    public static async Task<ForgeInstallResult> InstallAsync(ForgeInstallerFile installerFile,
+    public static async Task<Result<ForgeInstallResult>> InstallAsync(ForgeInstallerFile installerFile,
         string minecraftFolderPath, string jvmExecutablePath, string tempPath, string slug = "Forge")
     {
         // Install the vanilla minecraft version files (jar & json)
@@ -31,7 +31,7 @@ public static class ForgeInstaller
             if (!installerFile.IsV2)
             {
                 await Context.Downloader.EndSectionAsync(false);
-                return new ForgeInstallResult(installerFile.Version);
+                return new Result<ForgeInstallResult>(new ForgeInstallResult(installerFile.Version));
             }
         }
 
@@ -43,6 +43,16 @@ public static class ForgeInstaller
             Directory.CreateDirectory(forgeVersionPath);
             File.Copy($"{vanillaVersionPath}/{installerFile.MinecraftVersionId}.jar",
                 $"{forgeVersionPath}/{installerFile.Version.Id}.jar", true);
+        }
+        else
+        {
+            await Context.Downloader.EndSectionAsync(false);
+            
+            return Result<ForgeInstallResult>.Error(
+                $"The {slug} installer needs the base vanilla version {installerFile.MinecraftVersionId} and it" +
+                $" is not installed right now. You shouldn't see this message as mcLaunch should download it" +
+                $" automatically. You can manually download Minecraft {installerFile.MinecraftVersionId} via" +
+                $" running a vanilla FastLaunch instance or creating a new vanilla box");
         }
 
         foreach (ForgeInstallerFile.LibraryEntry library in installerFile.Libraries)
@@ -83,41 +93,62 @@ public static class ForgeInstaller
             variables[kv.Key] = $"{tempPath}/{value}";
         }
 
-        int processorCount = 0;
-        foreach (ForgeInstallerFile.PostProcessor processor in installerFile.Processors)
+        bool error = false;
+        for (int retryCount = 0; retryCount < 5; retryCount++)
         {
-            ForgeInstallerFile.LibraryEntry? library = installerFile.GetProcessorLibrary(processor);
-            if (library is null) continue;
-
-            string libraryFilename = $"{minecraftFolderPath}/libraries/{library.ArtifactPath}";
-
-            using var zip = new ZipArchive(new FileStream(libraryFilename, FileMode.Open));
-            var dict = MetaInfParser.Parse(zip);
-            string mainClass = dict["Main-Class"];
-            string procClassPath = string.Join(Path.PathSeparator, processor.Classpath
-                .Select(cp =>
-                    cp.Contains(':') ? $"{minecraftFolderPath}/libraries/{new LibraryName(cp).MavenFilename}" : cp));
-            string[] arguments = BuildArgumentList(processor.Arguments, variables, minecraftFolderPath);
-
-            ProcessStartInfo processStartInfo = new()
+            int processorCount = 0;
+            
+            foreach (ForgeInstallerFile.PostProcessor processor in installerFile.Processors)
             {
-                FileName = jvmExecutablePath,
-                Arguments = $"-cp {libraryFilename}{Path.PathSeparator}{procClassPath} {mainClass}" +
-                            $" {string.Join(' ', arguments)}",
-                UseShellExecute = false
-            };
+                ForgeInstallerFile.LibraryEntry? library = installerFile.GetProcessorLibrary(processor);
+                if (library is null) continue;
 
-            Process process = Process.Start(processStartInfo)!;
-            await process.WaitForExitAsync();
+                string libraryFilename = $"{minecraftFolderPath}/libraries/{library.ArtifactPath}";
 
-            await Context.Downloader.SetSectionProgressAsync(processor.JarName.Name,
-                (float) processorCount / installerFile.Processors.Count);
-            processorCount++;
+                using var zip = new ZipArchive(new FileStream(libraryFilename, FileMode.Open));
+                var dict = MetaInfParser.Parse(zip);
+                string mainClass = dict["Main-Class"];
+                string procClassPath = string.Join(Path.PathSeparator, processor.Classpath
+                    .Select(cp =>
+                        cp.Contains(':') ? $"{minecraftFolderPath}/libraries/{new LibraryName(cp).MavenFilename}" : cp));
+                string[] arguments = BuildArgumentList(processor.Arguments, variables, minecraftFolderPath);
+
+                ProcessStartInfo processStartInfo = new()
+                {
+                    FileName = jvmExecutablePath,
+                    Arguments = $"-cp {libraryFilename}{Path.PathSeparator}{procClassPath} {mainClass}" +
+                                $" {string.Join(' ', arguments)}",
+                    UseShellExecute = false
+                };
+
+                Process process = Process.Start(processStartInfo)!;
+                await process.WaitForExitAsync();
+
+                if (process.ExitCode != 0)
+                {
+                    error = true;
+                    break;
+                }
+
+                await Context.Downloader.SetSectionProgressAsync(processor.JarName.Name,
+                    (float) processorCount / installerFile.Processors.Count);
+                processorCount++;
+            }
+
+            if (error) continue;
+            
+            break;
+        }
+
+        if (error)
+        {
+            return Result<ForgeInstallResult>.Error("One or more installer processor failed to execute properly. " +
+                                                    "This is a problem within mcLaunch, please report it to CacahueteDev");
         }
 
         await Context.Downloader.EndSectionAsync(true);
 
-        return new ForgeInstallResult(installerFile.Version);
+        return new Result<ForgeInstallResult>(new ForgeInstallResult(installerFile.Version));
     }
 
     static string[] BuildArgumentList(string[] args, Dictionary<string, string> variables, string minecraftFolderPath)

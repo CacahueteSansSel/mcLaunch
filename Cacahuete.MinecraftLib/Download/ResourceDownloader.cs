@@ -14,4 +14,5 @@ public abstract class ResourceDownloader
     public abstract Task EndSectionAsync(bool immediate);
     public abstract Task SetSectionProgressAsync(string itemName, float progressPercent);
     public abstract Task FlushAsync();
+    public abstract Task WaitForPendingProcessesAsync();
 }

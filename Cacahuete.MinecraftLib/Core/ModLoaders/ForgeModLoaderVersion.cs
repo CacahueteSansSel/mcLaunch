@@ -26,6 +26,8 @@ public class ForgeModLoaderVersion : ModLoaderVersion
     protected async Task<Result<MinecraftVersion>> GetForgeMinecraftVersionAsync(string minecraftVersionId,
         string[] installerUrls, string slug)
     {
+        await Context.Downloader.WaitForPendingProcessesAsync();
+        
         string versionName = $"{MinecraftVersion}-{slug.ToLower()}-{Name}";
 
         if (File.Exists($"{SystemFolderPath}/versions/{versionName}/{versionName}.jar") &&
@@ -72,8 +74,10 @@ public class ForgeModLoaderVersion : ModLoaderVersion
             await Context.Downloader.FlushAsync();
         }
 
-        ForgeInstallResult result = await ForgeInstaller.InstallAsync(new ForgeInstallerFile(fullPath),
+        Result<ForgeInstallResult> result = await ForgeInstaller.InstallAsync(new ForgeInstallerFile(fullPath),
             SystemFolderPath, JvmExecutablePath, $"{SystemFolderPath}/temp", slug);
-        return new Result<MinecraftVersion>(result.MinecraftVersion);
+        if (result.IsError) return new Result<MinecraftVersion>(result);
+        
+        return new Result<MinecraftVersion>(result.Data!.MinecraftVersion);
     }
 }

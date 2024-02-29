@@ -303,6 +303,8 @@ public static class DownloadManager
             await ProcessAll();
         }
 
+        public override Task WaitForPendingProcessesAsync() => WaitForPendingProcesses();
+
         public override async Task SetSectionProgressAsync(string itemName, float progressPercent)
         {
             OnDownloadProgressUpdate?.Invoke(itemName, progressPercent, 0);

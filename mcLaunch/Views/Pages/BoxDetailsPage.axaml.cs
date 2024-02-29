@@ -178,7 +178,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         else if (serverAddress != null) java = Box.Run(serverAddress, serverPort ?? "25565");
         else java = Box.Run();
 
-        await Task.Delay(500);
+        await Task.Delay(1000);
 
         if (java.HasExited)
         {
