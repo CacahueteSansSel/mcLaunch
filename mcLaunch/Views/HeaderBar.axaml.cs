@@ -14,7 +14,7 @@ public partial class HeaderBar : UserControl
         if (OperatingSystem.IsMacOS())
         {
             MacosButtonsMargin.IsVisible = true;
-            HeaderPanel.Margin = new Thickness(0, -5f, 0, 5);
+            HeaderPanel.Margin = new Thickness(0, -8f, 0, 8);
         }
 
         Api.OnNetworkError += OnApiNetworkError;
