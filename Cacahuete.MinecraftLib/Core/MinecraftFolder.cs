@@ -20,9 +20,12 @@ public class MinecraftFolder
         return Directory.Exists($"{Path}/versions/{id}") && File.Exists($"{Path}/versions/{id}/{id}.jar");
     }
 
+    public string GetVersionPath(string id)
+        => $"{Path}/versions/{id}";
+
     public MinecraftVersion? GetVersion(string id)
     {
-        return JsonSerializer.Deserialize<MinecraftVersion>(File.ReadAllText($"{Path}/versions/{id}/{id}.json"));
+        return JsonSerializer.Deserialize<MinecraftVersion>(File.ReadAllText($"{GetVersionPath(id)}/{id}.json"));
     }
 
     public MinecraftVersion[] GetLocalVersions()

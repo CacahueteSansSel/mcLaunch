@@ -116,7 +116,13 @@
                                                RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
                                                Height="13" />
                                     </Button>
-                                    <Button Classes="transparent" Click="SubControlModButtonClicked"
+                                    <Button x:Name="DirectJarModsButton" IsVisible="False" Classes="transparent"
+                                            Click="SubControlDirectJarButtonClicked" ToolTip.Tip="Direct Jar Mods">
+                                        <Image Source="/resources/icons/directjar.png"
+                                               RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
+                                               Height="13" />
+                                    </Button>
+                                    <Button x:Name="ModsButton" Classes="transparent" Click="SubControlModButtonClicked"
                                             ToolTip.Tip="Manage mods">
                                         <Image Source="/resources/icons/mod.png"
                                                RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"

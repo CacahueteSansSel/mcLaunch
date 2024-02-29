@@ -124,6 +124,7 @@ public class Minecraft
         else jvmPath += "/bin/java";
 
         args["assets_root"] = assetsRoot;
+        args["game_assets"] = assetsRoot; // Fix for older versions
         args["assets_index_name"] = Version.AssetIndex.Id;
         args["classpath"] = classPath + Path.GetFullPath(jarPath);
         args["classpath_separator"] = classPathSeparator;

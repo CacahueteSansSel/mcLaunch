@@ -203,6 +203,10 @@
         <AvaloniaResource Include="resources\icons\backups.png" />
         <None Remove="resources\default_backup_logo.png" />
         <AvaloniaResource Include="resources\default_backup_logo.png" />
+        <None Remove="resources\icons\directjar.png" />
+        <AvaloniaResource Include="resources\icons\directjar.png" />
+        <None Remove="resources\default_directjar_logo.png" />
+        <AvaloniaResource Include="resources\default_directjar_logo.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -263,6 +267,10 @@
         <Compile Update="Views\Popups\NewBackupPopup.axaml.cs">
             <DependentUpon>NewBackupPopup.axaml</DependentUpon>
             <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Pages\BoxDetails\DirectJarModsSubControl.axaml.cs">
+          <DependentUpon>DirectJarModsSubControl.axaml</DependentUpon>
+          <SubType>Code</SubType>
         </Compile>
     </ItemGroup>
 

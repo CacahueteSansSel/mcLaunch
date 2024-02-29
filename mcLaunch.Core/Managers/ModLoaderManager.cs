@@ -31,6 +31,9 @@ public static class ModLoaderManager
 
         // Quilt
         All.Add(new QuiltModLoaderSupport());
+
+        // Direct Jar Merging
+        All.Add(new DirectJarMergingModLoaderSupport());
     }
 
     public static bool IsModLoaderName(string name)

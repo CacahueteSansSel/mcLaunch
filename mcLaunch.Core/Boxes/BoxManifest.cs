@@ -51,6 +51,7 @@ public class BoxManifest : ReactiveObject
 
     [JsonPropertyName("Modifications")] // For compatibility reasons
     public List<BoxStoredContent> Content { get; set; } = [];
+    public List<string> AdditionalModloaderFiles { get; set; } = [];
 
     [JsonIgnore]
     public IEnumerable<BoxStoredContent> ContentModifications =>
@@ -194,10 +195,12 @@ public class BoxManifest : ReactiveObject
         MinecraftVersion mcVersion =
             await MinecraftManager.Manifest.Get(Version).DownloadOrGetLocally(BoxManager.SystemFolder);
 
+        if (ModLoader != null) mcVersion = await ModLoader.PostProcessMinecraftVersionAsync(mcVersion);
+
         await BoxManager.SetupVersionAsync(mcVersion, downloadAllAfter: false);
 
         ModLoaderSupport modLoader = ModLoader;
-        if (modLoader != null && modLoader is not VanillaModLoaderSupport)
+        if (modLoader != null && modLoader.Type == "modded")
         {
             ModLoaderVersion[]? versions = await modLoader.GetVersionsAsync(Version);
             ModLoaderVersion version = versions.FirstOrDefault(v => v.Name == ModLoaderVersion);

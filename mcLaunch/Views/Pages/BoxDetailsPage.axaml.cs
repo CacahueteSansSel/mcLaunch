@@ -9,6 +9,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Cacahuete.MinecraftLib.Core;
+using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
@@ -88,6 +89,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         ReadmeButton.IsVisible = Box.HasReadmeFile;
         CrashReportButton.IsVisible = Box.HasCrashReports;
+        ModsButton.IsVisible = Box.ModLoader is not DirectJarMergingModLoaderSupport;
+        DirectJarModsButton.IsVisible = Box.ModLoader is DirectJarMergingModLoaderSupport;
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -344,6 +347,11 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     private void SubControlBackupsClicked(object? sender, RoutedEventArgs e)
     {
         SetSubControl(new BackupListSubControl());
+    }
+
+    private void SubControlDirectJarButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        SetSubControl(new DirectJarModsSubControl());
     }
 
     private async void MinecraftButtonClicked(object? sender, RoutedEventArgs e)

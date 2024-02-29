@@ -539,7 +539,7 @@ public class Box : IEquatable<Box>
         Minecraft = new Minecraft(Version, Folder)
             .WithSystemFolder(BoxManager.SystemFolder)
             .WithUseDedicatedGraphics(UseDedicatedGraphics)
-            .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher 
+            .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher
                                                                     && (ModLoader?.SupportsLauncherExposure ?? true))
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
             .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader);
@@ -555,6 +555,18 @@ public class Box : IEquatable<Box>
     public void SetLauncherVersion(string version)
     {
         launcherVersion = version;
+    }
+
+    public void AddDirectJarMod(string filename)
+    {
+        if (!Directory.Exists($"{Path}/directjar"))
+            Directory.CreateDirectory($"{Path}/directjar");
+
+        string relativePath = $"directjar/{System.IO.Path.GetFileName(filename)}";
+        File.Copy(filename, $"{Path}/{relativePath}");
+
+        Manifest.AdditionalModloaderFiles.Add(relativePath);
+        SaveManifest();
     }
 
     public List<string> GetUnlistedMods()
@@ -626,11 +638,15 @@ public class Box : IEquatable<Box>
     {
         Result result = await SetupVersionAsync();
         if (result.IsError) return result;
-        
+
         result = await CreateMinecraftAsync();
         if (result.IsError) return result;
 
         await BoxManager.SetupVersionAsync(Version);
+        result = await ModLoader!.FinalizeMinecraftInstallationAsync(
+            $"{BoxManager.SystemFolder.GetVersionPath(Version.Id)}/{Version.Id}.jar",
+            Manifest.AdditionalModloaderFiles.Select(filename => $"{Path}/{filename}").ToArray());
+        if (result.IsError) return result;
 
         return new Result();
     }
