@@ -61,4 +61,4 @@ Libraries used by the project :
 + [DiscordRichPresence](https://github.com/Lachee/discord-rpc-csharp) (for Discord Rich Presence)
 
 This project takes huge inspiration of :
-+ [portablemc](https://github.com/mindstorm38/portablemc) (general Minecraft launcher stuff + Forge installer wrapper code)
++ [portablemc](https://github.com/mindstorm38/portablemc) (general Minecraft launcher stuff + basis of the new Forge installer code)
