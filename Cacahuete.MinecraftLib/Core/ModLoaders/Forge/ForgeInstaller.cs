@@ -172,7 +172,7 @@ public static class ForgeInstaller
 
             // We need to transform every maven thing into proper paths
             if (finalArgs[i].StartsWith('[') && finalArgs[i].EndsWith(']'))
-                finalArgs[i] = $"{minecraftFolderPath}/libraries/{new LibraryName(finalArgs[i]).MavenFilename}";
+                finalArgs[i] = $"\"{minecraftFolderPath}/libraries/{new LibraryName(finalArgs[i]).MavenFilename}\"";
         }
 
         return finalArgs;
