@@ -39,7 +39,7 @@ public class JVMDownloader
         if (OperatingSystem.IsMacOS())
         {
             string path = $"{BasePath}/{name}/{platform}/jre.bundle/Contents/Home/bin/java";
-            File.SetUnixFileMode(path, UnixFileMode.UserExecute);
+            //File.SetUnixFileMode(path, UnixFileMode.UserExecute);
             
             return path;
         }
