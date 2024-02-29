@@ -106,7 +106,7 @@ public static class ForgeInstaller
                 ForgeInstallerFile.LibraryEntry? library = installerFile.GetProcessorLibrary(processor);
                 if (library is null) continue;
 
-                string libraryFilename = $"{minecraftFolderPath}/libraries/{library.ArtifactPath}";
+                string libraryFilename = $"libraries/{library.ArtifactPath}";
 
                 using var zip = new ZipArchive(new FileStream(libraryFilename, FileMode.Open));
                 var dict = MetaInfParser.Parse(zip);
@@ -119,6 +119,7 @@ public static class ForgeInstaller
                 ProcessStartInfo processStartInfo = new()
                 {
                     FileName = jvmExecutablePath,
+                    WorkingDirectory = minecraftFolderPath,
                     Arguments = $"-cp \"{libraryFilename}{Path.PathSeparator}{procClassPath}\" {mainClass}" +
                                 $" {string.Join(' ', arguments)}",
                     UseShellExecute = false
