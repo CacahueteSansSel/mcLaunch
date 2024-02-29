@@ -12,7 +12,7 @@ public class ForgeModLoaderVersion : ModLoaderVersion
     public string JvmExecutablePath { get; set; }
     public string SystemFolderPath { get; init; }
 
-    public override async Task<MinecraftVersion?> GetMinecraftVersionAsync(string minecraftVersionId)
+    public override async Task<Result<MinecraftVersion>> GetMinecraftVersionAsync(string minecraftVersionId)
     {
         string[] installerUrls =
         {
@@ -23,8 +23,8 @@ public class ForgeModLoaderVersion : ModLoaderVersion
 
         if (File.Exists($"{SystemFolderPath}/versions/{versionName}/{versionName}.jar") &&
             File.Exists($"{SystemFolderPath}/versions/{versionName}/{versionName}.json"))
-            return JsonSerializer.Deserialize<MinecraftVersion>(
-                await File.ReadAllTextAsync($"{SystemFolderPath}/versions/{versionName}/{versionName}.json"));
+            return new Result<MinecraftVersion>(JsonSerializer.Deserialize<MinecraftVersion>(
+                await File.ReadAllTextAsync($"{SystemFolderPath}/versions/{versionName}/{versionName}.json")));
 
         HttpClient client = new HttpClient();
         client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("mcLaunch", "1.0.0"));
@@ -41,27 +41,32 @@ public class ForgeModLoaderVersion : ModLoaderVersion
             foreach (string installerUrl in installerUrls)
             {
                 CancellationTokenSource cancelSource = new();
-                HttpResponseMessage resp = await client.GetAsync(installerUrl, 
+                HttpResponseMessage resp = await client.GetAsync(installerUrl,
                     HttpCompletionOption.ResponseHeadersRead, cancelSource.Token);
                 if (!resp.IsSuccessStatusCode) continue;
-                
+
                 await cancelSource.CancelAsync();
                 successfulInstallerUrl = installerUrl;
-                
+
                 break;
             }
 
-            if (successfulInstallerUrl == null) throw new Exception("unable to find the Forge installer URL");
+            if (successfulInstallerUrl == null)
+            {
+                return Result<MinecraftVersion>.Error($"The Forge installer file cannot be found for" +
+                                                      $" version {minecraftVersionId} : the version may be too old" +
+                                                      $" or have been deleted since");
+            }
 
             await Context.Downloader.BeginSectionAsync($"Forge {Name} installer", false);
             await Context.Downloader.DownloadAsync(successfulInstallerUrl, fullPath, null);
             await Context.Downloader.EndSectionAsync(false);
-            
+
             await Context.Downloader.FlushAsync();
         }
 
-        ForgeInstallResult result = await ForgeInstaller.InstallAsync(new ForgeInstallerFile(fullPath), 
+        ForgeInstallResult result = await ForgeInstaller.InstallAsync(new ForgeInstallerFile(fullPath),
             SystemFolderPath, JvmExecutablePath, $"{SystemFolderPath}/temp");
-        return result.MinecraftVersion;
+        return new Result<MinecraftVersion>(result.MinecraftVersion);
     }
 }

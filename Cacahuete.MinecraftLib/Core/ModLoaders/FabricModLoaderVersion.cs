@@ -5,11 +5,11 @@ namespace Cacahuete.MinecraftLib.Core.ModLoaders;
 
 public class FabricModLoaderVersion : ModLoaderVersion
 {
-    public override async Task<MinecraftVersion?> GetMinecraftVersionAsync(string minecraftVersionId)
+    public override async Task<Result<MinecraftVersion>> GetMinecraftVersionAsync(string minecraftVersionId)
     {
         string url =
             $"{FabricModLoaderSupport.Url}/v2/versions/loader/{minecraftVersionId}/{Name}/profile/json";
 
-        return await Api.GetAsync<MinecraftVersion>(url, true);
+        return new Result<MinecraftVersion>(await Api.GetAsync<MinecraftVersion>(url, true));
     }
 }

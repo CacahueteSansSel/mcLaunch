@@ -8,6 +8,7 @@ using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using DynamicData;
+using JetBrains.Annotations;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Core;
@@ -406,10 +407,14 @@ public class Box : IEquatable<Box>
             SaveManifest();
     }
 
-    private async Task SetupVersionAsync()
+    private async Task<Result> SetupVersionAsync()
     {
-        if (Version != null) return;
-        Version = await Manifest.Setup();
+        if (Version != null) return new Result();
+        Result<MinecraftVersion> setupResult = await Manifest.Setup();
+        if (setupResult.IsError) return setupResult;
+
+        Version = setupResult.Data!;
+        return new Result();
     }
 
     public async Task<bool> UpdateModAsync(MinecraftContent mod, bool installOptional = false)
@@ -524,11 +529,12 @@ public class Box : IEquatable<Box>
             : Directory.GetFiles($"{Folder.Path}/screenshots", "*.png");
     }
 
-    public async Task CreateMinecraftAsync()
+    public async Task<Result> CreateMinecraftAsync()
     {
-        if (Minecraft != null) return;
+        if (Minecraft != null) return new Result();
 
-        await SetupVersionAsync();
+        Result result = await SetupVersionAsync();
+        if (result.IsError) return result;
 
         Minecraft = new Minecraft(Version, Folder)
             .WithSystemFolder(BoxManager.SystemFolder)
@@ -536,6 +542,8 @@ public class Box : IEquatable<Box>
             .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher)
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
             .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader);
+
+        return new Result();
     }
 
     public void SetExposeLauncher(bool exposeLauncher)
@@ -612,12 +620,18 @@ public class Box : IEquatable<Box>
         Manifest.Background = new Bitmap($"{Path}/background.png");
     }
 
-    public async Task PrepareAsync()
+    [MustUseReturnValue("Use the return value to catch problems if any")]
+    public async Task<Result> PrepareAsync()
     {
-        await SetupVersionAsync();
-        await CreateMinecraftAsync();
+        Result result = await SetupVersionAsync();
+        if (result.IsError) return result;
+        
+        result = await CreateMinecraftAsync();
+        if (result.IsError) return result;
 
         await BoxManager.SetupVersionAsync(Version);
+
+        return new Result();
     }
 
     public async Task<MinecraftContent[]> MigrateToModrinthAsync(Action<BoxStoredContent, int, int> statusCallback)

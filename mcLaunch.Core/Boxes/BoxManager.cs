@@ -77,7 +77,7 @@ public static class BoxManager
         }
     }
 
-    public static async Task<string> Create(BoxManifest manifest)
+    public static async Task<Result<string>> Create(BoxManifest manifest)
     {
         string path = $"{BoxesPath}/{manifest.Id}";
         Directory.CreateDirectory(path);
@@ -92,26 +92,8 @@ public static class BoxManager
             manifest.Icon = await IconCollection.FromFileAsync($"{path}/icon.png");
         }
 
-        if (!Directory.Exists(AppdataFolderManager.GetPath("system/forge")))
-        {
-            // Extract the forge wrapper from resources
-            // This is a copy of portablemc's old wrapper code for the forge installer, along with license
-            // & source code
-            // We might want to find a new way for installing Forge in the future
-            // TODO: Implement a new way for installing Forge
-
-            await using Stream zipStream =
-                AssetLoader.Open(new Uri("avares://mcLaunch/resources/internal/forge_wrapper.zip"));
-            await using MemoryStream tmpStream = new();
-            string forgeWrapperPath = AppdataFolderManager.GetValidPath("system/forge");
-
-            await zipStream.CopyToAsync(tmpStream);
-
-            using ZipArchive zip = new ZipArchive(tmpStream);
-            zip.ExtractToDirectory(forgeWrapperPath, true);
-        }
-
-        await manifest.Setup();
+        var result = await manifest.Setup();
+        if (result.IsError) return new Result<string>(result);
 
         Directory.CreateDirectory($"{path}/minecraft");
 
@@ -120,10 +102,10 @@ public static class BoxManager
 
         await PostProcessBoxAsync(new Box(path), manifest);
 
-        return path;
+        return new Result<string>(path);
     }
 
-    public static async Task<Box> CreateFromModificationPack(ModificationPack pack,
+    public static async Task<Result<Box>> CreateFromModificationPack(ModificationPack pack,
         Action<string, float> progressCallback)
     {
         BoxManifest manifest = new BoxManifest(pack.Name, pack.Description ?? "no description", pack.Author,
@@ -132,9 +114,10 @@ public static class BoxManager
 
         if (pack.Id != null) manifest.Id = pack.Id;
 
-        string path = await Create(manifest);
+        Result<string> path = await Create(manifest);
+        if (path.IsError) return new Result<Box>(path);
 
-        Box box = new Box(manifest, path, false);
+        Box box = new Box(manifest, path.Data!, false);
 
         progressCallback?.Invoke($"Preparing Minecraft {pack.MinecraftVersion} ({pack.ModloaderId.Capitalize()})", 0f);
 
@@ -174,10 +157,10 @@ public static class BoxManager
 
         box.SaveManifest();
 
-        return new Box(manifest, path, false);
+        return new Result<Box>(new Box(manifest, path.Data!, false));
     }
 
-    public static async Task<Box> CreateFromPlatformModpack(PlatformModpack pack,
+    public static async Task<Result<Box>> CreateFromPlatformModpack(PlatformModpack pack,
         PlatformModpack.ModpackVersion version,
         Action<string, float> progressCallback)
     {
@@ -203,15 +186,18 @@ public static class BoxManager
 
         ModificationPack modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
 
-        Box box = await CreateFromModificationPack(modpack,
+        Result<Box> boxResult = await CreateFromModificationPack(modpack,
             (status, percent) => { progressCallback?.Invoke(status, 0.5f + percent); });
+        if (boxResult.IsError) return boxResult;
+
+        Box box = boxResult.Data!;
 
         if (pack.Icon != null) box.SetAndSaveIcon(pack.Icon);
         if (pack.Background != null) box.SetAndSaveBackground(pack.Background);
 
         box.SaveManifest();
 
-        return box;
+        return boxResult;
     }
 
     public static async Task SetupVersionAsync(MinecraftVersion version, string? customName = null,

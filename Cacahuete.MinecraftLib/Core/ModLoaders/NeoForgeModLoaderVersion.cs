@@ -12,7 +12,7 @@ public class NeoForgeModLoaderVersion : ModLoaderVersion
     public string JvmExecutablePath { get; set; }
     public string SystemFolderPath { get; init; }
 
-    public override async Task<MinecraftVersion?> GetMinecraftVersionAsync(string minecraftVersionId)
+    public override async Task<Result<MinecraftVersion>> GetMinecraftVersionAsync(string minecraftVersionId)
     {
         string[] installerUrls =
         {
@@ -24,8 +24,8 @@ public class NeoForgeModLoaderVersion : ModLoaderVersion
 
         if (File.Exists($"{SystemFolderPath}/versions/{versionName}/{versionName}.jar") &&
             File.Exists($"{SystemFolderPath}/versions/{versionName}/{versionName}.json"))
-            return JsonSerializer.Deserialize<MinecraftVersion>(
-                await File.ReadAllTextAsync($"{SystemFolderPath}/versions/{versionName}/{versionName}.json"));
+            return new Result<MinecraftVersion>(JsonSerializer.Deserialize<MinecraftVersion>(
+                await File.ReadAllTextAsync($"{SystemFolderPath}/versions/{versionName}/{versionName}.json")));
 
         HttpClient client = new HttpClient();
         client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("mcLaunch", "1.0.0"));
@@ -74,7 +74,7 @@ public class NeoForgeModLoaderVersion : ModLoaderVersion
 
         await forgeInstaller.WaitForExitAsync();
 
-        return JsonSerializer.Deserialize<MinecraftVersion>(
-            await File.ReadAllTextAsync($"{SystemFolderPath}/versions/{versionName}/{versionName}.json"));
+        return new Result<MinecraftVersion>(JsonSerializer.Deserialize<MinecraftVersion>(
+            await File.ReadAllTextAsync($"{SystemFolderPath}/versions/{versionName}/{versionName}.json")));
     }
 }

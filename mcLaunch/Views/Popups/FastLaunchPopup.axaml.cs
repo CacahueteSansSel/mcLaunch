@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Boxes;
@@ -75,7 +76,15 @@ public partial class FastLaunchPopup : UserControl
         BoxManifest newBoxManifest = new BoxManifest(name, null, "FastLaunch", modloader.Id, modloaderVersions[0].Name,
             null, minecraftVersion, BoxType.Temporary);
 
-        string path = await BoxManager.Create(newBoxManifest);
+        Result<string> pathResult = await BoxManager.Create(newBoxManifest);
+        if (pathResult.IsError)
+        {
+            Navigation.HidePopup();
+            pathResult.ShowErrorPopup();
+            return;
+        }
+        
+        string path = pathResult.Data!;
         Box box = new Box(path);
         box.SetAndSaveIcon(new Bitmap(AssetLoader.Open(
             new Uri("avares://mcLaunch/resources/fastlaunch_box_logo.png"))));

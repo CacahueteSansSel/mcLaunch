@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Avalonia.Media.Imaging;
+using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Core.ModLoaders;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Contents;
@@ -186,9 +187,9 @@ public class BoxManifest : ReactiveObject
         return hadChange;
     }
 
-    public async Task<MinecraftVersion> Setup()
+    public async Task<Result<MinecraftVersion>> Setup()
     {
-        if (setUpVersion != null) return setUpVersion;
+        if (setUpVersion != null) return new Result<MinecraftVersion>(setUpVersion);
 
         MinecraftVersion mcVersion =
             await MinecraftManager.Manifest.Get(Version).DownloadOrGetLocally(BoxManager.SystemFolder);
@@ -202,26 +203,28 @@ public class BoxManifest : ReactiveObject
             ModLoaderVersion version = versions.FirstOrDefault(v => v.Name == ModLoaderVersion);
             if (version == null) version = versions[0];
 
-            MinecraftVersion? mlMcVersion = await version.GetMinecraftVersionAsync(Version);
+            Result<MinecraftVersion> versionResult = await version.GetMinecraftVersionAsync(Version);
+            if (versionResult.IsError) return versionResult;
+
+            MinecraftVersion modloaderVersion = versionResult.Data!;
 
             // Merging
             if (modLoader.NeedsMerging)
-                mlMcVersion = mlMcVersion.Merge(mcVersion);
+                modloaderVersion = modloaderVersion.Merge(mcVersion);
 
             // Install & setup this patched version for the modloader
-            await BoxManager.SetupVersionAsync(mlMcVersion, $"{modLoader.Name} {version.Name}",
+            await BoxManager.SetupVersionAsync(modloaderVersion, $"{modLoader.Name} {version.Name}",
                 false);
 
-            setUpVersion = mlMcVersion;
-
-            return mlMcVersion;
+            setUpVersion = modloaderVersion;
+            return new Result<MinecraftVersion>(setUpVersion);
         }
 
         setUpVersion = mcVersion;
 
         await DownloadManager.ProcessAll();
 
-        return mcVersion;
+        return new Result<MinecraftVersion>(setUpVersion);
     }
 
     public override string ToString()

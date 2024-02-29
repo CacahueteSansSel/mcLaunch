@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Cacahuete.MinecraftLib.Core;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
@@ -164,7 +165,13 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         Box.SetExposeLauncher(Utilities.Settings.Instance.ExposeLauncherNameToMinecraft);
         Box.SetLauncherVersion(CurrentBuild.Version.ToString());
 
-        await Box.PrepareAsync();
+        Result boxPrepareResult = await Box.PrepareAsync();
+        if (boxPrepareResult.IsError)
+        {
+            boxPrepareResult.ShowErrorPopup();
+            return;
+        }
+        
         Process java;
 
         if (world != null) java = Box.Run(world);

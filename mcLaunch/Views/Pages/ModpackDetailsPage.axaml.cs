@@ -4,6 +4,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
+using Cacahuete.MinecraftLib.Core;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Core;
@@ -71,12 +72,18 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
         StatusPopup.Instance.Status = "Downloading...";
         StatusPopup.Instance.ShowDownloadBanner = true;
 
-        Box box = await BoxManager.CreateFromPlatformModpack(modpack, modpackVersion, (msg, percent) =>
+        Result<Box> boxResult = await BoxManager.CreateFromPlatformModpack(modpack, modpackVersion, (msg, percent) =>
         {
             StatusPopup.Instance.Status = $"{msg}";
             StatusPopup.Instance.StatusPercent = percent;
         });
+        if (boxResult.IsError)
+        {
+            boxResult.ShowErrorPopup();
+            return;
+        }
 
+        Box box = boxResult.Data!;
         StatusPopup.Instance.ShowDownloadBanner = false;
 
         Navigation.HidePopup();

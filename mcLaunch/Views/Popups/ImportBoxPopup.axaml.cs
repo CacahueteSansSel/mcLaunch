@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Cacahuete.MinecraftLib.Core;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents.Packs;
 using mcLaunch.Utilities;
@@ -29,7 +30,7 @@ public partial class ImportBoxPopup : UserControl
         Navigation.HidePopup();
     }
 
-    private async void ImportDdLaunchBoxButtonClicked(object? sender, RoutedEventArgs e)
+    private async void ImportMcLaunchBoxButtonClicked(object? sender, RoutedEventArgs e)
     {
         string[] files = await FileSystemUtilities.PickFiles(false, "Import a box file", ["box"]);
         if (files.Length == 0) return;
@@ -40,11 +41,18 @@ public partial class ImportBoxPopup : UserControl
         Navigation.ShowPopup(new StatusPopup($"Importing {bb.Name}", "Please wait for the modpack to be imported"));
         StatusPopup.Instance.ShowDownloadBanner = true;
 
-        Box box = await BoxManager.CreateFromModificationPack(bb, (msg, percent) =>
+        Result<Box> boxResult = await BoxManager.CreateFromModificationPack(bb, (msg, percent) =>
         {
             StatusPopup.Instance.Status = msg;
             StatusPopup.Instance.StatusPercent = percent;
         });
+        if (boxResult.IsError)
+        {
+            boxResult.ShowErrorPopup();
+            return;
+        }
+
+        Box box = boxResult.Data!;
 
         try
         {
@@ -73,11 +81,18 @@ public partial class ImportBoxPopup : UserControl
             "Please wait for the modpack to be imported"));
         StatusPopup.Instance.ShowDownloadBanner = true;
 
-        Box box = await BoxManager.CreateFromModificationPack(modpack, (msg, percent) =>
+        Result<Box> boxResult = await BoxManager.CreateFromModificationPack(modpack, (msg, percent) =>
         {
             StatusPopup.Instance.Status = msg;
             StatusPopup.Instance.StatusPercent = percent;
         });
+        if (boxResult.IsError)
+        {
+            boxResult.ShowErrorPopup();
+            return;
+        }
+
+        Box box = boxResult.Data!;
 
         Navigation.HidePopup();
 
@@ -105,11 +120,18 @@ public partial class ImportBoxPopup : UserControl
 
         StatusPopup.Instance.ShowDownloadBanner = true;
 
-        Box box = await BoxManager.CreateFromModificationPack(modpack, (msg, percent) =>
+        Result<Box> boxResult = await BoxManager.CreateFromModificationPack(modpack, (msg, percent) =>
         {
             StatusPopup.Instance.Status = $"{msg}";
             StatusPopup.Instance.StatusPercent = percent;
         });
+        if (boxResult.IsError)
+        {
+            boxResult.ShowErrorPopup();
+            return;
+        }
+
+        Box box = boxResult.Data!;
 
         Navigation.HidePopup();
 
