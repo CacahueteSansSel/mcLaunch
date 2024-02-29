@@ -15,6 +15,9 @@ public static class ForgeInstaller
     {
         // Install the vanilla minecraft version files (jar & json)
         await Context.Downloader.BeginSectionAsync($"{slug} {installerFile.Name.Trim()}", false);
+        
+        // An attempt to fix the "java opens in TextEdit" bug
+        if (OperatingSystem.IsMacOS()) File.SetUnixFileMode(jvmExecutablePath, UnixFileMode.UserExecute);
 
         if (installerFile.EmbeddedForgeJarPath != null)
         {
@@ -116,7 +119,7 @@ public static class ForgeInstaller
                 ProcessStartInfo processStartInfo = new()
                 {
                     FileName = jvmExecutablePath,
-                    Arguments = $"-cp {libraryFilename}{Path.PathSeparator}{procClassPath} {mainClass}" +
+                    Arguments = $"-cp \"{libraryFilename}{Path.PathSeparator}{procClassPath}\" {mainClass}" +
                                 $" {string.Join(' ', arguments)}",
                     UseShellExecute = false
                 };
