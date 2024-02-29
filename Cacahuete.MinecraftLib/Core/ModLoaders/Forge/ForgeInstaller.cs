@@ -108,7 +108,7 @@ public static class ForgeInstaller
 
                 string libraryFilename = $"libraries/{library.ArtifactPath}";
 
-                using var zip = new ZipArchive(new FileStream(libraryFilename, FileMode.Open));
+                using var zip = new ZipArchive(new FileStream($"{minecraftFolderPath}/{libraryFilename}", FileMode.Open));
                 var dict = MetaInfParser.Parse(zip);
                 string mainClass = dict["Main-Class"];
                 string procClassPath = string.Join(Path.PathSeparator, processor.Classpath
@@ -120,7 +120,7 @@ public static class ForgeInstaller
                 {
                     FileName = jvmExecutablePath,
                     WorkingDirectory = minecraftFolderPath,
-                    Arguments = $"-cp \"{libraryFilename}{Path.PathSeparator}{procClassPath}\" {mainClass}" +
+                    Arguments = $"-cp {libraryFilename}{Path.PathSeparator}{procClassPath} {mainClass}" +
                                 $" {string.Join(' ', arguments)}",
                     UseShellExecute = false
                 };
