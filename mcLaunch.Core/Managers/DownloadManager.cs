@@ -149,7 +149,24 @@ public static class DownloadManager
             if (!Directory.Exists(pathFolders)) Directory.CreateDirectory(pathFolders);
 
             byte[] data = ramStream.ToArray();
-            await File.WriteAllBytesAsync(entry.Target, data);
+
+            bool fileWritten = false;
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    await File.WriteAllBytesAsync(entry.Target, data);
+                    fileWritten = true;
+                    
+                    break;
+                }
+                catch (Exception e)
+                {
+                    await Task.Delay(500);
+                }
+            }
+            if (!fileWritten) throw new Exception($"File {entry.Source} at {entry.Target} download failed : " +
+                                                  $"file can't be accessed");
 
             ramStream.Close();
         }

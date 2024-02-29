@@ -19,7 +19,14 @@ public class ForgeModLoaderVersion : ModLoaderVersion
             $"https://maven.minecraftforge.net/net/minecraftforge/forge/{FullName}/forge-{FullName}-installer.jar",
             $"https://maven.minecraftforge.net/net/minecraftforge/forge/{FullName}-{MinecraftVersion}/forge-{FullName}-{MinecraftVersion}-installer.jar"
         };
-        string versionName = $"{MinecraftVersion}-forge-{Name}";
+
+        return await GetForgeMinecraftVersionAsync(minecraftVersionId, installerUrls, "Forge");
+    }
+
+    protected async Task<Result<MinecraftVersion>> GetForgeMinecraftVersionAsync(string minecraftVersionId,
+        string[] installerUrls, string slug)
+    {
+        string versionName = $"{MinecraftVersion}-{slug.ToLower()}-{Name}";
 
         if (File.Exists($"{SystemFolderPath}/versions/{versionName}/{versionName}.jar") &&
             File.Exists($"{SystemFolderPath}/versions/{versionName}/{versionName}.json"))
@@ -29,7 +36,7 @@ public class ForgeModLoaderVersion : ModLoaderVersion
         HttpClient client = new HttpClient();
         client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("mcLaunch", "1.0.0"));
 
-        string filename = $"forge-{FullName}-installer.jar";
+        string filename = $"{slug.ToLower()}-{FullName}-installer.jar";
         string fullPath = $"{SystemFolderPath}/temp/{filename}";
 
         if (!Directory.Exists($"{SystemFolderPath}/temp"))
@@ -53,12 +60,12 @@ public class ForgeModLoaderVersion : ModLoaderVersion
 
             if (successfulInstallerUrl == null)
             {
-                return Result<MinecraftVersion>.Error($"The Forge installer file cannot be found for" +
+                return Result<MinecraftVersion>.Error($"The {slug} installer file cannot be found for" +
                                                       $" version {minecraftVersionId} : the version may be too old" +
                                                       $" or have been deleted since");
             }
 
-            await Context.Downloader.BeginSectionAsync($"Forge {Name} installer", false);
+            await Context.Downloader.BeginSectionAsync($"{slug} {Name} installer", false);
             await Context.Downloader.DownloadAsync(successfulInstallerUrl, fullPath, null);
             await Context.Downloader.EndSectionAsync(false);
 
@@ -66,7 +73,7 @@ public class ForgeModLoaderVersion : ModLoaderVersion
         }
 
         ForgeInstallResult result = await ForgeInstaller.InstallAsync(new ForgeInstallerFile(fullPath),
-            SystemFolderPath, JvmExecutablePath, $"{SystemFolderPath}/temp");
+            SystemFolderPath, JvmExecutablePath, $"{SystemFolderPath}/temp", slug);
         return new Result<MinecraftVersion>(result.MinecraftVersion);
     }
 }

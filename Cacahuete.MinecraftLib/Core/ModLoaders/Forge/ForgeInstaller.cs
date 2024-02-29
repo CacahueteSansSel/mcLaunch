@@ -11,10 +11,10 @@ namespace Cacahuete.MinecraftLib.Core.ModLoaders.Forge;
 public static class ForgeInstaller
 {
     public static async Task<ForgeInstallResult> InstallAsync(ForgeInstallerFile installerFile,
-        string minecraftFolderPath, string jvmExecutablePath, string tempPath)
+        string minecraftFolderPath, string jvmExecutablePath, string tempPath, string slug = "Forge")
     {
         // Install the vanilla minecraft version files (jar & json)
-        await Context.Downloader.BeginSectionAsync($"Forge {installerFile.Name.Trim()}", false);
+        await Context.Downloader.BeginSectionAsync($"{slug} {installerFile.Name.Trim()}", false);
 
         if (installerFile.EmbeddedForgeJarPath != null)
         {
@@ -65,7 +65,7 @@ public static class ForgeInstaller
         variables.Add("SIDE", "client");
         variables.Add("MINECRAFT_JAR", $"{forgeVersionPath}/{installerFile.Version.Id}.jar");
         
-        await Context.Downloader.BeginSectionAsync($"Installing Forge {installerFile.Name.Trim()}", true);
+        await Context.Downloader.BeginSectionAsync($"Installing {slug} {installerFile.Name.Trim()}", true);
 
         // Extract any needed file in the temp folder
         foreach (var kv in installerFile.DataVariables)
