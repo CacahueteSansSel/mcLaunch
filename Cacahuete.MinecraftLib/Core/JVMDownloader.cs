@@ -36,6 +36,9 @@ public class JVMDownloader
 
     public string GetJVMExecutablePath(string platform, string name)
     {
+        if (OperatingSystem.IsMacOS())
+            return $"{BasePath}/{name}/{platform}/jre.bundle/Contents/Home/bin/java";
+        
         return $"{BasePath}/{name}/{platform}/bin/{(OperatingSystem.IsWindows() ? "javaw.exe" : "java")}";
     }
 
