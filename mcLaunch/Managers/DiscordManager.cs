@@ -10,7 +10,7 @@ public static class DiscordManager
 {
     private const string DiscordAppId = "1212095257563373720";
 
-    private static DiscordRpcClient _client;
+    private static DiscordRpcClient? _client;
 
     public static void Init()
     {
@@ -35,7 +35,7 @@ public static class DiscordManager
 
     public static void SetPresence(string state, string? details, string asset, string assetDescription)
     {
-        if (!Settings.Instance!.UseDiscordRpc) return;
+        if (!Settings.Instance!.UseDiscordRpc || _client == null) return;
 
         _client.SetPresence(new RichPresence
         {

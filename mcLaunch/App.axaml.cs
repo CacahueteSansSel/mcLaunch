@@ -4,6 +4,7 @@ using System.Reactive;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Cacahuete.MinecraftLib.Models;
@@ -41,7 +42,7 @@ public class App : Application
         AuthenticationManager.Init(Credentials.Get("azure"), Credentials.Get("tokens"));
         DefaultsManager.Init();
         AnonymityManager.Init();
-        DiscordManager.Init();
+        if (!Design.IsDesignMode) DiscordManager.Init();
         MinecraftVersion.ModelArguments.Default =
             JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(InternalSettings.Get("default_args.json"))!;
 
