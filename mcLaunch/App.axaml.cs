@@ -7,6 +7,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Cacahuete.MinecraftLib.Models;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Managers;
@@ -77,7 +78,10 @@ public class App : Application
 
         void ShowAboutWindow()
         {
-            new AboutWindow().Show(MainWindow.Instance);
+            Dispatcher.UIThread.Post(() =>
+            {
+                new AboutWindow().Show(MainWindow.Instance);
+            });
         }
     }
 }
