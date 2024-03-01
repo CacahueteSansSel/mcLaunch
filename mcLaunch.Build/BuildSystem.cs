@@ -33,6 +33,16 @@ public class BuildSystem
         {
             Console.Write($"[{index}/{steps.Count}] {step.Name}: ");
 
+            if (!step.IsSupportedOnThisPlatform())
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Not supported on {Utilities.GetPlatformName()}");
+                Console.ResetColor();
+
+                index++;
+                continue;
+            }
+
             BuildResult result = await step.RunAsync(this);
             if (result.IsError)
             {

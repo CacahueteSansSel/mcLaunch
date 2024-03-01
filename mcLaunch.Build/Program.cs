@@ -10,12 +10,15 @@ if (args.Length == 0)
 
 string solutionDirectory = args[0];
 BuildSystem buildSystem = new BuildSystem(solutionDirectory)
+    .With<CleanOutputDirectoryStep>()
     .With<BuildMcLaunchWindows64Step>()
     .With<BuildMcLaunchWindowsArm64Step>()
     .With<BuildMcLaunchMacOS64Step>()
     .With<BuildMcLaunchMacOSArm64Step>()
     .With<BuildMcLaunchLinux64Step>()
-    .With<BuildMcLaunchLinuxArm64Step>();
+    .With<BuildMcLaunchLinuxArm64Step>()
+    .With<CreateMacOSBundle64Step>()
+    .With<CreateMacOSBundleArm64Step>();
 
 bool success = await buildSystem.BuildAsync();
 
