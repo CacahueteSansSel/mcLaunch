@@ -164,14 +164,14 @@ class Build : NukeBuild
         {
             FileName = "dotnet",
             WorkingDirectory = Solution.GetProject("mcLaunch.MinecraftGuard")!.Directory,
-            Arguments = $"publish -c Release -r osx-arm64 -p:PublishSingleFile=true --sc -o \"{path}/Contents/MacOS\""
+            Arguments = $"publish -c Release -r osx-{arch} --sc -o \"{path}/Contents/MacOS\""
         })!.WaitForExit();
 
         Process.Start(new ProcessStartInfo
         {
             FileName = "dotnet",
             WorkingDirectory = Solution.GetProject("mcLaunch")!.Directory,
-            Arguments = $"publish -c Release -r osx-{arch} -p:PublishSingleFile=true --sc -o \"{path}/Contents/MacOS\""
+            Arguments = $"publish -c Release -r osx-{arch} --sc -o \"{path}/Contents/MacOS\""
         })!.WaitForExit();
 
         if (!OperatingSystem.IsWindows())
