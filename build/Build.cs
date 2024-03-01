@@ -185,7 +185,5 @@ class Build : NukeBuild
             $"{path}/Contents/Info.plist", true);
         File.Copy(Solution.GetProject("mcLaunch")!.Directory / "resources" / "Icons.icns",
             $"{path}/Contents/Resources/mcLaunch.icns", true);
-        
-        ZipFile.CreateFromDirectory(path, $"{outputDir}/mcLaunch-{arch}.app");
     }
 }
