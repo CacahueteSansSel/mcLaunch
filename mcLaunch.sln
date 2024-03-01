@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.GitHub", "mcLaunch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Tests", "mcLaunch.Tests\mcLaunch.Tests.csproj", "{368782D3-DDD0-48B4-A389-514D0F3D3F8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Build", "mcLaunch.Build\mcLaunch.Build.csproj", "{E535CF41-55BB-4564-9DA4-09C055A3BC43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{368782D3-DDD0-48B4-A389-514D0F3D3F8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{368782D3-DDD0-48B4-A389-514D0F3D3F8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{368782D3-DDD0-48B4-A389-514D0F3D3F8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E535CF41-55BB-4564-9DA4-09C055A3BC43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E535CF41-55BB-4564-9DA4-09C055A3BC43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E535CF41-55BB-4564-9DA4-09C055A3BC43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E535CF41-55BB-4564-9DA4-09C055A3BC43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
