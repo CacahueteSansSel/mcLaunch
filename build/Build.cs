@@ -155,19 +155,17 @@ class Build : NukeBuild
 
     void BuildMacOSBundle(string outputDir, string arch = "arm64")
     {
-        /*
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "dotnet",
-                WorkingDirectory = Solution.GetProject("mcLaunch.MinecraftGuard")!.Directory,
-                Arguments = $"publish -c Release -r osx-arm64 -p:PublishSingleFile=true --sc -o \"{outputDirPath + "/macos"}\""
-            })!.WaitForExit();
-            */
-
         string path = Solution.Directory / "output" / "macos" / arch / "mcLaunch.app";
         Directory.CreateDirectory(path);
         Directory.CreateDirectory($"{path}/Contents/MacOS");
         Directory.CreateDirectory($"{path}/Contents/Resources");
+        
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = "dotnet",
+            WorkingDirectory = Solution.GetProject("mcLaunch.MinecraftGuard")!.Directory,
+            Arguments = $"publish -c Release -r osx-arm64 -p:PublishSingleFile=true --sc -o \"{path}/Contents/MacOS\""
+        })!.WaitForExit();
 
         Process.Start(new ProcessStartInfo
         {
@@ -177,9 +175,15 @@ class Build : NukeBuild
         })!.WaitForExit();
 
         if (!OperatingSystem.IsWindows())
+        {
             File.SetUnixFileMode($"{path}/Contents/MacOS/mcLaunch",
                 UnixFileMode.UserExecute | UnixFileMode.OtherExecute | UnixFileMode.GroupExecute
                 | UnixFileMode.UserWrite | UnixFileMode.UserRead | UnixFileMode.GroupRead | UnixFileMode.OtherRead);
+            
+            File.SetUnixFileMode($"{path}/Contents/MacOS/mcLaunch.MinecraftGuard",
+                UnixFileMode.UserExecute | UnixFileMode.OtherExecute | UnixFileMode.GroupExecute
+                | UnixFileMode.UserWrite | UnixFileMode.UserRead | UnixFileMode.GroupRead | UnixFileMode.OtherRead);
+        }
 
         File.Copy(Solution.GetProject("mcLaunch")!.Directory / "resources" / "Info.plist",
             $"{path}/Contents/Info.plist", true);
