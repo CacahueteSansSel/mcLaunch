@@ -8,8 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Core", "mcLaunch.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.MinecraftGuard", "mcLaunch.MinecraftGuard\mcLaunch.MinecraftGuard.csproj", "{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{1FE4C42B-48B6-45B7-B676-88A6786F16DA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Installer", "mcLaunch.Installer\mcLaunch.Installer.csproj", "{94B4D61F-A732-45BB-A832-D4F61B43B27D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.GitHub", "mcLaunch.GitHub\mcLaunch.GitHub.csproj", "{6FDBDAD8-4972-4D56-B4AB-D5953875961A}"
@@ -24,8 +22,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1FE4C42B-48B6-45B7-B676-88A6786F16DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FE4C42B-48B6-45B7-B676-88A6786F16DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF7D96AB-0279-46DE-878A-B8982AC48443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EF7D96AB-0279-46DE-878A-B8982AC48443}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF7D96AB-0279-46DE-878A-B8982AC48443}.Release|Any CPU.ActiveCfg = Release|Any CPU
