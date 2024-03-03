@@ -16,9 +16,13 @@ public class Project
     public async Task<BuildResult> PublishAsync(string runtimeId, string outputDirPath, 
         string configuration = "Release", bool selfContained = true)
     {
+        string dotnetFilename = File.Exists("/usr/share/dotnet/dotnet") && OperatingSystem.IsLinux()
+            ? "/usr/share/dotnet/dotnet"
+            : "dotnet";
+        
         Process? process = Process.Start(new ProcessStartInfo
         {
-            FileName = "dotnet",
+            FileName = dotnetFilename,
             WorkingDirectory = Folder,
             Arguments =
                 $"publish -c {configuration} -r {runtimeId} {(selfContained ? "--sc" : "")} -o \"{outputDirPath}\"",
