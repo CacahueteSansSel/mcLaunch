@@ -1,4 +1,5 @@
-﻿using mcLaunch.Build.Core;
+﻿using LibGit2Sharp;
+using mcLaunch.Build.Core;
 
 namespace mcLaunch.Build;
 
@@ -8,11 +9,15 @@ public class BuildSystem
     
     public Project[] Projects { get; }
     public string SolutionDirectory { get; }
+    public Repository Repository { get; }
+    public Commit? LatestCommit => Repository.Head.Commits.FirstOrDefault();
 
     public BuildSystem(string solutionDirectory)
     {
         SolutionDirectory = Path.GetFullPath(solutionDirectory);
         Projects = Solution.GetProjects(solutionDirectory);
+        
+        Repository = new Repository($"{solutionDirectory}/.git");
     }
 
     public BuildSystem With<T>() where T : BuildStepBase, new()

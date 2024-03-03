@@ -11,6 +11,7 @@ if (args.Length == 0)
 string solutionDirectory = args[0];
 BuildSystem buildSystem = new BuildSystem(solutionDirectory)
     .With<CleanOutputDirectoryStep>()
+    .With<UpdateLatestCommitStep>()
     .With<BuildMcLaunchWindows64Step>()
     .With<BuildMcLaunchWindowsArm64Step>()
     .With<BuildMcLaunchMacOS64Step>()

@@ -59,6 +59,7 @@ Libraries used by the project :
 + [Markdig](https://github.com/xoofx/markdig) (to render mod pages)
 + [Jdenticon-net](https://github.com/dmester/jdenticon-net) (for generating anonymized box icons)
 + [DiscordRichPresence](https://github.com/Lachee/discord-rpc-csharp) (for Discord Rich Presence)
++ [LibGit2Sharp](https://github.com/libgit2/libgit2sharp) (for Git integration in the build system)
 
 This project takes huge inspiration of :
 + [portablemc](https://github.com/mindstorm38/portablemc) (general Minecraft launcher stuff + basis of the new Forge installer code)

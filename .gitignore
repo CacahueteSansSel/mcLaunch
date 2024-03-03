@@ -6,3 +6,4 @@ Tester
 output
 server
 mcLaunch.sln.DotSettings.user
+mcLaunch/resources/settings/build.json
