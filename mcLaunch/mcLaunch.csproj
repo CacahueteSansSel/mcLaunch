@@ -206,6 +206,8 @@
         <AvaloniaResource Include="resources\icons\directjar.png" />
         <None Remove="resources\default_directjar_logo.png" />
         <AvaloniaResource Include="resources\default_directjar_logo.png" />
+        <None Remove="resources\settings\build.json" />
+        <AvaloniaResource Include="resources\settings\build.json" />
     </ItemGroup>
 
     <ItemGroup>

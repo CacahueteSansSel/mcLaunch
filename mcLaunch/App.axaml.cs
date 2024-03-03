@@ -31,6 +31,7 @@ public class App : Application
     {
         Args = new ArgumentsParser(Environment.GetCommandLineArgs().Skip(1).ToArray());
 
+        CurrentBuild.Load();
         Settings.Load();
         DownloadManager.Init();
         await MinecraftManager.InitAsync();

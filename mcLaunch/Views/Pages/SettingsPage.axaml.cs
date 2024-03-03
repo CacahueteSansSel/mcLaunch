@@ -18,6 +18,7 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
 
         VersionText.Text = CurrentBuild.Version.ToString();
         CommitText.Text = CurrentBuild.Commit;
+        BranchNameText.Text = CurrentBuild.Branch;
     }
 
     public string Title => "Settings";

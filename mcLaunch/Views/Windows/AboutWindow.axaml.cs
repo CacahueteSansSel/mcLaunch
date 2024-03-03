@@ -20,7 +20,7 @@ public partial class AboutWindow : Window
         else platform = "unknown";
 
         VersionText.Text = $"mcLaunch v{CurrentBuild.Version}";
-        BuildInfoText.Text = $"commit {CurrentBuild.Commit} • " +
+        BuildInfoText.Text = $"branch {CurrentBuild.Branch} • " +
                              $"{platform} {Cacahuete.MinecraftLib.Core.Utilities.GetArchitecture()} • " +
                              $".NET {Environment.Version.ToString(2)}";
     }
