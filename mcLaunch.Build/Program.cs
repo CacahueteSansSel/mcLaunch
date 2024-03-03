@@ -17,6 +17,10 @@ BuildSystem buildSystem = new BuildSystem(solutionDirectory)
     .With<BuildMcLaunchMacOSArm64Step>()
     .With<BuildMcLaunchLinux64Step>()
     .With<BuildMcLaunchLinuxArm64Step>()
+    .With<BuildInstallerWindows64Step>()
+    .With<BuildInstallerWindowsArm64Step>()
+    .With<BuildInstallerLinux64Step>()
+    .With<BuildInstallerLinuxArm64Step>()
     .With<CreateMacOSBundle64Step>()
     .With<CreateMacOSBundleArm64Step>();
 
