@@ -39,11 +39,11 @@ public class MinecraftFolder
         return versions.ToArray();
     }
 
-    public string GetJvm(string JvmName)
+    public string GetJvm(string jvmName)
     {
         string platform = $"{Utilities.GetPlatformIdentifier()}-{Utilities.GetArchitecture()}";
 
-        return $"{Path}/runtime/{JvmName}/{platform}/{JvmName}/bin/javaw" +
+        return $"{Path}/runtime/{jvmName}/{platform}/{jvmName}/bin/javaw" +
                (platform.StartsWith("windows") ? ".exe" : "");
     }
 

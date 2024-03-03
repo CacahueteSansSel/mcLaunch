@@ -11,13 +11,13 @@ namespace mcLaunch.Launchsite.Core.ModLoaders.Forge;
 public static class ForgeInstaller
 {
     public static async Task<Result<ForgeInstallResult>> InstallAsync(ForgeInstallerFile installerFile,
-        string minecraftFolderPath, string JvmExecutablePath, string tempPath, string slug = "Forge")
+        string minecraftFolderPath, string jvmExecutablePath, string tempPath, string slug = "Forge")
     {
         // Install the vanilla minecraft version files (jar & json)
         await Context.Downloader.BeginSectionAsync($"{slug} {installerFile.Name.Trim()}", false);
         
         // An attempt to fix the "java opens in TextEdit" bug
-        if (OperatingSystem.IsMacOS()) File.SetUnixFileMode(JvmExecutablePath, UnixFileMode.UserExecute);
+        if (OperatingSystem.IsMacOS()) File.SetUnixFileMode(jvmExecutablePath, UnixFileMode.UserExecute);
 
         if (installerFile.EmbeddedForgeJarPath != null)
         {
@@ -118,7 +118,7 @@ public static class ForgeInstaller
 
                 ProcessStartInfo processStartInfo = new()
                 {
-                    FileName = JvmExecutablePath,
+                    FileName = jvmExecutablePath,
                     WorkingDirectory = minecraftFolderPath,
                     Arguments = $"-cp \"{libraryFilename}{Path.PathSeparator}{procClassPath}\" {mainClass}" +
                                 $" {string.Join(' ', arguments)}",

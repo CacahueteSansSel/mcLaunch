@@ -11,9 +11,9 @@ public class NeoForgeModLoaderSupport : ModLoaderSupport
     public const string NewerMavenQueryUrl
         = "https://maven.neoforged.net/api/maven/latest/version/releases/net/neoforged/neoforge?filter={0}";
 
-    public NeoForgeModLoaderSupport(string JvmExecutablePath, string systemFolderPath)
+    public NeoForgeModLoaderSupport(string jvmExecutablePath, string systemFolderPath)
     {
-        JvmExecutablePath = JvmExecutablePath;
+        JvmExecutablePath = jvmExecutablePath;
         SystemFolderPath = systemFolderPath;
     }
 

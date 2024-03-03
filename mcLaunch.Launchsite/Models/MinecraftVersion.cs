@@ -266,7 +266,7 @@ public class MinecraftVersion
     {
         [JsonPropertyName("game")] public object[]? Game { get; set; }
 
-        [JsonPropertyName("Jvm")] public object[]? Jvm { get; set; }
+        [JsonPropertyName("jvm")] public object[]? Jvm { get; set; }
 
         public static ModelArguments Default { get; set; }
 

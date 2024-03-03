@@ -16,14 +16,14 @@ public static class ModLoaderManager
         All.Add(new FabricModLoaderSupport());
 
         // Forge
-        // TODO: avoid to hardcode the Jvm to use for Forge's installer
+        // TODO: avoid to hardcode the jvm to use for Forge's installer
         All.Add(new ForgeModLoaderSupport(
             BoxManager.JvmDownloader.GetAndPrepareJvmExecPath(
                 mcLaunch.Launchsite.Core.Utilities.GetJavaPlatformIdentifier(),
                 "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
 
         // NeoForge
-        // TODO: avoid to hardcode the Jvm to use for Forge's installer
+        // TODO: avoid to hardcode the jvm to use for Forge's installer
         All.Add(new NeoForgeModLoaderSupport(
             BoxManager.JvmDownloader.GetAndPrepareJvmExecPath(
                 mcLaunch.Launchsite.Core.Utilities.GetJavaPlatformIdentifier(),

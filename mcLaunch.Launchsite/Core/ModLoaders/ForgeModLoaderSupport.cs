@@ -7,9 +7,9 @@ public class ForgeModLoaderSupport : ModLoaderSupport
 {
     public const string PromosUrl = "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json";
 
-    public ForgeModLoaderSupport(string JvmExecutablePath, string systemFolderPath)
+    public ForgeModLoaderSupport(string jvmExecutablePath, string systemFolderPath)
     {
-        JvmExecutablePath = JvmExecutablePath;
+        JvmExecutablePath = jvmExecutablePath;
         SystemFolderPath = systemFolderPath;
     }
 

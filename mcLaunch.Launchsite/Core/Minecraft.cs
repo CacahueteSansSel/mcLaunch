@@ -9,7 +9,7 @@ public class Minecraft
     private readonly Dictionary<string, string> args = new();
     private bool disableChat;
     private bool disableMultiplayer;
-    private string? JvmPath;
+    private string? jvmPath;
     private QuickPlayWorldType? quickPlayMode;
     private string? quickPlayPath;
     private string? quickPlaySingleplayerWorldName;
@@ -107,7 +107,7 @@ public class Minecraft
         return this;
     }
 
-    public Minecraft WithDownloaders(AssetsDownloader assets, LibrariesDownloader libraries, JvmDownloader Jvm)
+    public Minecraft WithDownloaders(AssetsDownloader assets, LibrariesDownloader libraries, JvmDownloader jvm)
     {
         string classPathSeparator = OperatingSystem.IsWindows() ? ";" : ":";
         string jarPath = $"{sysFolder.Path}/versions/{Version.Id}/{Version.Id}.jar";
@@ -116,12 +116,12 @@ public class Minecraft
         string classPath = string.Join(classPathSeparator, libraries.ClassPath) + classPathSeparator;
         string nativesPath = Path.GetFullPath(libraries.NativesPath);
 
-        JvmPath = Jvm.GetJvmPath(Utilities.GetJavaPlatformIdentifier(), Version.JavaVersion?.Component ?? "jre-legacy")
+        jvmPath = jvm.GetJvmPath(Utilities.GetJavaPlatformIdentifier(), Version.JavaVersion?.Component ?? "jre-legacy")
             .TrimEnd('/');
 
-        if (OperatingSystem.IsWindows()) JvmPath += "/bin/javaw.exe";
-        else if (OperatingSystem.IsMacOS()) JvmPath += "/jre.bundle/Contents/Home/bin/java";
-        else JvmPath += "/bin/java";
+        if (OperatingSystem.IsWindows()) jvmPath += "/bin/javaw.exe";
+        else if (OperatingSystem.IsMacOS()) jvmPath += "/jre.bundle/Contents/Home/bin/java";
+        else jvmPath += "/bin/java";
 
         args["assets_root"] = assetsRoot;
         args["game_assets"] = assetsRoot; // Fix for older versions
@@ -136,7 +136,7 @@ public class Minecraft
 
     public Process Run()
     {
-        string Jvm = JvmPath ?? sysFolder.GetJvm(Version.JavaVersion!.Component);
+        string jvm = jvmPath ?? sysFolder.GetJvm(Version.JavaVersion!.Component);
 
         if (Version.Arguments == null) Version.Arguments = MinecraftVersion.ModelArguments.Default;
 
@@ -180,7 +180,7 @@ public class Minecraft
         ProcessStartInfo info = new()
         {
             Arguments = builtArgs,
-            FileName = Jvm,
+            FileName = jvm,
             UseShellExecute = false,
             WorkingDirectory = Folder.CompletePath,
             RedirectStandardError = true,
