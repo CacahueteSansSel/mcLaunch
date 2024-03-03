@@ -1,4 +1,4 @@
-﻿using Cacahuete.MinecraftLib.Core.ModLoaders;
+﻿using mcLaunch.Launchsite.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
 
 namespace mcLaunch.Core.Managers;
@@ -16,17 +16,17 @@ public static class ModLoaderManager
         All.Add(new FabricModLoaderSupport());
 
         // Forge
-        // TODO: avoid to hardcode the jvm to use for Forge's installer
+        // TODO: avoid to hardcode the Jvm to use for Forge's installer
         All.Add(new ForgeModLoaderSupport(
-            BoxManager.JVMDownloader.GetAndPrepareJvmExecPath(
-                Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
+            BoxManager.JvmDownloader.GetAndPrepareJvmExecPath(
+                mcLaunch.Launchsite.Core.Utilities.GetJavaPlatformIdentifier(),
                 "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
 
         // NeoForge
-        // TODO: avoid to hardcode the jvm to use for Forge's installer
+        // TODO: avoid to hardcode the Jvm to use for Forge's installer
         All.Add(new NeoForgeModLoaderSupport(
-            BoxManager.JVMDownloader.GetAndPrepareJvmExecPath(
-                Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
+            BoxManager.JvmDownloader.GetAndPrepareJvmExecPath(
+                mcLaunch.Launchsite.Core.Utilities.GetJavaPlatformIdentifier(),
                 "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
 
         // Quilt

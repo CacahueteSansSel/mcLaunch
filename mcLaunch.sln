@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cacahuete.MinecraftLib", "Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj", "{EF7D96AB-0279-46DE-878A-B8982AC48443}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Launchsite", "mcLaunch.Launchsite\mcLaunch.Launchsite.csproj", "{EF7D96AB-0279-46DE-878A-B8982AC48443}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch", "mcLaunch\mcLaunch.csproj", "{7290B968-F67B-4D50-BE0C-0AA7A757EBB2}"
 EndProject

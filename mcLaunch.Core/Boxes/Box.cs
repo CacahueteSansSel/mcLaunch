@@ -4,9 +4,9 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Avalonia.Media.Imaging;
-using Cacahuete.MinecraftLib.Core;
-using Cacahuete.MinecraftLib.Core.ModLoaders;
-using Cacahuete.MinecraftLib.Models;
+using mcLaunch.Launchsite.Core;
+using mcLaunch.Launchsite.Core.ModLoaders;
+using mcLaunch.Launchsite.Models;
 using DynamicData;
 using JetBrains.Annotations;
 using mcLaunch.Core.Contents;
@@ -542,7 +542,7 @@ public class Box : IEquatable<Box>
             .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher
                                                                     && (ModLoader?.SupportsLauncherExposure ?? true))
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
-            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader);
+            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JvmDownloader);
 
         return new Result();
     }

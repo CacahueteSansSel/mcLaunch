@@ -8,7 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using Cacahuete.MinecraftLib.Models;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Managers;
 using mcLaunch.Managers;

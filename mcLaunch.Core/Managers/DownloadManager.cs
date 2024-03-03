@@ -1,8 +1,8 @@
 ﻿using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
-using Cacahuete.MinecraftLib.Core;
-using Cacahuete.MinecraftLib.Download;
+using mcLaunch.Launchsite.Core;
+using mcLaunch.Launchsite.Download;
 using mcLaunch.Core.Utilities;
 
 namespace mcLaunch.Core.Managers;
