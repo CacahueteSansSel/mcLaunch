@@ -26,6 +26,12 @@ public class BuildSystem
         return this;
     }
 
+    public BuildSystem With(params BuildStepBase[] steps)
+    {
+        this.steps.AddRange(steps);
+        return this;
+    }
+
     public Project? GetProject(string name)
         => Projects.FirstOrDefault(project => project.Name == name);
     

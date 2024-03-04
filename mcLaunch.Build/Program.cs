@@ -9,21 +9,36 @@ if (args.Length == 0)
 }
 
 string solutionDirectory = args[0];
+List<BuildStepBase> steps = [];
+
+if (args.Contains("--windows") || args.Length == 1)
+{
+    steps.AddRange([
+        new BuildMcLaunchWindows64Step(), new BuildMcLaunchWindowsArm64Step(), new BuildInstallerWindows64Step(),
+        new BuildInstallerWindowsArm64Step()
+    ]);
+}
+
+if (args.Contains("--macos") || args.Length == 1)
+{
+    steps.AddRange([
+        new BuildMcLaunchMacOS64Step(), new BuildMcLaunchMacOSArm64Step(), new CreateMacOSBundle64Step(),
+        new CreateMacOSBundleArm64Step()
+    ]);
+}
+
+if (args.Contains("--linux") || args.Length == 1)
+{
+    steps.AddRange([
+        new BuildMcLaunchLinux64Step(), new BuildMcLaunchLinuxArm64Step(), new BuildInstallerLinux64Step(),
+        new BuildInstallerLinuxArm64Step()
+    ]);
+}
+
 BuildSystem buildSystem = new BuildSystem(solutionDirectory)
     .With<CleanOutputDirectoryStep>()
     .With<UpdateLatestCommitStep>()
-    .With<BuildMcLaunchWindows64Step>()
-    .With<BuildMcLaunchWindowsArm64Step>()
-    .With<BuildMcLaunchMacOS64Step>()
-    .With<BuildMcLaunchMacOSArm64Step>()
-    .With<BuildMcLaunchLinux64Step>()
-    .With<BuildMcLaunchLinuxArm64Step>()
-    .With<BuildInstallerWindows64Step>()
-    .With<BuildInstallerWindowsArm64Step>()
-    .With<BuildInstallerLinux64Step>()
-    .With<BuildInstallerLinuxArm64Step>()
-    .With<CreateMacOSBundle64Step>()
-    .With<CreateMacOSBundleArm64Step>();
+    .With(steps.ToArray());
 
 bool success = await buildSystem.BuildAsync();
 
