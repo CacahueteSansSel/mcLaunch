@@ -3,7 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Cacahuete.MinecraftLib.Models;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
 

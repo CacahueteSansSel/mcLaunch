@@ -168,7 +168,6 @@
         <None Remove="resources\html\base.css" />
         <AvaloniaResource Include="resources\html\base.css" />
         <None Remove="resources\commit" />
-        <AvaloniaResource Include="resources\commit" />
         <None Remove="resources\icon_crash.png" />
         <AvaloniaResource Include="resources\icon_crash.png" />
         <None Remove="resources\header_bar_badge_offline.png" />
@@ -207,10 +206,14 @@
         <AvaloniaResource Include="resources\icons\directjar.png" />
         <None Remove="resources\default_directjar_logo.png" />
         <AvaloniaResource Include="resources\default_directjar_logo.png" />
+        <None Remove="resources\settings\build.json" />
+        <AvaloniaResource Include="resources\settings\build.json" />
+        <None Remove="resources\cube_transparent.png" />
+        <AvaloniaResource Include="resources\cube_transparent.png" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj" />
+        <ProjectReference Include="..\mcLaunch.Launchsite\mcLaunch.Launchsite.csproj" />
         <ProjectReference Include="..\mcLaunch.Core\mcLaunch.Core.csproj" />
         <ProjectReference Include="..\mcLaunch.GitHub\mcLaunch.GitHub.csproj" />
     </ItemGroup>
@@ -270,6 +273,10 @@
         </Compile>
         <Compile Update="Views\Pages\BoxDetails\DirectJarModsSubControl.axaml.cs">
           <DependentUpon>DirectJarModsSubControl.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Popups\LauncherUpdatedPopup.axaml.cs">
+          <DependentUpon>LauncherUpdatedPopup.axaml</DependentUpon>
           <SubType>Code</SubType>
         </Compile>
     </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.Controls;
-using Cacahuete.MinecraftLib.Http;
+using mcLaunch.Launchsite.Http;
 
 namespace mcLaunch.Views;
 

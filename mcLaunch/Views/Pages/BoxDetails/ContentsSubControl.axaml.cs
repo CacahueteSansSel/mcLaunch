@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Cacahuete.MinecraftLib.Core.ModLoaders;
+using mcLaunch.Launchsite.Core.ModLoaders;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;

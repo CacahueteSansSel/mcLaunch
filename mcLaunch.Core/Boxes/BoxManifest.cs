@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 using Avalonia.Media.Imaging;
-using Cacahuete.MinecraftLib.Core;
-using Cacahuete.MinecraftLib.Core.ModLoaders;
-using Cacahuete.MinecraftLib.Models;
+using mcLaunch.Launchsite.Core;
+using mcLaunch.Launchsite.Core.ModLoaders;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;

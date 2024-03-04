@@ -4,9 +4,11 @@ using System.Reactive;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Cacahuete.MinecraftLib.Models;
+using Avalonia.Threading;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Managers;
 using mcLaunch.Managers;
@@ -29,6 +31,7 @@ public class App : Application
     {
         Args = new ArgumentsParser(Environment.GetCommandLineArgs().Skip(1).ToArray());
 
+        CurrentBuild.Load();
         Settings.Load();
         DownloadManager.Init();
         await MinecraftManager.InitAsync();
@@ -41,7 +44,7 @@ public class App : Application
         AuthenticationManager.Init(Credentials.Get("azure"), Credentials.Get("tokens"));
         DefaultsManager.Init();
         AnonymityManager.Init();
-        DiscordManager.Init();
+        if (!Design.IsDesignMode) DiscordManager.Init();
         MinecraftVersion.ModelArguments.Default =
             JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(InternalSettings.Get("default_args.json"))!;
 
@@ -76,7 +79,10 @@ public class App : Application
 
         void ShowAboutWindow()
         {
-            new AboutWindow().Show(MainWindow.Instance);
+            Dispatcher.UIThread.Post(() =>
+            {
+                new AboutWindow().Show(MainWindow.Instance);
+            });
         }
     }
 }

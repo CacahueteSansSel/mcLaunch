@@ -1,5 +1,5 @@
-﻿using Cacahuete.MinecraftLib.Core;
-using Cacahuete.MinecraftLib.Models;
+﻿using mcLaunch.Launchsite.Core;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Managers;
 
 namespace mcLaunch.Tests.Tests;

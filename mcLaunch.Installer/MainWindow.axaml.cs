@@ -2,7 +2,7 @@ using System;
 using System.Net.Http.Headers;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Cacahuete.MinecraftLib.Http;
+using mcLaunch.Launchsite.Http;
 using mcLaunch.GitHub;
 using mcLaunch.GitHub.Models;
 using mcLaunch.Installer.Core;

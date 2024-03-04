@@ -4,9 +4,9 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Avalonia.Media.Imaging;
-using Cacahuete.MinecraftLib.Core;
-using Cacahuete.MinecraftLib.Core.ModLoaders;
-using Cacahuete.MinecraftLib.Models;
+using mcLaunch.Launchsite.Core;
+using mcLaunch.Launchsite.Core.ModLoaders;
+using mcLaunch.Launchsite.Models;
 using DynamicData;
 using JetBrains.Annotations;
 using mcLaunch.Core.Contents;
@@ -85,7 +85,8 @@ public class Box : IEquatable<Box>
     public bool HasCrashReports => Directory.Exists($"{Folder.Path}/crash-reports")
                                    && Directory.GetFiles($"{Folder.Path}/crash-reports").Length > 0;
 
-    public bool HasWorlds => Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
+    public bool HasWorlds => Directory.Exists($"{Folder.Path}/saves") && 
+                             Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
 
     public bool Equals(Box? other)
     {
@@ -542,7 +543,7 @@ public class Box : IEquatable<Box>
             .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher
                                                                     && (ModLoader?.SupportsLauncherExposure ?? true))
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
-            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JVMDownloader);
+            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JvmDownloader);
 
         return new Result();
     }
