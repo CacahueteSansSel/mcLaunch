@@ -14,10 +14,10 @@ public class UpdateLatestCommitStep : BuildStepBase
         Project? mcLaunch = system.GetProject("mcLaunch");
         string buildManifestFile = $"{mcLaunch.Folder}/resources/settings/build.json";
         Commit commit = system.LatestCommit!;
-        Branch branch = system.Repository.Head.TrackedBranch;
+        Branch? branch = system.Repository.Head.TrackedBranch;
 
         BuildManifest manifest = new(commit.Id.ToString()[..7],
-            branch.FriendlyName.Replace("origin/", ""),
+            branch is null ? string.Empty : branch.FriendlyName.Replace("origin/", ""),
             GenerateChangelog(system.Repository));
 
         await File.WriteAllTextAsync(buildManifestFile, JsonSerializer.Serialize(manifest));
