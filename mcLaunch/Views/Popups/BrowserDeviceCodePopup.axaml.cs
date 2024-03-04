@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Cacahuete.MinecraftLib.Auth;
+using mcLaunch.Launchsite.Auth;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Popups;

@@ -1,4 +1,4 @@
-﻿using Cacahuete.MinecraftLib.Http;
+﻿using mcLaunch.Launchsite.Http;
 using mcLaunch.GitHub.Models;
 
 namespace mcLaunch.GitHub;

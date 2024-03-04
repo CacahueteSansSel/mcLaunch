@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Security.Cryptography;
+using Avalonia.Media;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents.Packs;
 using mcLaunch.Core.Core;
@@ -143,7 +144,8 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             return PaginatedResponse<PlatformModpack>.Empty;
         }
 
-        PlatformModpack[] modpacks = search.Hits.Select(hit => new PlatformModpack
+        PlatformModpack[] modpacks = search.Hits.Where(hit => hit != null)
+            .Select(hit => new PlatformModpack
         {
             Id = hit.ProjectId,
             Name = hit.Title,
@@ -156,7 +158,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             LatestMinecraftVersion = hit.Versions.Last(),
             DownloadCount = hit.Downloads,
             LastUpdated = hit.DateModified,
-            Color = (uint) hit.Color.Value.ToArgb(),
+            Color = !hit.Color.HasValue ? 0xFF000000 : (uint) hit.Color.Value.ToArgb(),
             Platform = this
         }).ToArray();
 
@@ -343,7 +345,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 LongDescriptionBody = project.Body,
                 DownloadCount = project.Downloads,
                 LastUpdated = project.Updated,
-                Color = (uint) project.Color.Value.ToArgb(),
+                Color = !project.Color.HasValue ? 0xFF000000 : (uint)project.Color.Value.ToArgb(),
                 Platform = this
             };
 
@@ -469,6 +471,8 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
     public override async Task<ModificationPack> LoadModpackFileAsync(string filename)
     {
+        if (!System.IO.File.Exists(filename)) return null;
+        
         return await new ModrinthModificationPack(filename).SetupAsync();
     }
 

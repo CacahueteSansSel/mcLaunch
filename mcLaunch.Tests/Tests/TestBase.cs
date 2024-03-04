@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using Cacahuete.MinecraftLib.Core;
+using mcLaunch.Launchsite.Core;
 
 namespace mcLaunch.Tests.Tests;
 

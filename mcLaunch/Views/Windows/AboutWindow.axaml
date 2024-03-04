@@ -19,7 +19,7 @@
                 <Image Source="/resources/icon.png" Margin="0 0 0 20" Width="128"></Image>
                 <TextBlock x:Name="VersionText" TextAlignment="Center" FontSize="17">mcLaunch v0.0.0</TextBlock>
                 <TextBlock TextAlignment="Center" Classes="light" Margin="0 0 0 20" FontSize="15" TextWrapping="Wrap">A Minecraft launcher that puts your Minecraft in a box 📦</TextBlock>
-                <TextBlock x:Name="BuildInfoText" TextAlignment="Center" Classes="light" FontSize="12">commit xxxx • linux • .NET 8.0.0</TextBlock>
+                <TextBlock x:Name="BuildInfoText" TextAlignment="Center" Classes="light" FontSize="12">branch xxxx • linux • .NET 8.0.0</TextBlock>
                 <Button Click="GitHubButtonClicked" HorizontalAlignment="Center" Classes="secondary" Margin="0 20 0 0">GitHub</Button>
             </StackPanel>
         </Panel>

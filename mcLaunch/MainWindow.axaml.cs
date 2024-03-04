@@ -5,8 +5,8 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Cacahuete.MinecraftLib.Auth;
-using Cacahuete.MinecraftLib.Http;
+using mcLaunch.Launchsite.Auth;
+using mcLaunch.Launchsite.Http;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
@@ -121,12 +121,18 @@ public partial class MainWindow : Window
             }
         }
 
-        if (App.Args.Contains("crash"))
-        {
-            string crashReportFilename = App.Args.Get("crash");
+        bool macOSFileExists = File.Exists(AppdataFolderManager.GetPath("crash_report"))
+                               && OperatingSystem.IsMacOS();
 
-            if (File.Exists(crashReportFilename))
-                await new CrashWindow(await File.ReadAllTextAsync(crashReportFilename)).ShowDialog(this);
+        if (App.Args.Contains("crash") || macOSFileExists)
+        {
+            string crashReportFilename = macOSFileExists
+                ? await File.ReadAllTextAsync(AppdataFolderManager.GetPath("crash_report"))
+                : App.Args.Get("crash");
+
+            if (macOSFileExists) File.Delete(AppdataFolderManager.GetPath("crash_report"));
+                
+            await new CrashWindow(await File.ReadAllTextAsync(crashReportFilename)).ShowDialog(this);
         }
 
         MinecraftAuthenticationResult? authResult = await AuthenticationManager.TryLoginAsync();
@@ -167,6 +173,9 @@ public partial class MainWindow : Window
             }
 
             MainWindowDataContext.Instance.Push<MainPage>();
+            
+            if (!Settings.SeenVersionsList.Contains(CurrentBuild.Version.ToString()))
+                Navigation.ShowPopup(new LauncherUpdatedPopup());
         }
         else
         {

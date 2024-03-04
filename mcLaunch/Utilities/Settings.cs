@@ -17,6 +17,7 @@ public class Settings
     }
 
     public static Settings? Instance { get; private set; }
+    public static List<string> SeenVersionsList { get; private set; } = [];
 
     [Setting(Name = "Expose launcher name to Minecraft", Group = "Minecraft")]
     public bool ExposeLauncherNameToMinecraft { get; set; } = true;
@@ -86,20 +87,32 @@ public class Settings
         return new Setting(attribute.Name, prop, attribute.Group);
     }
 
+    public static void MarkCurrentVersionAsSeen()
+    {
+        if (SeenVersionsList.Contains(CurrentBuild.Version.ToString())) return;
+        
+        SeenVersionsList.Add(CurrentBuild.Version.ToString());
+        Save();
+    }
+
     public static void Save()
     {
         File.WriteAllText(AppdataFolderManager.GetPath("settings.json"), JsonSerializer.Serialize(Instance));
+        File.WriteAllText(AppdataFolderManager.GetPath("seen_versions.json"), JsonSerializer.Serialize(SeenVersionsList));
     }
 
     public static void Load()
     {
-        if (!File.Exists(AppdataFolderManager.GetPath("settings.json")))
+        if (File.Exists(AppdataFolderManager.GetPath("seen_versions.json")))
         {
-            Instance = new Settings().WithDefaults();
-            return;
+            SeenVersionsList = JsonSerializer.Deserialize<List<string>>(
+                File.ReadAllText(AppdataFolderManager.GetPath("seen_versions.json")))!;
         }
-
-        Instance = JsonSerializer.Deserialize<Settings>(
-            File.ReadAllText(AppdataFolderManager.GetPath("settings.json")))!;
+        
+        if (File.Exists(AppdataFolderManager.GetPath("settings.json")))
+        {
+            Instance = JsonSerializer.Deserialize<Settings>(
+                File.ReadAllText(AppdataFolderManager.GetPath("settings.json")))!;
+        } else Instance = new Settings().WithDefaults();
     }
 }

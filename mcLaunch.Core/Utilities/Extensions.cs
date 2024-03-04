@@ -1,6 +1,6 @@
 ﻿using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using Cacahuete.MinecraftLib.Core.ModLoaders;
+using mcLaunch.Launchsite.Core.ModLoaders;
 
 namespace mcLaunch.Core.Utilities;
 

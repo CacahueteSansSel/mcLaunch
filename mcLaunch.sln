@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cacahuete.MinecraftLib", "Cacahuete.MinecraftLib\Cacahuete.MinecraftLib.csproj", "{EF7D96AB-0279-46DE-878A-B8982AC48443}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Launchsite", "mcLaunch.Launchsite\mcLaunch.Launchsite.csproj", "{EF7D96AB-0279-46DE-878A-B8982AC48443}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch", "mcLaunch\mcLaunch.csproj", "{7290B968-F67B-4D50-BE0C-0AA7A757EBB2}"
 EndProject
@@ -8,13 +8,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Core", "mcLaunch.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.MinecraftGuard", "mcLaunch.MinecraftGuard\mcLaunch.MinecraftGuard.csproj", "{C17A20CB-3BBD-49D6-8B40-3A8A2FE70E23}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{1FE4C42B-48B6-45B7-B676-88A6786F16DA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Installer", "mcLaunch.Installer\mcLaunch.Installer.csproj", "{94B4D61F-A732-45BB-A832-D4F61B43B27D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.GitHub", "mcLaunch.GitHub\mcLaunch.GitHub.csproj", "{6FDBDAD8-4972-4D56-B4AB-D5953875961A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Tests", "mcLaunch.Tests\mcLaunch.Tests.csproj", "{368782D3-DDD0-48B4-A389-514D0F3D3F8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mcLaunch.Build", "mcLaunch.Build\mcLaunch.Build.csproj", "{E535CF41-55BB-4564-9DA4-09C055A3BC43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,8 +22,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1FE4C42B-48B6-45B7-B676-88A6786F16DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FE4C42B-48B6-45B7-B676-88A6786F16DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF7D96AB-0279-46DE-878A-B8982AC48443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EF7D96AB-0279-46DE-878A-B8982AC48443}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF7D96AB-0279-46DE-878A-B8982AC48443}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -52,6 +50,10 @@ Global
 		{368782D3-DDD0-48B4-A389-514D0F3D3F8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{368782D3-DDD0-48B4-A389-514D0F3D3F8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{368782D3-DDD0-48B4-A389-514D0F3D3F8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E535CF41-55BB-4564-9DA4-09C055A3BC43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E535CF41-55BB-4564-9DA4-09C055A3BC43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E535CF41-55BB-4564-9DA4-09C055A3BC43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E535CF41-55BB-4564-9DA4-09C055A3BC43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

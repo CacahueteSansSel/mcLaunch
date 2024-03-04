@@ -1,6 +1,6 @@
-﻿using Cacahuete.MinecraftLib.Auth;
-using Cacahuete.MinecraftLib.Cache;
-using Cacahuete.MinecraftLib.Models;
+﻿using mcLaunch.Launchsite.Auth;
+using mcLaunch.Launchsite.Cache;
+using mcLaunch.Launchsite.Models;
 
 namespace mcLaunch.Core.Managers;
 

@@ -3,8 +3,8 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using Cacahuete.MinecraftLib.Core;
-using Cacahuete.MinecraftLib.Models;
+using mcLaunch.Launchsite.Core;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Core;
@@ -23,7 +23,7 @@ public static class BoxManager
 
     public static LibrariesDownloader LibrariesDownloader { get; } = new(SystemFolder);
 
-    public static JVMDownloader JVMDownloader { get; } = new(SystemFolder);
+    public static JvmDownloader JvmDownloader { get; } = new(SystemFolder);
 
     public static int BoxCount => Directory.GetDirectories(BoxesPath).Length;
 
@@ -184,7 +184,11 @@ public static class BoxManager
 
         progressCallback?.Invoke("Initializing Minecraft", 0.5f);
 
-        ModificationPack modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
+        ModificationPack? modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
+        if (modpack == null)
+        {
+            return Result<Box>.Error("Unable to find the modpack");
+        }
 
         Result<Box> boxResult = await CreateFromModificationPack(modpack,
             (status, percent) => { progressCallback?.Invoke(status, 0.5f + percent); });
@@ -203,11 +207,11 @@ public static class BoxManager
     public static async Task SetupVersionAsync(MinecraftVersion version, string? customName = null,
         bool downloadAllAfter = true)
     {
-        if (!JVMDownloader.HasJVM(Cacahuete.MinecraftLib.Core.Utilities.GetJavaPlatformIdentifier(),
+        if (!JvmDownloader.HasJvm(mcLaunch.Launchsite.Core.Utilities.GetJavaPlatformIdentifier(),
                 version.JavaVersion?.Component ?? "jre-legacy"))
         {
             DownloadManager.Begin(customName ?? $"Java {version.JavaVersion.MajorVersion}");
-            await JVMDownloader.DownloadForCurrentPlatformAsync(version.JavaVersion.Component);
+            await JvmDownloader.DownloadForCurrentPlatformAsync(version.JavaVersion.Component);
             DownloadManager.End();
         }
 

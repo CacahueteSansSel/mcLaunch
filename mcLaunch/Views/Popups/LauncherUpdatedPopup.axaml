@@ -1,0 +1,69 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d"
+             Width="700" Height="500"
+             x:Class="mcLaunch.Views.Popups.LauncherUpdatedPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+
+        <Style Selector="TextBlock.appears">
+            <Style.Animations>
+                <Animation Duration="0:0:.25" Delay="0:0:1" FillMode="Both" Easing="QuinticEaseInOut" IterationCount="1">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0" />
+                        <Setter Property="TranslateTransform.Y" Value="-10" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1" />
+                        <Setter Property="TranslateTransform.Y" Value="0" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        
+        <Style Selector="Image.appears">
+            <Style.Animations>
+                <Animation Duration="0:0:.25" Delay="0:0:1" FillMode="Both" Easing="QuinticEaseInOut" IterationCount="1">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0" />
+                        <Setter Property="TranslateTransform.Y" Value="-10" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1" />
+                        <Setter Property="TranslateTransform.Y" Value="0" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <Panel>
+            <Image Source="/resources/cube_transparent.png" Opacity="0.05" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <Image.RenderTransform>
+                    <TranslateTransform X="100" Y="120"></TranslateTransform>
+                </Image.RenderTransform>
+            </Image>
+            <DockPanel Margin="38">
+                <TextBlock DockPanel.Dock="Top" Classes="light appears" FontSize="15">Your launcher has been updated to</TextBlock>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0 0 0 10">
+                    <Image Source="/resources/logo_big.png" Classes="appears" Height="20"></Image>
+                    <TextBlock x:Name="VersionText" DockPanel.Dock="Top" Classes="title appears" FontSize="25">0.2.0</TextBlock>
+                </StackPanel>
+                <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 00">
+                    <Button DockPanel.Dock="Right" x:Name="CopyAndOpenButton" Classes="primary"
+                            Click="CloseButtonClicked">
+                        Close
+                    </Button>
+                    <Panel />
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="20">Complete Changelog</TextBlock>
+                    <TextBox Background="rgba(1,1,1,0.4)" x:Name="ChangelogTextBox" IsReadOnly="True" Margin="0 10 0 0"></TextBox>
+                </DockPanel>
+            </DockPanel>
+        </Panel>
+    </Border>
+</UserControl>

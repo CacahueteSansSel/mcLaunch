@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using Cacahuete.MinecraftLib.Auth;
+using mcLaunch.Launchsite.Auth;
 using mcLaunch.Core.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
