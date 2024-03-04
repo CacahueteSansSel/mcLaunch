@@ -184,7 +184,11 @@ public static class BoxManager
 
         progressCallback?.Invoke("Initializing Minecraft", 0.5f);
 
-        ModificationPack modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
+        ModificationPack? modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
+        if (modpack == null)
+        {
+            return Result<Box>.Error("Unable to find the modpack");
+        }
 
         Result<Box> boxResult = await CreateFromModificationPack(modpack,
             (status, percent) => { progressCallback?.Invoke(status, 0.5f + percent); });

@@ -475,6 +475,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
 
     public override async Task<ModificationPack> LoadModpackFileAsync(string filename)
     {
+        if (!System.IO.File.Exists(filename)) return null;
+        
         return new CurseForgeModificationPack(filename);
     }
 
