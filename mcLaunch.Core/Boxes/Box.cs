@@ -85,7 +85,8 @@ public class Box : IEquatable<Box>
     public bool HasCrashReports => Directory.Exists($"{Folder.Path}/crash-reports")
                                    && Directory.GetFiles($"{Folder.Path}/crash-reports").Length > 0;
 
-    public bool HasWorlds => Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
+    public bool HasWorlds => Directory.Exists($"{Folder.Path}/saves") && 
+                             Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
 
     public bool Equals(Box? other)
     {
