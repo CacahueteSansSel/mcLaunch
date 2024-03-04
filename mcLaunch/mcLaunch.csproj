@@ -208,6 +208,8 @@
         <AvaloniaResource Include="resources\default_directjar_logo.png" />
         <None Remove="resources\settings\build.json" />
         <AvaloniaResource Include="resources\settings\build.json" />
+        <None Remove="resources\cube_transparent.png" />
+        <AvaloniaResource Include="resources\cube_transparent.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -271,6 +273,10 @@
         </Compile>
         <Compile Update="Views\Pages\BoxDetails\DirectJarModsSubControl.axaml.cs">
           <DependentUpon>DirectJarModsSubControl.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Popups\LauncherUpdatedPopup.axaml.cs">
+          <DependentUpon>LauncherUpdatedPopup.axaml</DependentUpon>
           <SubType>Code</SubType>
         </Compile>
     </ItemGroup>

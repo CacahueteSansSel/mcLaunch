@@ -173,6 +173,9 @@ public partial class MainWindow : Window
             }
 
             MainWindowDataContext.Instance.Push<MainPage>();
+            
+            if (!Settings.SeenVersionsList.Contains(CurrentBuild.Version.ToString()))
+                Navigation.ShowPopup(new LauncherUpdatedPopup());
         }
         else
         {
