@@ -4,8 +4,6 @@
 name: .NET
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -24,3 +22,25 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+  build-macos:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+    - name: Run mcLaunch.Build
+      run: dotnet run --project mcLaunch.Build/ . --macos
+    - name: Upload macOS x64 bundle
+      uses: actions/upload-artifact@v4
+      with:
+        name: mcLaunch-macOS-x64.zip
+        path: output/releases/mcLaunch-osx-x64.zip
+    - name: Upload macOS arm64 bundle
+      uses: actions/upload-artifact@v4
+      with:
+        name: mcLaunch-macOS-arm64.zip
+        path: output/releases/mcLaunch-osx-arm64.zip
