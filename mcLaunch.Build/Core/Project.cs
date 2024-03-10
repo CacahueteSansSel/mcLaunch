@@ -27,7 +27,7 @@ public class Project
             Arguments =
                 $"publish -c {configuration} -r {runtimeId} {(selfContained ? "--sc" : "")} -o \"{outputDirPath}\"",
             RedirectStandardOutput = true,
-            RedirectStandardInput = true
+            RedirectStandardError = true
         });
 
         await process!.StandardOutput.ReadToEndAsync();
