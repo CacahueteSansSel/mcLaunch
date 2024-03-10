@@ -30,12 +30,12 @@ public class Project
             RedirectStandardError = true
         });
 
-        await process!.StandardOutput.ReadToEndAsync();
-        string err = await process!.StandardOutput.ReadToEndAsync();
+        string stdout = await process!.StandardOutput.ReadToEndAsync();
+        string stderr = await process!.StandardOutput.ReadToEndAsync();
         await process.WaitForExitAsync();
 
         return process.ExitCode != 0
-            ? BuildResult.Error(err)
+            ? BuildResult.Error(stdout + "\n" + stderr)
             : new BuildResult();
     }
 }
