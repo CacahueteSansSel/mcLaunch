@@ -124,8 +124,8 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
         ctx.Contents = newList.ToArray();
 
-        LoadMoreButton.IsVisible = !NtsBanner.IsVisible;
         NtsBanner.IsVisible = ctx.Contents.Length == 0;
+        LoadMoreButton.IsVisible = !NtsBanner.IsVisible;
     }
 
     public void SetLoadingCircle(bool isLoading)

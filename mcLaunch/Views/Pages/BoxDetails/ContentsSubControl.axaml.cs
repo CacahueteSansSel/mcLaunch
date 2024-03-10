@@ -93,8 +93,8 @@ public partial class ContentsSubControl : SubControl
         ModsList.ContentType = ContentType;
 
         ModsList.SetBox(Box);
-        ModsList.SetContents(contents.ToArray());
         ModsList.SetLoadingCircle(false);
+        ModsList.SetContents(contents.ToArray());
 
         if (!canUpdate)
         {
