@@ -31,10 +31,11 @@ public class Project
         });
 
         await process!.StandardOutput.ReadToEndAsync();
+        string err = await process!.StandardOutput.ReadToEndAsync();
         await process.WaitForExitAsync();
 
         return process.ExitCode != 0
-            ? BuildResult.Error(await process.StandardError.ReadToEndAsync())
+            ? BuildResult.Error(err)
             : new BuildResult();
     }
 }
