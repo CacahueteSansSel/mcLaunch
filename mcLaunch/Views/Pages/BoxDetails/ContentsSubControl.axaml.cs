@@ -136,7 +136,13 @@ public partial class ContentsSubControl : SubControl
             toUpdateContents.Add(content);
         });
 
-        if (isChanges) ModsList.SetContents(toUpdateContents.ToArray());
+        if (isChanges)
+        {
+            toUpdateContents.Sort((left, right) 
+                => string.Compare(left.Name!, right.Name!, StringComparison.Ordinal));
+            
+            ModsList.SetContents(toUpdateContents.ToArray());
+        }
 
         SearchingForUpdates.IsVisible = false;
 
