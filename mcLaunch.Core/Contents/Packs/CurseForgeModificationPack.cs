@@ -63,9 +63,13 @@ public class CurseForgeModificationPack : ModificationPack
 
     public override async Task InstallModificationAsync(Box targetBox, SerializedMinecraftContent mod)
     {
+        MinecraftContent content = await CurseForgeMinecraftContentPlatform.Instance.GetContentAsync(mod.ModId);
+        if (content == null) return;
+        
         await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(targetBox, new MinecraftContent
         {
-            Id = mod.ModId
+            Id = mod.ModId,
+            Type = content.Type
         }, mod.VersionId, false);
     }
 

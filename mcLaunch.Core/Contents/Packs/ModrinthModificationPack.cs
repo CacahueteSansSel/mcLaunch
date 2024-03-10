@@ -183,10 +183,14 @@ public class ModrinthModificationPack : ModificationPack
 
     public override async Task InstallModificationAsync(Box targetBox, SerializedMinecraftContent mod)
     {
+        MinecraftContent content = await ModrinthMinecraftContentPlatform.Instance.GetContentAsync(mod.ModId);
+        if (content == null) return;
+
         await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(targetBox, new MinecraftContent
         {
             Id = mod.ModId,
-            Platform = ModrinthMinecraftContentPlatform.Instance
+            Platform = ModrinthMinecraftContentPlatform.Instance,
+            Type = content.Type
         }, mod.VersionId, false);
     }
 
