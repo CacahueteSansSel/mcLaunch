@@ -21,7 +21,9 @@ public class MinecraftFolder
     }
 
     public string GetVersionPath(string id)
-        => $"{Path}/versions/{id}";
+    {
+        return $"{Path}/versions/{id}";
+    }
 
     public MinecraftVersion? GetVersion(string id)
     {

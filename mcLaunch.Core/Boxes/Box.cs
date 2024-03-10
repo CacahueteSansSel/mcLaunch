@@ -4,9 +4,6 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Avalonia.Media.Imaging;
-using mcLaunch.Launchsite.Core;
-using mcLaunch.Launchsite.Core.ModLoaders;
-using mcLaunch.Launchsite.Models;
 using DynamicData;
 using JetBrains.Annotations;
 using mcLaunch.Core.Contents;
@@ -15,6 +12,9 @@ using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Utilities;
+using mcLaunch.Launchsite.Core;
+using mcLaunch.Launchsite.Core.ModLoaders;
+using mcLaunch.Launchsite.Models;
 using Modrinth.Exceptions;
 using SharpNBT;
 using AuthenticationManager = mcLaunch.Core.Managers.AuthenticationManager;
@@ -23,9 +23,9 @@ namespace mcLaunch.Core.Boxes;
 
 public class Box : IEquatable<Box>
 {
+    private readonly string manifestPath;
     private bool exposeLauncher;
     private string launcherVersion = "0.0.0";
-    private readonly string manifestPath;
     private FileSystemWatcher watcher;
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
@@ -83,7 +83,7 @@ public class Box : IEquatable<Box>
     public bool HasCrashReports => Directory.Exists($"{Folder.Path}/crash-reports")
                                    && Directory.GetFiles($"{Folder.Path}/crash-reports").Length > 0;
 
-    public bool HasWorlds => Directory.Exists($"{Folder.Path}/saves") && 
+    public bool HasWorlds => Directory.Exists($"{Folder.Path}/saves") &&
                              Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
 
     public bool Equals(Box? other)

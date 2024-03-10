@@ -6,13 +6,13 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using mcLaunch.Launchsite.Core;
-using mcLaunch.Launchsite.Core.ModLoaders;
-using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
+using mcLaunch.Launchsite.Core;
+using mcLaunch.Launchsite.Core.ModLoaders;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 
@@ -350,7 +350,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         }
 
         string path = pathResult.Data!;
-        
+
         Box box = new Box(path);
         box.SetAndSaveIcon(new Bitmap(AssetLoader.Open(
             new Uri("avares://mcLaunch/resources/fastlaunch_box_logo.png"))));

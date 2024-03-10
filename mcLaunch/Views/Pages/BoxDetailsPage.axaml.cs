@@ -8,13 +8,13 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using mcLaunch.Launchsite.Core;
-using mcLaunch.Launchsite.Core.ModLoaders;
-using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Utilities;
+using mcLaunch.Launchsite.Core;
+using mcLaunch.Launchsite.Core.ModLoaders;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.BoxDetails;
@@ -86,11 +86,9 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         if (Box.HasReadmeFile) SetSubControl(new ReadmeSubControl(Box.ReadReadmeFile()));
         else
-        {
             SetSubControl(Box.ModLoader is DirectJarMergingModLoaderSupport
                 ? new DirectJarModsSubControl()
                 : new ContentsSubControl(MinecraftContentType.Modification));
-        }
 
         ReadmeButton.IsVisible = Box.HasReadmeFile;
         CrashReportButton.IsVisible = Box.HasCrashReports;

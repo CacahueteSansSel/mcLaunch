@@ -4,10 +4,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Web;
-using mcLaunch.Launchsite.Core.ModLoaders;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Utilities;
+using mcLaunch.Launchsite.Core.ModLoaders;
 using Version = Modrinth.Models.Version;
 
 namespace mcLaunch.Core.Contents.Packs;

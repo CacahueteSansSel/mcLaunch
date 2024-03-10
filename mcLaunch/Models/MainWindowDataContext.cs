@@ -9,10 +9,10 @@ namespace mcLaunch.Models;
 
 public class MainWindowDataContext : PageNavigator
 {
+    private readonly Stack<ITopLevelPageControl> stack = new();
     private ITopLevelPageControl curPage;
     private Control curPopup;
     private bool isPopupShown;
-    private readonly Stack<ITopLevelPageControl> stack = new();
 
     public MainWindowDataContext(ITopLevelPageControl? mainPage, bool decorations)
     {

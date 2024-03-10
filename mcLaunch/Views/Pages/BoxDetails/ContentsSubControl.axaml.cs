@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using mcLaunch.Launchsite.Core.ModLoaders;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Managers;
+using mcLaunch.Launchsite.Core.ModLoaders;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 
@@ -15,9 +15,9 @@ namespace mcLaunch.Views.Pages.BoxDetails;
 public partial class ContentsSubControl : SubControl
 {
     private readonly bool canUpdate;
+    private readonly List<MinecraftContent> updatableContentsList = new();
     private bool isAnyUpdate;
     private bool isUpdating;
-    private readonly List<MinecraftContent> updatableContentsList = new();
 
     public ContentsSubControl()
     {
@@ -86,8 +86,8 @@ public partial class ContentsSubControl : SubControl
 
             contents.Add(content);
         });
-        
-        contents.Sort((left, right) 
+
+        contents.Sort((left, right)
             => string.Compare(left.Name!, right.Name!, StringComparison.Ordinal));
 
         ModsList.ContentType = ContentType;
@@ -138,9 +138,9 @@ public partial class ContentsSubControl : SubControl
 
         if (isChanges)
         {
-            toUpdateContents.Sort((left, right) 
+            toUpdateContents.Sort((left, right)
                 => string.Compare(left.Name!, right.Name!, StringComparison.Ordinal));
-            
+
             ModsList.SetContents(toUpdateContents.ToArray());
         }
 

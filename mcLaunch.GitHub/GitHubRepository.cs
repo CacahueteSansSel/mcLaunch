@@ -1,5 +1,5 @@
-﻿using mcLaunch.Launchsite.Http;
-using mcLaunch.GitHub.Models;
+﻿using mcLaunch.GitHub.Models;
+using mcLaunch.Launchsite.Http;
 
 namespace mcLaunch.GitHub;
 

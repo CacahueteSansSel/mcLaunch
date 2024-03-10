@@ -1,12 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 using Avalonia.Media.Imaging;
-using mcLaunch.Launchsite.Core;
-using mcLaunch.Launchsite.Core.ModLoaders;
-using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Utilities;
+using mcLaunch.Launchsite.Core;
+using mcLaunch.Launchsite.Core.ModLoaders;
+using mcLaunch.Launchsite.Models;
 using ReactiveUI;
 
 namespace mcLaunch.Core.Boxes;
@@ -51,6 +51,7 @@ public class BoxManifest : ReactiveObject
 
     [JsonPropertyName("Modifications")] // For compatibility reasons
     public List<BoxStoredContent> Content { get; set; } = [];
+
     public List<string> AdditionalModloaderFiles { get; set; } = [];
 
     [JsonIgnore]

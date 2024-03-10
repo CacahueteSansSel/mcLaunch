@@ -13,9 +13,9 @@ public static class LauncherCrashReport
         wr.WriteLine($"[!] mcLaunch v{CurrentBuild.Version} commit {CurrentBuild.Commit}");
         wr.WriteLine("If you are reporting this, please include this crash report");
         wr.WriteLine($"Platform: {Environment.OSVersion}");
-        wr.WriteLine($"Platform ID: {mcLaunch.Launchsite.Core.Utilities.GetPlatformIdentifier()}");
-        wr.WriteLine($"Java Platform ID: {mcLaunch.Launchsite.Core.Utilities.GetJavaPlatformIdentifier()}");
-        wr.WriteLine($"Architecture: {mcLaunch.Launchsite.Core.Utilities.GetArchitecture()}");
+        wr.WriteLine($"Platform ID: {Launchsite.Core.Utilities.GetPlatformIdentifier()}");
+        wr.WriteLine($"Java Platform ID: {Launchsite.Core.Utilities.GetJavaPlatformIdentifier()}");
+        wr.WriteLine($"Architecture: {Launchsite.Core.Utilities.GetArchitecture()}");
         wr.WriteLine();
         wr.WriteLine("Crash Type: Exception");
         wr.WriteLine();

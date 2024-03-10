@@ -15,7 +15,7 @@ public static class ForgeInstaller
     {
         // Install the vanilla minecraft version files (jar & json)
         await Context.Downloader.BeginSectionAsync($"{slug} {installerFile.Name.Trim()}", false);
-        
+
         // An attempt to fix the "java opens in TextEdit" bug
         if (OperatingSystem.IsMacOS()) File.SetUnixFileMode(jvmExecutablePath, UnixFileMode.UserExecute);
 
@@ -23,12 +23,12 @@ public static class ForgeInstaller
         {
             string targetFilename =
                 $"{minecraftFolderPath}/libraries/{installerFile.EmbeddedForgeJarLibraryName!.MavenFilename}";
-            string folder = targetFilename.Replace(Path.GetFileName(targetFilename), 
+            string folder = targetFilename.Replace(Path.GetFileName(targetFilename),
                 string.Empty).Trim();
 
-            if (!Directory.Exists(folder)) 
+            if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
-            
+
             installerFile.ExtractFile(installerFile.EmbeddedForgeJarPath!, targetFilename);
 
             if (!installerFile.IsV2)
@@ -50,7 +50,7 @@ public static class ForgeInstaller
         else
         {
             await Context.Downloader.EndSectionAsync(false);
-            
+
             return Result<ForgeInstallResult>.Error(
                 $"The {slug} installer needs the base vanilla version {installerFile.MinecraftVersionId} and it" +
                 $" is not installed right now. You shouldn't see this message as mcLaunch should download it" +
@@ -77,7 +77,7 @@ public static class ForgeInstaller
         Dictionary<string, string> variables = new(installerFile.DataVariables);
         variables.Add("SIDE", "client");
         variables.Add("MINECRAFT_JAR", $"{forgeVersionPath}/{installerFile.Version.Id}.jar");
-        
+
         await Context.Downloader.BeginSectionAsync($"Installing {slug} {installerFile.Name.Trim()}", true);
 
         // Extract any needed file in the temp folder
@@ -100,7 +100,7 @@ public static class ForgeInstaller
         for (int retryCount = 0; retryCount < 5; retryCount++)
         {
             int processorCount = 0;
-            
+
             foreach (ForgeInstallerFile.PostProcessor processor in installerFile.Processors)
             {
                 ForgeInstallerFile.LibraryEntry? library = installerFile.GetProcessorLibrary(processor);
@@ -108,12 +108,15 @@ public static class ForgeInstaller
 
                 string libraryFilename = $"libraries/{library.ArtifactPath}";
 
-                using var zip = new ZipArchive(new FileStream($"{minecraftFolderPath}/{libraryFilename}", FileMode.Open));
+                using var zip =
+                    new ZipArchive(new FileStream($"{minecraftFolderPath}/{libraryFilename}", FileMode.Open));
                 var dict = MetaInfParser.Parse(zip);
                 string mainClass = dict["Main-Class"];
                 string procClassPath = string.Join(Path.PathSeparator, processor.Classpath
                     .Select(cp =>
-                        cp.Contains(':') ? $"{minecraftFolderPath}/libraries/{new LibraryName(cp).MavenFilename}" : cp));
+                        cp.Contains(':')
+                            ? $"{minecraftFolderPath}/libraries/{new LibraryName(cp).MavenFilename}"
+                            : cp));
                 string[] arguments = BuildArgumentList(processor.Arguments, variables, minecraftFolderPath);
 
                 ProcessStartInfo processStartInfo = new()
@@ -140,22 +143,21 @@ public static class ForgeInstaller
             }
 
             if (error) continue;
-            
+
             break;
         }
 
         if (error)
-        {
             return Result<ForgeInstallResult>.Error("One or more installer processor failed to execute properly. " +
                                                     "This is a problem within mcLaunch, please report it to CacahueteDev");
-        }
 
         await Context.Downloader.EndSectionAsync(true);
 
         return new Result<ForgeInstallResult>(new ForgeInstallResult(installerFile.Version));
     }
 
-    static string[] BuildArgumentList(string[] args, Dictionary<string, string> variables, string minecraftFolderPath)
+    private static string[] BuildArgumentList(string[] args, Dictionary<string, string> variables,
+        string minecraftFolderPath)
     {
         string[] finalArgs = new string[args.Length];
         Array.Copy(args, finalArgs, args.Length);
@@ -166,8 +168,9 @@ public static class ForgeInstaller
             {
                 if (!args[i].Contains($"{{{kv.Key}}}")) continue;
 
-                finalArgs[i] = args[i].Replace($"{{{kv.Key}}}", kv.Value.Contains(' ') 
-                    ? $"\"{kv.Value}\"" : kv.Value);
+                finalArgs[i] = args[i].Replace($"{{{kv.Key}}}", kv.Value.Contains(' ')
+                    ? $"\"{kv.Value}\""
+                    : kv.Value);
                 break;
             }
 

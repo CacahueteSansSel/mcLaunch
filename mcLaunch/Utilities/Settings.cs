@@ -90,7 +90,7 @@ public class Settings
     public static void MarkCurrentVersionAsSeen()
     {
         if (SeenVersionsList.Contains(CurrentBuild.Version.ToString())) return;
-        
+
         SeenVersionsList.Add(CurrentBuild.Version.ToString());
         Save();
     }
@@ -98,21 +98,19 @@ public class Settings
     public static void Save()
     {
         File.WriteAllText(AppdataFolderManager.GetPath("settings.json"), JsonSerializer.Serialize(Instance));
-        File.WriteAllText(AppdataFolderManager.GetPath("seen_versions.json"), JsonSerializer.Serialize(SeenVersionsList));
+        File.WriteAllText(AppdataFolderManager.GetPath("seen_versions.json"),
+            JsonSerializer.Serialize(SeenVersionsList));
     }
 
     public static void Load()
     {
         if (File.Exists(AppdataFolderManager.GetPath("seen_versions.json")))
-        {
             SeenVersionsList = JsonSerializer.Deserialize<List<string>>(
                 File.ReadAllText(AppdataFolderManager.GetPath("seen_versions.json")))!;
-        }
-        
+
         if (File.Exists(AppdataFolderManager.GetPath("settings.json")))
-        {
             Instance = JsonSerializer.Deserialize<Settings>(
                 File.ReadAllText(AppdataFolderManager.GetPath("settings.json")))!;
-        } else Instance = new Settings().WithDefaults();
+        else Instance = new Settings().WithDefaults();
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using System.Reflection;
+using mcLaunch.Core.Managers;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Http;
-using mcLaunch.Core.Managers;
 using mcLaunch.Tests;
 using mcLaunch.Tests.Tests;
 using mcLaunch.Utilities;

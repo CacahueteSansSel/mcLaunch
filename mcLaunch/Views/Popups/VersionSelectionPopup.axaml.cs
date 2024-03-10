@@ -10,8 +10,8 @@ namespace mcLaunch.Views.Popups;
 
 public partial class VersionSelectionPopup : UserControl
 {
-    private IVersion? selectedVersion;
     private readonly Action<IVersion> versionSelectedCallback;
+    private IVersion? selectedVersion;
 
     public VersionSelectionPopup()
     {

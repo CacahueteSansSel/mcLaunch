@@ -41,10 +41,10 @@ internal class Program
             {
                 PlatformSpecific.LaunchProcess("mcLaunch", $"--crash \"{crashReportFilename}\"");
                 Environment.Exit(1);
-                
+
                 return;
             }
-            
+
             // On macOS, we write the crash report filename, then we crash
             // If the user selects the "Reopen" button, mcLaunch will re-open and see the crash_report file
             // It will show the usual "mcLaunch crashed" popup

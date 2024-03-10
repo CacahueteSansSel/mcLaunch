@@ -5,8 +5,8 @@ namespace mcLaunch.Launchsite.Core;
 
 public class QuickPlayManager
 {
-    private MinecraftFolder folder;
     private readonly string path;
+    private MinecraftFolder folder;
 
     public QuickPlayManager(MinecraftFolder folder)
     {

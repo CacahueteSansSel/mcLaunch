@@ -1,18 +1,17 @@
 ﻿using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Managers;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Windows;
 
 public partial class VersionSelectWindow : Window
 {
-    private ManifestMinecraftVersion? selectedVersion;
     private readonly ManifestMinecraftVersion[] versions;
+    private ManifestMinecraftVersion? selectedVersion;
 
     public VersionSelectWindow()
     {
@@ -55,7 +54,7 @@ public partial class VersionSelectWindow : Window
     {
         if (selectedVersion != null)
             Close(selectedVersion);
-        
+
         ManifestMinecraftVersion? exactMatch = versions
             .FirstOrDefault(v => v.Id.Trim() == SearchTextBox.Text?.Trim());
 

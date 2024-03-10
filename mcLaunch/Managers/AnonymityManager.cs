@@ -28,8 +28,8 @@ public static class AnonymityManager
 
 public class AnonymitySession
 {
-    private List<string> availableNames;
     private readonly List<string> initialNames;
+    private List<string> availableNames;
 
     public AnonymitySession(string[] names)
     {

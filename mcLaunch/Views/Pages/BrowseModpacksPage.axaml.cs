@@ -73,7 +73,7 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
 
         foreach (PlatformModpack modpack in additionalPacks.Items)
             BoxContainer.Children.Add(new ModpackEntryCard(modpack));
-        
+
         LoadingButtonFrame.IsVisible = false;
     }
 }

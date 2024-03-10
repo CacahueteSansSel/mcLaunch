@@ -2,11 +2,6 @@
 
 public class Result
 {
-    public static Result Error(string message) => new(errorMessage: message);
-    
-    public bool IsError { get; }
-    public string? ErrorMessage { get; }
-
     public Result()
     {
         IsError = false;
@@ -17,20 +12,24 @@ public class Result
         IsError = otherResult.IsError;
         ErrorMessage = otherResult.ErrorMessage;
     }
-    
+
     protected Result(string errorMessage)
     {
         IsError = true;
         ErrorMessage = errorMessage;
     }
+
+    public bool IsError { get; }
+    public string? ErrorMessage { get; }
+
+    public static Result Error(string message)
+    {
+        return new Result(message);
+    }
 }
 
 public class Result<T> : Result
 {
-    public static Result<T> Error(string message) => new(errorMessage: message);
-    
-    public T? Data { get; }
-
     public Result(T? data)
     {
         Data = data;
@@ -38,11 +37,16 @@ public class Result<T> : Result
 
     public Result(Result otherResult) : base(otherResult)
     {
-        
     }
 
     protected Result(string errorMessage) : base(errorMessage)
     {
-        
+    }
+
+    public T? Data { get; }
+
+    public static Result<T> Error(string message)
+    {
+        return new Result<T>(message);
     }
 }

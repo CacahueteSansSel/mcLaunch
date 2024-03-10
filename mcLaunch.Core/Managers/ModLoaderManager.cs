@@ -1,5 +1,5 @@
-﻿using mcLaunch.Launchsite.Core.ModLoaders;
-using mcLaunch.Core.Boxes;
+﻿using mcLaunch.Core.Boxes;
+using mcLaunch.Launchsite.Core.ModLoaders;
 
 namespace mcLaunch.Core.Managers;
 
@@ -19,14 +19,14 @@ public static class ModLoaderManager
         // TODO: avoid to hardcode the jvm to use for Forge's installer
         All.Add(new ForgeModLoaderSupport(
             BoxManager.JvmDownloader.GetAndPrepareJvmExecPath(
-                mcLaunch.Launchsite.Core.Utilities.GetJavaPlatformIdentifier(),
+                Launchsite.Core.Utilities.GetJavaPlatformIdentifier(),
                 "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
 
         // NeoForge
         // TODO: avoid to hardcode the jvm to use for Forge's installer
         All.Add(new NeoForgeModLoaderSupport(
             BoxManager.JvmDownloader.GetAndPrepareJvmExecPath(
-                mcLaunch.Launchsite.Core.Utilities.GetJavaPlatformIdentifier(),
+                Launchsite.Core.Utilities.GetJavaPlatformIdentifier(),
                 "java-runtime-gamma"), BoxManager.SystemFolder.CompletePath));
 
         // Quilt

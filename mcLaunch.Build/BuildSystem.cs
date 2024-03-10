@@ -5,20 +5,20 @@ namespace mcLaunch.Build;
 
 public class BuildSystem
 {
-    private List<BuildStepBase> steps = [];
-    
-    public Project[] Projects { get; }
-    public string SolutionDirectory { get; }
-    public Repository Repository { get; }
-    public Commit? LatestCommit => Repository.Head.Commits.FirstOrDefault();
+    private readonly List<BuildStepBase> steps = [];
 
     public BuildSystem(string solutionDirectory)
     {
         SolutionDirectory = Path.GetFullPath(solutionDirectory);
         Projects = Solution.GetProjects(solutionDirectory);
-        
+
         Repository = new Repository($"{solutionDirectory}/.git");
     }
+
+    public Project[] Projects { get; }
+    public string SolutionDirectory { get; }
+    public Repository Repository { get; }
+    public Commit? LatestCommit => Repository.Head.Commits.FirstOrDefault();
 
     public BuildSystem With<T>() where T : BuildStepBase, new()
     {
@@ -28,13 +28,15 @@ public class BuildSystem
 
     public BuildSystem With(params BuildStepBase[] newSteps)
     {
-        this.steps.AddRange(newSteps);
+        steps.AddRange(newSteps);
         return this;
     }
 
     public Project? GetProject(string name)
-        => Projects.FirstOrDefault(project => project.Name == name);
-    
+    {
+        return Projects.FirstOrDefault(project => project.Name == name);
+    }
+
     public async Task<bool> BuildAsync()
     {
         Console.WriteLine($"Now running {steps.Count} build step(s)...");
@@ -61,20 +63,20 @@ public class BuildSystem
                 Console.WriteLine("Error");
                 Console.WriteLine(result.ErrorMessage);
                 Console.ResetColor();
-        
+
                 Console.WriteLine($"Ran {index}/{steps.Count} build steps with failure");
 
                 return false;
             }
-            
+
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("OK");
             Console.ResetColor();
 
             index++;
         }
-        
-        Console.WriteLine($"Ran {index-1}/{steps.Count} build steps without failure");
+
+        Console.WriteLine($"Ran {index - 1}/{steps.Count} build steps without failure");
 
         return true;
     }

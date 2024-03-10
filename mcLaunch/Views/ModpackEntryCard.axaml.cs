@@ -51,10 +51,10 @@ public partial class ModpackEntryCard : UserControl
         {
             IsEnabled = false;
             IsVisible = false;
-            
+
             return;
         }
-        
+
         modpack.Icon = icon;
 
         await modpack.DownloadBackgroundAsync();

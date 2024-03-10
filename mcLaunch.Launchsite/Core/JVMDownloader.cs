@@ -40,10 +40,10 @@ public class JvmDownloader
         {
             string path = $"{BasePath}/{name}/{platform}/jre.bundle/Contents/Home/bin/java";
             //File.SetUnixFileMode(path, UnixFileMode.UserExecute);
-            
+
             return path;
         }
-        
+
         return $"{BasePath}/{name}/{platform}/bin/{(OperatingSystem.IsWindows() ? "javaw.exe" : "java")}";
     }
 
@@ -91,7 +91,7 @@ public class JvmDownloader
             // We need to make the java executable inside this bundle folder executable
 
             string macosJavaPath = $"{targetPath}/jre.bundle/Contents/Home/bin/java";
-            
+
             await Context.Downloader.ChmodAsync(macosJavaPath, "+x");
         }
     }

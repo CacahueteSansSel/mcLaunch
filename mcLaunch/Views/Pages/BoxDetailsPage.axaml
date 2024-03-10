@@ -122,7 +122,8 @@
                                                RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
                                                Height="13" />
                                     </Button>
-                                    <Button x:Name="ModsButton" Classes="transparent" Click="SubControlModButtonClicked"
+                                    <Button x:Name="ModsButton" Classes="transparent"
+                                            Click="SubControlModButtonClicked"
                                             ToolTip.Tip="Manage mods">
                                         <Image Source="/resources/icons/mod.png"
                                                RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
