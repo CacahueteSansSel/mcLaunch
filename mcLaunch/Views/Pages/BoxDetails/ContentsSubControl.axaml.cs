@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -85,6 +86,9 @@ public partial class ContentsSubControl : SubControl
 
             contents.Add(content);
         });
+        
+        contents.Sort((left, right) 
+            => string.Compare(left.Name!, right.Name!, StringComparison.Ordinal));
 
         ModsList.ContentType = ContentType;
 
