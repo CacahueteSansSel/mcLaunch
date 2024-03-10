@@ -11,18 +11,26 @@ public class UpdateLatestCommitStep : BuildStepBase
 
     public override async Task<BuildResult> RunAsync(BuildSystem system)
     {
-        Project? mcLaunch = system.GetProject("mcLaunch");
-        string buildManifestFile = $"{mcLaunch!.Folder}/resources/settings/build.json";
-        Commit commit = system.LatestCommit!;
-        Branch? branch = system.Repository.Head.TrackedBranch;
+        try
+        {
+            Project? mcLaunch = system.GetProject("mcLaunch");
+            string buildManifestFile = $"{mcLaunch!.Folder}/resources/settings/build.json";
+            Commit commit = system.LatestCommit!;
+            Branch? branch = system.Repository.Head.TrackedBranch;
 
-        BuildManifest manifest = new(commit.Id.ToString()[..7],
-            branch is null ? string.Empty : branch.FriendlyName.Replace("origin/", ""),
-            GenerateChangelog(system.Repository));
+            BuildManifest manifest = new(commit.Id.ToString()[..7],
+                branch is null ? string.Empty : branch.FriendlyName.Replace("origin/", ""),
+                GenerateChangelog(system.Repository));
 
-        await File.WriteAllTextAsync(buildManifestFile, JsonSerializer.Serialize(manifest));
+            await File.WriteAllTextAsync(buildManifestFile, JsonSerializer.Serialize(manifest));
 
-        return new BuildResult();
+            return new BuildResult();
+        }
+        catch (Exception e)
+        {
+            // Ignore the errors for now
+            return new BuildResult();
+        }
     }
 
     private string[] GenerateChangelog(Repository repository)
