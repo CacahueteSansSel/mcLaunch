@@ -85,7 +85,12 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         SubControlButtons.IsEnabled = true;
 
         if (Box.HasReadmeFile) SetSubControl(new ReadmeSubControl(Box.ReadReadmeFile()));
-        else SetSubControl(new ContentsSubControl());
+        else
+        {
+            SetSubControl(Box.ModLoader is DirectJarMergingModLoaderSupport
+                ? new DirectJarModsSubControl()
+                : new ContentsSubControl(MinecraftContentType.Modification));
+        }
 
         ReadmeButton.IsVisible = Box.HasReadmeFile;
         CrashReportButton.IsVisible = Box.HasCrashReports;
@@ -174,7 +179,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
             boxPrepareResult.ShowErrorPopup();
             return;
         }
-        
+
         Process java;
 
         if (world != null) java = Box.Run(world);
