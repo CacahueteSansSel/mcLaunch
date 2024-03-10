@@ -24,6 +24,9 @@ public class ForgeModLoaderSupport : ModLoaderSupport
 
     public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion)
     {
+        if (Version.TryParse(minecraftVersion, out Version? version) && version < new Version("1.12.2"))
+            return [];
+        
         ForgePromotionsManifest promos = await Api.GetAsync<ForgePromotionsManifest>(PromosUrl);
         string keyRecommended = $"{minecraftVersion}-recommended";
         string keyLatest = $"{minecraftVersion}-latest";
