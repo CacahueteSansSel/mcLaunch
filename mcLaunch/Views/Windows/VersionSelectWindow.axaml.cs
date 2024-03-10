@@ -53,17 +53,14 @@ public partial class VersionSelectWindow : Window
 
     private void SelectVersionButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (selectedVersion != null)
+            Close(selectedVersion);
+        
         ManifestMinecraftVersion? exactMatch = versions
             .FirstOrDefault(v => v.Id.Trim() == SearchTextBox.Text?.Trim());
 
         if (exactMatch != null)
-        {
             Close(exactMatch);
-            return;
-        }
-
-        if (selectedVersion != null)
-            Close(selectedVersion);
     }
 
     private void SearchVersionTextBoxTextChanged(object? sender, TextChangedEventArgs e)
