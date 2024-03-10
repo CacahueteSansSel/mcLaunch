@@ -1,5 +1,4 @@
-﻿using System.IO.Compression;
-using mcLaunch.Build.Core;
+﻿using mcLaunch.Build.Core;
 
 namespace mcLaunch.Build.Steps;
 
@@ -16,15 +15,16 @@ public abstract class BuildInstallerStep : BuildStepBase
         Project? installer = system.GetProject("mcLaunch.Installer");
         if (installer == null) return BuildResult.Error("mcLaunch is not present");
 
-        string outputDirectory = $"{system.SolutionDirectory}/output/{Platform.ToLower()}/installer-{PlatformRuntimeIdentifier}";
+        string outputDirectory =
+            $"{system.SolutionDirectory}/output/{Platform.ToLower()}/installer-{PlatformRuntimeIdentifier}";
         string releasesDirectory = $"{system.SolutionDirectory}/output/releases";
         Directory.CreateDirectory(outputDirectory);
         Directory.CreateDirectory(releasesDirectory);
 
         BuildResult result = await installer.PublishAsync(PlatformRuntimeIdentifier, outputDirectory);
         if (result.IsError) return result;
-        
-        File.Copy($"{outputDirectory}/mcLaunch.Installer{InstallerExtension}", 
+
+        File.Copy($"{outputDirectory}/mcLaunch.Installer{InstallerExtension}",
             $"{releasesDirectory}/mcLaunch-Installer-{PlatformRuntimeIdentifier}{InstallerExtension}");
 
         return new BuildResult();

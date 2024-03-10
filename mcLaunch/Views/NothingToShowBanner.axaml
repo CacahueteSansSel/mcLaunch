@@ -8,7 +8,7 @@
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <StackPanel Opacity="0.7" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-        <TextBlock x:Name="TitleText" Classes="light" TextAlignment="Center">Nothing to show here</TextBlock>
+        <TextBlock x:Name="TitleText" Classes="light" TextAlignment="Center">Nothing to see here...</TextBlock>
         <TextBlock x:Name="FooterText" IsVisible="False" Classes="light" TextAlignment="Center" />
     </StackPanel>
 </UserControl>

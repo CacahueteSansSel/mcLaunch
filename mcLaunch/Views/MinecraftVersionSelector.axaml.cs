@@ -1,8 +1,8 @@
 ﻿using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Managers;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Views.Windows;
 
 namespace mcLaunch.Views;

@@ -8,7 +8,7 @@ namespace mcLaunch.Utilities;
 public static class CurrentBuild
 {
     public static BuildManifest? Manifest { get; private set; }
-    
+
     public static Version Version => new("0.2.0");
 
     public static string Commit => Manifest?.CommitId ?? "unknown";
@@ -24,10 +24,8 @@ public static class CurrentBuild
         }
         catch (Exception e)
         {
-            
         }
     }
 }
-
 
 public record BuildManifest(string CommitId, string Branch, string[] Changelog);

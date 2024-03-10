@@ -4,9 +4,6 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Avalonia.Media.Imaging;
-using mcLaunch.Launchsite.Core;
-using mcLaunch.Launchsite.Core.ModLoaders;
-using mcLaunch.Launchsite.Models;
 using DynamicData;
 using JetBrains.Annotations;
 using mcLaunch.Core.Contents;
@@ -15,6 +12,9 @@ using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Utilities;
+using mcLaunch.Launchsite.Core;
+using mcLaunch.Launchsite.Core.ModLoaders;
+using mcLaunch.Launchsite.Models;
 using Modrinth.Exceptions;
 using SharpNBT;
 using AuthenticationManager = mcLaunch.Core.Managers.AuthenticationManager;
@@ -23,9 +23,9 @@ namespace mcLaunch.Core.Boxes;
 
 public class Box : IEquatable<Box>
 {
+    private readonly string manifestPath;
     private bool exposeLauncher;
     private string launcherVersion = "0.0.0";
-    private readonly string manifestPath;
     private FileSystemWatcher watcher;
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
@@ -60,7 +60,7 @@ public class Box : IEquatable<Box>
         QuickPlay = new QuickPlayManager(Folder);
 
         ReloadManifest(true);
-        if (File.Exists($"{path}/icon.png") && Manifest.Icon == null)
+        if (File.Exists($"{path}/icon.png") && Manifest!.Icon == null)
             LoadIcon();
     }
 
@@ -68,7 +68,6 @@ public class Box : IEquatable<Box>
     public string Path { get; }
     public MinecraftFolder Folder { get; }
     public Minecraft Minecraft { get; private set; }
-    public Process MinecraftProcess { get; }
     public MinecraftVersion Version { get; private set; }
     public MinecraftOptions? Options { get; private set; }
     public QuickPlayManager QuickPlay { get; }
@@ -78,14 +77,13 @@ public class Box : IEquatable<Box>
     public bool SupportsQuickPlay => MinecraftVersion >= new Version("1.20");
     public IBoxEventListener? EventListener { get; set; }
 
-    public bool IsRunning => MinecraftProcess != null && !MinecraftProcess.HasExited;
     public bool HasReadmeFile => File.Exists($"{Folder.Path}/README.md");
     public bool HasLicenseFile => File.Exists($"{Folder.Path}/LICENSE.md");
 
     public bool HasCrashReports => Directory.Exists($"{Folder.Path}/crash-reports")
                                    && Directory.GetFiles($"{Folder.Path}/crash-reports").Length > 0;
 
-    public bool HasWorlds => Directory.Exists($"{Folder.Path}/saves") && 
+    public bool HasWorlds => Directory.Exists($"{Folder.Path}/saves") &&
                              Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
 
     public bool Equals(Box? other)
@@ -104,7 +102,7 @@ public class Box : IEquatable<Box>
         watcher.Deleted += OnFileDeleted;
     }
 
-    private async void OnFileDeleted(object sender, FileSystemEventArgs e)
+    private void OnFileDeleted(object sender, FileSystemEventArgs e)
     {
         if (DownloadManager.IsProcessing) return;
 
@@ -173,7 +171,7 @@ public class Box : IEquatable<Box>
         {
             Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png");
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // TODO: Set the manifest icon to default
         }
@@ -325,13 +323,13 @@ public class Box : IEquatable<Box>
 
         bool isReload = Manifest != null;
 
-        IconCollection icon = null;
+        IconCollection? icon = null;
         Bitmap? background = null;
 
         if (isReload)
         {
             // We backup the manifest's icon and background to avoid loading those every time
-            icon = Manifest.Icon;
+            icon = Manifest!.Icon;
             background = Manifest.Background;
         }
 
@@ -404,7 +402,7 @@ public class Box : IEquatable<Box>
 
     private async void RunPostDeserializationChecks()
     {
-        if (await Manifest?.RunPostDeserializationChecks())
+        if (await Manifest.RunPostDeserializationChecks())
             SaveManifest();
     }
 
@@ -439,7 +437,7 @@ public class Box : IEquatable<Box>
 
         foreach (MinecraftContentPlatform.ContentDependency dep in deps.Items)
         {
-            if (dep?.Content == null || dep.Type == MinecraftContentPlatform.DependencyRelationType.Incompatible)
+            if (dep.Content == null || dep.Type == MinecraftContentPlatform.DependencyRelationType.Incompatible)
                 continue;
 
             if (!Manifest.HasContentStrict(dep.Content.Id, mod.ModPlatformId)
@@ -448,11 +446,12 @@ public class Box : IEquatable<Box>
                 continue;
 
             if (Manifest.HasContentStrict(dep.Content.Id, mod.ModPlatformId)
-                && Manifest.GetContent(dep.Content.Id).VersionId != dep.VersionId)
+                && Manifest.GetContent(dep.Content.Id)?.VersionId != dep.VersionId)
             {
                 // The mod is installed on this box & the required version does not match the installed one
 
-                string versionId = dep.VersionId ?? dep.Content.LatestVersion;
+                string? versionId = dep.VersionId ?? dep.Content.LatestVersion;
+                if (versionId == null) continue;
 
                 try
                 {
@@ -460,7 +459,7 @@ public class Box : IEquatable<Box>
                 }
                 catch (ModrinthApiException e)
                 {
-                    if (e.Response.StatusCode == HttpStatusCode.NotFound)
+                    if (e.Response?.StatusCode == HttpStatusCode.NotFound)
                         // It seems that this version doesn't work anymore, so we ignore it
                         continue;
 
@@ -483,7 +482,7 @@ public class Box : IEquatable<Box>
             {
                 worlds.Add(new MinecraftWorld(System.IO.Path.GetFullPath(folder)));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // ignored
             }
@@ -500,7 +499,9 @@ public class Box : IEquatable<Box>
         CompoundTag tag = NbtFile.Read($"{Folder.Path}/servers.dat", FormatOptions.Java);
         ListTag serversTag = (ListTag) tag["servers"];
 
-        foreach (CompoundTag server in serversTag)
+        foreach (Tag serverTag in serversTag)
+        {
+            var server = (CompoundTag) serverTag;
             try
             {
                 servers.Add(new MinecraftServer(server));
@@ -509,6 +510,7 @@ public class Box : IEquatable<Box>
             {
                 // ignored
             }
+        }
 
         return servers.ToArray();
     }

@@ -200,7 +200,7 @@ public class Minecraft
             info.RedirectStandardError = false;
             info.RedirectStandardOutput = false;
         }
-        
+
         // An attempt to fix the "java opens in TextEdit" bug
         if (OperatingSystem.IsMacOS()) File.SetUnixFileMode(info.FileName, UnixFileMode.UserExecute);
 

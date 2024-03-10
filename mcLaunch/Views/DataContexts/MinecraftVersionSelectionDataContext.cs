@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using mcLaunch.Core.Managers;
 using mcLaunch.Launchsite.Core.ModLoaders;
 using mcLaunch.Launchsite.Models;
-using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
 using ReactiveUI;
 

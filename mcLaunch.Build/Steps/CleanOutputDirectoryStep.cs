@@ -3,7 +3,7 @@
 public class CleanOutputDirectoryStep : BuildStepBase
 {
     public override string Name => "Clean output directory";
-    
+
     public override async Task<BuildResult> RunAsync(BuildSystem system)
     {
         if (Directory.Exists($"{system.SolutionDirectory}/output"))

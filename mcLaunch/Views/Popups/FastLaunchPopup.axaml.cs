@@ -5,11 +5,11 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Managers;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Core.ModLoaders;
 using mcLaunch.Launchsite.Models;
-using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.DataContexts;
 using mcLaunch.Views.Pages;
@@ -83,7 +83,7 @@ public partial class FastLaunchPopup : UserControl
             pathResult.ShowErrorPopup();
             return;
         }
-        
+
         string path = pathResult.Data!;
         Box box = new Box(path);
         box.SetAndSaveIcon(new Bitmap(AssetLoader.Open(

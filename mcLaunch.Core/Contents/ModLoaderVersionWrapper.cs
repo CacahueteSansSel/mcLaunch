@@ -1,5 +1,5 @@
-﻿using mcLaunch.Launchsite.Core.ModLoaders;
-using mcLaunch.Core.Core;
+﻿using mcLaunch.Core.Core;
+using mcLaunch.Launchsite.Core.ModLoaders;
 
 namespace mcLaunch.Core.Contents;
 

@@ -30,7 +30,8 @@ public class DirectJarMergingModLoaderSupport : ModLoaderSupport
 
         if (additionalFiles.Length == 0) return new Result();
 
-        using ZipArchive minecraftJar = new(new FileStream(jarFilename, FileMode.Open, FileAccess.ReadWrite), ZipArchiveMode.Update);
+        using ZipArchive minecraftJar = new(new FileStream(jarFilename, FileMode.Open, FileAccess.ReadWrite),
+            ZipArchiveMode.Update);
         minecraftJar.GetEntry("META-INF/MOJANG_C.SF")?.Delete();
         minecraftJar.GetEntry("META-INF/MOJANG_C.DSA")?.Delete();
         minecraftJar.GetEntry("META-INF/MANIFEST.MF")?.Delete();
@@ -51,9 +52,9 @@ public class DirectJarMergingModLoaderSupport : ModLoaderSupport
 
                 await using Stream targetStream = mcEntry.Open();
                 await using Stream sourceStream = entry.Open();
-                
+
                 await sourceStream.CopyToAsync(targetStream);
-                
+
                 Debug.Assert(targetStream.Length == entryLength);
             }
         }

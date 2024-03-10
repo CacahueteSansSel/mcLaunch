@@ -1,8 +1,6 @@
 using System;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Windows;
@@ -21,7 +19,7 @@ public partial class AboutWindow : Window
 
         VersionText.Text = $"mcLaunch v{CurrentBuild.Version}";
         BuildInfoText.Text = $"branch {CurrentBuild.Branch} • " +
-                             $"{platform} {mcLaunch.Launchsite.Core.Utilities.GetArchitecture()} • " +
+                             $"{platform} {Launchsite.Core.Utilities.GetArchitecture()} • " +
                              $".NET {Environment.Version.ToString(2)}";
     }
 

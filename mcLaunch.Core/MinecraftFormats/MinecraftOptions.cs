@@ -91,7 +91,7 @@ public class MinecraftOptions : Dictionary<string, object>
             string key = tokens[0].Trim();
             string stringValue = tokens[1].Trim();
 
-            Add(key, ParseValue(stringValue));
+            TryAdd(key, ParseValue(stringValue));
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace mcLaunch.Build.Steps;
 
-public class CreateMacOSBundleArm64Step : CreateMacOSBundleStep
+public class CreateMacosBundleArm64Step : CreateMacosBundleStep
 {
     public override string PlatformRuntimeIdentifier => "osx-arm64";
 }

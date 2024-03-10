@@ -1,6 +1,5 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using mcLaunch.Launchsite.Auth;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Popups;

@@ -25,12 +25,12 @@ public abstract class BuildMcLaunchStep : BuildStepBase
 
         BuildResult result = await mcLaunch.PublishAsync(PlatformRuntimeIdentifier, outputDirectory);
         if (result.IsError) return result;
-        
+
         result = await mcGuard.PublishAsync(PlatformRuntimeIdentifier, outputDirectory);
         if (result.IsError) return result;
 
         if (!GenerateZipFile) return new BuildResult();
-        
+
         string archiveFilename = $"{releasesDirectory}/mcLaunch-{PlatformRuntimeIdentifier}.zip";
         if (File.Exists(archiveFilename)) File.Delete(archiveFilename);
         ZipFile.CreateFromDirectory(outputDirectory, archiveFilename);

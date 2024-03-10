@@ -10,8 +10,24 @@ namespace mcLaunch.Launchsite.Core.ModLoaders.Forge;
 public class ForgeInstallerFile : IDisposable
 {
     public const string DefaultMavenRepositoryUrl = "https://libraries.minecraft.net/";
-    private ZipArchive _archive;
-    
+    private readonly ZipArchive _archive;
+
+    public ForgeInstallerFile(string jarFilename)
+    {
+        _archive = new ZipArchive(new FileStream(jarFilename, FileMode.Open));
+
+        string profileJson = _archive.ReadAllText("install_profile.json");
+        ForgeInstallProfile? installProfile = JsonSerializer.Deserialize<ForgeInstallProfile>(profileJson,
+            new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+            });
+        if (installProfile == null) return;
+
+        if (installProfile.IsV2) ParseProfileV2(installProfile);
+        else ParseProfileV1(installProfile);
+    }
+
     public string Name { get; private set; }
     public string MinecraftVersionId { get; private set; }
     public List<PostProcessor> Processors { get; } = [];
@@ -22,20 +38,9 @@ public class ForgeInstallerFile : IDisposable
     public Dictionary<string, string> DataVariables { get; } = [];
     public bool IsV2 { get; private set; }
 
-    public ForgeInstallerFile(string jarFilename)
+    public void Dispose()
     {
-        _archive = new ZipArchive(new FileStream(jarFilename, FileMode.Open));
-
-        string profileJson = _archive.ReadAllText("install_profile.json");
-        ForgeInstallProfile? installProfile = JsonSerializer.Deserialize<ForgeInstallProfile>(profileJson,
-            new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-            });
-        if (installProfile == null) return;
-        
-        if (installProfile.IsV2) ParseProfileV2(installProfile);
-        else ParseProfileV1(installProfile);
+        _archive.Dispose();
     }
 
     public void ExtractLocalLibrary(LibraryEntry library, string targetFilename)
@@ -53,42 +58,40 @@ public class ForgeInstallerFile : IDisposable
         File.WriteAllBytes(targetFilename, data);
     }
 
-    public bool HasFile(string filename) 
-        => _archive.GetEntry(filename) != null;
+    public bool HasFile(string filename)
+    {
+        return _archive.GetEntry(filename) != null;
+    }
 
     public LibraryEntry? GetProcessorLibrary(PostProcessor processor)
     {
         foreach (LibraryEntry lib in Libraries)
-        {
             if (lib.Name == processor.JarName)
                 return lib;
-        }
 
         return null;
     }
 
-    void ParseProfileV1(ForgeInstallProfile profile)
+    private void ParseProfileV1(ForgeInstallProfile profile)
     {
         IsV2 = false;
-        
+
         Name = profile.Install.Version.Replace("forge", "");
         MinecraftVersionId = profile.Install.Minecraft;
         Version = profile.VersionInfo;
 
         foreach (MinecraftVersion.ModelLibrary library in Version.Libraries)
-        {
             if (string.IsNullOrEmpty(library.Url))
                 library.Url = DefaultMavenRepositoryUrl;
-        }
 
         EmbeddedForgeJarPath = profile.Install.FilePath;
         EmbeddedForgeJarLibraryName = new LibraryName(profile.Install.Path);
     }
 
-    void ParseProfileV2(ForgeInstallProfile profile)
+    private void ParseProfileV2(ForgeInstallProfile profile)
     {
         IsV2 = true;
-        
+
         Name = profile.Version;
         MinecraftVersionId = profile.Minecraft;
         Version = JsonSerializer.Deserialize<MinecraftVersion>(_archive
@@ -106,10 +109,10 @@ public class ForgeInstallerFile : IDisposable
         {
             LibraryName name = new LibraryName(library.Name);
             bool isLocalLib = string.IsNullOrEmpty(library.Downloads.Artifact.Url);
-            
-            Libraries.Add(new LibraryEntry(name, 
-                library.Downloads.Artifact.Path, 
-                isLocalLib ? $"maven/{name.MavenFilename}" : library.Downloads.Artifact.Url, 
+
+            Libraries.Add(new LibraryEntry(name,
+                library.Downloads.Artifact.Path,
+                isLocalLib ? $"maven/{name.MavenFilename}" : library.Downloads.Artifact.Url,
                 isLocalLib));
         }
 
@@ -117,7 +120,7 @@ public class ForgeInstallerFile : IDisposable
         {
             JsonNode values = kv.Value!;
             string clientValue = values["client"]!.AsValue().GetValue<string>();
-            
+
             DataVariables.Add(kv.Key, clientValue);
         }
 
@@ -128,12 +131,8 @@ public class ForgeInstallerFile : IDisposable
             EmbeddedForgeJarPath = $"maven/{forgeName.MavenFilename}";
         }
     }
-    
-    public record PostProcessor(LibraryName JarName, string[] Classpath, string[] Arguments);
-    public record LibraryEntry(LibraryName Name, string ArtifactPath, string ArtifactUrl, bool IsLocal);
 
-    public void Dispose()
-    {
-        _archive.Dispose();
-    }
+    public record PostProcessor(LibraryName JarName, string[] Classpath, string[] Arguments);
+
+    public record LibraryEntry(LibraryName Name, string ArtifactPath, string ArtifactUrl, bool IsLocal);
 }

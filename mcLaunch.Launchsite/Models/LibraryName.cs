@@ -22,7 +22,7 @@ public class LibraryName
             Version = versionTokens[0];
             Extension = versionTokens[1];
         }
-        
+
         if (tokens.Length < 4) return;
 
         Classifier = tokens[3];
@@ -41,17 +41,24 @@ public class LibraryName
     public string Extension { get; }
 
     public string JarFilename => $"{Name}-{Version}{(Classifier != null ? $"-{Classifier}" : "")}.{Extension}";
+
     public string MavenFilename => $"{Package.Replace('.', '/').Replace(':', '/')}" +
                                    $"/{Name.Replace('.', '/').Replace(':', '/')}" +
                                    $"/{Version}" +
                                    $"/{JarFilename}";
 
     public string BuildMavenUrl(string baseUrl)
-        => $"{baseUrl.TrimEnd('/')}/{MavenFilename}";
+    {
+        return $"{baseUrl.TrimEnd('/')}/{MavenFilename}";
+    }
 
     public static bool operator ==(LibraryName? left, LibraryName? right)
-        => left?.Package == right?.Package && left?.Name == right?.Name && left?.Version == right?.Version;
+    {
+        return left?.Package == right?.Package && left?.Name == right?.Name && left?.Version == right?.Version;
+    }
 
     public static bool operator !=(LibraryName? left, LibraryName? right)
-        => left?.Package != right?.Package || left?.Name != right?.Name || left?.Version != right?.Version;
+    {
+        return left?.Package != right?.Package || left?.Name != right?.Name || left?.Version != right?.Version;
+    }
 }

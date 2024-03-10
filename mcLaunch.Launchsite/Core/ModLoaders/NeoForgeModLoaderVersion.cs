@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net.Http.Headers;
-using System.Text.Json;
-using mcLaunch.Launchsite.Models;
+﻿using mcLaunch.Launchsite.Models;
 
 namespace mcLaunch.Launchsite.Core.ModLoaders;
 
@@ -17,7 +14,7 @@ public class NeoForgeModLoaderVersion : ForgeModLoaderVersion
                 ? $"https://maven.neoforged.net/releases/net/neoforged/neoforge/{Name}/neoforge-{Name}-installer.jar"
                 : $"https://maven.neoforged.net/releases/net/neoforged/forge/{FullName}/forge-{FullName}-installer.jar"
         };
-        
+
         return await GetForgeMinecraftVersionAsync(minecraftVersionId, installerUrls, "NeoForge");
     }
 }

@@ -92,10 +92,14 @@ public class BoxBinaryModificationPack : ModificationPack
 
     public override async Task InstallModificationAsync(Box targetBox, SerializedMinecraftContent mod)
     {
+        MinecraftContent content = await ModPlatformManager.Platform.GetContentAsync(mod.ModId);
+        if (content == null) return;
+        
         await ModPlatformManager.Platform.InstallContentAsync(targetBox, new MinecraftContent
         {
             Id = mod.ModId,
-            ModPlatformId = mod.PlatformId
+            ModPlatformId = mod.PlatformId,
+            Type = content.Type
         }, mod.VersionId, false);
     }
 

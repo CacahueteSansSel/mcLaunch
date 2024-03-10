@@ -35,11 +35,19 @@
                                     <views:ModpackEntryCard />
                                 </WrapPanel>
                                 <views:LoadingCircle x:Name="LoadingCircleIcon" IsVisible="False" />
+                                <views:NothingToShowBanner x:Name="NtsBanner" IsVisible="False" />
                             </Panel>
-                            <Button Classes="secondary" HorizontalAlignment="Center" Click="LoadMoreButtonClicked"
-                                    Margin="0 10 0 20">
-                                Load more
-                            </Button>
+                            <Panel HorizontalAlignment="Center" Margin="0 10 0 20">
+                                <Button Classes="secondary" x:Name="LoadMoreButton" Click="LoadMoreButtonClicked">
+                                    Load more
+                                </Button>
+                                <Border x:Name="LoadingButtonFrame" IsVisible="False" Width="124" Height="40"
+                                        Background="{DynamicResource BackgroundDarker}"
+                                        BorderBrush="{DynamicResource BackgroundLighter}" BorderThickness="1"
+                                        CornerRadius="4">
+                                    <views:LoadingCircle RenderTransform="scale(0.65)" />
+                                </Border>
+                            </Panel>
                         </StackPanel>
                     </Panel>
                 </Border>

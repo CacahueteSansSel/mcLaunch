@@ -12,28 +12,22 @@ string solutionDirectory = args[0];
 List<BuildStepBase> steps = [];
 
 if (args.Contains("--windows") || args.Length == 1)
-{
     steps.AddRange([
         new BuildMcLaunchWindows64Step(), new BuildMcLaunchWindowsArm64Step(), new BuildInstallerWindows64Step(),
         new BuildInstallerWindowsArm64Step()
     ]);
-}
 
 if (args.Contains("--macos") || args.Length == 1)
-{
     steps.AddRange([
-        new BuildMcLaunchMacOS64Step(), new BuildMcLaunchMacOSArm64Step(), new CreateMacOSBundle64Step(),
-        new CreateMacOSBundleArm64Step()
+        new BuildMcLaunchMacos64Step(), new BuildMcLaunchMacosArm64Step(), new CreateMacosBundle64Step(),
+        new CreateMacosBundleArm64Step()
     ]);
-}
 
 if (args.Contains("--linux") || args.Length == 1)
-{
     steps.AddRange([
         new BuildMcLaunchLinux64Step(), new BuildMcLaunchLinuxArm64Step(), new BuildInstallerLinux64Step(),
         new BuildInstallerLinuxArm64Step()
     ]);
-}
 
 BuildSystem buildSystem = new BuildSystem(solutionDirectory)
     .With<CleanOutputDirectoryStep>()

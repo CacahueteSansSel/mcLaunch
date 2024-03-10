@@ -14,7 +14,7 @@ public class UpdateLatestCommitStep : BuildStepBase
         try
         {
             Project? mcLaunch = system.GetProject("mcLaunch");
-            string buildManifestFile = $"{mcLaunch.Folder}/resources/settings/build.json";
+            string buildManifestFile = $"{mcLaunch!.Folder}/resources/settings/build.json";
             Commit commit = system.LatestCommit!;
             Branch? branch = system.Repository.Head.TrackedBranch;
 
@@ -41,13 +41,13 @@ public class UpdateLatestCommitStep : BuildStepBase
 
         foreach (Commit commit in repository.Commits)
         {
-            if (commit.Id == ((Commit)latestTag.Target).Id) break;
+            if (commit.Id == ((Commit) latestTag.Target).Id) break;
             if (!commitFormat.IsMatch(commit.MessageShort)) continue;
             if (log.Contains(commit.MessageShort.Trim())) continue;
 
             log.Add(commit.MessageShort.Trim());
         }
-        
+
         return log.ToArray();
     }
 

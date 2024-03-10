@@ -116,7 +116,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
                 Author = mod.Authors?.FirstOrDefault()?.Name,
                 IconUrl = mod.Logo?.Url,
                 MinecraftVersions = minecraftVersions.ToArray(),
-                LatestMinecraftVersion = minecraftVersions.Last(),
+                LatestMinecraftVersion = minecraftVersions.LastOrDefault(),
                 BackgroundPath = mod.Screnshots?.FirstOrDefault()?.Url,
                 DownloadCount = (int) mod.DownloadCount,
                 LastUpdated = mod.DateModified.DateTime,
@@ -219,9 +219,9 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
                 IconUrl = cfMod.Logo?.Url,
                 BackgroundPath = cfMod.Screnshots?.FirstOrDefault()?.Url,
                 MinecraftVersions = minecraftVersions.ToArray(),
-                LatestMinecraftVersion = minecraftVersions.Last(),
+                LatestMinecraftVersion = minecraftVersions.LastOrDefault(),
                 Versions = cfMod.LatestFiles.Select(f => f.Id.ToString()).ToArray(),
-                LatestVersion = cfMod.LatestFiles?.FirstOrDefault().Id.ToString(),
+                LatestVersion = cfMod.LatestFiles?.FirstOrDefault()?.Id.ToString(),
                 LongDescriptionBody = (await client.GetModDescription(cfMod.Id)).Data,
                 DownloadCount = (int) cfMod.DownloadCount,
                 LastUpdated = cfMod.DateModified.DateTime,
@@ -309,7 +309,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             IconPath = cfMod.Logo.Url,
             BackgroundPath = cfMod.Screnshots?.FirstOrDefault()?.Url ?? cfMod.Logo.Url,
             MinecraftVersions = minecraftVersions.ToArray(),
-            LatestMinecraftVersion = minecraftVersions.Last(),
+            LatestMinecraftVersion = minecraftVersions.LastOrDefault(),
             Versions = versions,
             LatestVersion = versions[0],
             LongDescriptionBody = (await client.GetModDescription(cfMod.Id)).Data,
@@ -476,7 +476,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
     public override async Task<ModificationPack> LoadModpackFileAsync(string filename)
     {
         if (!System.IO.File.Exists(filename)) return null;
-        
+
         return new CurseForgeModificationPack(filename);
     }
 

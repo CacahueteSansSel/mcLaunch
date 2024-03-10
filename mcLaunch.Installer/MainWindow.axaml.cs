@@ -2,11 +2,11 @@ using System;
 using System.Net.Http.Headers;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using mcLaunch.Launchsite.Http;
 using mcLaunch.GitHub;
 using mcLaunch.GitHub.Models;
 using mcLaunch.Installer.Core;
 using mcLaunch.Installer.Pages;
+using mcLaunch.Launchsite.Http;
 
 namespace mcLaunch.Installer;
 

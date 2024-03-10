@@ -12,8 +12,7 @@ public partial class MinecraftContentEntry : UserControl
 {
     public static readonly AttachedProperty<MinecraftContent> ModProperty =
         AvaloniaProperty.RegisterAttached<MinecraftContent, UserControl, MinecraftContent>(
-            nameof(Mod),
-            null);
+            nameof(Mod));
 
     public MinecraftContentEntry()
     {

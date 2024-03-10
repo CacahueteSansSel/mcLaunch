@@ -5,13 +5,11 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using mcLaunch.Launchsite.Auth;
-using mcLaunch.Launchsite.Http;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
-using mcLaunch.GitHub;
-using mcLaunch.Managers;
+using mcLaunch.Launchsite.Auth;
+using mcLaunch.Launchsite.Http;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
@@ -30,11 +28,9 @@ public partial class MainWindow : Window
         SetTitle("mcLaunch");
 
         if (OperatingSystem.IsLinux())
-        {
             // Hide the top header bar on Linux, because we can't have borderless windows on Linux with Avalonia
             // apparently
             TopHeaderBar.IsVisible = false;
-        }
 
         UpdateBar.IsVisible = false;
         Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch", CurrentBuild.Version.ToString()));
@@ -131,7 +127,7 @@ public partial class MainWindow : Window
                 : App.Args.Get("crash");
 
             if (macOSFileExists) File.Delete(AppdataFolderManager.GetPath("crash_report"));
-                
+
             await new CrashWindow(await File.ReadAllTextAsync(crashReportFilename)).ShowDialog(this);
         }
 
@@ -173,7 +169,7 @@ public partial class MainWindow : Window
             }
 
             MainWindowDataContext.Instance.Push<MainPage>();
-            
+
             if (!Settings.SeenVersionsList.Contains(CurrentBuild.Version.ToString()))
                 Navigation.ShowPopup(new LauncherUpdatedPopup());
         }

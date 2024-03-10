@@ -2,8 +2,8 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using mcLaunch.Launchsite.Auth;
 using mcLaunch.Core.Managers;
+using mcLaunch.Launchsite.Auth;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;

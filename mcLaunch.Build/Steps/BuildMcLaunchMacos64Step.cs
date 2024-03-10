@@ -1,6 +1,6 @@
 ﻿namespace mcLaunch.Build.Steps;
 
-public class BuildMcLaunchMacOS64Step : BuildMcLaunchStep
+public class BuildMcLaunchMacos64Step : BuildMcLaunchStep
 {
     public override string Platform => "macOS";
     public override string PlatformRuntimeIdentifier => "osx-x64";

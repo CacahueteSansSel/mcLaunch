@@ -4,10 +4,10 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
-using mcLaunch.Launchsite.Core;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Core;
+using mcLaunch.Launchsite.Core;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 

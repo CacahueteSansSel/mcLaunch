@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Security.Cryptography;
-using Avalonia.Media;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents.Packs;
 using mcLaunch.Core.Core;
@@ -146,21 +145,21 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
         PlatformModpack[] modpacks = search.Hits.Where(hit => hit != null)
             .Select(hit => new PlatformModpack
-        {
-            Id = hit.ProjectId,
-            Name = hit.Title,
-            ShortDescription = hit.Description,
-            Author = hit.Author,
-            Url = hit.GetDirectUrl(),
-            IconPath = hit.IconUrl,
-            MinecraftVersions = hit.Versions,
-            BackgroundPath = hit.Gallery?.FirstOrDefault(),
-            LatestMinecraftVersion = hit.Versions.Last(),
-            DownloadCount = hit.Downloads,
-            LastUpdated = hit.DateModified,
-            Color = !hit.Color.HasValue ? 0xFF000000 : (uint) hit.Color.Value.ToArgb(),
-            Platform = this
-        }).ToArray();
+            {
+                Id = hit.ProjectId,
+                Name = hit.Title,
+                ShortDescription = hit.Description,
+                Author = hit.Author,
+                Url = hit.GetDirectUrl(),
+                IconPath = hit.IconUrl,
+                MinecraftVersions = hit.Versions,
+                BackgroundPath = hit.Gallery?.FirstOrDefault(),
+                LatestMinecraftVersion = hit.Versions.LastOrDefault(),
+                DownloadCount = hit.Downloads,
+                LastUpdated = hit.DateModified,
+                Color = !hit.Color.HasValue ? 0xFF000000 : (uint) hit.Color.Value.ToArgb(),
+                Platform = this
+            }).ToArray();
 
         // Download all modpack images
         foreach (PlatformModpack pack in modpacks) pack.DownloadIconAsync();
@@ -251,9 +250,9 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 IconUrl = project.IconUrl,
                 BackgroundPath = project.FeaturedGallery,
                 MinecraftVersions = project.GameVersions,
-                LatestMinecraftVersion = project.GameVersions.Last(),
+                LatestMinecraftVersion = project.GameVersions.LastOrDefault(),
                 Versions = project.Versions,
-                LatestVersion = project.Versions.Last(),
+                LatestVersion = project.Versions.LastOrDefault(),
                 LongDescriptionBody = project.Body,
                 DownloadCount = project.Downloads,
                 LastUpdated = project.Updated,
@@ -339,13 +338,13 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                     ? project.Gallery[0].Url
                     : null),
                 MinecraftVersions = project.GameVersions,
-                LatestMinecraftVersion = project.GameVersions.Last(),
+                LatestMinecraftVersion = project.GameVersions.LastOrDefault(),
                 Versions = versions,
                 LatestVersion = versions[0],
                 LongDescriptionBody = project.Body,
                 DownloadCount = project.Downloads,
                 LastUpdated = project.Updated,
-                Color = !project.Color.HasValue ? 0xFF000000 : (uint)project.Color.Value.ToArgb(),
+                Color = !project.Color.HasValue ? 0xFF000000 : (uint) project.Color.Value.ToArgb(),
                 Platform = this
             };
 
@@ -472,7 +471,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
     public override async Task<ModificationPack> LoadModpackFileAsync(string filename)
     {
         if (!System.IO.File.Exists(filename)) return null;
-        
+
         return await new ModrinthModificationPack(filename).SetupAsync();
     }
 
@@ -486,7 +485,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             Version latest = await Client.Version.GetAsync(project.Versions[0]);
 
             content.Versions = project.Versions;
-            content.LatestVersion = content.Versions.Last();
+            content.LatestVersion = content.Versions.LastOrDefault();
             content.LongDescriptionBody = project.Body;
             content.BackgroundPath = project.FeaturedGallery;
             content.Changelog = latest.Changelog;

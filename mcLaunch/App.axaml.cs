@@ -8,9 +8,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Managers;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Windows;
@@ -70,19 +70,16 @@ public class App : Application
 
     public class AppDataContext
     {
-        public ReactiveCommand<Unit, Unit> AboutCommand { get; set; }
-
         public AppDataContext()
         {
             AboutCommand = ReactiveCommand.Create(ShowAboutWindow);
         }
 
-        void ShowAboutWindow()
+        public ReactiveCommand<Unit, Unit> AboutCommand { get; set; }
+
+        private void ShowAboutWindow()
         {
-            Dispatcher.UIThread.Post(() =>
-            {
-                new AboutWindow().Show(MainWindow.Instance);
-            });
+            Dispatcher.UIThread.Post(() => { new AboutWindow().Show(MainWindow.Instance); });
         }
     }
 }

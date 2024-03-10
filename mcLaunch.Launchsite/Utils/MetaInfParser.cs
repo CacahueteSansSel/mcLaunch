@@ -21,5 +21,7 @@ public static class MetaInfParser
     }
 
     public static Dictionary<string, string> Parse(ZipArchive zipArchive)
-        => Parse(zipArchive.ReadAllText("META-INF/MANIFEST.MF"));
+    {
+        return Parse(zipArchive.ReadAllText("META-INF/MANIFEST.MF"));
+    }
 }

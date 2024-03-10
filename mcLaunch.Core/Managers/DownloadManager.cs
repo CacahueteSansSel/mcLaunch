@@ -1,9 +1,9 @@
 ﻿using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using mcLaunch.Core.Utilities;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Download;
-using mcLaunch.Core.Utilities;
 
 namespace mcLaunch.Core.Managers;
 
@@ -152,21 +152,21 @@ public static class DownloadManager
 
             bool fileWritten = false;
             for (int i = 0; i < 5; i++)
-            {
                 try
                 {
                     await File.WriteAllBytesAsync(entry.Target, data);
                     fileWritten = true;
-                    
+
                     break;
                 }
                 catch (Exception e)
                 {
                     await Task.Delay(500);
                 }
-            }
-            if (!fileWritten) throw new Exception($"File {entry.Source} at {entry.Target} download failed : " +
-                                                  $"file can't be accessed");
+
+            if (!fileWritten)
+                throw new Exception($"File {entry.Source} at {entry.Target} download failed : " +
+                                    $"file can't be accessed");
 
             ramStream.Close();
         }
@@ -283,7 +283,7 @@ public static class DownloadManager
                 OnDownloadSectionStarting?.Invoke(sectionName, 0);
                 return;
             }
-            
+
             Begin(sectionName);
         }
 
@@ -294,7 +294,7 @@ public static class DownloadManager
                 OnDownloadFinished?.Invoke();
                 return;
             }
-            
+
             End();
         }
 
@@ -303,7 +303,10 @@ public static class DownloadManager
             await ProcessAll();
         }
 
-        public override Task WaitForPendingProcessesAsync() => WaitForPendingProcesses();
+        public override Task WaitForPendingProcessesAsync()
+        {
+            return WaitForPendingProcesses();
+        }
 
         public override async Task SetSectionProgressAsync(string itemName, float progressPercent)
         {
