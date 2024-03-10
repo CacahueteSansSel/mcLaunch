@@ -30,7 +30,7 @@ public class Project
             RedirectStandardInput = true
         });
 
-        await process.StandardOutput.ReadToEndAsync();
+        await process!.StandardOutput.ReadToEndAsync();
         await process.WaitForExitAsync();
         
         return process.ExitCode != 0

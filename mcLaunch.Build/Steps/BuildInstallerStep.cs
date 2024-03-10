@@ -1,5 +1,4 @@
-﻿using System.IO.Compression;
-using mcLaunch.Build.Core;
+﻿using mcLaunch.Build.Core;
 
 namespace mcLaunch.Build.Steps;
 

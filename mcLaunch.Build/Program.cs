@@ -22,8 +22,8 @@ if (args.Contains("--windows") || args.Length == 1)
 if (args.Contains("--macos") || args.Length == 1)
 {
     steps.AddRange([
-        new BuildMcLaunchMacOS64Step(), new BuildMcLaunchMacOSArm64Step(), new CreateMacOSBundle64Step(),
-        new CreateMacOSBundleArm64Step()
+        new BuildMcLaunchMacos64Step(), new BuildMcLaunchMacosArm64Step(), new CreateMacosBundle64Step(),
+        new CreateMacosBundleArm64Step()
     ]);
 }
 

@@ -12,7 +12,7 @@ public class UpdateLatestCommitStep : BuildStepBase
     public override async Task<BuildResult> RunAsync(BuildSystem system)
     {
         Project? mcLaunch = system.GetProject("mcLaunch");
-        string buildManifestFile = $"{mcLaunch.Folder}/resources/settings/build.json";
+        string buildManifestFile = $"{mcLaunch!.Folder}/resources/settings/build.json";
         Commit commit = system.LatestCommit!;
         Branch? branch = system.Repository.Head.TrackedBranch;
 

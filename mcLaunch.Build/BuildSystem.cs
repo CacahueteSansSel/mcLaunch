@@ -26,9 +26,9 @@ public class BuildSystem
         return this;
     }
 
-    public BuildSystem With(params BuildStepBase[] steps)
+    public BuildSystem With(params BuildStepBase[] newSteps)
     {
-        this.steps.AddRange(steps);
+        this.steps.AddRange(newSteps);
         return this;
     }
 

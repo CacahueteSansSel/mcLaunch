@@ -3,7 +3,7 @@ using mcLaunch.Build.Core;
 
 namespace mcLaunch.Build.Steps;
 
-public abstract class CreateMacOSBundleStep : BuildStepBase
+public abstract class CreateMacosBundleStep : BuildStepBase
 {
     public abstract string PlatformRuntimeIdentifier { get; }
     public override string Name => $"Create macOS bundle ({PlatformRuntimeIdentifier})";

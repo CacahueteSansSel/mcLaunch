@@ -1,8 +1,6 @@
-﻿using System.IO.Compression;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.RegularExpressions;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Models;
 using mcLaunch.Core.Contents;
@@ -69,8 +67,9 @@ public static class BoxManager
                     await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(box, fabricApi, versions[0].Id,
                         false);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
+                    // ignored
                 }
 
                 break;
@@ -168,7 +167,7 @@ public static class BoxManager
         string modpackTempFilename = Path.GetFullPath($"temp/{pack.Id}.zip");
 
         DownloadManager.Begin($"{pack.Name} ({version.Name})");
-        DownloadManager.Add(version.ModpackFileUrl, modpackTempFilename, version.ModpackFileHash, EntryAction.Download);
+        DownloadManager.Add(version.ModpackFileUrl!, modpackTempFilename, version.ModpackFileHash, EntryAction.Download);
         DownloadManager.End();
 
         void ProgressUpdate(string status, float percent, int sectionIndex)
