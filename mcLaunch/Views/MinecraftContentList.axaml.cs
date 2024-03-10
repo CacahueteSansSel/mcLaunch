@@ -94,6 +94,8 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         Data ctx = (Data) DataContext;
         ctx.Contents = contents;
 
+        NtsBanner.IsVisible = false;
+
         fullContentList = [..contents];
 
         ApplyContentAttributes();
@@ -122,14 +124,17 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
         ctx.Contents = newList.ToArray();
 
-        NtsBanner.IsVisible = Contents == null || Contents.Length == 0;
         LoadMoreButton.IsVisible = !NtsBanner.IsVisible;
+        NtsBanner.IsVisible = ctx.Contents.Length == 0;
     }
 
     public void SetLoadingCircle(bool isLoading)
     {
         LoadCircle.IsVisible = isLoading;
-        LoadMoreButton.IsVisible = !isLoading && !NtsBanner.IsVisible;
+        LoadMoreButton.IsVisible = !isLoading;
+        if (isLoading) NtsBanner.IsVisible = false;
+
+        if (!isLoading && !NtsBanner.IsVisible) LoadMoreButton.IsVisible = true;
     }
 
     public async void Search(Box box, string query)
@@ -139,8 +144,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
     public async Task SearchAsync(Box box, string query)
     {
-        LoadMoreButton.IsEnabled = false;
-        LoadCircle.IsVisible = true;
+        SetLoadingCircle(true);
 
         Data ctx = (Data) DataContext;
 
@@ -148,8 +152,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
         ApplyContentAttributes();
 
-        LoadCircle.IsVisible = false;
-        LoadMoreButton.IsEnabled = ctx.Contents.Length >= 10;
+        SetLoadingCircle(false);
         LoadMoreButton.IsVisible = ctx.Contents.Length >= 10;
     }
 
@@ -170,8 +173,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     {
         Data ctx = (Data) DataContext;
 
-        LoadMoreButton.IsEnabled = false;
-        LoadCircle.IsVisible = true;
+        LoadingButtonFrame.IsVisible = true;
 
         ctx.Page++;
 
@@ -180,8 +182,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
         ctx.Contents = contents.ToArray();
 
-        LoadCircle.IsVisible = false;
-        LoadMoreButton.IsEnabled = true;
+        LoadingButtonFrame.IsVisible = false;
     }
 
     private void ContentSelectionChanged(object? sender, SelectionChangedEventArgs e)
