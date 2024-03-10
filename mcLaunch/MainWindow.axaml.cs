@@ -8,8 +8,10 @@ using Avalonia.Controls;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
+using mcLaunch.GitHub;
 using mcLaunch.Launchsite.Auth;
 using mcLaunch.Launchsite.Http;
+using mcLaunch.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
@@ -178,13 +180,11 @@ public partial class MainWindow : Window
             MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
         }
 
-#if !DEBUG
         // Check for updates
         if (await UpdateManager.IsUpdateAvailableAsync())
         {
             UpdateBar.IsVisible = true;
             UpdateBar.SetUpdateDetails(await GitHubRepository.GetLatestReleaseAsync());
         }
-#endif
     }
 }
