@@ -35,6 +35,8 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
     {
         BoxContainer.Children.Clear();
         LoadingCircleIcon.IsVisible = true;
+        NtsBanner.IsVisible = false;
+        LoadMoreButton.IsVisible = false;
 
         PageIndex = 0;
         lastQuery = query;
@@ -46,6 +48,8 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
             BoxContainer.Children.Add(new ModpackEntryCard(modpack));
 
         LoadingCircleIcon.IsVisible = false;
+        NtsBanner.IsVisible = packs.Length == 0;
+        LoadMoreButton.IsVisible = !NtsBanner.IsVisible;
     }
 
     private async void LoadModpacksAsync()
@@ -60,6 +64,7 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
 
     private async void LoadMoreButtonClicked(object? sender, RoutedEventArgs e)
     {
+        LoadingButtonFrame.IsVisible = true;
         PageIndex++;
 
         PaginatedResponse<PlatformModpack> additionalPacks = await ModPlatformManager.Platform.GetModpacksAsync(
@@ -68,5 +73,7 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
 
         foreach (PlatformModpack modpack in additionalPacks.Items)
             BoxContainer.Children.Add(new ModpackEntryCard(modpack));
+        
+        LoadingButtonFrame.IsVisible = false;
     }
 }
