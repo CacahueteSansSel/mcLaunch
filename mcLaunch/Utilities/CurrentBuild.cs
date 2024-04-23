@@ -9,7 +9,7 @@ public static class CurrentBuild
 {
     public static BuildManifest? Manifest { get; private set; }
 
-    public static Version Version => new("0.2.0");
+    public static Version Version => new("0.2.1");
 
     public static string Commit => Manifest?.CommitId ?? "unknown";
     public static string Branch => Manifest?.Branch ?? "unknown";
