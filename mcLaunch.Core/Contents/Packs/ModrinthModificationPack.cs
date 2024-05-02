@@ -245,7 +245,13 @@ public class ModrinthModificationPack : ModificationPack
             }
 
             Version modVersion = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetAsync(mod.VersionId);
-            var primaryVersionFile = modVersion.Files.First(f => f.Primary);
+            Modrinth.Models.File? primaryVersionFile = modVersion.Files.FirstOrDefault(f => f.Primary);
+
+            if (primaryVersionFile == null)
+            {
+                // TODO: inform user that this mod was ignored
+                continue;
+            }
 
             ModelModrinthIndex.ModelFile fileModel = new()
             {
