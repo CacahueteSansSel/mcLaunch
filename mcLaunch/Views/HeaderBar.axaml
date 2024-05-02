@@ -10,8 +10,10 @@
     <Panel x:Name="HeaderPanel">
         <DockPanel>
             <Panel DockPanel.Dock="Left" x:Name="MacosButtonsMargin" IsVisible="False" Width="65" />
-            <Image x:Name="Logo" DockPanel.Dock="Left" VerticalAlignment="Top" IsHitTestVisible="False"
+            <Image x:Name="LogoBeta" DockPanel.Dock="Left" VerticalAlignment="Top" IsHitTestVisible="False"
                    Source="/resources/logo_beta.png" Height="35" Margin="15 5 0 0" />
+            <Image x:Name="LogoDevelopment" DockPanel.Dock="Left" VerticalAlignment="Top" IsHitTestVisible="False"
+                   Source="/resources/logo_dev.png" Height="35" Margin="15 5 0 0" />
             <Image x:Name="OfflineBadge" IsVisible="False" DockPanel.Dock="Left" VerticalAlignment="Top"
                    IsHitTestVisible="False" Source="/resources/header_bar_badge_offline.png" Height="17"
                    Margin="15 13.5 0 0" />

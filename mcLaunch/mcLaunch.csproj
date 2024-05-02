@@ -210,6 +210,8 @@
         <AvaloniaResource Include="resources\settings\build.json"/>
         <None Remove="resources\cube_transparent.png"/>
         <AvaloniaResource Include="resources\cube_transparent.png"/>
+        <None Remove="resources\logo_dev.png" />
+        <AvaloniaResource Include="resources\logo_dev.png" />
     </ItemGroup>
 
     <ItemGroup>
