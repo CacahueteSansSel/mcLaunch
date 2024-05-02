@@ -196,11 +196,11 @@ public class Box : IEquatable<Box>
 
         Directory.CreateDirectory($"{Path}/backups");
 
-        File.Copy($"{Path}/box.json", $"{Folder.CompletePath}/box.json");
+        File.Copy($"{Path}/box.json", $"{Folder.CompletePath}/box.json", true);
         if (File.Exists($"{Path}/icon.png"))
-            File.Copy($"{Path}/icon.png", $"{Folder.CompletePath}/icon.png");
+            File.Copy($"{Path}/icon.png", $"{Folder.CompletePath}/icon.png", true);
         if (File.Exists($"{Path}/background.png"))
-            File.Copy($"{Path}/background.png", $"{Folder.CompletePath}/background.png");
+            File.Copy($"{Path}/background.png", $"{Folder.CompletePath}/background.png", true);
 
         await TarFile.CreateFromDirectoryAsync(Folder.CompletePath,
             fullPath, false);
