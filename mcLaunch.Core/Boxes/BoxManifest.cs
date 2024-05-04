@@ -259,6 +259,16 @@ public class BoxStoredContent
             if (File.Exists(path)) File.Delete(path);
         }
     }
+
+    public MinecraftContent ToContent() => new()
+    {
+        IsComplete = false,
+        Id = Id,
+        ModPlatformId = PlatformId,
+        Versions = [VersionId],
+        Name = Name,
+        Author = Author
+    };
 }
 
 public class BoxBackup

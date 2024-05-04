@@ -122,6 +122,8 @@ public class MinecraftContent : ReactiveObject
     public string LastUpdatedFormatted => !IsLastUpdatedValid ? "-" : LastUpdatedSpan.ToDisplay();
     public bool IsDownloadCountValid => DownloadCount.HasValue;
     public bool IsLastUpdatedValid => LastUpdated.HasValue;
+    
+    [JsonIgnore] public bool IsComplete { get; set; }
 
     public static MinecraftContent CreateIdOnly(string id)
     {

@@ -73,6 +73,7 @@ public partial class ContentsSubControl : SubControl
         await Parallel.ForEachAsync(Box.Manifest.GetContents(ContentType), async (boxContent, token) =>
         {
             MinecraftContent content = await ModPlatformManager.Platform.GetContentAsync(boxContent.Id);
+            //MinecraftContent content = boxContent.ToContent();
             if (content == null) return;
 
             string folder = $"{MinecraftContentUtils.GetInstallFolderName(ContentType)}/";
