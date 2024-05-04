@@ -23,10 +23,13 @@
             </DockPanel>
             <DockPanel>
                 <views:BoxEntryCard x:Name="BoxCard" DockPanel.Dock="Left" IsHitTestVisible="False" />
-                <Panel DockPanel.Dock="Right" Margin="20 36 10 35">
-                    <TextBox x:Name="BodyText" IsVisible="False" Focusable="False">This is the error message</TextBox>
-                    <views:LoadingCircle x:Name="LoadingIcon" />
-                </Panel>
+                <Border DockPanel.Dock="Right" Margin="20 36 10 35" Classes="frame-dark-without-shadow">
+                    <Panel>
+                        <TextBox x:Name="BodyText" IsVisible="False" Focusable="False">This is the error message</TextBox>
+                        <Button x:Name="OpenCrashReportButton" HorizontalAlignment="Center" Classes="secondary" Click="OpenCrashReportButtonClicked">Open complete crash report</Button>
+                        <views:LoadingCircle x:Name="LoadingIcon" IsVisible="False" />
+                    </Panel>
+                </Border>
             </DockPanel>
         </DockPanel>
     </Border>
