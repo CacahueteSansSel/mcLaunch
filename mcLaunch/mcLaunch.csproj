@@ -212,6 +212,10 @@
         <AvaloniaResource Include="resources\cube_transparent.png"/>
         <None Remove="resources\logo_dev.png" />
         <AvaloniaResource Include="resources\logo_dev.png" />
+        <None Remove="resources\icons\arrow_left.png" />
+        <AvaloniaResource Include="resources\icons\arrow_left.png" />
+        <None Remove="resources\icons\arrow_right.png" />
+        <AvaloniaResource Include="resources\icons\arrow_right.png" />
     </ItemGroup>
 
     <ItemGroup>

@@ -18,11 +18,13 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
         string searchQuery, MinecraftContentType contentType)
     {
         List<MinecraftContent> contents = new();
+        int totalPageCount = 0;
 
         foreach (MinecraftContentPlatform platform in _platforms)
         {
             PaginatedResponse<MinecraftContent> modsFromPlatform =
                 await platform.GetContentsAsync(page, box, searchQuery, contentType);
+            totalPageCount += modsFromPlatform.TotalPageCount;
 
             foreach (MinecraftContent mod in modsFromPlatform.Items)
             {
@@ -34,18 +36,20 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
             }
         }
 
-        return new PaginatedResponse<MinecraftContent>(page, contents.Count / 20, contents.ToArray());
+        return new PaginatedResponse<MinecraftContent>(page, totalPageCount, contents.ToArray());
     }
 
     public override async Task<PaginatedResponse<PlatformModpack>> GetModpacksAsync(int page, string searchQuery,
         string minecraftVersion)
     {
         List<PlatformModpack> modpacks = new();
+        int totalPageCount = 0;
 
         foreach (MinecraftContentPlatform platform in _platforms)
         {
             PaginatedResponse<PlatformModpack> modpacksFromPlatform =
                 await platform.GetModpacksAsync(page, searchQuery, minecraftVersion);
+            totalPageCount += modpacksFromPlatform.TotalPageCount;
 
             foreach (PlatformModpack mod in modpacksFromPlatform.Items)
             {
@@ -58,7 +62,7 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
             }
         }
 
-        return new PaginatedResponse<PlatformModpack>(page, modpacks.Count / 20, modpacks.ToArray());
+        return new PaginatedResponse<PlatformModpack>(page, totalPageCount, modpacks.ToArray());
     }
 
     public override async Task<PaginatedResponse<ContentDependency>> GetContentDependenciesAsync(string id,

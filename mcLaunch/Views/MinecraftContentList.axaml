@@ -29,16 +29,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Panel HorizontalAlignment="Center" Margin="0 20 0 0">
-                <Button x:Name="LoadMoreButton" Classes="secondary"
-                        Click="LoadMoreButtonClicked">
-                    Load more
-                </Button>
-                <Border x:Name="LoadingButtonFrame" IsVisible="False" Width="124" Height="40"
-                        Background="{DynamicResource BackgroundDarker}"
-                        BorderBrush="{DynamicResource BackgroundLighter}" BorderThickness="1"
-                        CornerRadius="4">
-                    <views:LoadingCircle RenderTransform="scale(0.65)" />
-                </Border>
+                <views:PageSelector x:Name="PageSelectorComponent"></views:PageSelector>
             </Panel>
         </StackPanel>
         <views:LoadingCircle x:Name="LoadCircle" IsVisible="False" IsHitTestVisible="False" />
