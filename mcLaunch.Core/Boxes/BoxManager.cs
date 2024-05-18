@@ -194,9 +194,9 @@ public static class BoxManager
 
         Box box = boxResult.Data!;
 
-        Stream? iconStream = pack.IconPath == null 
+        await using Stream? iconStream = pack.IconPath == null 
             ? null : await DownloadManager.DownloadFileAsync(pack.IconPath);
-        Stream? backgroundStream = pack.BackgroundPath == null 
+        await using Stream? backgroundStream = pack.BackgroundPath == null 
             ? null : await DownloadManager.DownloadFileAsync(pack.BackgroundPath);
         
         if (iconStream != null) box.SetAndSaveIcon(iconStream, false);

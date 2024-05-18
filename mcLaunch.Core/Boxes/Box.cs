@@ -61,7 +61,7 @@ public class Box : IEquatable<Box>
 
         ReloadManifest(true);
         if (File.Exists($"{path}/icon.png") && Manifest!.Icon == null)
-            LoadIcon();
+            LoadIconAsync();
     }
 
     public bool UseDedicatedGraphics { get; set; }
@@ -247,7 +247,7 @@ public class Box : IEquatable<Box>
                 SaveManifest();
 
                 // Reload icon and background
-                LoadIcon();
+                await LoadIconAsync();
                 LoadBackground();
 
                 return true;
@@ -617,7 +617,7 @@ public class Box : IEquatable<Box>
         await iconStream.CopyToAsync(stream);
         await File.WriteAllBytesAsync($"{Path}/icon.png", stream.ToArray());
         
-        if (reload) LoadIcon();
+        if (reload) await LoadIconAsync();
     }
 
     public void SetAndSaveBackground(Bitmap background)
@@ -636,7 +636,7 @@ public class Box : IEquatable<Box>
         if (reload) LoadBackground();
     }
     
-    public async void LoadIcon()
+    public async Task LoadIconAsync()
     {
         if (Manifest.Icon != null) return;
         if (!File.Exists($"{Path}/icon.png")) return;

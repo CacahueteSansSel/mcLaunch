@@ -95,8 +95,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         ModsButton.IsVisible = Box.ModLoader is not DirectJarMergingModLoaderSupport;
         DirectJarModsButton.IsVisible = Box.ModLoader is DirectJarMergingModLoaderSupport;
         
-        if (Box.Manifest.Icon == null)
-            Box.LoadIcon();
+        if (Box.Manifest.Icon == null) await Box.LoadIconAsync();
 
         BoxCover.Source = Box.Manifest.Icon?.IconLarge;
     }
