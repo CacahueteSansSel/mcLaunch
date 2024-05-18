@@ -141,7 +141,7 @@ public class BoxManifest : ReactiveObject
 
     public BoxStoredContent[] GetContents(MinecraftContentType type)
     {
-        return Contents.Where(c => c.Type == type).ToArray();
+        return Contents.Where(c => c.Content!.Type == type).ToArray();
     }
 
     public void AddContent(MinecraftContent content, string versionId, string[] filenames)

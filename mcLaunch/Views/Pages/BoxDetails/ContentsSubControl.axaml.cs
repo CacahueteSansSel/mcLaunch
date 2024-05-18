@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Managers;
 using mcLaunch.Launchsite.Core.ModLoaders;
@@ -68,9 +69,10 @@ public partial class ContentsSubControl : SubControl
         ModsList.HideLoadMoreButton();
         ModsList.SetLoadingCircle(true);
 
+        BoxStoredContent[] storedContents = Box.Manifest.GetContents(ContentType);
         List<MinecraftContent> contents =
         [
-            ..Box.Manifest.Contents
+            ..storedContents
                 .Where(content => content.Content != null)
                 .Select(content => content.Content!)
         ];
@@ -119,7 +121,7 @@ public partial class ContentsSubControl : SubControl
         {
             try
             {
-                await Parallel.ForEachAsync(Box.Manifest.Contents, async (storedContent, token) =>
+                await Parallel.ForEachAsync(storedContents, async (storedContent, token) =>
                 {
                     MinecraftContent content = storedContent.Content!;
                     ContentVersion[] versions = await ModPlatformManager.Platform.GetContentVersionsAsync(content,
