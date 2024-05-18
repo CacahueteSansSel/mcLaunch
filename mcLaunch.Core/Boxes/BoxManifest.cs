@@ -195,18 +195,18 @@ public class BoxManifest : ReactiveObject
         // Remove duplicates
         List<string> seenContents = [];
         List<string> toRemoveContents = [];
-        await Parallel.ForEachAsync(Contents, async (content, token) =>
+        foreach (BoxStoredContent content in Contents)
         {
-            if (content.Content == null) return;
+            if (content.Content == null) continue;
             
             if (seenContents.Contains(content.Content!.Id))
             {
                 toRemoveContents.Add(content.Content!.Id);
-                return;
+                continue;
             }
             
             seenContents.Add(content.Content.Id);
-        });
+        }
 
         Contents.RemoveAll(content => content.Content == null || toRemoveContents.Contains(content.Content!.Id));
 
