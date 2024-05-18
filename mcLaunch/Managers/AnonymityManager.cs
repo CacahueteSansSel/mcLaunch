@@ -28,6 +28,8 @@ public static class AnonymityManager
 
 public class AnonymitySession
 {
+    public static AnonymitySession Default { get; private set; } = AnonymityManager.CreateSession();
+    
     private readonly List<string> initialNames;
     private List<string> availableNames;
 

@@ -20,20 +20,11 @@ public partial class BoxEntryCard : UserControl
         AvaloniaProperty.RegisterDirect<BoxEntryCard, Box>(nameof(Box), card => card.box,
             (card, box) => card.SetBox(box));
 
-    private readonly AnonymitySession anonSession;
     private Box box;
 
     public BoxEntryCard()
     {
         InitializeComponent();
-    }
-
-    public BoxEntryCard(Box box, AnonymitySession anonSession)
-    {
-        InitializeComponent();
-        this.anonSession = anonSession;
-
-        SetBox(box);
     }
 
     public Box Box
@@ -50,16 +41,14 @@ public partial class BoxEntryCard : UserControl
     {
         base.OnLoaded(e);
 
-        if (Settings.Instance.AnonymizeBoxIdentity)
+        if (Settings.Instance!.AnonymizeBoxIdentity)
         {
-            object v = null;
+            (string, Bitmap)? tuple = null;
 
-            await Task.Run(() => { v = anonSession.TakeNameAndIcon(); });
+            await Task.Run(() => { tuple = AnonymitySession.Default.TakeNameAndIcon(); });
 
-            var tuple = ((string, Bitmap)) v;
-
-            BoxNameText.Text = tuple.Item1;
-            BoxIcon.Source = tuple.Item2;
+            BoxNameText.Text = tuple!.Value.Item1;
+            BoxIcon.Source = tuple!.Value.Item2;
             AuthorText.Text = "Someone";
         }
     }
@@ -74,7 +63,7 @@ public partial class BoxEntryCard : UserControl
         DataContext = box.Manifest;
 
         if (Settings.Instance != null && Settings.Instance.AnonymizeBoxIdentity)
-            BoxNameText.Text = anonSession.TakeName();
+            BoxNameText.Text = AnonymitySession.Default.TakeName();
 
         VersionBadge.Text = box.Manifest.Version;
         ModLoaderBadge.Text = box.ModLoader?.Name ?? "Unknown";
