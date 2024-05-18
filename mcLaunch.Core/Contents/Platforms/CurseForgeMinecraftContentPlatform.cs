@@ -126,9 +126,6 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             return m;
         }).ToArray();
 
-        // Download all contents images
-        foreach (MinecraftContent content in contents) content.DownloadIconAsync();
-
         return new PaginatedResponse<MinecraftContent>(page, (int) resp.Pagination.TotalCount, contents);
     }
 

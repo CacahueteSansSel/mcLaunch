@@ -37,9 +37,6 @@ public partial class OptionalModsPopup : UserControl
     {
         ModList.SetLoadingCircle(true);
 
-        foreach (MinecraftContentPlatform.ContentDependency dep in dependencies)
-            dep.Content.DownloadIconAsync();
-
         ModList.SetLoadingCircle(false);
         ModList.SetContents(dependencies.Select(dep => dep.Content).ToArray());
     }

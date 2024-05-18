@@ -110,9 +110,6 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             Platform = this
         }).ToArray();
 
-        // Download all content images
-        foreach (MinecraftContent content in contents) content.DownloadIconAsync();
-
         return new PaginatedResponse<MinecraftContent>(page, search.TotalHits / search.Limit, contents);
     }
 

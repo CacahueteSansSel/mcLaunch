@@ -83,8 +83,6 @@ public partial class ContentsSubControl : SubControl
                     .Replace(folder, "").Trim();
             content.InstalledVersion = boxContent.VersionId;
 
-            content.DownloadIconAsync();
-
             contents.Add(content);
         });
 

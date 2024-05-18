@@ -24,8 +24,8 @@ public partial class MinecraftContentEntry : UserControl
             Mod = new MinecraftContent
             {
                 Name = "Sample Mod",
+                IconUrl = "/resources/icons/download.png",
                 Type = MinecraftContentType.Modification,
-                Icon = IconCollection.Default,
                 Author = "sample dev",
                 ShortDescription = "sample desc",
                 IsUpdateRequired = false,

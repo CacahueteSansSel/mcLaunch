@@ -25,12 +25,6 @@ public partial class ModsPopup : UserControl
 
     private async void DownloadIconAndApplyAsync(Box box, MinecraftContent[] mods)
     {
-        ModList.SetLoadingCircle(true);
-
-        foreach (MinecraftContent mod in mods)
-            await mod.DownloadIconAsync();
-
-        ModList.SetLoadingCircle(false);
         ModList.SetContents(mods);
     }
 
