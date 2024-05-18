@@ -30,8 +30,8 @@ public partial class ModpackEntryCard : UserControl
         VersionBadge.Text = modpack.LatestMinecraftVersion ?? "Unknown";
         PlatformBadge.Text = modpack.Platform.Name;
         PlatformBadge.Icon = modpack.Platform.Icon;
-
-        DownloadBackgroundAndApplyAsync();
+        
+        ApplyModpackValues();
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
@@ -41,10 +41,8 @@ public partial class ModpackEntryCard : UserControl
         Navigation.Push(new ModpackDetailsPage(modpack));
     }
 
-    private async void DownloadBackgroundAndApplyAsync()
+    private async void ApplyModpackValues()
     {
-        Bitmap icon = modpack.Icon;
-
         // Download additional infos for the modpack
         modpack = await ModPlatformManager.Platform.GetModpackAsync(modpack.Id);
         if (modpack == null)
@@ -54,10 +52,6 @@ public partial class ModpackEntryCard : UserControl
 
             return;
         }
-
-        modpack.Icon = icon;
-
-        await modpack.DownloadBackgroundAsync();
 
         DataContext = modpack;
 
@@ -75,7 +69,7 @@ public partial class ModpackEntryCard : UserControl
             ModLoaderBadge.IsVisible = false;
         }
 
-        if (modpack.Background == null)
+        if (string.IsNullOrWhiteSpace(modpack.BackgroundPath))
         {
             Color accent = Color.FromUInt32(modpack.Color);
             Header.Background = new SolidColorBrush(new Color(255, accent.R, accent.G, accent.B));
