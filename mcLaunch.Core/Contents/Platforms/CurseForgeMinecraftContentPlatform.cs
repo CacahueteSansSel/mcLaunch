@@ -417,7 +417,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
 
         filenames.Add($"{folder}/{file.FileName}");
 
-        targetBox.Manifest.AddContent(file.ModId.ToString(), contentType, file.Id.ToString(), Name,
+        targetBox.Manifest.AddContent(await GetContentAsync(file.ModId.ToString()), file.Id.ToString(),
             filenames.ToArray());
 
         DownloadManager.End();

@@ -89,7 +89,7 @@ public partial class MainWindow : Window
                 // FastLaunch's temporary box ahead !
 
                 string boxId = App.Args.Get("box-id");
-                Box? box = BoxManager.LoadLocalBoxes(true)
+                Box? box = (await BoxManager.LoadLocalBoxesAsync(true))
                     .FirstOrDefault(b => b.Manifest.Id == boxId);
 
                 Navigation.ShowPopup(new ConfirmMessageBoxPopup("Keep the FastLaunch instance ?",

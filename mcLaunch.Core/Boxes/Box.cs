@@ -46,7 +46,7 @@ public class Box : IEquatable<Box>
         QuickPlay = new QuickPlayManager(Folder);
     }
 
-    public Box(string path)
+    public Box(string path, bool loadManifest = true)
     {
         Path = path;
         manifestPath = $"{path}/box.json";
@@ -59,9 +59,7 @@ public class Box : IEquatable<Box>
 
         QuickPlay = new QuickPlayManager(Folder);
 
-        ReloadManifest(true);
-        if (File.Exists($"{path}/icon.png") && Manifest!.Icon == null)
-            LoadIconAsync();
+        if (loadManifest) ReloadManifest(true);
     }
 
     public bool UseDedicatedGraphics { get; set; }
@@ -115,7 +113,7 @@ public class Box : IEquatable<Box>
 
         try
         {
-            foreach (BoxStoredContent mod in Manifest.Content)
+            foreach (BoxStoredContent mod in Manifest.Contents)
             {
                 if (!mod.Filenames.Contains(relativePath)) continue;
 
@@ -154,8 +152,7 @@ public class Box : IEquatable<Box>
             if (version == null || version.Content == null) return;
 
             // Add the mod to the list
-            Manifest.AddContent(version.Content.Id, contentType, version.Id,
-                version.Content.ModPlatformId, [relativePath]);
+            Manifest.AddContent(version.Content, version.Id, [relativePath]);
 
             EventListener?.OnContentAdded(version.Content);
         }
@@ -302,7 +299,10 @@ public class Box : IEquatable<Box>
         return HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
     }
 
-    public void ReloadManifest(bool force = false)
+    public async void ReloadManifest(bool force = false) 
+        => await ReloadManifestAsync(force);
+
+    public async Task ReloadManifestAsync(bool force = false)
     {
         // Check if the manifest needs reloading
         SHA1 sha = SHA1.Create();
@@ -322,7 +322,7 @@ public class Box : IEquatable<Box>
         }
 
         Manifest = JsonSerializer.Deserialize<BoxManifest>(File.ReadAllText(manifestPath))!;
-        RunPostDeserializationChecks();
+        await RunPostDeserializationChecksAsync();
 
         Manifest.FileHash = hash;
 
@@ -331,6 +331,9 @@ public class Box : IEquatable<Box>
             Manifest.Icon = icon;
             Manifest.Background = background;
         }
+        
+        if (File.Exists($"{Path}/icon.png") && Manifest!.Icon == null)
+            await LoadIconAsync();
     }
 
     public async Task<string[]> RunIntegrityChecks()
@@ -340,7 +343,7 @@ public class Box : IEquatable<Box>
 
         ReloadManifest();
 
-        foreach (BoxStoredContent mod in Manifest.Content)
+        foreach (BoxStoredContent mod in Manifest.Contents)
         {
             bool exists = false;
             foreach (string filename in mod.Filenames)
@@ -360,7 +363,7 @@ public class Box : IEquatable<Box>
 
         if (await AddMissingModsToList()) SaveManifest();
 
-        Manifest.Content.RemoveMany(modsToRemove);
+        Manifest.Contents.RemoveMany(modsToRemove);
 
         return changes.ToArray();
     }
@@ -379,8 +382,7 @@ public class Box : IEquatable<Box>
             if (version == null || version.Content == null) continue;
 
             // Add the mod to the list
-            Manifest.AddContent(version.Content.Id, MinecraftContentType.Modification, version.Id,
-                version.Content.ModPlatformId, new[] {modFilename});
+            Manifest.AddContent(version.Content, version.Id, [modFilename]);
 
             save = true;
         }
@@ -388,10 +390,9 @@ public class Box : IEquatable<Box>
         return save;
     }
 
-    private async void RunPostDeserializationChecks()
+    private async Task RunPostDeserializationChecksAsync()
     {
-        if (await Manifest.RunPostDeserializationChecks())
-            SaveManifest();
+        if (await Manifest.RunPostDeserializationChecksAsync()) SaveManifest();
     }
 
     private async Task<Result> SetupVersionAsync()
@@ -571,7 +572,7 @@ public class Box : IEquatable<Box>
         {
             string absPath = file.Replace(Path, "").Replace('\\', '/')
                 .Replace("minecraft/", "").Replace(Path, "").Trim('/').Trim();
-            if (Manifest.Content.FirstOrDefault(mod => mod.Filenames.Contains(absPath)) != null)
+            if (Manifest.Contents.FirstOrDefault(mod => mod.Filenames.Contains(absPath)) != null)
                 continue;
 
             mods.Add(absPath);
@@ -689,12 +690,12 @@ public class Box : IEquatable<Box>
         int cur = 0;
         List<MinecraftContent> migratedMods = new();
 
-        BoxStoredContent[] modsToMigrate = Manifest.Content.Where(m =>
+        BoxStoredContent[] modsToMigrate = Manifest.Contents.Where(m =>
             m.PlatformId.ToLower() != "modrinth").ToArray();
 
         foreach (BoxStoredContent mod in modsToMigrate)
         {
-            statusCallback?.Invoke(mod, cur, Manifest.Content.Count);
+            statusCallback?.Invoke(mod, cur, Manifest.Contents.Count);
             cur++;
 
             foreach (string filename in mod.Filenames)
@@ -726,12 +727,12 @@ public class Box : IEquatable<Box>
         int cur = 0;
         List<MinecraftContent> migratedMods = new();
 
-        BoxStoredContent[] modsToMigrate = Manifest.Content.Where(m =>
+        BoxStoredContent[] modsToMigrate = Manifest.Contents.Where(m =>
             m.PlatformId.ToLower() != "curseforge").ToArray();
 
         foreach (BoxStoredContent mod in modsToMigrate)
         {
-            statusCallback?.Invoke(mod, cur, Manifest.Content.Count);
+            statusCallback?.Invoke(mod, cur, Manifest.Contents.Count);
             cur++;
 
             foreach (string filename in mod.Filenames)

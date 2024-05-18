@@ -68,8 +68,14 @@ public partial class ContentsSubControl : SubControl
         ModsList.HideLoadMoreButton();
         ModsList.SetLoadingCircle(true);
 
-        List<MinecraftContent> contents = new();
+        List<MinecraftContent> contents =
+        [
+            ..Box.Manifest.Contents
+                .Where(content => content.Content != null)
+                .Select(content => content.Content!)
+        ];
 
+        /*
         await Parallel.ForEachAsync(Box.Manifest.GetContents(ContentType), async (boxContent, token) =>
         {
             MinecraftContent content = await ModPlatformManager.Platform.GetContentAsync(boxContent.Id);
@@ -85,6 +91,7 @@ public partial class ContentsSubControl : SubControl
 
             contents.Add(content);
         });
+        */
 
         contents.Sort((left, right)
             => string.Compare(left.Name!, right.Name!, StringComparison.Ordinal));
@@ -108,32 +115,45 @@ public partial class ContentsSubControl : SubControl
         List<MinecraftContent> toUpdateContents = new();
         bool isChanges = false;
 
-        await Parallel.ForEachAsync(contents, async (content, token) =>
+        for (int i = 0; i < 10; i++)
         {
-            ContentVersion[] versions = await ModPlatformManager.Platform.GetContentVersionsAsync(content,
-                Box.Manifest.ModLoaderId, Box.Manifest.Version);
-
-            content.IsInvalid = versions.Length == 0;
-
-            if (content.IsInvalid)
+            try
             {
-                isChanges = true;
-                toUpdateContents.Add(content);
+                await Parallel.ForEachAsync(Box.Manifest.Contents, async (storedContent, token) =>
+                {
+                    MinecraftContent content = storedContent.Content!;
+                    ContentVersion[] versions = await ModPlatformManager.Platform.GetContentVersionsAsync(content,
+                        Box.Manifest.ModLoaderId, Box.Manifest.Version);
 
-                return;
+                    content.IsInvalid = versions.Length == 0;
+
+                    if (content.IsInvalid)
+                    {
+                        isChanges = true;
+                        toUpdateContents.Add(content);
+
+                        return;
+                    }
+
+                    content.IsUpdateRequired = versions[0].Id != storedContent.VersionId;
+                    if (content.IsUpdateRequired)
+                    {
+                        isChanges = true;
+                        isAnyUpdate = true;
+
+                        if (!isUpdating) updatableContentsList.Add(content);
+                    }
+
+                    toUpdateContents.Add(content);
+                });
+
+                break;
             }
-
-            content.IsUpdateRequired = versions[0].Id != content.InstalledVersion;
-            if (content.IsUpdateRequired)
+            catch (Exception)
             {
-                isChanges = true;
-                isAnyUpdate = true;
-
-                if (!isUpdating) updatableContentsList.Add(content);
+                // ignored
             }
-
-            toUpdateContents.Add(content);
-        });
+        }
 
         if (isChanges)
         {

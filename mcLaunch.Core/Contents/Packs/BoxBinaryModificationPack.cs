@@ -125,7 +125,8 @@ public class BoxBinaryModificationPack : ModificationPack
         bb.BackgroundData = backgroundStream.ToArray();
 
         List<Mod> mods = new();
-        foreach (BoxStoredContent mod in box.Manifest.Content)
+        foreach (BoxStoredContent mod in box.Manifest.Contents)
+        {
             mods.Add(new Mod
             {
                 Id = mod.Id,
@@ -133,6 +134,7 @@ public class BoxBinaryModificationPack : ModificationPack
                 Platform = mod.PlatformId,
                 Version = mod.VersionId
             });
+        }
         bb.Mods = mods.ToArray();
 
         List<FSFile> files = new();

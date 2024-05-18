@@ -10,21 +10,18 @@ namespace mcLaunch.Views.Popups;
 
 public partial class CrashPopup : UserControl
 {
-    private readonly Box? box;
+    private Box? box;
     private string? fileToOpen;
     
     public CrashPopup(int exitCode, string boxId)
     {
         InitializeComponent();
 
-        box = BoxManager.LoadLocalBoxes()
-            .FirstOrDefault(b => b.Manifest.Id == boxId);
-
         if (box == null) return;
 
         BoxCard.SetBox(box);
 
-        PopulateCrashReportTextAsync(exitCode);
+        PopulateAsync(boxId, exitCode);
     }
 
     public CrashPopup()
@@ -32,10 +29,12 @@ public partial class CrashPopup : UserControl
         InitializeComponent();
     }
 
-    private async void PopulateCrashReportTextAsync(int exitCode)
+    private async void PopulateAsync(string boxId, int exitCode)
     {
         LoadingIcon.IsVisible = true;
         BodyText.IsVisible = false;
+        
+        box = (await BoxManager.LoadLocalBoxesAsync()).FirstOrDefault(b => b.Manifest.Id == boxId);
 
         string bodyText;
         string latestLogsPath = $"{box.Folder.CompletePath}/logs/latest.log";

@@ -37,9 +37,11 @@ public partial class MainPage : UserControl, ITopLevelPageControl
     {
         if (reloadAll || loadedBoxes == null)
         {
-            loadedBoxes = (await Task.Run(() => BoxManager.LoadLocalBoxes())).ToList();
+            loadedBoxes = (await Task.Run(() => BoxManager.LoadLocalBoxesAsync())).ToList();
             loadedBoxes.Sort((l, r) => -l.Manifest.LastLaunchTime.CompareTo(r.Manifest.LastLaunchTime));
         }
+
+        LoadingOverlay.IsVisible = false;
 
         if (string.IsNullOrWhiteSpace(query))
         {

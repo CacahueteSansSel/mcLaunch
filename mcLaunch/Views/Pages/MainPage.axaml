@@ -7,6 +7,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              Background="{DynamicResource BackgroundDarker}"
              x:Class="mcLaunch.Views.Pages.MainPage">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+    </UserControl.Styles>
     <Panel>
         <DockPanel Margin="20, 10, 20 10">
             <StackPanel DockPanel.Dock="Top" Margin="5 0 5 5">
@@ -26,5 +29,10 @@
                 </ItemsRepeater>
             </ScrollViewer>
         </DockPanel>
+        <StackPanel x:Name="LoadingOverlay" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <views:LoadingCircle></views:LoadingCircle>
+            <TextBlock HorizontalAlignment="Center" Classes="title">Loading your boxes</TextBlock>
+            <TextBlock HorizontalAlignment="Center" Classes="light">If this takes an extended period of time, mcLaunch is migrating your boxes to the latest version</TextBlock>
+        </StackPanel>
     </Panel>
 </UserControl>

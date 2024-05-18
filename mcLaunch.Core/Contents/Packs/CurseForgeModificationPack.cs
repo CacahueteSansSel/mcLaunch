@@ -100,7 +100,7 @@ public class CurseForgeModificationPack : ModificationPack
         };
 
         List<ModelManifest.ModelFile> files = new();
-        foreach (BoxStoredContent mod in box.Manifest.Content)
+        foreach (BoxStoredContent mod in box.Manifest.Contents)
         {
             if (mod.PlatformId.ToLower() != "curseforge")
             {
