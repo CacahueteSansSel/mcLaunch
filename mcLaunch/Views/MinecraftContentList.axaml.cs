@@ -40,6 +40,8 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
     private List<MinecraftContent> list = new();
 
+    private PageSelector[] pageSelectors;
+
     private Box lastBox;
     private string lastQuery;
 
@@ -47,7 +49,14 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     {
         InitializeComponent();
 
-        PageSelectorComponent.IsVisible = false;
+        pageSelectors =
+        [
+            PageSelectorComponentTop,
+            PageSelectorComponentBottom
+        ];
+
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = false;
 
         DataContext = new Data();
     }
@@ -89,13 +98,17 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     {
         if (HidePageSelector) return;
         
-        PageSelectorComponent.IsVisible = true;
-        PageSelectorComponent.IsEnabled = true;
+        foreach (PageSelector component in pageSelectors)
+        {
+            component.IsVisible = true;
+            component.IsEnabled = true;
+        }
     }
 
     public void HideLoadMoreButton()
     {
-        PageSelectorComponent.IsVisible = false;
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = false;
     }
 
     public void SetContents(MinecraftContent[] contents)
@@ -130,16 +143,20 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         }
 
         NtsBanner.IsVisible = ctx.Contents.Length == 0;
-        PageSelectorComponent.IsVisible = !NtsBanner.IsVisible && !HidePageSelector;
+        
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = !NtsBanner.IsVisible && !HidePageSelector;
     }
 
     public void SetLoadingCircle(bool isLoading)
     {
         LoadCircle.IsVisible = isLoading;
-        PageSelectorComponent.IsVisible = !isLoading;
         if (isLoading) NtsBanner.IsVisible = false;
+        
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = !isLoading;
 
-        if (!isLoading && !NtsBanner.IsVisible) PageSelectorComponent.IsVisible = !HidePageSelector;
+        if (!isLoading && !NtsBanner.IsVisible) PageSelectorComponentBottom.IsVisible = !HidePageSelector;
     }
 
     public async void Search(Box box, string query)
@@ -159,7 +176,8 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
         SetLoadingCircle(false);
         
-        PageSelectorComponent.IsVisible = ctx.Contents.Length >= 10 && !HidePageSelector;
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = ctx.Contents.Length >= 10 && !HidePageSelector;
     }
 
     private async Task<MinecraftContent[]> SearchContentsAsync(Box box, string query)
@@ -172,22 +190,27 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         lastBox = box;
         lastQuery = query;
         
-        PageSelectorComponent.Setup(mods.TotalPageCount, PageSelectedCallback);
-        PageSelectorComponent.SetPage(ctx.Page, false);
+        foreach (PageSelector component in pageSelectors)
+        {
+            component.Setup(mods.TotalPageCount, PageSelectedCallback);
+            component.SetPage(ctx.Page, false);
+        }
 
         return mods.Items.ToArray();
     }
 
     private async void PageSelectedCallback(int index)
     {
-        PageSelectorComponent.IsEnabled = false;
+        foreach (PageSelector component in pageSelectors)
+            component.IsEnabled = false;
         
         Data ctx = (Data) DataContext;
         
         ctx.Page = index;
         ctx.Contents = await SearchContentsAsync(lastBox, lastQuery);
 
-        PageSelectorComponent.IsEnabled = true;
+        foreach (PageSelector component in pageSelectors)
+            component.IsEnabled = true;
     }
 
     private void ContentSelectionChanged(object? sender, SelectionChangedEventArgs e)
