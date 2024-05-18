@@ -158,9 +158,6 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 Platform = this
             }).ToArray();
 
-        // Download all modpack images
-        foreach (PlatformModpack pack in modpacks) pack.DownloadIconAsync();
-
         return new PaginatedResponse<PlatformModpack>(page, search.TotalHits / search.Limit, modpacks);
     }
 

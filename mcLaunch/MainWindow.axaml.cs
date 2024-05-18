@@ -38,7 +38,7 @@ public partial class MainWindow : Window
         Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch", CurrentBuild.Version.ToString()));
 
         IconCollection.Default = IconCollection.FromResources("default_mod_logo.png");
-        IconCollection.Default.DownloadAllAsync();
+        IconCollection.Default.LoadAsync();
 
         DataContext = new MainWindowDataContext(null, false);
 

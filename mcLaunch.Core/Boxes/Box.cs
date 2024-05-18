@@ -165,18 +165,6 @@ public class Box : IEquatable<Box>
         }
     }
 
-    private async void LoadIcon()
-    {
-        try
-        {
-            Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png");
-        }
-        catch (Exception)
-        {
-            // TODO: Set the manifest icon to default
-        }
-    }
-
     public bool HasBackup(string name)
     {
         return Manifest.Backups.Any(backup => backup.Name == name);
@@ -622,10 +610,45 @@ public class Box : IEquatable<Box>
         Manifest.Icon = await IconCollection.FromBitmapAsync(icon);
     }
 
+    public async void SetAndSaveIcon(Stream iconStream, bool reload = true)
+    {
+        using MemoryStream stream = new();
+        
+        await iconStream.CopyToAsync(stream);
+        await File.WriteAllBytesAsync($"{Path}/icon.png", stream.ToArray());
+        
+        if (reload) LoadIcon();
+    }
+
     public void SetAndSaveBackground(Bitmap background)
     {
         background.Save($"{Path}/background.png");
         Manifest.Background = background;
+    }
+
+    public async void SetAndSaveBackground(Stream backgroundStream, bool reload = true)
+    {
+        using MemoryStream stream = new();
+        
+        await backgroundStream.CopyToAsync(stream);
+        await File.WriteAllBytesAsync($"{Path}/background.png", stream.ToArray());
+        
+        if (reload) LoadBackground();
+    }
+    
+    public async void LoadIcon()
+    {
+        if (Manifest.Icon != null) return;
+        if (!File.Exists($"{Path}/icon.png")) return;
+
+        try
+        {
+            Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png");
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
     }
 
     public void LoadBackground()
@@ -633,7 +656,14 @@ public class Box : IEquatable<Box>
         if (Manifest.Background != null) return;
         if (!File.Exists($"{Path}/background.png")) return;
 
-        Manifest.Background = new Bitmap($"{Path}/background.png");
+        try
+        {
+            Manifest.Background = new Bitmap($"{Path}/background.png");
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
     }
 
     [MustUseReturnValue("Use the return value to catch problems if any")]

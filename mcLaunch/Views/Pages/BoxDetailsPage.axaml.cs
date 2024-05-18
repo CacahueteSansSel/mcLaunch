@@ -94,6 +94,11 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         CrashReportButton.IsVisible = Box.HasCrashReports;
         ModsButton.IsVisible = Box.ModLoader is not DirectJarMergingModLoaderSupport;
         DirectJarModsButton.IsVisible = Box.ModLoader is DirectJarMergingModLoaderSupport;
+        
+        if (Box.Manifest.Icon == null)
+            Box.LoadIcon();
+
+        BoxCover.Source = Box.Manifest.Icon?.IconLarge;
     }
 
     protected override void OnLoaded(RoutedEventArgs e)

@@ -252,6 +252,14 @@ public static class DownloadManager
         OnDownloadFinished?.Invoke();
     }
 
+    public static async Task<Stream?> DownloadFileAsync(string url)
+    {
+        HttpResponseMessage resp = await client.GetAsync(url);
+        if (!resp.IsSuccessStatusCode) return null;
+
+        return await resp.Content.ReadAsStreamAsync();
+    }
+
     public class Downloader : ResourceDownloader
     {
         public override async Task<bool> DownloadAsync(string url, string target, string? hash)

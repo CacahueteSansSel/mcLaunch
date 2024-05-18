@@ -104,10 +104,11 @@ public static class BoxManager
         return new Result<string>(path);
     }
 
-    public static async Task<Result<Box>> CreateFromModificationPack(ModificationPack pack,
+    public static async Task<Result<Box>> CreateFromModificationPack(ModificationPack pack, string authorFallback,
         Action<string, float> progressCallback)
     {
-        BoxManifest manifest = new BoxManifest(pack.Name, pack.Description ?? "no description", pack.Author,
+        BoxManifest manifest = new BoxManifest(pack.Name, pack.Description ?? "no description",
+            string.IsNullOrWhiteSpace(pack.Author) ? authorFallback : pack.Author,
             pack.ModloaderId, pack.ModloaderVersion, null,
             await MinecraftManager.GetManifestAsync(pack.MinecraftVersion));
 
@@ -187,14 +188,19 @@ public static class BoxManager
         ModificationPack? modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
         if (modpack == null) return Result<Box>.Error("Unable to find the modpack");
 
-        Result<Box> boxResult = await CreateFromModificationPack(modpack,
+        Result<Box> boxResult = await CreateFromModificationPack(modpack, pack.Author,
             (status, percent) => { progressCallback?.Invoke(status, 0.5f + percent); });
         if (boxResult.IsError) return boxResult;
 
         Box box = boxResult.Data!;
 
-        if (pack.Icon != null) box.SetAndSaveIcon(pack.Icon);
-        if (pack.Background != null) box.SetAndSaveBackground(pack.Background);
+        Stream? iconStream = pack.IconPath == null 
+            ? null : await DownloadManager.DownloadFileAsync(pack.IconPath);
+        Stream? backgroundStream = pack.BackgroundPath == null 
+            ? null : await DownloadManager.DownloadFileAsync(pack.BackgroundPath);
+        
+        if (iconStream != null) box.SetAndSaveIcon(iconStream, false);
+        if (backgroundStream != null) box.SetAndSaveBackground(backgroundStream, false);
 
         box.SaveManifest();
 

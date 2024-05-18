@@ -167,10 +167,6 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             Platform = this
         }).ToArray();
 
-        // Download all modpack images
-        // TODO: fix that causing slow loading process
-        foreach (PlatformModpack pack in modpacks) await pack.DownloadIconAsync();
-
         return new PaginatedResponse<PlatformModpack>(page, (int) resp.Pagination.TotalCount, modpacks);
     }
 

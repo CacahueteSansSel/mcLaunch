@@ -12,10 +12,9 @@ public class IconCollection
     public const int SmallIconSize = 48;
     public const int LargeIconSize = 384;
 
-    private IconCollection(string url, bool isFile)
+    private IconCollection(string filename)
     {
-        Url = url;
-        IsLocalFile = isFile;
+        Filename = filename;
     }
 
     public IconCollection(Uri resourceUri)
@@ -30,19 +29,13 @@ public class IconCollection
     public static IconCollection? Default { get; set; } = new() {IsDefaultIcon = true};
 
     public Uri? ResourceUri { get; }
-    public string? Url { get; }
-    public bool IsLocalFile { get; }
+    public string? Filename { get; }
 
     public Bitmap? IconSmall { get; private set; }
     public Bitmap? IconLarge { get; private set; }
     public bool IsDefaultIcon { get; private set; }
     public int IconSmallSize { get; private set; } = SmallIconSize;
     public int IconLargeSize { get; private set; } = LargeIconSize;
-
-    public static IconCollection FromUrl(string url)
-    {
-        return new IconCollection(url, false);
-    }
 
     public static IconCollection FromResources(string path)
     {
@@ -52,7 +45,9 @@ public class IconCollection
     public static async Task<IconCollection> FromFileAsync(string filename, int largeSize = LargeIconSize,
         int smallSize = SmallIconSize)
     {
-        return await new IconCollection(filename, true).WithCustomSizes(largeSize, smallSize).DownloadAllAsync();
+        return await new IconCollection(filename)
+            .WithCustomSizes(largeSize, smallSize)
+            .LoadAsync();
     }
 
     public static async Task<IconCollection> FromBitmapAsync(Bitmap bitmap, int largeSize = LargeIconSize,
@@ -82,69 +77,22 @@ public class IconCollection
         if (ResourceUri != null)
             return AssetLoader.Open(ResourceUri);
 
-        if (Url == null)
+        if (Filename == null)
             return AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_mod_logo.png"));
-
-        if (IsLocalFile)
-        {
-            int times = 0;
-            Exception exception = null;
-
-            while (times < 4)
-            {
-                try
-                {
-                    return new FileStream(Url, FileMode.Open);
-                }
-                catch (Exception e)
-                {
-                    exception = e;
-                    await Task.Delay(10);
-                }
-
-                times++;
-            }
-
-            throw new Exception($"Failed to load the icon: {exception}");
-        }
-
-        HttpClient client = new HttpClient();
 
         try
         {
-            HttpResponseMessage resp = await client.GetAsync(Url);
-            if (!resp.IsSuccessStatusCode) return null;
-
-            return await resp.Content.ReadAsStreamAsync();
+            return new FileStream(Filename, FileMode.Open);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            IsDefaultIcon = true;
-
             return AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_mod_logo.png"));
         }
     }
 
-    public async Task DownloadSmallAsync()
+    public async Task LoadSmallAsync()
     {
-        SHA1 sha = SHA1.Create();
-        string cacheName = string.Empty;
-        bool isResource = ResourceUri != null;
-        if (!isResource && !IsLocalFile)
-        {
-            string hash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(Url)));
-
-            cacheName = $"is-{hash}";
-
-            if (CacheManager.HasBitmap(cacheName) && !IsLocalFile)
-            {
-                await Task.Run(() => { IconSmall = CacheManager.LoadBitmap(cacheName); });
-
-                return;
-            }
-        }
-
-        Stream imageStream = await LoadStreamAsync();
+        await using Stream imageStream = await LoadStreamAsync();
 
         IconSmall = await Task.Run(() =>
         {
@@ -157,33 +105,11 @@ public class IconCollection
                 return null;
             }
         });
-
-        if (!isResource && !IsLocalFile) CacheManager.Store(IconSmall, cacheName);
-
-
-        if (!isResource || IsLocalFile) await imageStream.DisposeAsync();
     }
 
-    public async Task DownloadLargeAsync()
+    public async Task LoadLargeAsync()
     {
-        SHA1 sha = SHA1.Create();
-        string cacheName = string.Empty;
-        bool isResource = ResourceUri != null;
-        if (!isResource && !IsLocalFile)
-        {
-            string hash = Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(Url)));
-
-            cacheName = $"il-{hash}";
-
-            if (CacheManager.HasBitmap(cacheName) && !IsLocalFile)
-            {
-                await Task.Run(() => { IconLarge = CacheManager.LoadBitmap(cacheName); });
-
-                return;
-            }
-        }
-
-        Stream imageStream = await LoadStreamAsync();
+        await using Stream imageStream = await LoadStreamAsync();
 
         IconLarge = await Task.Run(() =>
         {
@@ -196,16 +122,12 @@ public class IconCollection
                 return null;
             }
         });
-
-        if (!isResource && !IsLocalFile) CacheManager.Store(IconLarge, cacheName);
-
-        if (!isResource || IsLocalFile) await imageStream.DisposeAsync();
     }
 
-    public async Task<IconCollection> DownloadAllAsync()
+    public async Task<IconCollection> LoadAsync()
     {
-        await DownloadSmallAsync();
-        await DownloadLargeAsync();
+        await LoadSmallAsync();
+        await LoadLargeAsync();
 
         return this;
     }
