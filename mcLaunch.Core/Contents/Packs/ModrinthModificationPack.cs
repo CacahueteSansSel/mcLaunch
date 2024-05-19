@@ -211,7 +211,7 @@ public class ModrinthModificationPack : ModificationPack
         if (box.ModLoader is ForgeModLoaderSupport)
             index.Dependencies = new ModelModrinthIndex.ModelDependencies
             {
-                Forge = box.Manifest.ModLoaderVersion
+                Forge = $"{box.Manifest.Version}-{box.Manifest.ModLoaderVersion}"
             };
         else if (box.ModLoader is FabricModLoaderSupport)
             index.Dependencies = new ModelModrinthIndex.ModelDependencies
