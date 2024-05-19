@@ -157,8 +157,8 @@ public class MinecraftContent : ReactiveObject
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(author))
             return false;
 
-        string nameNormalized = Name.NormalizeTitle();
-        string authorNormalized = Author.NormalizeUsername();
+        string? nameNormalized = Name?.NormalizeTitle();
+        string? authorNormalized = Author?.NormalizeUsername();
         string otherNameNormalized = name.NormalizeTitle();
         string otherAuthorNormalized = author.NormalizeUsername();
 
