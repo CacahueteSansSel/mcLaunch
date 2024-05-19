@@ -20,7 +20,7 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
         CommitText.Text = CurrentBuild.Commit;
         BranchNameText.Text = CurrentBuild.Branch;
 
-        int years = (int)MathF.Floor((float)(DateTime.Now - Constants.McLaunchBirthDate).TotalDays / 365);
+        int years = (int) MathF.Floor((float) (DateTime.Now - Constants.McLaunchBirthDate).TotalDays / 365);
         YearsText.Text = $"{years} year{(years > 1 ? "s" : "")} old";
     }
 

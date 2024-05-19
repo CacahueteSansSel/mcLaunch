@@ -26,7 +26,10 @@
                 <Border DockPanel.Dock="Right" Margin="20 36 10 35" Classes="frame-dark-without-shadow">
                     <Panel>
                         <TextBox x:Name="BodyText" IsVisible="False" Focusable="False">This is the error message</TextBox>
-                        <Button x:Name="OpenCrashReportButton" HorizontalAlignment="Center" Classes="secondary" Click="OpenCrashReportButtonClicked">Open complete crash report</Button>
+                        <Button x:Name="OpenCrashReportButton" HorizontalAlignment="Center" Classes="secondary"
+                                Click="OpenCrashReportButtonClicked">
+                            Open complete crash report
+                        </Button>
                         <views:LoadingCircle x:Name="LoadingIcon" IsVisible="False" />
                     </Panel>
                 </Border>

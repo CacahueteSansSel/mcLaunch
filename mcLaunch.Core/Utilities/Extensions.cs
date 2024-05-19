@@ -6,10 +6,8 @@ namespace mcLaunch.Core.Utilities;
 
 public static class Extensions
 {
-    public static string Capitalize(this string text)
-    {
-        return string.IsNullOrWhiteSpace(text) ? text : char.ToUpper(text[0]) + text[1..];
-    }
+    public static string Capitalize(this string text) =>
+        string.IsNullOrWhiteSpace(text) ? text : char.ToUpper(text[0]) + text[1..];
 
     public static string NormalizeCase(this string text)
     {
@@ -43,9 +41,8 @@ public static class Extensions
     }
 
     // This ugly hacks must be used to ensure that two mods are similar on different platforms
-    public static string NormalizeTitle(this string title)
-    {
-        return title
+    public static string NormalizeTitle(this string title) =>
+        title
             .Replace("(Fabric)", "")
             .Replace("(fabric)", "")
             .Replace("(Forge)", "")
@@ -55,12 +52,8 @@ public static class Extensions
             .Replace("(Fabric/Forge)", "")
             .Replace("(fabric/forge)", "")
             .Trim();
-    }
 
-    public static string NormalizeUsername(this string username)
-    {
-        return username.Trim().TrimEnd('_');
-    }
+    public static string NormalizeUsername(this string username) => username.Trim().TrimEnd('_');
 
     public static byte[] ReadToEndAndClose(this Stream stream, long? size = null)
     {

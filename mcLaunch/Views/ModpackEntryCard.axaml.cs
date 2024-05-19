@@ -30,7 +30,7 @@ public partial class ModpackEntryCard : UserControl
         VersionBadge.Text = modpack.LatestMinecraftVersion ?? "Unknown";
         PlatformBadge.Text = modpack.Platform.Name;
         PlatformBadge.Icon = modpack.Platform.Icon;
-        
+
         ApplyModpackValues();
     }
 

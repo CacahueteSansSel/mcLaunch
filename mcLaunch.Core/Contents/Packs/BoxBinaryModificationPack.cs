@@ -94,7 +94,7 @@ public class BoxBinaryModificationPack : ModificationPack
     {
         MinecraftContent content = await ModPlatformManager.Platform.GetContentAsync(mod.ModId);
         if (content == null) return;
-        
+
         await ModPlatformManager.Platform.InstallContentAsync(targetBox, new MinecraftContent
         {
             Id = mod.ModId,
@@ -126,7 +126,6 @@ public class BoxBinaryModificationPack : ModificationPack
 
         List<Mod> mods = new();
         foreach (BoxStoredContent mod in box.Manifest.Contents)
-        {
             mods.Add(new Mod
             {
                 Id = mod.Id,
@@ -134,7 +133,6 @@ public class BoxBinaryModificationPack : ModificationPack
                 Platform = mod.PlatformId,
                 Version = mod.VersionId
             });
-        }
         bb.Mods = mods.ToArray();
 
         List<FSFile> files = new();

@@ -84,10 +84,7 @@ public class Box : IEquatable<Box>
     public bool HasWorlds => Directory.Exists($"{Folder.Path}/saves") &&
                              Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
 
-    public bool Equals(Box? other)
-    {
-        return other?.Manifest.Id == Manifest.Id;
-    }
+    public bool Equals(Box? other) => other?.Manifest.Id == Manifest.Id;
 
     private void CreateWatcher()
     {
@@ -294,13 +291,12 @@ public class Box : IEquatable<Box>
         watcher.EnableRaisingEvents = isWatching;
     }
 
-    public string? ReadReadmeFile()
-    {
-        return HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
-    }
+    public string? ReadReadmeFile() => HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
 
-    public async void ReloadManifest(bool force = false) 
-        => await ReloadManifestAsync(force);
+    public async void ReloadManifest(bool force = false)
+    {
+        await ReloadManifestAsync(force);
+    }
 
     public async Task ReloadManifestAsync(bool force = false)
     {
@@ -331,7 +327,7 @@ public class Box : IEquatable<Box>
             Manifest.Icon = icon;
             Manifest.Background = background;
         }
-        
+
         if (File.Exists($"{Path}/icon.png") && Manifest!.Icon == null)
             await LoadIconAsync();
     }
@@ -514,12 +510,10 @@ public class Box : IEquatable<Box>
             .ToArray();
     }
 
-    public string[] GetScreenshotPaths()
-    {
-        return !Directory.Exists($"{Folder.Path}/screenshots")
+    public string[] GetScreenshotPaths() =>
+        !Directory.Exists($"{Folder.Path}/screenshots")
             ? Array.Empty<string>()
             : Directory.GetFiles($"{Folder.Path}/screenshots", "*.png");
-    }
 
     public async Task<Result> CreateMinecraftAsync()
     {
@@ -614,10 +608,10 @@ public class Box : IEquatable<Box>
     public async void SetAndSaveIcon(Stream iconStream, bool reload = true)
     {
         using MemoryStream stream = new();
-        
+
         await iconStream.CopyToAsync(stream);
         await File.WriteAllBytesAsync($"{Path}/icon.png", stream.ToArray());
-        
+
         if (reload) await LoadIconAsync();
     }
 
@@ -630,13 +624,13 @@ public class Box : IEquatable<Box>
     public async void SetAndSaveBackground(Stream backgroundStream, bool reload = true)
     {
         using MemoryStream stream = new();
-        
+
         await backgroundStream.CopyToAsync(stream);
         await File.WriteAllBytesAsync($"{Path}/background.png", stream.ToArray());
-        
+
         if (reload) LoadBackground();
     }
-    
+
     public async Task LoadIconAsync()
     {
         if (Manifest.Icon != null) return;
@@ -757,15 +751,9 @@ public class Box : IEquatable<Box>
         return migratedMods.ToArray();
     }
 
-    public bool HasContentStrict(MinecraftContent mod)
-    {
-        return Manifest.HasContentStrict(mod.Id, mod.Platform.Name);
-    }
+    public bool HasContentStrict(MinecraftContent mod) => Manifest.HasContentStrict(mod.Id, mod.Platform.Name);
 
-    public bool HasContentSoft(MinecraftContent mod)
-    {
-        return Manifest.HasContentSoft(mod);
-    }
+    public bool HasContentSoft(MinecraftContent mod) => Manifest.HasContentSoft(mod);
 
     public void SaveManifest()
     {
@@ -782,12 +770,10 @@ public class Box : IEquatable<Box>
     }
 
     // Launch Minecraft and directly connect to a server 
-    public Process Run(string serverAddress, string serverPort)
-    {
-        return Minecraft
+    public Process Run(string serverAddress, string serverPort) =>
+        Minecraft
             .WithServer(serverAddress, serverPort)
             .Run();
-    }
 
     // Launch a Minecraft world directly using QuickPlay
     public Process Run(MinecraftWorld world)
@@ -800,18 +786,9 @@ public class Box : IEquatable<Box>
             .Run();
     }
 
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as Box);
-    }
+    public override bool Equals(object? obj) => Equals(obj as Box);
 
-    public override int GetHashCode()
-    {
-        return Manifest.Id.GetHashCode();
-    }
+    public override int GetHashCode() => Manifest.Id.GetHashCode();
 
-    public override string ToString()
-    {
-        return $"Box {Manifest.Id} {Manifest.Name}";
-    }
+    public override string ToString() => $"Box {Manifest.Id} {Manifest.Name}";
 }

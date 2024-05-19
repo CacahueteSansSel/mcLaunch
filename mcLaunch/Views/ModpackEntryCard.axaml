@@ -36,7 +36,8 @@
                 </Border.Background>
                 <Canvas Height="120">
                     <Border Canvas.Left="40" Canvas.Top="60" ClipToBounds="True" CornerRadius="4">
-                        <Image Stretch="Fill" Width="80" Height="80" asyncImageLoader:ImageLoader.Source="{Binding IconPath}" />
+                        <Image Stretch="Fill" Width="80" Height="80"
+                               asyncImageLoader:ImageLoader.Source="{Binding IconPath}" />
                     </Border>
                     <StackPanel Canvas.Left="135" Canvas.Top="60" Width="250" ClipToBounds="True">
                         <TextBlock Classes="title" FontSize="20" Text="{Binding Name}" />

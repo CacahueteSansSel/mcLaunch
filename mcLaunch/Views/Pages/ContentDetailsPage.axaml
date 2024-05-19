@@ -25,7 +25,8 @@
                 <Border Classes="frame" Margin="0 10 0 100" Width="888">
                     <StackPanel Margin="1" Orientation="Vertical">
                         <DockPanel Margin="38 38 38 0" LastChildFill="True">
-                            <Image DockPanel.Dock="Left" asyncImageLoader:ImageLoader.Source="{Binding IconUrl}" Height="155" Width="155"
+                            <Image DockPanel.Dock="Left" asyncImageLoader:ImageLoader.Source="{Binding IconUrl}"
+                                   Height="155" Width="155"
                                    Stretch="Uniform" />
                             <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
                                 <Button x:Name="InstallButton" Classes="primary" Width="124"

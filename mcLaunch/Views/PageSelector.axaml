@@ -9,13 +9,11 @@
     </UserControl.Styles>
     <DockPanel>
         <Button DockPanel.Dock="Left" Click="PreviousButtonClicked" Classes="secondary square">
-            <Image Source="/resources/icons/arrow_left.png" Height="13"></Image>
+            <Image Source="/resources/icons/arrow_left.png" Height="13" />
         </Button>
         <Button DockPanel.Dock="Right" Click="NextButtonClicked" Classes="secondary square">
-            <Image Source="/resources/icons/arrow_right.png" Height="13"></Image>
+            <Image Source="/resources/icons/arrow_right.png" Height="13" />
         </Button>
-        <StackPanel x:Name="ButtonsContainer" Orientation="Horizontal" ClipToBounds="True" Spacing="2" Margin="5 0 5 0">
-            
-        </StackPanel>
+        <StackPanel x:Name="ButtonsContainer" Orientation="Horizontal" ClipToBounds="True" Spacing="2" Margin="5 0 5 0" />
     </DockPanel>
 </UserControl>

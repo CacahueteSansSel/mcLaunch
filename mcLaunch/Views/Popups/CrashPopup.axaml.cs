@@ -12,7 +12,7 @@ public partial class CrashPopup : UserControl
 {
     private Box? box;
     private string? fileToOpen;
-    
+
     public CrashPopup(int exitCode, string boxId)
     {
         InitializeComponent();
@@ -33,7 +33,7 @@ public partial class CrashPopup : UserControl
     {
         LoadingIcon.IsVisible = true;
         BodyText.IsVisible = false;
-        
+
         box = (await BoxManager.LoadLocalBoxesAsync()).FirstOrDefault(b => b.Manifest.Id == boxId);
 
         string bodyText;
@@ -42,7 +42,7 @@ public partial class CrashPopup : UserControl
         if (File.Exists(latestLogsPath))
         {
             fileToOpen = latestLogsPath;
-            
+
             BodyText.IsVisible = false;
             OpenCrashReportButton.IsVisible = true;
         }

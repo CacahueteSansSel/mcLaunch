@@ -47,18 +47,13 @@ public class LibraryName
                                    $"/{Version}" +
                                    $"/{JarFilename}";
 
-    public string BuildMavenUrl(string baseUrl)
-    {
-        return $"{baseUrl.TrimEnd('/')}/{MavenFilename}";
-    }
+    public string BuildMavenUrl(string baseUrl) => $"{baseUrl.TrimEnd('/')}/{MavenFilename}";
 
-    public static bool operator ==(LibraryName? left, LibraryName? right)
-    {
-        return left?.Package == right?.Package && left?.Name == right?.Name && left?.Version == right?.Version;
-    }
+    public static bool operator ==(LibraryName? left, LibraryName? right) => left?.Package == right?.Package &&
+                                                                             left?.Name == right?.Name &&
+                                                                             left?.Version == right?.Version;
 
-    public static bool operator !=(LibraryName? left, LibraryName? right)
-    {
-        return left?.Package != right?.Package || left?.Name != right?.Name || left?.Version != right?.Version;
-    }
+    public static bool operator !=(LibraryName? left, LibraryName? right) => left?.Package != right?.Package ||
+                                                                             left?.Name != right?.Name ||
+                                                                             left?.Version != right?.Version;
 }

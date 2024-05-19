@@ -20,16 +20,11 @@ public static class AnonymityManager
         anonNames = reader.ReadToEnd().Split("\r\n");
     }
 
-    public static AnonymitySession CreateSession()
-    {
-        return new AnonymitySession(anonNames);
-    }
+    public static AnonymitySession CreateSession() => new(anonNames);
 }
 
 public class AnonymitySession
 {
-    public static AnonymitySession Default { get; private set; } = AnonymityManager.CreateSession();
-    
     private readonly List<string> initialNames;
     private List<string> availableNames;
 
@@ -38,6 +33,8 @@ public class AnonymitySession
         initialNames = new List<string>(names);
         availableNames = new List<string>(names);
     }
+
+    public static AnonymitySession Default { get; private set; } = AnonymityManager.CreateSession();
 
     public string TakeName()
     {

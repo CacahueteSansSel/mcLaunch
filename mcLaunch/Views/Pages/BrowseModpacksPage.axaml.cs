@@ -9,9 +9,9 @@ namespace mcLaunch.Views.Pages;
 
 public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
 {
+    private readonly PageSelector[] pageSelectors;
     private string lastMinecraftVersion = string.Empty;
     private string lastQuery = string.Empty;
-    private PageSelector[] pageSelectors;
 
     public BrowseModpacksPage()
     {
@@ -72,7 +72,7 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
     {
         foreach (PageSelector component in pageSelectors)
             component.IsEnabled = false;
-        
+
         Search(index, lastQuery, lastMinecraftVersion);
 
         foreach (PageSelector component in pageSelectors)

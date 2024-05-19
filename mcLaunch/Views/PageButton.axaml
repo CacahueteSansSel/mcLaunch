@@ -10,7 +10,8 @@
     <Button Classes="secondary" Padding="13 10 13 10" Height="39" MinWidth="39" Click="ButtonClicked">
         <StackPanel Orientation="Vertical" VerticalAlignment="Center">
             <TextBlock x:Name="PageIndexText" HorizontalAlignment="Center">1</TextBlock>
-            <Border x:Name="Light" IsVisible="False" HorizontalAlignment="Center" Width="12" Height="3" Background="{StaticResource BrightAccent}" CornerRadius="2"></Border>
+            <Border x:Name="Light" IsVisible="False" HorizontalAlignment="Center" Width="12" Height="3"
+                    Background="{StaticResource BrightAccent}" CornerRadius="2" />
         </StackPanel>
     </Button>
 </UserControl>

@@ -65,7 +65,7 @@ public class CurseForgeModificationPack : ModificationPack
     {
         MinecraftContent content = await CurseForgeMinecraftContentPlatform.Instance.GetContentAsync(mod.ModId);
         if (content == null) return;
-        
+
         await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(targetBox, new MinecraftContent
         {
             Id = mod.ModId,

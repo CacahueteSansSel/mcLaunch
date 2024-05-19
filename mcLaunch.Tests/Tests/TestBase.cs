@@ -51,20 +51,11 @@ public abstract class TestBase
         Dependencies.Add(typeof(T));
     }
 
-    protected TestResult Success(string? message = null)
-    {
-        return new TestResult(true, message, this);
-    }
+    protected TestResult Success(string? message = null) => new(true, message, this);
 
-    protected TestResult Failure(string message)
-    {
-        return new TestResult(false, message, this);
-    }
+    protected TestResult Failure(string message) => new(false, message, this);
 
-    protected TestResult TestFailure()
-    {
-        return new TestResult(false, LatestTestFailure, this);
-    }
+    protected TestResult TestFailure() => new(false, LatestTestFailure, this);
 }
 
 public class TestFailedException(string testName, string? message) : Exception($"Test '{testName}' failed: {message}");

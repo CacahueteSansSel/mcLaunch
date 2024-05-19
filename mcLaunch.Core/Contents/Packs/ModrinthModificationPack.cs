@@ -8,6 +8,7 @@ using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Launchsite.Core.ModLoaders;
+using File = Modrinth.Models.File;
 using Version = Modrinth.Models.Version;
 
 namespace mcLaunch.Core.Contents.Packs;
@@ -245,13 +246,11 @@ public class ModrinthModificationPack : ModificationPack
             }
 
             Version modVersion = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetAsync(mod.VersionId);
-            Modrinth.Models.File? primaryVersionFile = modVersion.Files.FirstOrDefault(f => f.Primary);
+            File? primaryVersionFile = modVersion.Files.FirstOrDefault(f => f.Primary);
 
             if (primaryVersionFile == null)
-            {
                 // TODO: inform user that this mod was ignored
                 continue;
-            }
 
             ModelModrinthIndex.ModelFile fileModel = new()
             {
@@ -273,7 +272,7 @@ public class ModrinthModificationPack : ModificationPack
         foreach (string file in box.GetAdditionalFiles())
         {
             string completePath = $"{box.Path}/minecraft/{file}";
-            if (!File.Exists(completePath)) continue;
+            if (!System.IO.File.Exists(completePath)) continue;
 
             ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
             await using Stream entryStream = overrideEntry.Open();
@@ -285,7 +284,7 @@ public class ModrinthModificationPack : ModificationPack
         foreach (string modFile in box.GetUnlistedMods())
         {
             string completePath = $"{box.Path}/minecraft/{modFile}";
-            if (!File.Exists(completePath)) continue;
+            if (!System.IO.File.Exists(completePath)) continue;
 
             ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{modFile}");
             await using Stream entryStream = overrideEntry.Open();

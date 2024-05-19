@@ -425,10 +425,10 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         return filenames.ToArray();
     }
 
-    string DeduceCurseforgeFileUrl(File file)
+    private string DeduceCurseforgeFileUrl(File file)
     {
         string id = file.Id.ToString();
-        
+
         return $"https://mediafilez.forgecdn.net/files/{id[..4]}/{id.Substring(4, 3)}/{file.FileName}";
     }
 

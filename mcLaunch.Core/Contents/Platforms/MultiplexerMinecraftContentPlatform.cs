@@ -87,10 +87,8 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
     }
 
     public override Task<ContentVersion[]> GetContentVersionsAsync(MinecraftContent content, string? modLoaderId,
-        string? minecraftVersionId)
-    {
-        return content.Platform!.GetContentVersionsAsync(content, modLoaderId, minecraftVersionId);
-    }
+        string? minecraftVersionId) =>
+        content.Platform!.GetContentVersionsAsync(content, modLoaderId, minecraftVersionId);
 
     public override async Task<PlatformModpack> GetModpackAsync(string id)
     {
@@ -114,10 +112,7 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
         return await platform.InstallContentAsync(targetBox, content, versionId, installOptional);
     }
 
-    public override async Task<ModificationPack> LoadModpackFileAsync(string filename)
-    {
-        return null;
-    }
+    public override async Task<ModificationPack> LoadModpackFileAsync(string filename) => null;
 
     public override async Task<MinecraftContent> DownloadContentInfosAsync(MinecraftContent content)
     {

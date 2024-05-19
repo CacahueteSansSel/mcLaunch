@@ -109,14 +109,14 @@ public class BoxManifest : ReactiveObject
     public bool HasContentStrict(string id, string versionId, string platformId)
     {
         return Contents.FirstOrDefault(m => m.Id == id
-                                           && m.PlatformId == platformId
-                                           && m.VersionId == versionId) != null;
+                                            && m.PlatformId == platformId
+                                            && m.VersionId == versionId) != null;
     }
 
     public bool HasContentStrict(string id, string platformId)
     {
         return Contents.FirstOrDefault(m => m.Id == id
-                                           && m.PlatformId == platformId) != null;
+                                            && m.PlatformId == platformId) != null;
     }
 
     public bool HasContentSoft(MinecraftContent content)
@@ -191,20 +191,20 @@ public class BoxManifest : ReactiveObject
             content.Content = await ModPlatformManager.Platform.GetContentAsync(content.Id);
             hadChange = true;
         });
-        
+
         // Remove duplicates
         List<string> seenContents = [];
         List<string> toRemoveContents = [];
         foreach (BoxStoredContent content in Contents)
         {
             if (content.Content == null) continue;
-            
+
             if (seenContents.Contains(content.Content!.Id))
             {
                 toRemoveContents.Add(content.Content!.Id);
                 continue;
             }
-            
+
             seenContents.Add(content.Content.Id);
         }
 
@@ -255,17 +255,14 @@ public class BoxManifest : ReactiveObject
         return new Result<MinecraftVersion>(setUpVersion);
     }
 
-    public override string ToString()
-    {
-        return $"Manifest {Id} {Name}";
-    }
+    public override string ToString() => $"Manifest {Id} {Name}";
 }
 
 public class BoxStoredContent
 {
     private string? id, platformId, name, author;
     private MinecraftContentType? type;
-    
+
     public MinecraftContent? Content { get; set; }
 
     [Obsolete("Use Content instead")]
@@ -276,25 +273,30 @@ public class BoxStoredContent
     }
 
     public string VersionId { get; init; }
+
     [Obsolete("Use Content instead")]
-    public string PlatformId 
+    public string PlatformId
     {
         get => platformId ?? Content.ModPlatformId;
         set => platformId = value;
     }
+
     public string[] Filenames { get; set; }
+
     [Obsolete("Use Content instead")]
     public string Name
     {
         get => name ?? Content.Name;
         set => name = value;
     }
+
     [Obsolete("Use Content instead")]
     public string Author
     {
         get => author ?? Content.Author;
         set => author = value;
     }
+
     [Obsolete("Use Content instead")]
     public MinecraftContentType Type
     {

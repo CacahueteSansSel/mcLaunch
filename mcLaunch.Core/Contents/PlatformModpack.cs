@@ -68,10 +68,7 @@ public class PlatformModpack : ReactiveObject, IVersionContent
                && authorNormalized == otherAuthorNormalized;
     }
 
-    public bool IsSimilar(PlatformModpack other)
-    {
-        return IsSimilar(other.Name, other.Author);
-    }
+    public bool IsSimilar(PlatformModpack other) => IsSimilar(other.Name, other.Author);
 
     private async Task<Stream> LoadIconStreamAsync()
     {

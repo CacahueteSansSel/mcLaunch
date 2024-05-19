@@ -11,8 +11,6 @@ public class MinecraftLoginRequest
 
     [JsonPropertyName("identityToken")] public string IdentityToken { get; set; }
 
-    public static MinecraftLoginRequest CreateXbox(string userHash, string xstsToken)
-    {
-        return new MinecraftLoginRequest($"XBL3.0 x={userHash};{xstsToken}");
-    }
+    public static MinecraftLoginRequest CreateXbox(string userHash, string xstsToken) =>
+        new($"XBL3.0 x={userHash};{xstsToken}");
 }

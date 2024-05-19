@@ -43,7 +43,8 @@
                     <StackPanel Margin="1" Orientation="Vertical">
                         <DockPanel Margin="38 38 38 0" LastChildFill="True">
                             <Panel>
-                                <Image x:Name="BoxCover" PointerEntered="BoxIconCursorEntered" PointerExited="BoxIconCursorLeft"
+                                <Image x:Name="BoxCover" PointerEntered="BoxIconCursorEntered"
+                                       PointerExited="BoxIconCursorLeft"
                                        DockPanel.Dock="Left" Source="{Binding Manifest.Icon.IconLarge}" Height="155"
                                        Width="155" Stretch="Uniform" />
                                 <Button IsVisible="False" IsEnabled="False" PointerEntered="BoxIconCursorEntered"

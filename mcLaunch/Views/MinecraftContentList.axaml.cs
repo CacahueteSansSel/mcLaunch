@@ -38,12 +38,12 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
             true
         );
 
-    private List<MinecraftContent> list = new();
-
-    private PageSelector[] pageSelectors;
+    private readonly PageSelector[] pageSelectors;
 
     private Box lastBox;
     private string lastQuery;
+
+    private List<MinecraftContent> list = new();
 
     public MinecraftContentList()
     {
@@ -97,7 +97,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     public void ShowLoadMoreButton()
     {
         if (HidePageSelector) return;
-        
+
         foreach (PageSelector component in pageSelectors)
         {
             component.IsVisible = true;
@@ -114,7 +114,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     public void SetContents(MinecraftContent[] contents)
     {
         Data ctx = (Data) DataContext;
-        
+
         ctx.Contents = contents;
         list = contents.ToList();
 
@@ -143,7 +143,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         }
 
         NtsBanner.IsVisible = ctx.Contents.Length == 0;
-        
+
         foreach (PageSelector component in pageSelectors)
             component.IsVisible = !NtsBanner.IsVisible && !HidePageSelector;
     }
@@ -152,7 +152,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     {
         LoadCircle.IsVisible = isLoading;
         if (isLoading) NtsBanner.IsVisible = false;
-        
+
         foreach (PageSelector component in pageSelectors)
             component.IsVisible = !isLoading;
 
@@ -175,7 +175,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         ApplyContentAttributes();
 
         SetLoadingCircle(false);
-        
+
         foreach (PageSelector component in pageSelectors)
             component.IsVisible = ctx.Contents.Length >= 10 && !HidePageSelector;
     }
@@ -189,7 +189,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
         lastBox = box;
         lastQuery = query;
-        
+
         foreach (PageSelector component in pageSelectors)
         {
             component.Setup(mods.TotalPageCount, PageSelectedCallback);
@@ -203,9 +203,9 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     {
         foreach (PageSelector component in pageSelectors)
             component.IsEnabled = false;
-        
+
         Data ctx = (Data) DataContext;
-        
+
         ctx.Page = index;
         ctx.Contents = await SearchContentsAsync(lastBox, lastQuery);
 

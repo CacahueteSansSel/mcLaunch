@@ -30,7 +30,7 @@
             </ScrollViewer>
         </DockPanel>
         <StackPanel x:Name="LoadingOverlay" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <views:LoadingCircle></views:LoadingCircle>
+            <views:LoadingCircle />
             <TextBlock HorizontalAlignment="Center" Classes="title">Loading your boxes</TextBlock>
             <TextBlock HorizontalAlignment="Center" Classes="light">If this takes an extended period of time, mcLaunch is migrating your boxes to the latest version</TextBlock>
         </StackPanel>

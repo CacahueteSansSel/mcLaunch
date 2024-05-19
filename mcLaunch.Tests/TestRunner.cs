@@ -105,8 +105,5 @@ public class TestResult(bool isSuccess, string? message, TestBase? test = null)
     public string? Message { get; } = message;
     public TestBase? Test { get; set; } = test;
 
-    public static TestResult Error(string message)
-    {
-        return new TestResult(false, message);
-    }
+    public static TestResult Error(string message) => new(false, message);
 }

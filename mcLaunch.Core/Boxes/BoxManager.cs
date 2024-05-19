@@ -42,7 +42,7 @@ public static class BoxManager
 
             Box box = new Box(boxPath, false);
             await box.ReloadManifestAsync(true);
-            
+
             if (box.Manifest.Type == BoxType.Temporary && !includeTemp) continue;
 
             boxes.Add(box);
@@ -196,11 +196,13 @@ public static class BoxManager
 
         Box box = boxResult.Data!;
 
-        await using Stream? iconStream = pack.IconPath == null 
-            ? null : await DownloadManager.DownloadFileAsync(pack.IconPath);
-        await using Stream? backgroundStream = pack.BackgroundPath == null 
-            ? null : await DownloadManager.DownloadFileAsync(pack.BackgroundPath);
-        
+        await using Stream? iconStream = pack.IconPath == null
+            ? null
+            : await DownloadManager.DownloadFileAsync(pack.IconPath);
+        await using Stream? backgroundStream = pack.BackgroundPath == null
+            ? null
+            : await DownloadManager.DownloadFileAsync(pack.BackgroundPath);
+
         if (iconStream != null) box.SetAndSaveIcon(iconStream, false);
         if (backgroundStream != null) box.SetAndSaveBackground(backgroundStream, false);
 

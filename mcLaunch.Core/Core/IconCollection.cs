@@ -1,9 +1,6 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using mcLaunch.Core.Managers;
 
 namespace mcLaunch.Core.Core;
 
@@ -37,18 +34,13 @@ public class IconCollection
     public int IconSmallSize { get; private set; } = SmallIconSize;
     public int IconLargeSize { get; private set; } = LargeIconSize;
 
-    public static IconCollection FromResources(string path)
-    {
-        return new IconCollection(new Uri($"avares://mcLaunch/resources/{path}"));
-    }
+    public static IconCollection FromResources(string path) => new(new Uri($"avares://mcLaunch/resources/{path}"));
 
     public static async Task<IconCollection> FromFileAsync(string filename, int largeSize = LargeIconSize,
-        int smallSize = SmallIconSize)
-    {
-        return await new IconCollection(filename)
+        int smallSize = SmallIconSize) =>
+        await new IconCollection(filename)
             .WithCustomSizes(largeSize, smallSize)
             .LoadAsync();
-    }
 
     public static async Task<IconCollection> FromBitmapAsync(Bitmap bitmap, int largeSize = LargeIconSize,
         int smallSize = SmallIconSize)

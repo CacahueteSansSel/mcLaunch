@@ -3,7 +3,6 @@ using Avalonia;
 using Avalonia.Controls;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Platforms;
-using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 
 namespace mcLaunch.Views;

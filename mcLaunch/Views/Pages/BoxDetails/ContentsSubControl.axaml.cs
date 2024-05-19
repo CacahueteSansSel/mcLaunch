@@ -118,7 +118,6 @@ public partial class ContentsSubControl : SubControl
         bool isChanges = false;
 
         for (int i = 0; i < 10; i++)
-        {
             try
             {
                 await Parallel.ForEachAsync(storedContents, async (storedContent, token) =>
@@ -155,7 +154,6 @@ public partial class ContentsSubControl : SubControl
             {
                 // ignored
             }
-        }
 
         if (isChanges)
         {

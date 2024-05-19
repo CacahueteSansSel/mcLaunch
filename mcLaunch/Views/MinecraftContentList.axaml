@@ -15,7 +15,7 @@
     <Panel>
         <StackPanel Orientation="Vertical">
             <Panel HorizontalAlignment="Center" Margin="0 20 0 0">
-                <views:PageSelector x:Name="PageSelectorComponentTop"></views:PageSelector>
+                <views:PageSelector x:Name="PageSelectorComponentTop" />
             </Panel>
             <ListBox x:Name="ContentList" SelectionMode="Single" ItemsSource="{Binding Contents}"
                      SelectionChanged="ContentSelectionChanged">
@@ -32,7 +32,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Panel HorizontalAlignment="Center" Margin="0 20 0 0">
-                <views:PageSelector x:Name="PageSelectorComponentBottom"></views:PageSelector>
+                <views:PageSelector x:Name="PageSelectorComponentBottom" />
             </Panel>
         </StackPanel>
         <views:LoadingCircle x:Name="LoadCircle" IsVisible="False" IsHitTestVisible="False" />

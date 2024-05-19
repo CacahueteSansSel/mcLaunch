@@ -15,20 +15,13 @@ public class MinecraftFolder
     public string Path { get; }
     public string CompletePath => System.IO.Path.GetFullPath(Path);
 
-    public bool HasVersion(string id)
-    {
-        return Directory.Exists($"{Path}/versions/{id}") && File.Exists($"{Path}/versions/{id}/{id}.jar");
-    }
+    public bool HasVersion(string id) =>
+        Directory.Exists($"{Path}/versions/{id}") && File.Exists($"{Path}/versions/{id}/{id}.jar");
 
-    public string GetVersionPath(string id)
-    {
-        return $"{Path}/versions/{id}";
-    }
+    public string GetVersionPath(string id) => $"{Path}/versions/{id}";
 
-    public MinecraftVersion? GetVersion(string id)
-    {
-        return JsonSerializer.Deserialize<MinecraftVersion>(File.ReadAllText($"{GetVersionPath(id)}/{id}.json"));
-    }
+    public MinecraftVersion? GetVersion(string id) =>
+        JsonSerializer.Deserialize<MinecraftVersion>(File.ReadAllText($"{GetVersionPath(id)}/{id}.json"));
 
     public MinecraftVersion[] GetLocalVersions()
     {
