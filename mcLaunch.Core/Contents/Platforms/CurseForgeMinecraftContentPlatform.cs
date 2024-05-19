@@ -425,6 +425,13 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         return filenames.ToArray();
     }
 
+    string DeduceCurseforgeFileUrl(File file)
+    {
+        string id = file.Id.ToString();
+        
+        return $"https://mediafilez.forgecdn.net/files/{id[..4]}/{id.Substring(4, 3)}/{file.FileName}";
+    }
+
     public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent content, string versionId,
         bool installOptional)
     {
@@ -435,6 +442,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         try
         {
             version = await client.GetModFile(uint.Parse(content.Id), uint.Parse(versionId));
+            if (string.IsNullOrWhiteSpace(version.Data.DownloadUrl))
+                version.Data.DownloadUrl = DeduceCurseforgeFileUrl(version.Data);
             if (version == null) return false;
         }
         catch (HttpRequestException)
