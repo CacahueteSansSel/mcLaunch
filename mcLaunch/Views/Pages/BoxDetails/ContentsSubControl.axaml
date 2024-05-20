@@ -16,12 +16,17 @@
                             ToolTip.Tip="Add mods">
                         <Image Width="13" Height="13" Source="/resources/icons/plus.png" />
                     </Button>
+                    <views:SeparatorLine />
                     <Button x:Name="UpdateAllButton" DockPanel.Dock="Left" Padding="10" Height="39" Classes="secondary"
                             Click="UpdateAllButtonClicked" ToolTip.Tip="Update all">
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <Image Width="13" Height="13" Source="/resources/icons/up_arrow.png" />
                             <TextBlock x:Name="UpdateButtonCountText">0</TextBlock>
                         </StackPanel>
+                    </Button>
+                    <Button x:Name="CheckForUpdatesButton" DockPanel.Dock="Left" Padding="10" Height="39" Classes="secondary square"
+                            Click="CheckForUpdatesButtonClicked" ToolTip.Tip="Check for updates">
+                        <Image Width="13" Height="13" Source="/resources/icons/refresh.png" />
                     </Button>
                     <views:SeparatorLine />
                     <Button x:Name="MigrateToModrinthButton" DockPanel.Dock="Left" Classes="secondary square"

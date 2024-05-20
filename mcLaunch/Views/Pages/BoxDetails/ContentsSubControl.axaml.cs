@@ -77,24 +77,6 @@ public partial class ContentsSubControl : SubControl
                 .Select(content => content.Content!)
         ];
 
-        /*
-        await Parallel.ForEachAsync(Box.Manifest.GetContents(ContentType), async (boxContent, token) =>
-        {
-            MinecraftContent content = await ModPlatformManager.Platform.GetContentAsync(boxContent.Id);
-            //MinecraftContent content = boxContent.ToContent();
-            if (content == null) return;
-
-            string folder = $"{MinecraftContentUtils.GetInstallFolderName(ContentType)}/";
-            content.Filename = boxContent.Filenames.Length == 0
-                ? ""
-                : boxContent.Filenames[0]
-                    .Replace(folder, "").Trim();
-            content.InstalledVersion = boxContent.VersionId;
-
-            contents.Add(content);
-        });
-        */
-
         contents.Sort((left, right)
             => string.Compare(left.Name!, right.Name!, StringComparison.Ordinal));
 
@@ -107,11 +89,24 @@ public partial class ContentsSubControl : SubControl
         if (!canUpdate)
         {
             UpdateAllButton.IsVisible = false;
+            CheckForUpdatesButton.IsVisible = false;
+        }
+    }
+
+    public async Task UpdateAsync()
+    {
+        if (!canUpdate)
+        {
+            UpdateAllButton.IsVisible = false;
+            CheckForUpdatesButton.IsVisible = false;
+            
             return;
         }
-
+        
+        BoxStoredContent[] storedContents = Box.Manifest.GetContents(ContentType);
+        
+        CheckForUpdatesButton.IsVisible = false;
         SearchingForUpdates.IsVisible = true;
-
         isAnyUpdate = false;
 
         List<MinecraftContent> toUpdateContents = new();
@@ -164,8 +159,10 @@ public partial class ContentsSubControl : SubControl
 
         UpdateAllButton.IsVisible = isAnyUpdate;
         UpdateButtonCountText.Text = updatableContentsList.Count.ToString();
+        
+        CheckForUpdatesButton.IsVisible = !isAnyUpdate;
     }
-
+    
     private void AddModsButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.Push(new ContentSearchPage(Box, ContentType));
@@ -234,6 +231,7 @@ public partial class ContentsSubControl : SubControl
 
         isUpdating = false;
         UpdateAllButton.IsVisible = false;
+        CheckForUpdatesButton.IsVisible = true;
     }
 
     private void MigrateToCurseForgeButtonClicked(object? sender, RoutedEventArgs e)
@@ -269,5 +267,10 @@ public partial class ContentsSubControl : SubControl
     private void SearchBoxTextChanged(object? sender, TextChangedEventArgs e)
     {
         ModsList.SetQuery(SearchBox.Text);
+    }
+
+    private async void CheckForUpdatesButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        await UpdateAsync();
     }
 }
