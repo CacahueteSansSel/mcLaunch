@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace mcLaunch.Utilities;
 
@@ -25,6 +26,7 @@ public class ArgumentsParser
         }
     }
 
+    public string Get(int index) => dict.ElementAt(index).Key;
     public string Get(string key, string defaultValue = null) => dict.ContainsKey(key) ? dict[key] : defaultValue;
 
     public bool Contains(string key) => dict.ContainsKey(key);
