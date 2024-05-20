@@ -27,7 +27,7 @@ public partial class NewBoxPopup : UserControl
         Random rng = new Random();
 
         Bitmap bmp =
-            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
+            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 5)}.png")));
         BoxIconImage.Source = bmp;
 
         if (AuthenticationManager.Account != null) AuthorNameTb.Text = AuthenticationManager.Account.Username;
@@ -85,7 +85,7 @@ public partial class NewBoxPopup : UserControl
         else
         {
             Random rng = new Random(BoxNameTb.Text.GetHashCode());
-            icon = IconCollection.FromResources($"box_icons/{rng.Next(0, 4)}.png");
+            icon = IconCollection.FromResources($"box_icons/{rng.Next(0, 5)}.png");
         }
 
         // We fetch automatically the latest version of the modloader for now
@@ -144,7 +144,7 @@ public partial class NewBoxPopup : UserControl
         Random rng = new Random((BoxNameTb.Text ?? string.Empty).GetHashCode());
 
         Bitmap bmp =
-            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 4)}.png")));
+            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 5)}.png")));
 
         BoxIconImage.Source = bmp;
     }

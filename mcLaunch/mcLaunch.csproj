@@ -217,6 +217,8 @@
         <AvaloniaResource Include="resources\icons\arrow_left.png"/>
         <None Remove="resources\icons\arrow_right.png"/>
         <AvaloniaResource Include="resources\icons\arrow_right.png"/>
+        <None Remove="resources\box_icons\4.png" />
+        <AvaloniaResource Include="resources\box_icons\4.png" />
     </ItemGroup>
 
     <ItemGroup>
