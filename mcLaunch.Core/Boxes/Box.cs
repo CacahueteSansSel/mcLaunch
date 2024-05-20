@@ -302,7 +302,7 @@ public class Box : IEquatable<Box>
     {
         // Check if the manifest needs reloading
         SHA1 sha = SHA1.Create();
-        string hash = Convert.ToHexString(sha.ComputeHash(File.ReadAllBytes(manifestPath)));
+        string hash = Convert.ToHexString(sha.ComputeHash(await File.ReadAllBytesAsync(manifestPath)));
         if (!force && Manifest != null && hash == Manifest.FileHash) return;
 
         bool isReload = Manifest != null;
@@ -317,7 +317,7 @@ public class Box : IEquatable<Box>
             background = Manifest.Background;
         }
 
-        Manifest = JsonSerializer.Deserialize<BoxManifest>(File.ReadAllText(manifestPath))!;
+        Manifest = JsonSerializer.Deserialize<BoxManifest>(await File.ReadAllTextAsync(manifestPath))!;
         await RunPostDeserializationChecksAsync();
 
         Manifest.FileHash = hash;

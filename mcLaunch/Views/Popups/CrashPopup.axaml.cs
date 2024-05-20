@@ -17,10 +17,6 @@ public partial class CrashPopup : UserControl
     {
         InitializeComponent();
 
-        if (box == null) return;
-
-        BoxCard.SetBox(box);
-
         PopulateAsync(boxId, exitCode);
     }
 
@@ -33,8 +29,10 @@ public partial class CrashPopup : UserControl
     {
         LoadingIcon.IsVisible = true;
         BodyText.IsVisible = false;
+        ButtonsRow.IsEnabled = false;
 
         box = (await BoxManager.LoadLocalBoxesAsync()).FirstOrDefault(b => b.Manifest.Id == boxId);
+        if (box == null) return;
 
         string bodyText;
         string latestLogsPath = $"{box.Folder.CompletePath}/logs/latest.log";
@@ -57,7 +55,9 @@ public partial class CrashPopup : UserControl
             OpenCrashReportButton.IsVisible = false;
         }
 
+        ButtonsRow.IsEnabled = true;
         LoadingIcon.IsVisible = false;
+        BoxCard.SetBox(box);
     }
 
     public CrashPopup WithCustomLog(string log)

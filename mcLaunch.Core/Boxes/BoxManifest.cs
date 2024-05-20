@@ -193,8 +193,8 @@ public class BoxManifest : ReactiveObject
         });
 
         // Remove duplicates
-        List<string> seenContents = [];
-        List<string> toRemoveContents = [];
+        HashSet<string> seenContents = [];
+        HashSet<string> toRemoveContents = [];
         foreach (BoxStoredContent content in Contents)
         {
             if (content.Content == null) continue;

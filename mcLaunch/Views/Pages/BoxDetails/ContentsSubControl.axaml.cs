@@ -117,43 +117,40 @@ public partial class ContentsSubControl : SubControl
         List<MinecraftContent> toUpdateContents = new();
         bool isChanges = false;
 
-        for (int i = 0; i < 10; i++)
-            try
+        try
+        {
+            await Parallel.ForEachAsync(storedContents, async (storedContent, token) =>
             {
-                await Parallel.ForEachAsync(storedContents, async (storedContent, token) =>
+                MinecraftContent content = storedContent.Content!;
+                ContentVersion[] versions = await ModPlatformManager.Platform.GetContentVersionsAsync(content,
+                    Box.Manifest.ModLoaderId, Box.Manifest.Version);
+
+                content.IsInvalid = versions.Length == 0;
+
+                if (content.IsInvalid)
                 {
-                    MinecraftContent content = storedContent.Content!;
-                    ContentVersion[] versions = await ModPlatformManager.Platform.GetContentVersionsAsync(content,
-                        Box.Manifest.ModLoaderId, Box.Manifest.Version);
-
-                    content.IsInvalid = versions.Length == 0;
-
-                    if (content.IsInvalid)
-                    {
-                        isChanges = true;
-                        toUpdateContents.Add(content);
-
-                        return;
-                    }
-
-                    content.IsUpdateRequired = versions[0].Id != storedContent.VersionId;
-                    if (content.IsUpdateRequired)
-                    {
-                        isChanges = true;
-                        isAnyUpdate = true;
-
-                        if (!isUpdating) updatableContentsList.Add(content);
-                    }
-
+                    isChanges = true;
                     toUpdateContents.Add(content);
-                });
 
-                break;
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
+                    return;
+                }
+
+                content.IsUpdateRequired = versions[0].Id != storedContent.VersionId;
+                if (content.IsUpdateRequired)
+                {
+                    isChanges = true;
+                    isAnyUpdate = true;
+
+                    if (!isUpdating) updatableContentsList.Add(content);
+                }
+
+                toUpdateContents.Add(content);
+            });
+        }
+        catch (Exception e)
+        {
+            // ignored
+        }
 
         if (isChanges)
         {
