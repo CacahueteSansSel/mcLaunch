@@ -85,7 +85,9 @@ public partial class FastLaunchPopup : UserControl
         }
 
         string path = pathResult.Data!;
-        Box box = new Box(path);
+        Box box = new Box(path, false);
+
+        await box.ReloadManifestAsync();
         box.SetAndSaveIcon(new Bitmap(AssetLoader.Open(
             new Uri("avares://mcLaunch/resources/fastlaunch_box_logo.png"))));
 

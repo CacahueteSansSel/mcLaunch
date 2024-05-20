@@ -41,7 +41,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         Box.SetWatching(true);
 
-        if (box.Manifest.Type == BoxType.Temporary)
+        if (box.Manifest == null || box.Manifest.Type == BoxType.Temporary)
         {
             ContentsBox.IsVisible = false;
             return;
