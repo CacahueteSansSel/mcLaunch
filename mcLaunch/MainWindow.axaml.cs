@@ -184,7 +184,7 @@ public partial class MainWindow : Window
             UpdateBar.SetUpdateDetails(await GitHubRepository.GetLatestReleaseAsync());
         }
 
-        if (File.Exists(App.Args.Get(0))) 
-            await BoxImportUtilities.ImportAsync(App.Args.Get(0));
+        string? filename = App.Args.GetOrDefault(0);
+        if (filename != null && File.Exists(filename)) await BoxImportUtilities.ImportAsync(filename);
     }
 }
