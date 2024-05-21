@@ -96,12 +96,6 @@ public static class DownloadManager
 
             if (entry.Hash == null && File.Exists(entry.Target)) return;
 
-            /*
-            HttpResponseMessage resp = await client.GetAsync(entry.Source,
-                HttpCompletionOption.ResponseHeadersRead);
-            resp.EnsureSuccessStatusCode();
-            */
-
             string folder = entry.Target.Replace(
                 Path.GetFileName(entry.Target), "").Trim('/');
             if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
@@ -123,76 +117,6 @@ public static class DownloadManager
 
             if (!File.Exists(entry.Target)) 
                 throw new InvalidOperationException("Downloaded file does not exist");
-
-            /*
-            Stream downloadStream = await resp.Content.ReadAsStreamAsync();
-            long size = resp.Content.Headers.ContentLength ?? 0;
-            MemoryStream ramStream = new();
-            long b = 0;
-            long blockSize = 1024;
-            long lastBytesInSecond = 0;
-            long bytesInSecond = 0;
-            DateTime lastSecond = DateTime.Now;
-
-            while (true)
-            {
-                float oneEntryMax = 1f / section.Entries.Count;
-                double byteProgress = (double) b / size * oneEntryMax;
-
-                byte[] buffer = new byte[blockSize];
-                int input = await downloadStream.ReadAsync(buffer);
-                if (input == 0) break;
-
-                await ramStream.WriteAsync(buffer.AsMemory(0, input));
-
-                OnDownloadProgressUpdate?.Invoke(entry.Source,
-                    (float) progress / section.Entries.Count + (float) byteProgress,
-                    sectionIndex + 1);
-
-                DateTime now = DateTime.Now;
-                if ((now - lastSecond).TotalSeconds > 0)
-                {
-                    long delta = bytesInSecond - lastBytesInSecond;
-
-                    if (delta > 0 && blockSize < size) blockSize += 10; // Faster, increase block size
-                    else if (blockSize > 25) blockSize -= 10; // Slower, decrease block size
-
-                    bytesInSecond = 0;
-                }
-
-                lastSecond = now;
-
-                b += input;
-                bytesInSecond += input;
-            }
-
-            string pathFolders = entry.Target.Replace(Path.GetFileName(entry.Target), "").Trim();
-
-            if (!Directory.Exists(pathFolders)) Directory.CreateDirectory(pathFolders);
-
-            byte[] data = ramStream.ToArray();
-
-            bool fileWritten = false;
-            for (int i = 0; i < 5; i++)
-                try
-                {
-                    await File.WriteAllBytesAsync(entry.Target, data);
-                    fileWritten = true;
-
-                    break;
-                }
-                catch (Exception e)
-                {
-                    await Task.Delay(500);
-                }
-
-            if (!fileWritten)
-                throw new Exception($"File {entry.Source} at {entry.Target} download failed : " +
-                                    $"file can't be accessed");
-
-            ramStream.Close();
-
-            */
         }
         catch (InvalidProgramException e)
         {
