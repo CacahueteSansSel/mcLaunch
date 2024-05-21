@@ -67,7 +67,7 @@ public static class BoxManager
                         fabricApi, "fabric", manifest.Version);
 
                     await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(box, fabricApi, versions[0].Id,
-                        false);
+                        false, true);
                 }
                 catch (Exception)
                 {
@@ -129,13 +129,18 @@ public static class BoxManager
 
         foreach (var mod in pack.Modifications)
         {
-            progressCallback?.Invoke($"Installing modification {index}/{pack.Modifications.Length}",
+            progressCallback?.Invoke($"Looking up modification {index}/{pack.Modifications.Length}",
                 (float) index / pack.Modifications.Length / 2);
 
             await pack.InstallModificationAsync(box, mod);
 
             index++;
         }
+        
+        progressCallback?.Invoke("Downloading modifications...",
+            (float) index / pack.Modifications.Length / 2);
+
+        await DownloadManager.ProcessAll();
 
         Regex driveLetterRegex = new Regex("[A-Z]:[\\/\\\\]");
 

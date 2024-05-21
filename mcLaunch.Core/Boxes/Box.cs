@@ -440,7 +440,7 @@ public class Box : IEquatable<Box>
 
                 try
                 {
-                    await ModPlatformManager.Platform.InstallContentAsync(this, dep.Content, versionId, false);
+                    await ModPlatformManager.Platform.InstallContentAsync(this, dep.Content, versionId, false, true);
                 }
                 catch (ModrinthApiException e)
                 {
@@ -453,7 +453,7 @@ public class Box : IEquatable<Box>
             }
         }
 
-        return await ModPlatformManager.Platform.InstallContentAsync(this, mod, version.Id, installOptional);
+        return await ModPlatformManager.Platform.InstallContentAsync(this, mod, version.Id, installOptional, true);
     }
 
     public MinecraftWorld[] LoadWorlds()
@@ -707,11 +707,13 @@ public class Box : IEquatable<Box>
                 Manifest.RemoveContent(mod.Id, this);
                 bool success = await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(this,
                     modVersion.Content,
-                    modVersion.Id, false);
+                    modVersion.Id, false, false);
 
                 if (success) migratedMods.Add(modVersion.Content);
             }
         }
+
+        await DownloadManager.ProcessAll();
 
         return migratedMods.ToArray();
     }
@@ -742,11 +744,13 @@ public class Box : IEquatable<Box>
                 Manifest.RemoveContent(mod.Id, this);
                 bool success = await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(this,
                     modVersion.Content,
-                    modVersion.Id, false);
+                    modVersion.Id, false, false);
 
                 if (success) migratedMods.Add(modVersion.Content);
             }
         }
+
+        await DownloadManager.ProcessAll();
 
         return migratedMods.ToArray();
     }

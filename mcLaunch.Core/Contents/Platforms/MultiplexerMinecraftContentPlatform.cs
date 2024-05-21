@@ -102,14 +102,14 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
     }
 
     public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent content, string versionId,
-        bool installOptional)
+        bool installOptional, bool processDownload)
     {
         MinecraftContentPlatform? platform =
             content.Platform ?? _platforms.FirstOrDefault(p => p.Name == content.ModPlatformId);
 
         if (platform == null || !_platforms.Contains(platform)) return false;
 
-        return await platform.InstallContentAsync(targetBox, content, versionId, installOptional);
+        return await platform.InstallContentAsync(targetBox, content, versionId, installOptional, processDownload);
     }
 
     public override async Task<ModificationPack> LoadModpackFileAsync(string filename) => null;

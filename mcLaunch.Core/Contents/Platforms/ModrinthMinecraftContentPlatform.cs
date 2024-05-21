@@ -426,7 +426,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
     }
 
     public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent content, string versionId,
-        bool installOptional)
+        bool installOptional, bool processDownload)
     {
         Version version;
 
@@ -453,9 +453,11 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         if (!targetBox.HasContentSoft(content))
             paths = await InstallVersionAsync(targetBox, version, installOptional, content.Type);
 
-        await DownloadManager.ProcessAll();
-
-        if (content.Type == MinecraftContentType.DataPack && paths.Length > 0)
+        bool isDatapackToInstall = content.Type == MinecraftContentType.DataPack && paths.Length > 0;
+        
+        if (processDownload || isDatapackToInstall) 
+            await DownloadManager.ProcessAll();
+        if (isDatapackToInstall)
             targetBox.InstallDatapack(versionId, $"{targetBox.Folder.CompletePath}/{paths[0]}");
 
         targetBox.SaveManifest();

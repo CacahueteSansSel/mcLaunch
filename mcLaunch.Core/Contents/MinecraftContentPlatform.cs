@@ -35,7 +35,7 @@ public abstract class MinecraftContentPlatform
     public abstract Task<PlatformModpack> GetModpackAsync(string id);
 
     public abstract Task<bool> InstallContentAsync(Box targetBox, MinecraftContent content, string versionId,
-        bool installOptional);
+        bool installOptional, bool processDownload);
 
     public abstract Task<ModificationPack> LoadModpackFileAsync(string filename);
 

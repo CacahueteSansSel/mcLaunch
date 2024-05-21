@@ -433,7 +433,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
     }
 
     public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent content, string versionId,
-        bool installOptional)
+        bool installOptional, bool processDownload)
     {
         if (content == null) return false;
 
@@ -466,9 +466,11 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             }
         }
 
-        await DownloadManager.ProcessAll();
+        bool isDatapackToInstall = content.Type == MinecraftContentType.DataPack && filenames != null;
 
-        if (content.Type == MinecraftContentType.DataPack && filenames != null)
+        if (processDownload || isDatapackToInstall) 
+            await DownloadManager.ProcessAll();
+        if (isDatapackToInstall)
             targetBox.InstallDatapack(versionId, filenames[0]);
 
         targetBox.SaveManifest();

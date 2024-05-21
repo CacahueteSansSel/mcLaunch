@@ -100,7 +100,7 @@ public class BoxBinaryModificationPack : ModificationPack
             Id = mod.ModId,
             ModPlatformId = mod.PlatformId,
             Type = content.Type
-        }, mod.VersionId, false);
+        }, mod.VersionId, false, false);
     }
 
     public override async Task ExportAsync(Box box, string filename)

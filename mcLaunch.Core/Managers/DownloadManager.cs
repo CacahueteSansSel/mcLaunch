@@ -1,6 +1,7 @@
 ﻿using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using Downloader;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Download;
@@ -95,14 +96,35 @@ public static class DownloadManager
 
             if (entry.Hash == null && File.Exists(entry.Target)) return;
 
+            /*
             HttpResponseMessage resp = await client.GetAsync(entry.Source,
                 HttpCompletionOption.ResponseHeadersRead);
             resp.EnsureSuccessStatusCode();
+            */
 
             string folder = entry.Target.Replace(
                 Path.GetFileName(entry.Target), "").Trim('/');
             if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
 
+            var download = DownloadBuilder.New()
+                .WithUrl(entry.Source)
+                .WithFolder(new DirectoryInfo(folder))
+                .WithFileName(Path.GetFileName(entry.Target))
+                .Build();
+
+            download.DownloadProgressChanged += (sender, args) =>
+            {
+                OnDownloadProgressUpdate?.Invoke(entry.Source,
+                    (float) progress / section.Entries.Count + (float)(args.ProgressPercentage / 100),
+                    sectionIndex + 1);
+            };
+
+            await download.StartAsync();
+
+            if (!File.Exists(entry.Target)) 
+                throw new InvalidOperationException("Downloaded file does not exist");
+
+            /*
             Stream downloadStream = await resp.Content.ReadAsStreamAsync();
             long size = resp.Content.Headers.ContentLength ?? 0;
             MemoryStream ramStream = new();
@@ -169,6 +191,8 @@ public static class DownloadManager
                                     $"file can't be accessed");
 
             ramStream.Close();
+
+            */
         }
         catch (InvalidProgramException e)
         {

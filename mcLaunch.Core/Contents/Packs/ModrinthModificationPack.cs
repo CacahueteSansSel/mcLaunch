@@ -192,7 +192,7 @@ public class ModrinthModificationPack : ModificationPack
             Id = mod.ModId,
             Platform = ModrinthMinecraftContentPlatform.Instance,
             Type = content.Type
-        }, mod.VersionId, false);
+        }, mod.VersionId, false, false);
     }
 
     public override async Task ExportAsync(Box box, string filename)

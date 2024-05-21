@@ -156,7 +156,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         {
             Navigation.ShowPopup(new OptionalModsPopup(TargetBox, ShownContent, optionalDeps, async () =>
             {
-                await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, version.Id, true);
+                await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, version.Id, true, true);
 
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
@@ -166,7 +166,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
                 isInstalling = false;
             }, async () =>
             {
-                await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, version.Id, false);
+                await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, version.Id, false, true);
 
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
@@ -180,7 +180,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         }
 
         if (!await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent,
-                version.Id, false))
+                version.Id, false, true))
         {
             Navigation.ShowPopup(new MessageBoxPopup("Error",
                 $"{ShownContent.Name} failed to download : the content may lack any download url"));
@@ -355,7 +355,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         box.SetAndSaveIcon(new Bitmap(AssetLoader.Open(
             new Uri("avares://mcLaunch/resources/fastlaunch_box_logo.png"))));
 
-        await ModPlatformManager.Platform.InstallContentAsync(box, ShownContent, version.Id, false);
+        await ModPlatformManager.Platform.InstallContentAsync(box, ShownContent, version.Id, false, true);
 
         StatusPopup.Instance.ShowDownloadBanner = false;
         Navigation.HidePopup();

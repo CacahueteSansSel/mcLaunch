@@ -70,7 +70,7 @@ public class CurseForgeModificationPack : ModificationPack
         {
             Id = mod.ModId,
             Type = content.Type
-        }, mod.VersionId, false);
+        }, mod.VersionId, false, false);
     }
 
     public override async Task ExportAsync(Box box, string filename)
