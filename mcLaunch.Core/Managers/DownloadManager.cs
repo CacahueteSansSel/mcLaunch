@@ -114,9 +114,6 @@ public static class DownloadManager
             };
 
             await download.StartAsync();
-
-            if (!File.Exists(entry.Target)) 
-                throw new InvalidOperationException("Downloaded file does not exist");
         }
         catch (InvalidProgramException e)
         {
