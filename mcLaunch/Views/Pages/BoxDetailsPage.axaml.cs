@@ -163,7 +163,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         if (Box.Manifest.ModLoader == null)
         {
             Navigation.ShowPopup(new MessageBoxPopup("Can't run Minecraft",
-                $"The modloader {Box.Manifest.ModLoaderId.Capitalize()} isn't supported"));
+                $"The modloader {Box.Manifest.ModLoaderId.Capitalize()} isn't supported", MessageStatus.Error));
 
             return;
         }
@@ -291,7 +291,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
                 catch (Exception exception)
                 {
                     Navigation.ShowPopup(new MessageBoxPopup("Failed to delete box",
-                        $"Failed to delete the box {Box.Manifest.Name} : {exception.Message}"));
+                        $"Failed to delete the box {Box.Manifest.Name} : {exception.Message}", MessageStatus.Error));
                 }
             }));
     }

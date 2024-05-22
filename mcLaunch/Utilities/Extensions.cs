@@ -9,6 +9,6 @@ public static class Extensions
     {
         if (!result.IsError) return;
 
-        Navigation.ShowPopup(new MessageBoxPopup("Error occurred", result.ErrorMessage!));
+        Navigation.ShowPopup(new MessageBoxPopup("Error occurred", result.ErrorMessage!, MessageStatus.Error));
     }
 }

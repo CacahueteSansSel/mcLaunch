@@ -69,7 +69,7 @@ public partial class FastLaunchPopup : UserControl
         {
             Navigation.HidePopup();
             Navigation.ShowPopup(new MessageBoxPopup("Failed to initialize the mod loader",
-                $"Failed to get any version of {modloader.Name} for Minecraft {minecraftVersion.Id}"));
+                $"Failed to get any version of {modloader.Name} for Minecraft {minecraftVersion.Id}", MessageStatus.Error));
             return;
         }
 

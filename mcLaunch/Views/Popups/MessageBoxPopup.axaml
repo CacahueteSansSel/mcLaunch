@@ -10,6 +10,11 @@
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">
+            <Panel DockPanel.Dock="Left" VerticalAlignment="Top" Width="50" Margin="0 8 20 0">
+                <Image x:Name="StatusError" IsVisible="False" Source="/resources/status/error.png"></Image>
+                <Image x:Name="StatusWarning" IsVisible="False" Source="/resources/status/warning.png"></Image>
+                <Image x:Name="StatusSuccess" IsVisible="False" Source="/resources/status/success.png"></Image>
+            </Panel>
             <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25" Text="{Binding Title}" />
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" Classes="primary" Click="OKButtonClicked">OK</Button>

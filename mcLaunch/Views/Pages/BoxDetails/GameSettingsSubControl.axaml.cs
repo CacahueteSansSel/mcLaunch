@@ -36,6 +36,6 @@ public partial class GameSettingsSubControl : SubControl
         if (Box.Options == null) return;
         DefaultsManager.SetDefaultMinecraftOptions(Box.Options);
 
-        Navigation.ShowPopup(new MessageBoxPopup("Successful", "These options have been set to default"));
+        Navigation.ShowPopup(new MessageBoxPopup("Successful", "These options have been set to default", MessageStatus.Success));
     }
 }

@@ -51,7 +51,7 @@ public partial class ExportBoxPopup : UserControl
 
         Navigation.HidePopup();
         Navigation.ShowPopup(new MessageBoxPopup("Success !",
-            $"{box.Manifest.Name} have been exported successfully"));
+            $"{box.Manifest.Name} have been exported successfully", MessageStatus.Success));
     }
 
     private void ClosePopupButtonClicked(object? sender, RoutedEventArgs e)

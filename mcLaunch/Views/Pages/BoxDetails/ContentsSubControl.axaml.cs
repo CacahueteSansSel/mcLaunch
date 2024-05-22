@@ -185,7 +185,7 @@ public partial class ContentsSubControl : SubControl
 
                 if (contents.Length == 0)
                 {
-                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated"));
+                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated", MessageStatus.None));
                     return;
                 }
 
@@ -227,7 +227,7 @@ public partial class ContentsSubControl : SubControl
 
         if (failedModUpdates > 0)
             Navigation.ShowPopup(new MessageBoxPopup("Warning",
-                $"{failedModUpdates} {ContentName}{(failedModUpdates > 1 ? "s" : "")} failed to update"));
+                $"{failedModUpdates} {ContentName}{(failedModUpdates > 1 ? "s" : "")} failed to update", MessageStatus.Warning));
 
         isUpdating = false;
         UpdateAllButton.IsVisible = false;
@@ -254,7 +254,7 @@ public partial class ContentsSubControl : SubControl
 
                 if (contents.Length == 0)
                 {
-                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated"));
+                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated", MessageStatus.None));
                     return;
                 }
 

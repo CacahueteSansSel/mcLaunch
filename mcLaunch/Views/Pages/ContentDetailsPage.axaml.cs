@@ -183,7 +183,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
                 version.Id, false, true))
         {
             Navigation.ShowPopup(new MessageBoxPopup("Error",
-                $"{ShownContent.Name} failed to download : the content may lack any download url"));
+                $"{ShownContent.Name} failed to download : the content may lack any download url", MessageStatus.Error));
 
             LoadingButtonFrame.IsVisible = false;
             SetInstalled(false);
@@ -205,7 +205,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         if (TargetBox != null && !TargetBox.HasWorlds && ShownContent.Type == MinecraftContentType.DataPack)
         {
             Navigation.ShowPopup(new MessageBoxPopup("Cannot download datapack",
-                "You need to have at least one world to download a datapack"));
+                "You need to have at least one world to download a datapack", MessageStatus.Error));
 
             return;
         }
@@ -234,7 +234,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         {
             Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
                 $"Unable to install {ShownContent.Name} : no compatible version found " +
-                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}"));
+                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}", MessageStatus.Error));
 
             LoadingButtonFrame.IsVisible = false;
             SetInstalled(false);
@@ -276,7 +276,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         {
             Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
                 $"Unable to install {ShownContent.Name} : no compatible version found " +
-                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}"));
+                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}", MessageStatus.Error));
 
             LoadingButtonFrame.IsVisible = false;
             SetInstalled(false);

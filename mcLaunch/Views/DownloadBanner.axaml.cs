@@ -78,7 +78,7 @@ public partial class DownloadBanner : UserControl
     private void OnDownloadError(string sectionName, string file)
     {
         Navigation.ShowPopup(new MessageBoxPopup($"Download failed for {sectionName}",
-            $"{sectionName} failed to download (file: {file}). Try restarting the download."));
+            $"{sectionName} failed to download (file: {file}). Try restarting the download.", MessageStatus.Error));
     }
 
     private void OnDownloadSectionStarting(string sectionName, int index)

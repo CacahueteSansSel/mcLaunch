@@ -40,6 +40,8 @@ public partial class BoxEntryCard : UserControl
 
     void UpdateDeletedStatus()
     {
+        if (box == null) return;
+        
         bool isBeingDeleted = !Directory.Exists(box.Path);
         DeletingText.IsVisible = isBeingDeleted;
         Badges.IsVisible = !isBeingDeleted;

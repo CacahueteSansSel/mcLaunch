@@ -9,13 +9,19 @@ public partial class MessageBoxPopup : UserControl
     public MessageBoxPopup()
     {
         InitializeComponent();
+        
+        DataContext = new Data("Hello, World !", "Lorem Ipsum");
     }
 
-    public MessageBoxPopup(string title, string text)
+    public MessageBoxPopup(string title, string text, MessageStatus status)
     {
         InitializeComponent();
 
         DataContext = new Data(title, text);
+
+        StatusError.IsVisible = status == MessageStatus.Error;
+        StatusWarning.IsVisible = status == MessageStatus.Warning;
+        StatusSuccess.IsVisible = status == MessageStatus.Success;
     }
 
     private void OKButtonClicked(object? sender, RoutedEventArgs e)
@@ -34,4 +40,12 @@ public partial class MessageBoxPopup : UserControl
         public string Title { get; set; }
         public string Text { get; set; }
     }
+}
+
+public enum MessageStatus
+{
+    None,
+    Warning,
+    Error,
+    Success
 }

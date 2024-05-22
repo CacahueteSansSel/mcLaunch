@@ -219,6 +219,12 @@
         <AvaloniaResource Include="resources\icons\arrow_right.png"/>
         <None Remove="resources\box_icons\4.png" />
         <AvaloniaResource Include="resources\box_icons\4.png" />
+        <None Remove="resources\status\error.png" />
+        <AvaloniaResource Include="resources\status\error.png" />
+        <None Remove="resources\status\warning.png" />
+        <AvaloniaResource Include="resources\status\warning.png" />
+        <None Remove="resources\status\success.png" />
+        <AvaloniaResource Include="resources\status\success.png" />
     </ItemGroup>
 
     <ItemGroup>
