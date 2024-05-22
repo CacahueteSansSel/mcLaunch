@@ -1,7 +1,12 @@
 ﻿using System.IO.Compression;
+using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Security.Cryptography;
+using System.Web;
+using Avalonia.Threading;
 using Downloader;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Download;
@@ -14,6 +19,7 @@ public static class DownloadManager
     private static List<DownloadEntry> currentSectionEntries = [];
     private static readonly List<DownloadSection> sections = [];
     private static HttpClient client;
+    private static string userAgent;
 
     public static DownloadSection? CurrentSection { get; private set; }
     public static int PendingSectionCount => sections.Count;
@@ -27,9 +33,10 @@ public static class DownloadManager
     public static event Action? OnDownloadPrepareEnding;
     public static event Action<string, int>? OnDownloadSectionStarting;
 
-    public static void Init()
+    public static void Init(string version)
     {
         Context.Init(new Downloader());
+        userAgent = $"mcLaunch/{version}";
     }
 
     public static void Begin(string name)
@@ -44,7 +51,6 @@ public static class DownloadManager
         currentSectionName = name;
 
         client = new HttpClient();
-        client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("mcLaunch", "1.0.0"));
 
         OnDownloadPrepareStarting?.Invoke(name);
     }
@@ -77,6 +83,17 @@ public static class DownloadManager
         currentSectionEntries.Add(new DownloadEntry {Source = source, Target = target, Hash = hash, Action = action});
     }
 
+    private static async Task<bool> UseFallbackDownloader(string sourceUrl, string targetFilename, Action<float> progressUpdated, Action<bool, Exception> finished)
+    {
+        Console.WriteLine($"Using Fallback Downloader for {sourceUrl}");
+
+        using FallbackDownloader downloader = new(userAgent);
+        downloader.ProgressUpdated += progressUpdated;
+        downloader.Finished += finished;
+
+        return await downloader.DownloadAsync(sourceUrl, targetFilename);
+    }
+
     private static async Task DownloadEntryAsync(DownloadEntry entry, DownloadSection section, int sectionIndex,
         int progress)
     {
@@ -101,6 +118,18 @@ public static class DownloadManager
             if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
 
             var download = DownloadBuilder.New()
+                .WithConfiguration(new DownloadConfiguration()
+                {
+                    RequestConfiguration = new RequestConfiguration()
+                    {
+                        UserAgent = userAgent,
+                        Accept = "*/*",
+                        AllowAutoRedirect = false,
+                        AuthenticationLevel = AuthenticationLevel.None,
+                        AutomaticDecompression = DecompressionMethods.All,
+                        PreAuthenticate = false
+                    }
+                })
                 .WithUrl(entry.Source)
                 .WithFolder(new DirectoryInfo(folder))
                 .WithFileName(Path.GetFileName(entry.Target))
@@ -109,11 +138,26 @@ public static class DownloadManager
             download.DownloadProgressChanged += (sender, args) =>
             {
                 OnDownloadProgressUpdate?.Invoke(entry.Source,
-                    (float) progress / section.Entries.Count + (float)(args.ProgressPercentage / 100),
+                    (float) progress / section.Entries.Count + (float) (args.ProgressPercentage / 100),
                     sectionIndex + 1);
             };
 
             await download.StartAsync();
+
+            if (download.Package.Status == DownloadStatus.Failed)
+            {
+                await UseFallbackDownloader(entry.Source, entry.Target, pp =>
+                {
+                    OnDownloadProgressUpdate?.Invoke(entry.Source,
+                        (float) progress / section.Entries.Count + pp,
+                        sectionIndex + 1);
+                }, (success, error) =>
+                {
+                    if (!success) Console.WriteLine($"Fallback Downloader error : {error}");
+                    
+                    OnDownloadError?.Invoke(section.Name, entry.Source);
+                });
+            }
         }
         catch (InvalidProgramException e)
         {

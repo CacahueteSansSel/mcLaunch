@@ -602,7 +602,7 @@ public class Box : IEquatable<Box>
     public async void SetAndSaveIcon(Bitmap icon)
     {
         icon.Save($"{Path}/icon.png");
-        Manifest.Icon = await IconCollection.FromBitmapAsync(icon);
+        if (Manifest != null) Manifest.Icon = await IconCollection.FromBitmapAsync(icon);
     }
 
     public async void SetAndSaveIcon(Stream iconStream, bool reload = true)
@@ -612,13 +612,13 @@ public class Box : IEquatable<Box>
         await iconStream.CopyToAsync(stream);
         await File.WriteAllBytesAsync($"{Path}/icon.png", stream.ToArray());
 
-        if (reload) await LoadIconAsync();
+        if (reload && Manifest != null) await LoadIconAsync();
     }
 
     public void SetAndSaveBackground(Bitmap background)
     {
         background.Save($"{Path}/background.png");
-        Manifest.Background = background;
+        if (Manifest != null) Manifest.Background = background;
     }
 
     public async void SetAndSaveBackground(Stream backgroundStream, bool reload = true)
@@ -628,7 +628,7 @@ public class Box : IEquatable<Box>
         await backgroundStream.CopyToAsync(stream);
         await File.WriteAllBytesAsync($"{Path}/background.png", stream.ToArray());
 
-        if (reload) LoadBackground();
+        if (reload && Manifest != null) LoadBackground();
     }
 
     public async Task LoadIconAsync()
