@@ -57,10 +57,11 @@
                 <TextBlock FontSize="12" Classes="light" Margin="0 0 0 0">by</TextBlock>
                 <TextBlock x:Name="AuthorText" FontSize="12" Classes="title" Margin="5 0 0 0" Text="{Binding Author}" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Spacing="5">
+            <StackPanel x:Name="Badges" Orientation="Horizontal" Spacing="5">
                 <views:Badge x:Name="VersionBadge" Icon="/resources/icons/vanilla.png" />
                 <views:Badge x:Name="ModLoaderBadge" Icon="/resources/icons/vanilla.png" />
             </StackPanel>
+            <TextBlock x:Name="DeletingText" IsVisible="False" Classes="title">Deleting...</TextBlock>
         </StackPanel>
         <Image x:Name="SnapshotStripe" IsVisible="False" Source="/resources/snapshot_stripe.png" Width="68"
                HorizontalAlignment="Right" VerticalAlignment="Bottom" IsHitTestVisible="False" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Avalonia;
@@ -37,9 +38,18 @@ public partial class BoxEntryCard : UserControl
         }
     }
 
+    void UpdateDeletedStatus()
+    {
+        bool isBeingDeleted = !Directory.Exists(box.Path);
+        DeletingText.IsVisible = isBeingDeleted;
+        Badges.IsVisible = !isBeingDeleted;
+    }
+
     protected override async void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
+        
+        UpdateDeletedStatus();
 
         if (Settings.Instance!.AnonymizeBoxIdentity)
         {
@@ -61,6 +71,8 @@ public partial class BoxEntryCard : UserControl
 
         IsEnabled = true;
         DataContext = box.Manifest;
+        
+        UpdateDeletedStatus();
 
         if (Settings.Instance != null && Settings.Instance.AnonymizeBoxIdentity)
             BoxNameText.Text = AnonymitySession.Default.TakeName();
@@ -93,12 +105,15 @@ public partial class BoxEntryCard : UserControl
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
-
+        if (!Directory.Exists(box.Path)) return;
+        
         Navigation.Push(new BoxDetailsPage(box));
     }
 
     private void PlayButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (!Directory.Exists(box.Path)) return;
+        
         BoxDetailsPage page = new BoxDetailsPage(box);
         Navigation.Push(page);
 

@@ -31,7 +31,7 @@ public partial class CrashPopup : UserControl
         BodyText.IsVisible = false;
         ButtonsRow.IsEnabled = false;
 
-        box = (await BoxManager.LoadLocalBoxesAsync()).FirstOrDefault(b => b.Manifest.Id == boxId);
+        box = (await BoxManager.LoadLocalBoxesAsync(runChecks: false)).FirstOrDefault(b => b.Manifest.Id == boxId);
         if (box == null) return;
 
         string bodyText;

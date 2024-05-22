@@ -298,13 +298,9 @@ public class Box : IEquatable<Box>
         await ReloadManifestAsync(force);
     }
 
-    public async Task ReloadManifestAsync(bool force = false)
+    public async Task ReloadManifestAsync(bool force = false, bool runChecks = true)
     {
-        // Check if the manifest needs reloading
-        SHA1 sha = SHA1.Create();
-        string hash = Convert.ToHexString(sha.ComputeHash(await File.ReadAllBytesAsync(manifestPath)));
-        if (!force && Manifest != null && hash == Manifest.FileHash) return;
-
+        if (!force && Manifest != null) return;
         bool isReload = Manifest != null;
 
         IconCollection? icon = null;
@@ -318,9 +314,7 @@ public class Box : IEquatable<Box>
         }
 
         Manifest = JsonSerializer.Deserialize<BoxManifest>(await File.ReadAllTextAsync(manifestPath))!;
-        await RunPostDeserializationChecksAsync();
-
-        Manifest.FileHash = hash;
+        if (runChecks) await RunPostDeserializationChecksAsync();
 
         if (isReload)
         {

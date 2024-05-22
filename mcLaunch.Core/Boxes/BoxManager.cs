@@ -25,7 +25,7 @@ public static class BoxManager
 
     public static int BoxCount => Directory.GetDirectories(BoxesPath).Length;
 
-    public static async Task<Box[]> LoadLocalBoxesAsync(bool includeTemp = false)
+    public static async Task<Box[]> LoadLocalBoxesAsync(bool includeTemp = false, bool runChecks = true)
     {
         if (!Directory.Exists(BoxesPath))
         {
@@ -41,7 +41,7 @@ public static class BoxManager
             if (!File.Exists($"{boxPath}/box.json")) continue;
 
             Box box = new Box(boxPath, false);
-            await box.ReloadManifestAsync(true);
+            await box.ReloadManifestAsync(true, runChecks);
 
             if (box.Manifest.Type == BoxType.Temporary && !includeTemp) continue;
 

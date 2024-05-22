@@ -63,7 +63,7 @@ public partial class MainWindow : Window
     async Task ProcessFastLaunchBoxAsync()
     {
         string boxId = App.Args.Get("box-id");
-        Box? box = (await BoxManager.LoadLocalBoxesAsync(true))
+        Box? box = (await BoxManager.LoadLocalBoxesAsync(true, false))
             .FirstOrDefault(b => b.Manifest.Id == boxId);
 
         Navigation.ShowPopup(new ConfirmMessageBoxPopup("Keep this FastLaunch instance ?",
