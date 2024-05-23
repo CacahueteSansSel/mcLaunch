@@ -366,6 +366,14 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         if (version.Dependencies != null && contentType == MinecraftContentType.Modification)
             foreach (Dependency dependency in version.Dependencies)
             {
+                if (dependency.ProjectId == version.ProjectId)
+                {
+                    // For some reason, some mods references themselves in dependencies (see Thermal Integration on modrinth)
+                    // We absolutely want to avoid that, because this will cause an infinite loop !
+                    
+                    continue;
+                }
+                
                 if (installOptional)
                 {
                     if (dependency.DependencyType != DependencyType.Required &&

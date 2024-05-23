@@ -16,17 +16,14 @@ public partial class HeaderBar : UserControl
 
         Api.OnNetworkError += OnApiNetworkError;
         Api.OnNetworkSuccess += OnApiNetworkSuccess;
-
-        if (CurrentBuild.Branch == "dev" || Debugger.IsAttached)
-        {
-            LogoDevelopment.IsVisible = true;
-            LogoBeta.IsVisible = false;
-        }
-        else
-        {
-            LogoDevelopment.IsVisible = false;
-            LogoBeta.IsVisible = true;
-        }
+        
+#if DEBUG
+        LogoDevelopment.IsVisible = true;
+        LogoBeta.IsVisible = false;
+#else
+        LogoDevelopment.IsVisible = false;
+        LogoBeta.IsVisible = true;
+#endif
     }
 
     public void SetTitle(string title)

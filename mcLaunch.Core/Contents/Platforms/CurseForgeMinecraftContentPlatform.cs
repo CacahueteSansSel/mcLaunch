@@ -376,6 +376,14 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             contentType == MinecraftContentType.Modification)
             foreach (FileDependency dep in file.Dependencies)
             {
+                if (dep.ModId == file.ModId)
+                {
+                    // For some reason, some mods references themselves in dependencies (see Thermal Integration on modrinth)
+                    // We absolutely want to avoid that, because this will cause an infinite loop !
+                    
+                    continue;
+                }
+                
                 if (installOptional)
                 {
                     if (dep.RelationType != FileRelationType.RequiredDependency &&
