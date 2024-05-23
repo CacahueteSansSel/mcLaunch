@@ -132,6 +132,9 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
     private void ApplyContentAttributes()
     {
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = false;
+        
         if (lastBox == null) return;
 
         Data ctx = (Data) DataContext;
