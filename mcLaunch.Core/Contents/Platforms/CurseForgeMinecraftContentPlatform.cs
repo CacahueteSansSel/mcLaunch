@@ -372,8 +372,10 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             return null;
         }
 
-        if (file.Dependencies != null && file.Dependencies.Count > 0 &&
-            contentType == MinecraftContentType.Modification)
+        if (file.Dependencies != null 
+            && file.Dependencies.Count > 0 
+            && contentType == MinecraftContentType.Modification)
+        {
             foreach (FileDependency dep in file.Dependencies)
             {
                 if (dep.ModId == file.ModId)
@@ -397,6 +399,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
                 Mod cfMod = (await client.GetMod(dep.ModId)).Data;
                 await InstallFileAsync(targetBox, cfMod.LatestFiles[0], false, MinecraftContentType.Modification);
             }
+        }
 
         if (targetBox.Manifest.HasContentStrict(file.ModId.ToString(), Name))
         {

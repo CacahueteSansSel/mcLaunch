@@ -364,6 +364,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         MinecraftContentType contentType)
     {
         if (version.Dependencies != null && contentType == MinecraftContentType.Modification)
+        {
             foreach (Dependency dependency in version.Dependencies)
             {
                 if (dependency.ProjectId == version.ProjectId)
@@ -408,6 +409,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
                 await InstallVersionAsync(targetBox, dependencyVersion, false, contentType);
             }
+        }
 
         DownloadManager.Begin(version.Name);
 
