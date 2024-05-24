@@ -65,6 +65,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     public MinecraftContentType ContentType { get; set; }
     public bool HidePageSelector { get; set; }
     public MinecraftContent[] Contents => ((Data) DataContext).Contents;
+    public MinecraftContent[] SelectedContent => ContentList.SelectedItems!.Cast<MinecraftContent>().ToArray();
 
     public void OnContentAdded(MinecraftContent content)
     {
@@ -86,6 +87,13 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
             ctx.Contents = ctx.Contents.Where(content => content.Id != contentId).ToArray();
         });
+    }
+
+    public void SetupMultipleSelection(bool selectAllByDefault = false)
+    {
+        ContentList.SelectionMode = SelectionMode.Multiple;
+        
+        if (selectAllByDefault) ContentList.SelectAll();
     }
 
     public void SetBox(Box box)
@@ -218,6 +226,8 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
     private void ContentSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        if (ContentList.SelectionMode != SelectionMode.Single) return;
+        
         if (e.AddedItems.Count > 0)
         {
             MinecraftContent selectedContent = (MinecraftContent) e.AddedItems[0];
@@ -239,6 +249,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     {
         private MinecraftContent[] contents;
         private int page;
+        private bool isMultipleSelection;
 
         public MinecraftContent[] Contents
         {
@@ -250,6 +261,12 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         {
             get => page;
             set => this.RaiseAndSetIfChanged(ref page, value);
+        }
+
+        public bool IsMultipleSelection
+        {
+            get => isMultipleSelection;
+            set => this.RaiseAndSetIfChanged(ref isMultipleSelection, value);
         }
     }
 }

@@ -154,10 +154,35 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
         if (optionalDeps.Length > 0)
         {
-            Navigation.ShowPopup(new OptionalModsPopup(TargetBox, ShownContent, optionalDeps, async () =>
+            Navigation.ShowPopup(new OptionalModsPopup(TargetBox, ShownContent, optionalDeps, async (mods) =>
             {
-                await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, version.Id, true, true);
+                foreach (MinecraftContentPlatform.ContentDependency dependency in mods)
+                {
+                    string? versionId = dependency.VersionId;
 
+                    if (versionId == null)
+                    {
+                        // If no version is provided, take the latest one
+
+                        ContentVersion[] versions = await ModPlatformManager.Platform.GetContentVersionsAsync(dependency.Content,
+                            ShownContent.Type == MinecraftContentType.Modification
+                                ? TargetBox.Manifest.ModLoaderId
+                                : null, TargetBox.Manifest.Version);
+
+                        versionId = versions[0].Id;
+                    }
+                    
+                    await ModPlatformManager.Platform.InstallContentAsync(TargetBox, 
+                        dependency.Content, 
+                        versionId, 
+                        true, 
+                        false);
+                }
+                
+                await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, version.Id, false, false);
+
+                await DownloadManager.ProcessAll();
+                
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
 

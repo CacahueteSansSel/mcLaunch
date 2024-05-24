@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -11,7 +12,8 @@ namespace mcLaunch.Views.Popups;
 public partial class OptionalModsPopup : UserControl
 {
     private readonly Action cancelCallback;
-    private readonly Action confirmCallback;
+    private readonly Action<MinecraftContentPlatform.ContentDependency[]> confirmCallback;
+    private Dictionary<MinecraftContent, MinecraftContentPlatform.ContentDependency> dependenciesDict = new();
 
     public OptionalModsPopup()
     {
@@ -19,9 +21,12 @@ public partial class OptionalModsPopup : UserControl
     }
 
     public OptionalModsPopup(Box box, MinecraftContent mod, MinecraftContentPlatform.ContentDependency[] dependencies,
-        Action confirm, Action cancel)
+        Action<MinecraftContentPlatform.ContentDependency[]> confirm, Action cancel)
     {
         InitializeComponent();
+
+        foreach (MinecraftContentPlatform.ContentDependency dependency in dependencies)
+            dependenciesDict[dependency.Content] = dependency;
 
         confirmCallback = confirm;
         cancelCallback = cancel;
@@ -30,6 +35,8 @@ public partial class OptionalModsPopup : UserControl
             .Replace("$MOD", mod.Name);
 
         DownloadIconAndApplyAsync(box, mod, dependencies);
+
+        ModList.SetupMultipleSelection(true);
     }
 
     private async void DownloadIconAndApplyAsync(Box box, MinecraftContent mod,
@@ -44,7 +51,7 @@ public partial class OptionalModsPopup : UserControl
     private void OKButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.HidePopup();
-        confirmCallback?.Invoke();
+        confirmCallback?.Invoke(ModList.SelectedContent.Select(content => dependenciesDict[content]).ToArray());
     }
 
     private void CancelButtonClicked(object? sender, RoutedEventArgs e)
