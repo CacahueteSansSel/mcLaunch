@@ -132,7 +132,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         UninstallButton.IsEnabled = isInstalled;
     }
 
-    private async void CreateModpackFromVersion(IVersion incomingVersion)
+    private async void InstallContentFromVersion(IVersion incomingVersion)
     {
         ContentVersion version = (ContentVersion) incomingVersion;
 
@@ -156,6 +156,8 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         {
             Navigation.ShowPopup(new OptionalModsPopup(TargetBox, ShownContent, optionalDeps, async (mods) =>
             {
+                await DownloadManager.WaitForPendingProcesses();
+                
                 foreach (MinecraftContentPlatform.ContentDependency dependency in mods)
                 {
                     string? versionId = dependency.VersionId;
@@ -191,6 +193,8 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
                 isInstalling = false;
             }, async () =>
             {
+                await DownloadManager.WaitForPendingProcesses();
+                
                 await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, version.Id, false, true);
 
                 LoadingButtonFrame.IsVisible = false;
@@ -203,6 +207,8 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
             return;
         }
+        
+        await DownloadManager.WaitForPendingProcesses();
 
         if (!await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent,
                 version.Id, false, true))
@@ -269,7 +275,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         LoadingButtonFrame.IsVisible = false;
 
         Navigation.ShowPopup(new VersionSelectionPopup(new MinecraftContentVersionProvider(versions, ShownContent),
-            CreateModpackFromVersion));
+            InstallContentFromVersion));
     }
 
     private async void UninstallButtonClicked(object? sender, RoutedEventArgs e)
@@ -282,7 +288,14 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         UninstallButton.IsVisible = false;
         UninstallButton.IsEnabled = false;
 
-        TargetBox.Manifest.RemoveContent(ShownContent.Id, TargetBox);
+        Result result = TargetBox.Manifest.RemoveContent(ShownContent.Id, TargetBox);
+        if (result.IsError)
+        {
+            result.ShowErrorPopup();
+            SetInstalled(true);
+            
+            return;
+        }
 
         TargetBox.SaveManifest();
 

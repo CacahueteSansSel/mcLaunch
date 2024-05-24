@@ -160,17 +160,26 @@ public class BoxManifest : ReactiveObject
         }
     }
 
-    public void RemoveContent(string id, Box box)
+    public Result RemoveContent(string id, Box box)
     {
         BoxStoredContent? content = GetContent(id);
-        if (content == null) return;
+        if (content == null) return Result.Error("Content not found");
 
-        content.Delete(box.Folder.CompletePath);
+        try
+        {
+            content.Delete(box.Folder.CompletePath);
+        }
+        catch (Exception e)
+        {
+            return Result.Error("Cannot delete mod");
+        }
 
         lock (Contents)
         {
             Contents.Remove(content);
         }
+
+        return new Result();
     }
 
     public async Task<bool> RunPostDeserializationChecksAsync()
