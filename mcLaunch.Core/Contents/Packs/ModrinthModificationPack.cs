@@ -212,7 +212,7 @@ public class ModrinthModificationPack : ModificationPack
         if (box.ModLoader is ForgeModLoaderSupport)
             index.Dependencies = new ModelModrinthIndex.ModelDependencies
             {
-                Forge = $"{box.Manifest.Version}-{box.Manifest.ModLoaderVersion}"
+                Forge = box.Manifest.ModLoaderVersion
             };
         else if (box.ModLoader is FabricModLoaderSupport)
             index.Dependencies = new ModelModrinthIndex.ModelDependencies
@@ -249,13 +249,15 @@ public class ModrinthModificationPack : ModificationPack
             File? primaryVersionFile = modVersion.Files.FirstOrDefault(f => f.Primary);
 
             if (primaryVersionFile == null)
+            {
                 // TODO: inform user that this mod was ignored
                 continue;
+            }
 
             ModelModrinthIndex.ModelFile fileModel = new()
             {
                 Path = mod.Filenames[0],
-                Downloads = new[] {primaryVersionFile.Url},
+                Downloads = [primaryVersionFile.Url],
                 Hashes = new ModelModrinthIndex.ModelFile.ModelHashes
                 {
                     Sha1 = primaryVersionFile.Hashes.Sha1,
