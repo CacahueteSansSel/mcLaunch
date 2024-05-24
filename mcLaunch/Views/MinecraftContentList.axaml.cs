@@ -222,6 +222,8 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
         foreach (PageSelector component in pageSelectors)
             component.IsEnabled = true;
+        
+        ApplyContentAttributes();
     }
 
     private void ContentSelectionChanged(object? sender, SelectionChangedEventArgs e)
