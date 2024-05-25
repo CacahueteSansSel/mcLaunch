@@ -191,9 +191,18 @@ public static class BoxManager
         DownloadManager.OnDownloadProgressUpdate -= ProgressUpdate;
 
         progressCallback?.Invoke("Initializing Minecraft", 0.5f);
+            
+        ModificationPack? modpack;
 
-        ModificationPack? modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
-        if (modpack == null) return Result<Box>.Error("Unable to find the modpack");
+        try
+        {
+            modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
+            if (modpack == null) return Result<Box>.Error("Unable to find the modpack");
+        }
+        catch (Exception e)
+        {
+            return Result<Box>.Error($"The downloaded archive is not valid (error: {e.Message})");
+        }
 
         Result<Box> boxResult = await CreateFromModificationPack(modpack, pack.Author,
             (status, percent) => { progressCallback?.Invoke(status, 0.5f + percent); });

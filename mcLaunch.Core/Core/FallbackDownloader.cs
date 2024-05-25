@@ -26,12 +26,14 @@ public class FallbackDownloader : IDisposable
         }
         
         await using Stream stream = await response.Content.ReadAsStreamAsync();
-        await using MemoryStream ramStream = new();
+        await using FileStream fileStream = new(targetFilename, FileMode.Create);
 
         byte[] buffer = new byte[1024];
         long position = 0;
         float lastProgress = 0;
         long size = response.Content.Headers.ContentLength ?? 0;
+
+        ProgressUpdated?.Invoke(0);
 
         while (stream.CanRead)
         {
@@ -46,11 +48,13 @@ public class FallbackDownloader : IDisposable
             
             lastProgress = progress;
 
-            await ramStream.WriteAsync(buffer, 0, readSize);
+            await fileStream.WriteAsync(buffer, 0, readSize);
         }
 
-        byte[] data = ramStream.GetBuffer();
-        await File.WriteAllBytesAsync(targetFilename, data);
+        ProgressUpdated?.Invoke(1);
+        
+        if (!fileStream.SafeFileHandle.IsClosed)
+            fileStream.SafeFileHandle.Close();
 
         return true;
     }
