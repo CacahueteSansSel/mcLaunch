@@ -14,7 +14,7 @@
             <ProgressBar x:Name="DBBar" MinWidth="0" Height="43" Opacity="0.15" Value="{Binding Progress}" />
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <StackPanel Orientation="Vertical" Width="40" VerticalAlignment="Center" Spacing="4">
-                    <Image Width="16" Height="16" Source="/resources/icons/download.png" />
+                    <Image Width="16" Height="16" Source="{SvgImage /resources/icons/download.svg}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="{Binding ResourceName}" Margin="0 0 15 0" FontSize="12">-</TextBlock>

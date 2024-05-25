@@ -43,9 +43,9 @@
             </Border>
             <StackPanel Margin="20 30 20 20">
                 <StackPanel Orientation="Horizontal" Spacing="2">
-                    <views:Badge x:Name="PlatformBadge" Icon="/resources/icons/vanilla.png" />
-                    <views:Badge x:Name="VersionBadge" Icon="/resources/icons/vanilla.png" />
-                    <views:Badge x:Name="ModLoaderBadge" Icon="/resources/icons/vanilla.png" />
+                    <views:Badge x:Name="PlatformBadge" />
+                    <views:Badge x:Name="VersionBadge" />
+                    <views:Badge x:Name="ModLoaderBadge" />
                 </StackPanel>
                 <TextBlock Margin="0 5 0 0" Height="65" TextWrapping="Wrap" Classes="light"
                            Text="{Binding ShortDescription}" />

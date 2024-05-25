@@ -19,7 +19,7 @@
                     <views:BackButton />
                     <Button x:Name="OpenInBrowserButton" Margin="10 0 0 0" Classes="transparent"
                             Click="OpenButtonClicked" ToolTip.Tip="Open in browser">
-                        <Image Source="/resources/icons/open.png" Width="14" Height="14" />
+                        <Image Source="{SvgImage /resources/icons/open.svg}" Width="14" Height="14" />
                     </Button>
                 </StackPanel>
                 <Border Classes="frame" Margin="0 10 0 100" Width="888">
@@ -47,9 +47,9 @@
                                     <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16" Text="{Binding Author}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0" Spacing="5">
-                                    <views:Badge x:Name="ModpackVersionsBadge" Icon="/resources/icons/vanilla.png"
+                                    <views:Badge x:Name="ModpackVersionsBadge"
                                                  HorizontalAlignment="Left" />
-                                    <views:Badge x:Name="ModpackPlatformBadge" Icon="/resources/icons/mod.png"
+                                    <views:Badge x:Name="ModpackPlatformBadge"
                                                  HorizontalAlignment="Left" />
                                 </StackPanel>
                             </StackPanel>

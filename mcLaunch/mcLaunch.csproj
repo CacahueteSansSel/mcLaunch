@@ -318,6 +318,12 @@
         <AvaloniaResource Include="resources\icons\Vector.svg" />
         <None Remove="resources\icons\world.svg" />
         <AvaloniaResource Include="resources\icons\world.svg" />
+        <None Remove="resources\status\error.svg" />
+        <AvaloniaResource Include="resources\status\error.svg" />
+        <None Remove="resources\status\success.svg" />
+        <AvaloniaResource Include="resources\status\success.svg" />
+        <None Remove="resources\status\warning.svg" />
+        <AvaloniaResource Include="resources\status\warning.svg" />
     </ItemGroup>
 
     <ItemGroup>

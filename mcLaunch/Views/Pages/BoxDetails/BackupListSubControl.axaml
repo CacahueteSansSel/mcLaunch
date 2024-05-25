@@ -21,7 +21,7 @@
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center">
                 <Button DockPanel.Dock="Left" Classes="secondary square" Click="NewBackupButtonClicked"
                         ToolTip.Tip="New backup">
-                    <Image Width="13" Height="13" Source="/resources/icons/plus.png" />
+                    <Image Width="13" Height="13" Source="{SvgImage /resources/icons/plus.svg}" />
                 </Button>
             </StackPanel>
             <Panel />

@@ -1,6 +1,7 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Managers;
@@ -38,6 +39,24 @@ public partial class MinecraftContentEntry : UserControl
     public MinecraftContent Mod
     {
         get => (MinecraftContent) DataContext;
-        set => DataContext = value;
+        set
+        {
+            DataContext = value;
+            
+            UpdateBadges();
+        }
+    }
+
+    public void UpdateBadges()
+    {
+        InstalledBadge.IsVisible = Mod.IsInstalledOnCurrentBoxUi;
+        UpdateBadge.IsVisible = Mod.IsUpdateRequired;
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        UpdateBadges();
     }
 }

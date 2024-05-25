@@ -81,9 +81,6 @@ public partial class BoxEntryCard : UserControl
 
         VersionBadge.Text = box.Manifest.Version;
         ModLoaderBadge.Text = box.ModLoader?.Name ?? "Unknown";
-        if (box.ModLoader != null)
-            ModLoaderBadge.Icon =
-                new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{box.ModLoader.Id}.png")));
 
         Regex snapshotVersionRegex = new Regex("\\d.w\\d.a");
 

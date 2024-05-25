@@ -16,18 +16,18 @@
                        PointerExited="LeaveScreenshot">
                 <StackPanel Margin="10" DockPanel.Dock="Right">
                     <Button Classes="transparent" Click="CloseButtonClicked">
-                        <Image Source="/resources/icons/close.png" Width="15" />
+                        <Image Source="{SvgImage /resources/icons/close.svg}" Width="15" />
                     </Button>
                 </StackPanel>
                 <StackPanel Margin="10" Spacing="10" Orientation="Horizontal" DockPanel.Dock="Bottom">
                     <Button Classes="transparent" Margin="0" Click="OpenButtonClicked">
-                        <Image Source="/resources/icons/open.png" Width="15" Height="15" />
+                        <Image Source="{SvgImage /resources/icons/open.svg}" Width="15" Height="15" />
                     </Button>
                     <Button Classes="transparent" Margin="0" Click="OpenFolderButtonClicked">
-                        <Image Source="/resources/icons/folder.png" Width="15" Height="15" />
+                        <Image Source="{SvgImage /resources/icons/folder.svg}" Width="15" Height="15" />
                     </Button>
                     <Button Classes="transparent" Margin="0" Click="SetAsBoxBackgroundButtonClicked">
-                        <Image Source="/resources/icons/screenshot.png" Width="15" Height="15" />
+                        <Image Source="{SvgImage /resources/icons/screenshot.svg}" Width="15" Height="15" />
                     </Button>
                 </StackPanel>
                 <Panel />

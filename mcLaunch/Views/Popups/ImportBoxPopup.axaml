@@ -34,7 +34,7 @@
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Classes="title">Modrinth modpack</TextBlock>
-                            <views:Badge Text="Experimental" IsHitTestVisible="False" Icon="/resources/icons/cog.png"
+                            <views:Badge Text="Experimental" IsHitTestVisible="False"
                                          Margin="5 -1 0 0" />
                         </StackPanel>
                         <TextBlock Classes="light">A modpack from Modrinth</TextBlock>

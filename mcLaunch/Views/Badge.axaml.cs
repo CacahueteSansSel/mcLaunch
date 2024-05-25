@@ -4,67 +4,58 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using ReactiveUI;
 
 namespace mcLaunch.Views;
 
 public partial class Badge : UserControl
 {
+    private Data data;
+    
     public static readonly AttachedProperty<string> TextProperty =
         AvaloniaProperty.RegisterAttached<Badge, UserControl, string>(
             nameof(Text),
             "Editor",
             true);
 
-
-    public static readonly StyledProperty<IImage> IconProperty =
-        AvaloniaProperty.Register<Badge, IImage>(nameof(Icon));
-
-    private IImage icon;
-
-    private string text;
-
     public Badge()
     {
         InitializeComponent();
     }
 
-    public Badge(string text, string iconName)
+    public Badge(string text)
     {
         InitializeComponent();
 
-        DataContext = new Data(text, iconName);
+        data = new Data(text);
+        DataContext = data;
     }
 
     public string Text
     {
-        get => text;
+        get => data.Text;
         set
         {
-            text = value;
-            Label.Text = value;
+            if (data == null) data = new Data(value);
+            
+            data.Text = value;
+            DataContext = data;
         }
     }
 
-    public IImage Icon
+    public class Data : ReactiveObject
     {
-        get => icon;
-        set
+        private string text;
+        
+        public Data(string text)
         {
-            icon = value;
-            IconImage.Source = icon;
-        }
-    }
-
-    public class Data
-    {
-        public Data(string text, string iconName)
-        {
-            Text = text;
-
-            Icon = new Bitmap(AssetLoader.Open(new Uri($"avares:resources/icons/{iconName}.png")));
+            this.text = text;
         }
 
-        public string Text { get; set; }
-        public Bitmap Icon { get; set; }
+        public string Text
+        {
+            get => text;
+            set => this.RaiseAndSetIfChanged(ref text, value);
+        }
     }
 }

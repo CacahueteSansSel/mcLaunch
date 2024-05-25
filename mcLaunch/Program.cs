@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using Avalonia;
+using Avalonia.Svg;
 using mcLaunch.Core.Managers;
 using mcLaunch.Utilities;
 
@@ -15,6 +16,8 @@ internal class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        GC.KeepAlive(typeof(SvgImageExtension).Assembly);
+        GC.KeepAlive(typeof(Avalonia.Svg.Svg).Assembly);
         AppBuilder app = BuildAvaloniaApp();
 
         if (Debugger.IsAttached)

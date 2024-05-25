@@ -10,7 +10,7 @@
         <Style Selector="Border.badge">
             <Setter Property="Background" Value="{DynamicResource BackgroundLighter}" />
             <Setter Property="Padding" Value="5 0 5 0" />
-            <Setter Property="Height" Value="20" />
+            <Setter Property="Height" Value="23" />
             <Setter Property="CornerRadius" Value="2" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLightest}" />
@@ -18,9 +18,7 @@
     </UserControl.Styles>
     <Border Classes="badge">
         <StackPanel Orientation="Horizontal">
-            <Image x:Name="IconImage" VerticalAlignment="Center" Width="12" Height="12"
-                   Source="/resources/icons/edit.png" />
-            <TextBlock x:Name="Label" Margin="5 0 0 0" Classes="light">Editor</TextBlock>
+            <TextBlock x:Name="Label" Margin="2" Classes="light" Text="{Binding Text}">Test</TextBlock>
         </StackPanel>
     </Border>
 </UserControl>

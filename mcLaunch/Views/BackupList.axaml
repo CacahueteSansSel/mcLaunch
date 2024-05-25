@@ -32,9 +32,9 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="title" Text="{Binding Name}" />
                                     <views:Badge IsVisible="{Binding IsCompleteBackup}" Margin="5 0 0 0"
-                                                 Text="Complete Box Backup" Icon="/resources/icons/up_arrow.png" />
+                                                 Text="Complete Box Backup"/>
                                     <views:Badge IsVisible="{Binding IsPartialBackup}" Margin="5 0 0 0"
-                                                 Text="Partial Box Backup" Icon="/resources/icons/down_arrow.png" />
+                                                 Text="Partial Box Backup"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="light" FontSize="12" Margin="0 0 0 0"
