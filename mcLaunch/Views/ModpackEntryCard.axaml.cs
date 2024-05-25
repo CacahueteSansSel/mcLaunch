@@ -29,7 +29,7 @@ public partial class ModpackEntryCard : UserControl
 
         VersionBadge.Text = modpack.LatestMinecraftVersion ?? "Unknown";
         PlatformBadge.Text = modpack.Platform.Name;
-        PlatformBadge.Icon = modpack.Platform.Icon;
+        //PlatformBadge.SetIcon("mod");
 
         ApplyModpackValues();
     }
@@ -64,9 +64,7 @@ public partial class ModpackEntryCard : UserControl
             ModLoaderBadge.IsVisible = true;
 
             ModLoaderBadge.Text = modpack.LatestVersion.ModLoader.Capitalize();
-            ModLoaderBadge.Icon =
-                new Bitmap(AssetLoader.Open(
-                    new Uri($"avares://mcLaunch/resources/icons/{modpack.LatestVersion.ModLoader.ToLower()}.png")));
+            //ModLoaderBadge.SetIcon(modpack.LatestVersion.ModLoader.ToLower());
         }
         else
         {

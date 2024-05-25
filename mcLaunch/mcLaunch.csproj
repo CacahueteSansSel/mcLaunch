@@ -9,214 +9,215 @@
         <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove=".gitignore"/>
+        <None Remove=".gitignore" />
     </ItemGroup>
 
     <ItemGroup>
-        <TrimmerRootDescriptor Include="Roots.xml"/>
+        <TrimmerRootDescriptor Include="Roots.xml" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.2.1"/>
-        <PackageReference Include="Avalonia" Version="11.0.10"/>
-        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.0.10"/>
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.10"/>
+        <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.2.1" />
+        <PackageReference Include="Avalonia" Version="11.0.10" />
+        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.0.10" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10"/>
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10"/>
-        <PackageReference Include="Avalonia.HtmlRenderer" Version="11.0.0"/>
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10"/>
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10"/>
-        <PackageReference Include="DiscordRichPresence" Version="1.2.1.24"/>
-        <PackageReference Include="Jdenticon-net" Version="3.1.2"/>
-        <PackageReference Include="Markdown.Avalonia" Version="11.0.2"/>
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10" />
+        <PackageReference Include="Avalonia.HtmlRenderer" Version="11.0.0" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
+        <PackageReference Include="Avalonia.Svg" Version="11.0.0.18" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
+        <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
+        <PackageReference Include="Jdenticon-net" Version="3.1.2" />
+        <PackageReference Include="Markdown.Avalonia" Version="11.0.2" />
         <PackageReference Include="ReverseMarkdown" Version="4.4.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="resources\logo.png"/>
-        <AvaloniaResource Include="resources\logo.png"/>
-        <None Remove="resources\fonts\LexendDeca-Black.ttf"/>
-        <AvaloniaResource Include="resources\fonts\LexendDeca-Black.ttf"/>
-        <None Remove="resources\fonts\LexendDeca-Bold.ttf"/>
-        <AvaloniaResource Include="resources\fonts\LexendDeca-Bold.ttf"/>
-        <None Remove="resources\fonts\LexendDeca-ExtraBold.ttf"/>
-        <AvaloniaResource Include="resources\fonts\LexendDeca-ExtraBold.ttf"/>
-        <None Remove="resources\fonts\LexendDeca-ExtraLight.ttf"/>
-        <AvaloniaResource Include="resources\fonts\LexendDeca-ExtraLight.ttf"/>
-        <None Remove="resources\fonts\LexendDeca-Light.ttf"/>
-        <AvaloniaResource Include="resources\fonts\LexendDeca-Light.ttf"/>
-        <None Remove="resources\fonts\LexendDeca-Medium.ttf"/>
-        <AvaloniaResource Include="resources\fonts\LexendDeca-Medium.ttf"/>
-        <None Remove="resources\fonts\LexendDeca-Regular.ttf"/>
-        <AvaloniaResource Include="resources\fonts\LexendDeca-Regular.ttf"/>
-        <None Remove="resources\fonts\LexendDeca-SemiBold.ttf"/>
-        <AvaloniaResource Include="resources\fonts\LexendDeca-SemiBold.ttf"/>
-        <None Remove="resources\fonts\LexendDeca-Thin.ttf"/>
-        <AvaloniaResource Include="resources\fonts\LexendDeca-Thin.ttf"/>
-        <None Remove="resources\default_box_logo.png"/>
-        <AvaloniaResource Include="resources\default_box_logo.png"/>
-        <None Remove="resources\loading_circle.png"/>
-        <AvaloniaResource Include="resources\loading_circle.png"/>
-        <None Remove="resources\icons\edit.png"/>
-        <AvaloniaResource Include="resources\icons\edit.png"/>
-        <None Remove="resources\banner.png"/>
-        <AvaloniaResource Include="resources\banner.png"/>
-        <None Remove="resources\icons\folder.png"/>
-        <AvaloniaResource Include="resources\icons\folder.png"/>
-        <None Remove="resources\icons\delete.png"/>
-        <AvaloniaResource Include="resources\icons\delete.png"/>
-        <None Remove="resources\icons\download.png"/>
-        <AvaloniaResource Include="resources\icons\download.png"/>
-        <None Remove="resources\credentials\curseforge.txt"/>
-        <AvaloniaResource Include="resources\credentials\curseforge.txt"/>
-        <None Remove="resources\icon.png"/>
-        <AvaloniaResource Include="resources\icon.png"/>
-        <None Remove="resources\icon.ico"/>
-        <AvaloniaResource Include="resources\icon.ico"/>
-        <None Remove="resources\default_cf_modpack_logo.png"/>
-        <AvaloniaResource Include="resources\default_cf_modpack_logo.png"/>
-        <None Remove="resources\credentials\azure.txt"/>
-        <AvaloniaResource Include="resources\credentials\azure.txt"/>
-        <None Remove="resources\background_onboarding.png"/>
-        <AvaloniaResource Include="resources\background_onboarding.png"/>
-        <None Remove="resources\background_onboarding_2.png"/>
-        <AvaloniaResource Include="resources\background_onboarding_2.png"/>
-        <None Remove="resources\fonts\JetBrainsMono-Regular.ttf"/>
-        <AvaloniaResource Include="resources\fonts\JetBrainsMono-Regular.ttf"/>
-        <None Remove="resources\box_icons\0.png"/>
-        <AvaloniaResource Include="resources\box_icons\0.png"/>
-        <None Remove="resources\box_icons\1.png"/>
-        <AvaloniaResource Include="resources\box_icons\1.png"/>
-        <None Remove="resources\box_icons\2.png"/>
-        <AvaloniaResource Include="resources\box_icons\2.png"/>
-        <None Remove="resources\box_icons\3.png"/>
-        <AvaloniaResource Include="resources\box_icons\3.png"/>
-        <None Remove="resources\icons\update.png"/>
-        <AvaloniaResource Include="resources\icons\update.png"/>
-        <None Remove="resources\icons\checkmark.png"/>
-        <AvaloniaResource Include="resources\icons\checkmark.png"/>
-        <None Remove="resources\icons\mod.png"/>
-        <AvaloniaResource Include="resources\icons\mod.png"/>
-        <None Remove="resources\icons\resource_pack.png"/>
-        <AvaloniaResource Include="resources\icons\resource_pack.png"/>
-        <None Remove="resources\icons\screenshot.png"/>
-        <AvaloniaResource Include="resources\icons\screenshot.png"/>
-        <None Remove="resources\icons\world.png"/>
-        <AvaloniaResource Include="resources\icons\world.png"/>
-        <None Remove="resources\default_screenshot.png"/>
-        <AvaloniaResource Include="resources\default_screenshot.png"/>
-        <None Remove="resources\settings\default_args.json"/>
-        <AvaloniaResource Include="resources\settings\default_args.json"/>
-        <None Remove="resources\icons\at.png"/>
-        <AvaloniaResource Include="resources\icons\at.png"/>
-        <None Remove="resources\logo_beta.png"/>
-        <AvaloniaResource Include="resources\logo_beta.png"/>
-        <None Remove="resources\icons\cog.png"/>
-        <AvaloniaResource Include="resources\icons\cog.png"/>
-        <None Remove="resources\icons\down_arrow.png"/>
-        <AvaloniaResource Include="resources\icons\down_arrow.png"/>
-        <None Remove="resources\icons\logout.png"/>
-        <AvaloniaResource Include="resources\icons\logout.png"/>
-        <None Remove="resources\icons\plus.png"/>
-        <AvaloniaResource Include="resources\icons\plus.png"/>
-        <None Remove="resources\icons\open.png"/>
-        <AvaloniaResource Include="resources\icons\open.png"/>
-        <None Remove="resources\icons\close.png"/>
-        <AvaloniaResource Include="resources\icons\close.png"/>
-        <None Remove="resources\bottom_bar_progress_background.png"/>
-        <AvaloniaResource Include="resources\bottom_bar_progress_background.png"/>
-        <None Remove="resources\snapshot_stripe.png"/>
-        <AvaloniaResource Include="resources\snapshot_stripe.png"/>
-        <None Remove="resources\logo_big.png"/>
-        <AvaloniaResource Include="resources\logo_big.png"/>
-        <None Remove="resources\icons\settings.png"/>
-        <AvaloniaResource Include="resources\icons\settings.png"/>
-        <None Remove="resources\credentials\tokens.txt"/>
-        <AvaloniaResource Include="resources\credentials\tokens.txt"/>
-        <None Remove="resources\default_mod_logo.png"/>
-        <AvaloniaResource Include="resources\default_mod_logo.png"/>
-        <None Remove="resources\icons\refresh.png"/>
-        <AvaloniaResource Include="resources\icons\refresh.png"/>
-        <None Remove="resources\icons\modrinth.png"/>
-        <AvaloniaResource Include="resources\icons\modrinth.png"/>
-        <None Remove="resources\icons\curseforge.png"/>
-        <AvaloniaResource Include="resources\icons\curseforge.png"/>
-        <None Remove="resources\icons\dot.png"/>
-        <AvaloniaResource Include="resources\icons\dot.png"/>
-        <None Remove="resources\internal\forge_wrapper.zip"/>
-        <None Remove="resources\icons\quilt.png"/>
-        <AvaloniaResource Include="resources\icons\quilt.png"/>
-        <None Remove="resources\icons\forge.png"/>
-        <AvaloniaResource Include="resources\icons\forge.png"/>
-        <None Remove="resources\icons\fabric.png"/>
-        <AvaloniaResource Include="resources\icons\fabric.png"/>
-        <None Remove="resources\icons\vanilla.png"/>
-        <AvaloniaResource Include="resources\icons\vanilla.png"/>
-        <None Remove="resources\icons\import.png"/>
-        <AvaloniaResource Include="resources\icons\import.png"/>
-        <None Remove="resources\icons\readme.png"/>
-        <AvaloniaResource Include="resources\icons\readme.png"/>
-        <None Remove="resources\icons\search.png"/>
-        <AvaloniaResource Include="resources\icons\search.png"/>
-        <None Remove="resources\icons\game_settings.png"/>
-        <AvaloniaResource Include="resources\icons\game_settings.png"/>
-        <None Remove="resources\icons\play.png"/>
-        <AvaloniaResource Include="resources\icons\play.png"/>
-        <None Remove="resources\gradient.png"/>
-        <None Remove="resources\icons\up_arrow.png"/>
-        <AvaloniaResource Include="resources\icons\up_arrow.png"/>
-        <None Remove="resources\html\base.css"/>
-        <AvaloniaResource Include="resources\html\base.css"/>
-        <None Remove="resources\commit"/>
-        <None Remove="resources\icon_crash.png"/>
-        <AvaloniaResource Include="resources\icon_crash.png"/>
-        <None Remove="resources\header_bar_badge_offline.png"/>
-        <AvaloniaResource Include="resources\header_bar_badge_offline.png"/>
-        <None Remove="resources\icons\thunderbolt.png"/>
-        <AvaloniaResource Include="resources\icons\thunderbolt.png"/>
-        <None Remove="resources\fastlaunch_box_logo.png"/>
-        <AvaloniaResource Include="resources\fastlaunch_box_logo.png"/>
-        <None Remove="resources\icons\browse_modpacks.png"/>
-        <AvaloniaResource Include="resources\icons\browse_modpacks.png"/>
-        <None Remove="resources\icons\browse_mods.png"/>
-        <AvaloniaResource Include="resources\icons\browse_mods.png"/>
-        <None Remove="resources\icons\license.png"/>
-        <AvaloniaResource Include="resources\icons\license.png"/>
-        <None Remove="resources\icons\open_source.png"/>
-        <AvaloniaResource Include="resources\icons\open_source.png"/>
-        <None Remove="resources\icons\lock.png"/>
-        <AvaloniaResource Include="resources\icons\lock.png"/>
-        <None Remove="resources\icons\neoforge.png"/>
-        <AvaloniaResource Include="resources\icons\neoforge.png"/>
-        <None Remove="resources\settings\anonymized_names.txt"/>
-        <AvaloniaResource Include="resources\settings\anonymized_names.txt"/>
-        <None Remove="resources\icons\problem.png"/>
-        <AvaloniaResource Include="resources\icons\problem.png"/>
-        <None Remove="resources\background_default.png"/>
-        <AvaloniaResource Include="resources\background_default.png"/>
-        <None Remove="resources\icons\datapack.png"/>
-        <AvaloniaResource Include="resources\icons\datapack.png"/>
-        <None Remove="resources\icons\shader.png"/>
-        <AvaloniaResource Include="resources\icons\shader.png"/>
-        <None Remove="resources\icons\backups.png"/>
-        <AvaloniaResource Include="resources\icons\backups.png"/>
-        <None Remove="resources\default_backup_logo.png"/>
-        <AvaloniaResource Include="resources\default_backup_logo.png"/>
-        <None Remove="resources\icons\directjar.png"/>
-        <AvaloniaResource Include="resources\icons\directjar.png"/>
-        <None Remove="resources\default_directjar_logo.png"/>
-        <AvaloniaResource Include="resources\default_directjar_logo.png"/>
-        <None Remove="resources\settings\build.json"/>
-        <AvaloniaResource Include="resources\settings\build.json"/>
-        <None Remove="resources\cube_transparent.png"/>
-        <AvaloniaResource Include="resources\cube_transparent.png"/>
-        <None Remove="resources\logo_dev.png"/>
-        <AvaloniaResource Include="resources\logo_dev.png"/>
-        <None Remove="resources\icons\arrow_left.png"/>
-        <AvaloniaResource Include="resources\icons\arrow_left.png"/>
-        <None Remove="resources\icons\arrow_right.png"/>
-        <AvaloniaResource Include="resources\icons\arrow_right.png"/>
+        <None Remove="resources\logo.png" />
+        <AvaloniaResource Include="resources\logo.png" />
+        <None Remove="resources\fonts\LexendDeca-Black.ttf" />
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Black.ttf" />
+        <None Remove="resources\fonts\LexendDeca-Bold.ttf" />
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Bold.ttf" />
+        <None Remove="resources\fonts\LexendDeca-ExtraBold.ttf" />
+        <AvaloniaResource Include="resources\fonts\LexendDeca-ExtraBold.ttf" />
+        <None Remove="resources\fonts\LexendDeca-ExtraLight.ttf" />
+        <AvaloniaResource Include="resources\fonts\LexendDeca-ExtraLight.ttf" />
+        <None Remove="resources\fonts\LexendDeca-Light.ttf" />
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Light.ttf" />
+        <None Remove="resources\fonts\LexendDeca-Medium.ttf" />
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Medium.ttf" />
+        <None Remove="resources\fonts\LexendDeca-Regular.ttf" />
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Regular.ttf" />
+        <None Remove="resources\fonts\LexendDeca-SemiBold.ttf" />
+        <AvaloniaResource Include="resources\fonts\LexendDeca-SemiBold.ttf" />
+        <None Remove="resources\fonts\LexendDeca-Thin.ttf" />
+        <AvaloniaResource Include="resources\fonts\LexendDeca-Thin.ttf" />
+        <None Remove="resources\default_box_logo.png" />
+        <AvaloniaResource Include="resources\default_box_logo.png" />
+        <None Remove="resources\loading_circle.png" />
+        <AvaloniaResource Include="resources\loading_circle.png" />
+        <None Remove="resources\icons\edit.png" />
+        <AvaloniaResource Include="resources\icons\edit.png" />
+        <None Remove="resources\banner.png" />
+        <AvaloniaResource Include="resources\banner.png" />
+        <None Remove="resources\icons\folder.png" />
+        <AvaloniaResource Include="resources\icons\folder.png" />
+        <None Remove="resources\icons\delete.png" />
+        <AvaloniaResource Include="resources\icons\delete.png" />
+        <None Remove="resources\icons\download.png" />
+        <AvaloniaResource Include="resources\icons\download.png" />
+        <None Remove="resources\credentials\curseforge.txt" />
+        <AvaloniaResource Include="resources\credentials\curseforge.txt" />
+        <None Remove="resources\icon.png" />
+        <AvaloniaResource Include="resources\icon.png" />
+        <None Remove="resources\icon.ico" />
+        <AvaloniaResource Include="resources\icon.ico" />
+        <None Remove="resources\default_cf_modpack_logo.png" />
+        <AvaloniaResource Include="resources\default_cf_modpack_logo.png" />
+        <None Remove="resources\credentials\azure.txt" />
+        <AvaloniaResource Include="resources\credentials\azure.txt" />
+        <None Remove="resources\background_onboarding.png" />
+        <AvaloniaResource Include="resources\background_onboarding.png" />
+        <None Remove="resources\background_onboarding_2.png" />
+        <AvaloniaResource Include="resources\background_onboarding_2.png" />
+        <None Remove="resources\fonts\JetBrainsMono-Regular.ttf" />
+        <AvaloniaResource Include="resources\fonts\JetBrainsMono-Regular.ttf" />
+        <None Remove="resources\box_icons\0.png" />
+        <AvaloniaResource Include="resources\box_icons\0.png" />
+        <None Remove="resources\box_icons\1.png" />
+        <AvaloniaResource Include="resources\box_icons\1.png" />
+        <None Remove="resources\box_icons\2.png" />
+        <AvaloniaResource Include="resources\box_icons\2.png" />
+        <None Remove="resources\box_icons\3.png" />
+        <AvaloniaResource Include="resources\box_icons\3.png" />
+        <None Remove="resources\icons\update.png" />
+        <AvaloniaResource Include="resources\icons\update.png" />
+        <None Remove="resources\icons\checkmark.png" />
+        <AvaloniaResource Include="resources\icons\checkmark.png" />
+        <None Remove="resources\icons\mod.png" />
+        <AvaloniaResource Include="resources\icons\mod.png" />
+        <None Remove="resources\icons\resource_pack.png" />
+        <AvaloniaResource Include="resources\icons\resource_pack.png" />
+        <None Remove="resources\icons\screenshot.png" />
+        <AvaloniaResource Include="resources\icons\screenshot.png" />
+        <None Remove="resources\icons\world.png" />
+        <AvaloniaResource Include="resources\icons\world.png" />
+        <None Remove="resources\default_screenshot.png" />
+        <AvaloniaResource Include="resources\default_screenshot.png" />
+        <None Remove="resources\settings\default_args.json" />
+        <AvaloniaResource Include="resources\settings\default_args.json" />
+        <None Remove="resources\icons\at.png" />
+        <AvaloniaResource Include="resources\icons\at.png" />
+        <None Remove="resources\logo_beta.png" />
+        <AvaloniaResource Include="resources\logo_beta.png" />
+        <None Remove="resources\icons\cog.png" />
+        <AvaloniaResource Include="resources\icons\cog.png" />
+        <None Remove="resources\icons\down_arrow.png" />
+        <AvaloniaResource Include="resources\icons\down_arrow.png" />
+        <None Remove="resources\icons\logout.png" />
+        <AvaloniaResource Include="resources\icons\logout.png" />
+        <None Remove="resources\icons\plus.png" />
+        <AvaloniaResource Include="resources\icons\plus.png" />
+        <None Remove="resources\icons\open.png" />
+        <AvaloniaResource Include="resources\icons\open.png" />
+        <None Remove="resources\icons\close.png" />
+        <AvaloniaResource Include="resources\icons\close.png" />
+        <None Remove="resources\bottom_bar_progress_background.png" />
+        <AvaloniaResource Include="resources\bottom_bar_progress_background.png" />
+        <None Remove="resources\snapshot_stripe.png" />
+        <AvaloniaResource Include="resources\snapshot_stripe.png" />
+        <None Remove="resources\logo_big.png" />
+        <AvaloniaResource Include="resources\logo_big.png" />
+        <None Remove="resources\icons\settings.png" />
+        <AvaloniaResource Include="resources\icons\settings.png" />
+        <None Remove="resources\credentials\tokens.txt" />
+        <AvaloniaResource Include="resources\credentials\tokens.txt" />
+        <None Remove="resources\default_mod_logo.png" />
+        <AvaloniaResource Include="resources\default_mod_logo.png" />
+        <None Remove="resources\icons\refresh.png" />
+        <AvaloniaResource Include="resources\icons\refresh.png" />
+        <None Remove="resources\icons\modrinth.png" />
+        <AvaloniaResource Include="resources\icons\modrinth.png" />
+        <None Remove="resources\icons\curseforge.png" />
+        <AvaloniaResource Include="resources\icons\curseforge.png" />
+        <None Remove="resources\icons\dot.png" />
+        <AvaloniaResource Include="resources\icons\dot.png" />
+        <None Remove="resources\internal\forge_wrapper.zip" />
+        <None Remove="resources\icons\quilt.png" />
+        <AvaloniaResource Include="resources\icons\quilt.png" />
+        <None Remove="resources\icons\forge.png" />
+        <AvaloniaResource Include="resources\icons\forge.png" />
+        <None Remove="resources\icons\fabric.png" />
+        <AvaloniaResource Include="resources\icons\fabric.png" />
+        <None Remove="resources\icons\vanilla.png" />
+        <AvaloniaResource Include="resources\icons\vanilla.png" />
+        <None Remove="resources\icons\import.png" />
+        <AvaloniaResource Include="resources\icons\import.png" />
+        <None Remove="resources\icons\readme.png" />
+        <AvaloniaResource Include="resources\icons\readme.png" />
+        <None Remove="resources\icons\search.png" />
+        <AvaloniaResource Include="resources\icons\search.png" />
+        <None Remove="resources\icons\game_settings.png" />
+        <AvaloniaResource Include="resources\icons\game_settings.png" />
+        <None Remove="resources\icons\play.png" />
+        <AvaloniaResource Include="resources\icons\play.png" />
+        <None Remove="resources\gradient.png" />
+        <None Remove="resources\icons\up_arrow.png" />
+        <AvaloniaResource Include="resources\icons\up_arrow.png" />
+        <None Remove="resources\html\base.css" />
+        <AvaloniaResource Include="resources\html\base.css" />
+        <None Remove="resources\commit" />
+        <None Remove="resources\icon_crash.png" />
+        <AvaloniaResource Include="resources\icon_crash.png" />
+        <None Remove="resources\header_bar_badge_offline.png" />
+        <AvaloniaResource Include="resources\header_bar_badge_offline.png" />
+        <None Remove="resources\icons\thunderbolt.png" />
+        <AvaloniaResource Include="resources\icons\thunderbolt.png" />
+        <None Remove="resources\fastlaunch_box_logo.png" />
+        <AvaloniaResource Include="resources\fastlaunch_box_logo.png" />
+        <None Remove="resources\icons\browse_modpacks.png" />
+        <AvaloniaResource Include="resources\icons\browse_modpacks.png" />
+        <None Remove="resources\icons\browse_mods.png" />
+        <AvaloniaResource Include="resources\icons\browse_mods.png" />
+        <None Remove="resources\icons\license.png" />
+        <AvaloniaResource Include="resources\icons\license.png" />
+        <None Remove="resources\icons\open_source.png" />
+        <AvaloniaResource Include="resources\icons\open_source.png" />
+        <None Remove="resources\icons\lock.png" />
+        <AvaloniaResource Include="resources\icons\lock.png" />
+        <None Remove="resources\icons\neoforge.png" />
+        <AvaloniaResource Include="resources\icons\neoforge.png" />
+        <None Remove="resources\settings\anonymized_names.txt" />
+        <AvaloniaResource Include="resources\settings\anonymized_names.txt" />
+        <None Remove="resources\icons\problem.png" />
+        <AvaloniaResource Include="resources\icons\problem.png" />
+        <None Remove="resources\background_default.png" />
+        <AvaloniaResource Include="resources\background_default.png" />
+        <None Remove="resources\icons\datapack.png" />
+        <AvaloniaResource Include="resources\icons\datapack.png" />
+        <None Remove="resources\icons\shader.png" />
+        <AvaloniaResource Include="resources\icons\shader.png" />
+        <None Remove="resources\icons\backups.png" />
+        <AvaloniaResource Include="resources\icons\backups.png" />
+        <None Remove="resources\default_backup_logo.png" />
+        <AvaloniaResource Include="resources\default_backup_logo.png" />
+        <None Remove="resources\icons\directjar.png" />
+        <AvaloniaResource Include="resources\icons\directjar.png" />
+        <None Remove="resources\default_directjar_logo.png" />
+        <AvaloniaResource Include="resources\default_directjar_logo.png" />
+        <None Remove="resources\settings\build.json" />
+        <AvaloniaResource Include="resources\settings\build.json" />
+        <None Remove="resources\cube_transparent.png" />
+        <AvaloniaResource Include="resources\cube_transparent.png" />
+        <None Remove="resources\logo_dev.png" />
+        <AvaloniaResource Include="resources\logo_dev.png" />
+        <None Remove="resources\icons\arrow_left.png" />
+        <AvaloniaResource Include="resources\icons\arrow_left.png" />
+        <None Remove="resources\icons\arrow_right.png" />
+        <AvaloniaResource Include="resources\icons\arrow_right.png" />
         <None Remove="resources\box_icons\4.png" />
         <AvaloniaResource Include="resources\box_icons\4.png" />
         <None Remove="resources\status\error.png" />
@@ -225,12 +226,104 @@
         <AvaloniaResource Include="resources\status\warning.png" />
         <None Remove="resources\status\success.png" />
         <AvaloniaResource Include="resources\status\success.png" />
+        <None Remove="resources\icons\plus.svg" />
+        <AvaloniaResource Include="resources\icons\plus.svg" />
+        <None Remove="resources\icons\import.svg" />
+        <AvaloniaResource Include="resources\icons\import.svg" />
+        <None Remove="resources\icons\open.svg" />
+        <AvaloniaResource Include="resources\icons\open.svg" />
+        <None Remove="resources\icons\search.svg" />
+        <AvaloniaResource Include="resources\icons\search.svg" />
+        <None Remove="resources\icons\thunderbolt.svg" />
+        <AvaloniaResource Include="resources\icons\thunderbolt.svg" />
+        <None Remove="resources\icons\vanilla.svg" />
+        <AvaloniaResource Include="resources\icons\vanilla.svg" />
+        <None Remove="resources\icons\browse_mods.svg" />
+        <AvaloniaResource Include="resources\icons\browse_mods.svg" />
+        <None Remove="resources\icons\browse_modpacks.svg" />
+        <AvaloniaResource Include="resources\icons\browse_modpacks.svg" />
+        <None Remove="resources\icons\arrow_left.svg" />
+        <AvaloniaResource Include="resources\icons\arrow_left.svg" />
+        <None Remove="resources\icons\arrow_right.svg" />
+        <AvaloniaResource Include="resources\icons\arrow_right.svg" />
+        <None Remove="resources\icons\at.svg" />
+        <AvaloniaResource Include="resources\icons\at.svg" />
+        <None Remove="resources\icons\backups.svg" />
+        <AvaloniaResource Include="resources\icons\backups.svg" />
+        <None Remove="resources\icons\checkmark.svg" />
+        <AvaloniaResource Include="resources\icons\checkmark.svg" />
+        <None Remove="resources\icons\close.svg" />
+        <AvaloniaResource Include="resources\icons\close.svg" />
+        <None Remove="resources\icons\cog.svg" />
+        <AvaloniaResource Include="resources\icons\cog.svg" />
+        <None Remove="resources\icons\curseforge.svg" />
+        <AvaloniaResource Include="resources\icons\curseforge.svg" />
+        <None Remove="resources\icons\datapack.svg" />
+        <AvaloniaResource Include="resources\icons\datapack.svg" />
+        <None Remove="resources\icons\delete.svg" />
+        <AvaloniaResource Include="resources\icons\delete.svg" />
+        <None Remove="resources\icons\directjar.svg" />
+        <AvaloniaResource Include="resources\icons\directjar.svg" />
+        <None Remove="resources\icons\down_arrow.svg" />
+        <AvaloniaResource Include="resources\icons\down_arrow.svg" />
+        <None Remove="resources\icons\download.svg" />
+        <AvaloniaResource Include="resources\icons\download.svg" />
+        <None Remove="resources\icons\edit.svg" />
+        <AvaloniaResource Include="resources\icons\edit.svg" />
+        <None Remove="resources\icons\fabric.svg" />
+        <AvaloniaResource Include="resources\icons\fabric.svg" />
+        <None Remove="resources\icons\folder.svg" />
+        <AvaloniaResource Include="resources\icons\folder.svg" />
+        <None Remove="resources\icons\forge.svg" />
+        <AvaloniaResource Include="resources\icons\forge.svg" />
+        <None Remove="resources\icons\game_settings.svg" />
+        <AvaloniaResource Include="resources\icons\game_settings.svg" />
+        <None Remove="resources\icons\license.svg" />
+        <AvaloniaResource Include="resources\icons\license.svg" />
+        <None Remove="resources\icons\lock.svg" />
+        <AvaloniaResource Include="resources\icons\lock.svg" />
+        <None Remove="resources\icons\logout.svg" />
+        <AvaloniaResource Include="resources\icons\logout.svg" />
+        <None Remove="resources\icons\mod.svg" />
+        <AvaloniaResource Include="resources\icons\mod.svg" />
+        <None Remove="resources\icons\modrinth.svg" />
+        <AvaloniaResource Include="resources\icons\modrinth.svg" />
+        <None Remove="resources\icons\neoforge.svg" />
+        <AvaloniaResource Include="resources\icons\neoforge.svg" />
+        <None Remove="resources\icons\open_source.svg" />
+        <AvaloniaResource Include="resources\icons\open_source.svg" />
+        <None Remove="resources\icons\play.svg" />
+        <AvaloniaResource Include="resources\icons\play.svg" />
+        <None Remove="resources\icons\problem.svg" />
+        <AvaloniaResource Include="resources\icons\problem.svg" />
+        <None Remove="resources\icons\quilt.svg" />
+        <AvaloniaResource Include="resources\icons\quilt.svg" />
+        <None Remove="resources\icons\readme.svg" />
+        <AvaloniaResource Include="resources\icons\readme.svg" />
+        <None Remove="resources\icons\refresh.svg" />
+        <AvaloniaResource Include="resources\icons\refresh.svg" />
+        <None Remove="resources\icons\resource_pack.svg" />
+        <AvaloniaResource Include="resources\icons\resource_pack.svg" />
+        <None Remove="resources\icons\screenshot.svg" />
+        <AvaloniaResource Include="resources\icons\screenshot.svg" />
+        <None Remove="resources\icons\settings.svg" />
+        <AvaloniaResource Include="resources\icons\settings.svg" />
+        <None Remove="resources\icons\shader.svg" />
+        <AvaloniaResource Include="resources\icons\shader.svg" />
+        <None Remove="resources\icons\up_arrow.svg" />
+        <AvaloniaResource Include="resources\icons\up_arrow.svg" />
+        <None Remove="resources\icons\update.svg" />
+        <AvaloniaResource Include="resources\icons\update.svg" />
+        <None Remove="resources\icons\Vector.svg" />
+        <AvaloniaResource Include="resources\icons\Vector.svg" />
+        <None Remove="resources\icons\world.svg" />
+        <AvaloniaResource Include="resources\icons\world.svg" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\mcLaunch.Launchsite\mcLaunch.Launchsite.csproj"/>
-        <ProjectReference Include="..\mcLaunch.Core\mcLaunch.Core.csproj"/>
-        <ProjectReference Include="..\mcLaunch.GitHub\mcLaunch.GitHub.csproj"/>
+        <ProjectReference Include="..\mcLaunch.Launchsite\mcLaunch.Launchsite.csproj" />
+        <ProjectReference Include="..\mcLaunch.Core\mcLaunch.Core.csproj" />
+        <ProjectReference Include="..\mcLaunch.GitHub\mcLaunch.GitHub.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -297,6 +390,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="resources\internal\"/>
+        <Folder Include="resources\internal\" />
     </ItemGroup>
 </Project>

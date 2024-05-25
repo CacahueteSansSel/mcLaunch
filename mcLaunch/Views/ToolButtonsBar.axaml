@@ -15,38 +15,38 @@
             <StackPanel Orientation="Horizontal" Margin="20 0 0 0" Spacing="10">
                 <Button DockPanel.Dock="Left" ToolTip.Tip="New box" Classes="primary square"
                         Click="NewBoxButtonClicked">
-                    <Image Source="/resources/icons/plus.png" Width="13" Height="13" />
+                    <Image Source="{SvgImage /resources/icons/plus.svg}" Width="13" Height="13" />
                 </Button>
                 <Button DockPanel.Dock="Left" ToolTip.Tip="Import a box/Minecraft instance"
                         Classes="secondary square" Click="ImportBoxButtonClicked">
-                    <Image Source="/resources/icons/import.png" Width="13" Height="13" />
+                    <Image Source="{SvgImage /resources/icons/import.svg}" Width="13" Height="13" />
                 </Button>
                 <Button DockPanel.Dock="Left" ToolTip.Tip="Fast launch"
                         Classes="secondary square" Click="FastLaunchButtonClicked">
-                    <Image Source="/resources/icons/thunderbolt.png" Width="13" Height="13" />
+                    <Image Source="{SvgImage /resources/icons/thunderbolt.svg}" Width="13" Height="13" />
                 </Button>
                 <views:SeparatorLine />
                 <Button DockPanel.Dock="Left" ToolTip.Tip="View Boxes"
                         Classes="secondary square" Click="ViewBoxesButtonClicked">
-                    <Image Source="/resources/icons/vanilla.png" Width="13" Height="13" />
+                    <Image Source="{SvgImage /resources/icons/vanilla.svg}" Width="13" Height="13" />
                 </Button>
                 <views:SeparatorLine />
                 <Button DockPanel.Dock="Left" ToolTip.Tip="Browse modpacks" Classes="secondary square"
                         Click="BrowseModpacksButtonClicked">
-                    <Image Source="/resources/icons/browse_modpacks.png" Width="13" Height="13" />
+                    <Image Source="{SvgImage /resources/icons/browse_modpacks.svg}" Width="13" Height="13" />
                 </Button>
                 <Button DockPanel.Dock="Left" ToolTip.Tip="Browse mods" Classes="secondary square"
                         Click="BrowseModsButtonClicked">
-                    <Image Source="/resources/icons/browse_mods.png" Width="13" Height="13" />
+                    <Image Source="{SvgImage /resources/icons/browse_mods.svg}" Width="13" Height="13" />
                 </Button>
             </StackPanel>
             <Button DockPanel.Dock="Right" Margin="0 0 20 0" Classes="secondary square" ToolTip.Tip="Manage settings"
                     Click="SettingsButtonClicked">
-                <Image Source="/resources/icons/cog.png" Width="16" Height="16" />
+                <Image Source="{SvgImage /resources/icons/cog.svg}" Width="16" Height="16" />
             </Button>
             <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary square" ToolTip.Tip="Manage defaults"
                     Click="DefaultsButtonClicked">
-                <Image Source="/resources/icons/game_settings.png" Width="13" Height="13" />
+                <Image Source="{SvgImage /resources/icons/game_settings.svg}" Width="13" Height="13" />
             </Button>
             <Border Classes="frame-without-shadow" Margin="5 10 10 10" BoxShadow=""
                     Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
@@ -57,7 +57,7 @@
                     </StackPanel>
                     <Button Margin="10 0 10 0" Classes="transparent square" ToolTip.Tip="Disconnect"
                             Click="DisconnectButtonClicked">
-                        <Image Width="16" Height="16" Source="/resources/icons/logout.png" />
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/logout.svg}" />
                     </Button>
                 </StackPanel>
             </Border>

@@ -63,10 +63,8 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         }
 
         ModPlatformBadge.Text = shownContent.Platform.Name;
-        ModPlatformBadge.Icon =
-            new Bitmap(
-                AssetLoader.Open(
-                    new Uri($"avares://mcLaunch/resources/icons/{shownContent.Platform.Name.ToLower()}.png")));
+        //ModPlatformBadge.SetIcon(shownContent.Platform.Name.ToLower());
+        
         if (shownContent.License != null)
         {
             ModLicenseBadge.Text = shownContent.GetLicenseDisplayName();
