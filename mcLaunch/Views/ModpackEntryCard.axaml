@@ -27,13 +27,6 @@
     <Panel>
         <StackPanel Margin="0">
             <Border x:Name="Header" CornerRadius="4">
-                <Border.Background>
-                    <ImageBrush
-                        AlignmentX="Left"
-                        AlignmentY="Top"
-                        asyncImageLoader:ImageBrushLoader.Source="{Binding BackgroundPath}"
-                        Stretch="UniformToFill" />
-                </Border.Background>
                 <Canvas Height="120">
                     <Border Canvas.Left="40" Canvas.Top="60" ClipToBounds="True" CornerRadius="4">
                         <Image Stretch="Fill" Width="80" Height="80"
