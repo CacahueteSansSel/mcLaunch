@@ -27,7 +27,7 @@ public static class PlatformSpecific
             Verb = verb,
             CreateNoWindow = hidden,
             WindowStyle = hidden ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
-            UseShellExecute = false
+            UseShellExecute = true
         });
     }
 
