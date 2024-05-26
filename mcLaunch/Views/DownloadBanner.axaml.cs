@@ -110,6 +110,8 @@ public partial class DownloadBanner : UserControl
         UIDataContext.ResourceCount = string.Empty;
         UIDataContext.ResourceDetailsText = string.Empty;
         UIDataContext.ResourceFileText = string.Empty;
+        
+        ResourceCountText.IsVisible = false;
 
         if (!IsForcedToBeShown) IsVisible = false;
     }
@@ -126,6 +128,8 @@ public partial class DownloadBanner : UserControl
             UIDataContext.ResourceDetailsText = $"{(int) MathF.Round(percent * 100)}%";
             UIDataContext.ResourceCount = $"{currentSectionIndex}/{DownloadManager.PendingSectionCount}";
             FileNameText.Text = Path.GetFileName(file);
+
+            ResourceCountText.IsVisible = DownloadManager.PendingSectionCount > 0;
         });
     }
 
