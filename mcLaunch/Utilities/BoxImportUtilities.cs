@@ -15,11 +15,23 @@ public static class BoxImportUtilities
 {
     public static async Task ImportBoxAsync(string filename, bool popup = true, bool openBoxAfterImport = true)
     {
-        BoxBinaryModificationPack bb = new(filename);
+        BoxBinaryModificationPack bb = null;
+
+        try
+        {
+            bb = new BoxBinaryModificationPack(filename);
+        }
+        catch (Exception e)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Error", 
+                "Failed to import the box : it may be invalid", MessageStatus.Error));
+            
+            return;
+        }
 
         if (popup)
         {
-            Navigation.ShowPopup(new StatusPopup($"Importing {bb.Name}", "Please wait for the modpack to be imported"));
+            Navigation.ShowPopup(new StatusPopup($"Importing {bb.Name}", "Please wait for the box to be imported"));
             StatusPopup.Instance.ShowDownloadBanner = true;
         }
 
@@ -59,7 +71,19 @@ public static class BoxImportUtilities
 
     public static async Task ImportCurseforgeAsync(string filename, bool popup = true, bool openBoxAfterImport = true)
     {
-        CurseForgeModificationPack modpack = new CurseForgeModificationPack(filename);
+        CurseForgeModificationPack modpack = null;
+
+        try
+        {
+            modpack = new CurseForgeModificationPack(filename);
+        }
+        catch (Exception e)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Error", 
+                "Failed to import the modpack : it may be invalid", MessageStatus.Error));
+            
+            return;
+        }
 
         if (popup)
         {
@@ -105,7 +129,19 @@ public static class BoxImportUtilities
     
     public static async Task ImportModrinthAsync(string filename, bool popup = true, bool openBoxAfterImport = true)
     {
-        ModrinthModificationPack modpack = new ModrinthModificationPack(filename);
+        ModrinthModificationPack modpack = null;
+
+        try
+        {
+            modpack = new ModrinthModificationPack(filename);
+        }
+        catch (Exception e)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Error", 
+                "Failed to import the modpack : it may be invalid", MessageStatus.Error));
+            
+            return;
+        }
 
         if (popup)
         {

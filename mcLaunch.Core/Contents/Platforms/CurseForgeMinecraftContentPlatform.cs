@@ -470,7 +470,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
 
             if (filenames == null)
             {
-                await DownloadManager.ProcessAll();
+                if (processDownload) await DownloadManager.ProcessAll();
                 targetBox.SaveManifest();
 
                 return false;

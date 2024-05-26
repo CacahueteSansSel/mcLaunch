@@ -13,6 +13,8 @@ namespace mcLaunch.Views;
 
 public partial class DownloadBanner : UserControl
 {
+    private float lastProgress = 0f;
+    
     public DownloadBanner()
     {
         InitializeComponent();
@@ -77,15 +79,16 @@ public partial class DownloadBanner : UserControl
 
     private void OnDownloadError(string sectionName, string file)
     {
-        Navigation.ShowPopup(new MessageBoxPopup($"Download failed for {sectionName}",
-            $"{sectionName} failed to download (file: {file}). Try restarting the download.", MessageStatus.Error));
+        
     }
 
     private void OnDownloadSectionStarting(string sectionName, int index)
     {
+        lastProgress = 0f;
         UIDataContext.Progress = 0;
-        UIDataContext.ResourceName = sectionName;
+        UIDataContext.ResourceName = string.IsNullOrWhiteSpace(sectionName) ? "Downloading" : sectionName;
         UIDataContext.ResourceCount = $"{index}/{DownloadManager.PendingSectionCount}";
+        UIDataContext.ResourceFileText = string.Empty;
 
         IsVisible = true;
     }
@@ -93,8 +96,9 @@ public partial class DownloadBanner : UserControl
     private void OnDownloadPrepareStarting(string name)
     {
         UIDataContext.Progress = 0;
-        UIDataContext.ResourceName = name;
-        UIDataContext.ResourceDetailsText = "Preparing";
+        UIDataContext.ResourceName = string.IsNullOrWhiteSpace(name) ? "Preparing download" : $"Preparing {name}";
+        UIDataContext.ResourceDetailsText = string.Empty;
+        UIDataContext.ResourceFileText = string.Empty;
 
         IsVisible = true;
     }
@@ -104,12 +108,17 @@ public partial class DownloadBanner : UserControl
         UIDataContext.Progress = 0;
         UIDataContext.ResourceName = string.Empty;
         UIDataContext.ResourceCount = string.Empty;
+        UIDataContext.ResourceDetailsText = string.Empty;
+        UIDataContext.ResourceFileText = string.Empty;
 
         if (!IsForcedToBeShown) IsVisible = false;
     }
 
     private void OnDownloadProgressUpdate(string file, float percent, int currentSectionIndex)
     {
+        if (lastProgress >= percent) return;
+        lastProgress = percent;
+        
         Dispatcher.UIThread.Post(() =>
         {
             UIDataContext.Progress = (int) MathF.Round(percent * 100);

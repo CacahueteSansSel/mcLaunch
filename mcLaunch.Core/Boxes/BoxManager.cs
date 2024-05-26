@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.RegularExpressions;
 using Avalonia.Media.Imaging;
+using Avalonia.Utilities;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Core;
@@ -130,17 +131,20 @@ public static class BoxManager
         foreach (var mod in pack.Modifications)
         {
             progressCallback?.Invoke($"Looking up modification {index}/{pack.Modifications.Length}",
-                (float) index / pack.Modifications.Length / 2);
+                MathUtilities.Clamp((float) index / pack.Modifications.Length, 0f, 1f) * (1f/3f));
 
             await pack.InstallModificationAsync(box, mod);
 
             index++;
         }
         
-        progressCallback?.Invoke("Downloading modifications...",
-            (float) index / pack.Modifications.Length / 2);
+        progressCallback?.Invoke("Downloading modifications",
+            1f / 3f);
 
         await DownloadManager.ProcessAll();
+        
+        progressCallback?.Invoke("Extracting files",
+            2f / 3f);
 
         Regex driveLetterRegex = new Regex("[A-Z]:[\\/\\\\]");
 
@@ -151,7 +155,7 @@ public static class BoxManager
                                                   || driveLetterRegex.IsMatch(additionalFile.Path)) continue;
 
             progressCallback?.Invoke("Extracting files",
-                0.5f + (float) index / pack.AdditionalFiles.Length / 2);
+                (2f/3f) + MathUtilities.Clamp((float) index / pack.AdditionalFiles.Length, 0f, 1f) * (1f/3f));
 
             string filename = $"{box.Folder.Path}/{additionalFile.Path}";
             string folderPath = filename.Replace(Path.GetFileName(filename), "");
