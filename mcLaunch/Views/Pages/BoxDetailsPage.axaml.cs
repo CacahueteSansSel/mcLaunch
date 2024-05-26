@@ -283,9 +283,9 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
             {
                 try
                 {
-                    Directory.Delete(Box.Path, true);
+                    Box.Delete();
+                    
                     MainPage.Instance.PopulateBoxList();
-
                     Navigation.Pop();
                 }
                 catch (Exception exception)

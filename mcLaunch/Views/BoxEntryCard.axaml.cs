@@ -12,6 +12,7 @@ using mcLaunch.Core.Boxes;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
+using mcLaunch.Views.Popups;
 
 namespace mcLaunch.Views;
 
@@ -104,6 +105,10 @@ public partial class BoxEntryCard : UserControl
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
+        
+        if (e.GetCurrentPoint(null).Properties.PointerUpdateKind != PointerUpdateKind.LeftButtonPressed)
+            return;
+        
         if (!Directory.Exists(box.Path)) return;
         
         Navigation.Push(new BoxDetailsPage(box));
@@ -117,5 +122,32 @@ public partial class BoxEntryCard : UserControl
         Navigation.Push(page);
 
         page.Run();
+    }
+
+    private void OpenMenuOptionClicked(object? sender, RoutedEventArgs e)
+    {
+        if (!Directory.Exists(box.Path)) return;
+        
+        Navigation.Push(new BoxDetailsPage(box));
+    }
+
+    private void CopyMenuOptionClicked(object? sender, RoutedEventArgs e)
+    {
+        MainWindow.Instance.Clipboard?.SetTextAsync(box.Manifest.Id);
+    }
+
+    private void DeleteMenuOptionClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Delete {box.Manifest.Name} ?", "This action is irreversible",
+            () =>
+            {
+                Box.Delete();
+                MainPage.Instance.PopulateBoxList();
+            }));
+    }
+
+    private void OpenFolderMenuOptionClicked(object? sender, RoutedEventArgs e)
+    {
+        PlatformSpecific.OpenFolder(Box.Path);
     }
 }

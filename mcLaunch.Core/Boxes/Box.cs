@@ -159,6 +159,11 @@ public class Box : IEquatable<Box>
         }
     }
 
+    public void Delete()
+    {
+        Directory.Delete(Path, true);
+    }
+
     public bool HasBackup(string name)
     {
         return Manifest.Backups.Any(backup => backup.Name == name);

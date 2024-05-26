@@ -137,9 +137,9 @@ public partial class DownloadBanner : UserControl
     {
         private int progress;
         private string resourceCount;
-        private string resourceDetailsText = "-";
-        private string resourceFileText = "-";
-        private string resourceName = "No pending download";
+        private string resourceDetailsText = "";
+        private string resourceFileText = "";
+        private string resourceName = "";
 
         public int Progress
         {
