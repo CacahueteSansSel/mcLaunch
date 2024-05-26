@@ -21,10 +21,7 @@ public static class Extensions
         return list;
     }
 
-    public static bool Exists(this ZipArchive zip, string path)
-    {
-        return zip.GetEntry(path) != null;
-    }
+    public static bool Exists(this ZipArchive zip, string path) => zip.GetEntry(path) != null;
 
     public static byte[] ReadAllBytes(this ZipArchive zip, string path)
     {
@@ -37,8 +34,6 @@ public static class Extensions
         return memoryStream.ToArray();
     }
 
-    public static string ReadAllText(this ZipArchive zip, string path)
-    {
-        return Encoding.UTF8.GetString(ReadAllBytes(zip, path));
-    }
+    public static string ReadAllText(this ZipArchive zip, string path) =>
+        Encoding.UTF8.GetString(ReadAllBytes(zip, path));
 }

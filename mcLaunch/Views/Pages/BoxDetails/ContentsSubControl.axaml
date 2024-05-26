@@ -14,25 +14,30 @@
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Button DockPanel.Dock="Left" Classes="secondary square" Click="AddModsButtonClicked"
                             ToolTip.Tip="Add mods">
-                        <Image Width="13" Height="13" Source="/resources/icons/plus.png" />
+                        <Image Width="13" Height="13" Source="{SvgImage /resources/icons/plus.svg}" />
                     </Button>
+                    <views:SeparatorLine />
                     <Button x:Name="UpdateAllButton" DockPanel.Dock="Left" Padding="10" Height="39" Classes="secondary"
                             Click="UpdateAllButtonClicked" ToolTip.Tip="Update all">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Image Width="13" Height="13" Source="/resources/icons/up_arrow.png" />
+                            <Image Width="13" Height="13" Source="{SvgImage /resources/icons/update.svg}" />
                             <TextBlock x:Name="UpdateButtonCountText">0</TextBlock>
                         </StackPanel>
+                    </Button>
+                    <Button x:Name="CheckForUpdatesButton" DockPanel.Dock="Left" Padding="10" Height="39" Classes="secondary square"
+                            Click="CheckForUpdatesButtonClicked" ToolTip.Tip="Check for updates">
+                        <Image Width="13" Height="13" Source="{SvgImage /resources/icons/refresh.svg}" />
                     </Button>
                     <views:SeparatorLine />
                     <Button x:Name="MigrateToModrinthButton" DockPanel.Dock="Left" Classes="secondary square"
                             Click="MigrateToModrinthButtonClicked" ToolTip.Tip="Migrate all mods to Modrinth"
                             BorderBrush="#1bd96a">
-                        <Image Width="13" Height="13" Source="/resources/icons/modrinth.png" />
+                        <Image Width="13" Height="13" Source="{SvgImage /resources/icons/modrinth.svg}" />
                     </Button>
                     <Button x:Name="MigrateToCurseForgeButton" DockPanel.Dock="Left" Classes="secondary square"
                             Click="MigrateToCurseForgeButtonClicked" ToolTip.Tip="Migrate all mods to CurseForge"
                             BorderBrush="#ee6234">
-                        <Image Width="13" Height="13" Source="/resources/icons/curseforge.png" />
+                        <Image Width="13" Height="13" Source="{SvgImage /resources/icons/curseforge.svg}" />
                     </Button>
                     <views:SeparatorLine />
                     <TextBox x:Name="SearchBox" Watermark="Search mod" Width="300" VerticalContentAlignment="Center"
@@ -55,7 +60,8 @@
                 </StackPanel>
                 <Panel />
             </DockPanel>
-            <views:MinecraftContentList x:Name="ModsList" HideInstalledBadges="True" Margin="0 10 0 0" />
+            <views:MinecraftContentList x:Name="ModsList" HideInstalledBadges="True" HidePageSelector="True"
+                                        Margin="0 10 0 0" />
         </StackPanel>
         <TextBlock x:Name="VanillaDisclaimer" VerticalAlignment="Center" HorizontalAlignment="Center" Height="20">Not available on vanilla instances</TextBlock>
     </Panel>

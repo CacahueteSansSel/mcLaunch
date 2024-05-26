@@ -44,10 +44,8 @@ public class QuickPlayManager
         File.Delete($"{path}/{name}.json");
     }
 
-    public QuickPlayProfile[]? Get(string name)
-    {
-        return JsonSerializer.Deserialize<QuickPlayProfile[]>(File.ReadAllText($"{path}/{name}"));
-    }
+    public QuickPlayProfile[]? Get(string name) =>
+        JsonSerializer.Deserialize<QuickPlayProfile[]>(File.ReadAllText($"{path}/{name}"));
 }
 
 public enum QuickPlayWorldType

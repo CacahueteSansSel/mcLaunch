@@ -8,6 +8,7 @@ using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Launchsite.Core.ModLoaders;
+using File = Modrinth.Models.File;
 using Version = Modrinth.Models.Version;
 
 namespace mcLaunch.Core.Contents.Packs;
@@ -191,7 +192,7 @@ public class ModrinthModificationPack : ModificationPack
             Id = mod.ModId,
             Platform = ModrinthMinecraftContentPlatform.Instance,
             Type = content.Type
-        }, mod.VersionId, false);
+        }, mod.VersionId, false, false);
     }
 
     public override async Task ExportAsync(Box box, string filename)
@@ -229,7 +230,7 @@ public class ModrinthModificationPack : ModificationPack
         index.Dependencies.Minecraft = box.Manifest.Version;
 
         List<ModelModrinthIndex.ModelFile> files = new();
-        foreach (BoxStoredContent mod in box.Manifest.Content)
+        foreach (BoxStoredContent mod in box.Manifest.Contents)
         {
             if (mod.PlatformId.ToLower() != "modrinth")
             {
@@ -245,7 +246,7 @@ public class ModrinthModificationPack : ModificationPack
             }
 
             Version modVersion = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetAsync(mod.VersionId);
-            Modrinth.Models.File? primaryVersionFile = modVersion.Files.FirstOrDefault(f => f.Primary);
+            File? primaryVersionFile = modVersion.Files.FirstOrDefault(f => f.Primary);
 
             if (primaryVersionFile == null)
             {
@@ -256,7 +257,7 @@ public class ModrinthModificationPack : ModificationPack
             ModelModrinthIndex.ModelFile fileModel = new()
             {
                 Path = mod.Filenames[0],
-                Downloads = new[] {primaryVersionFile.Url},
+                Downloads = [primaryVersionFile.Url],
                 Hashes = new ModelModrinthIndex.ModelFile.ModelHashes
                 {
                     Sha1 = primaryVersionFile.Hashes.Sha1,
@@ -273,7 +274,7 @@ public class ModrinthModificationPack : ModificationPack
         foreach (string file in box.GetAdditionalFiles())
         {
             string completePath = $"{box.Path}/minecraft/{file}";
-            if (!File.Exists(completePath)) continue;
+            if (!System.IO.File.Exists(completePath)) continue;
 
             ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
             await using Stream entryStream = overrideEntry.Open();
@@ -285,7 +286,7 @@ public class ModrinthModificationPack : ModificationPack
         foreach (string modFile in box.GetUnlistedMods())
         {
             string completePath = $"{box.Path}/minecraft/{modFile}";
-            if (!File.Exists(completePath)) continue;
+            if (!System.IO.File.Exists(completePath)) continue;
 
             ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{modFile}");
             await using Stream entryStream = overrideEntry.Open();

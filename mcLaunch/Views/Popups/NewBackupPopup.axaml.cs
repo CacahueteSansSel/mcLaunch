@@ -46,11 +46,11 @@ public partial class NewBackupPopup : UserControl
 
         if (backup == null)
         {
-            Navigation.ShowPopup(new MessageBoxPopup("Backup failed", "Failed to create backup"));
+            Navigation.ShowPopup(new MessageBoxPopup("Backup failed", "Failed to create backup", MessageStatus.Error));
             return;
         }
 
         Navigation.ShowPopup(new MessageBoxPopup("Backup created",
-            $"Your backup {backup.Name} for {box.Manifest.Name} has been created"));
+            $"Your backup {backup.Name} for {box.Manifest.Name} has been created", MessageStatus.Success));
     }
 }

@@ -65,12 +65,12 @@ public class CurseForgeModificationPack : ModificationPack
     {
         MinecraftContent content = await CurseForgeMinecraftContentPlatform.Instance.GetContentAsync(mod.ModId);
         if (content == null) return;
-        
+
         await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(targetBox, new MinecraftContent
         {
             Id = mod.ModId,
             Type = content.Type
-        }, mod.VersionId, false);
+        }, mod.VersionId, false, false);
     }
 
     public override async Task ExportAsync(Box box, string filename)
@@ -100,7 +100,7 @@ public class CurseForgeModificationPack : ModificationPack
         };
 
         List<ModelManifest.ModelFile> files = new();
-        foreach (BoxStoredContent mod in box.Manifest.Content)
+        foreach (BoxStoredContent mod in box.Manifest.Contents)
         {
             if (mod.PlatformId.ToLower() != "curseforge")
             {

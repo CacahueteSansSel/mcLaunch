@@ -79,10 +79,7 @@ public class MinecraftVersion
             CustomClientUrl == null ? Downloads.Client.Hash : null);
     }
 
-    public Task<AssetIndex?> GetAssetIndexAsync()
-    {
-        return Api.GetAsync<AssetIndex>(AssetIndex.Url);
-    }
+    public Task<AssetIndex?> GetAssetIndexAsync() => Api.GetAsync<AssetIndex>(AssetIndex.Url);
 
     /// <summary>
     ///     Merges the two <see cref="MinecraftVersion" /> and gives the priority to the callee for non-list elements that
@@ -165,10 +162,7 @@ public class MinecraftVersion
                                                 && Name.Contains(':')
                                                 && !string.IsNullOrEmpty(Url);
 
-        public string GetFinalJarFilename()
-        {
-            return new LibraryName(Name).JarFilename;
-        }
+        public string GetFinalJarFilename() => new LibraryName(Name).JarFilename;
 
         public string? DeduceUrl()
         {

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using Avalonia.Controls;
 using mcLaunch.Launchsite.Http;
+using mcLaunch.Utilities;
 
 namespace mcLaunch.Views;
 
@@ -14,6 +16,14 @@ public partial class HeaderBar : UserControl
 
         Api.OnNetworkError += OnApiNetworkError;
         Api.OnNetworkSuccess += OnApiNetworkSuccess;
+        
+#if DEBUG
+        LogoDevelopment.IsVisible = true;
+        LogoBeta.IsVisible = false;
+#else
+        LogoDevelopment.IsVisible = false;
+        LogoBeta.IsVisible = true;
+#endif
     }
 
     public void SetTitle(string title)

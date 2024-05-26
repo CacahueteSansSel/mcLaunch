@@ -84,7 +84,7 @@ public partial class BackupList : UserControl
                     if (!success)
                     {
                         Navigation.ShowPopup(new MessageBoxPopup("Failed to restore backup",
-                            $"Failed to restore backup {backup.Name} onto {lastBox.Manifest.Name}"));
+                            $"Failed to restore backup {backup.Name} onto {lastBox.Manifest.Name}", MessageStatus.Error));
 
                         return;
                     }
@@ -94,7 +94,7 @@ public partial class BackupList : UserControl
                     Navigation.Push(new BoxDetailsPage(lastBox));
 
                     Navigation.ShowPopup(new MessageBoxPopup("Backup restored",
-                        $"Backup {backup.Name} was restored on {lastBox.Manifest.Name}"));
+                        $"Backup {backup.Name} was restored on {lastBox.Manifest.Name}", MessageStatus.Success));
                 }));
         }
 

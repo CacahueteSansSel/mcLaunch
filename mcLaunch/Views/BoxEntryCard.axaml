@@ -42,13 +42,45 @@
         </Style>
     </UserControl.Styles>
     <Panel>
+        <Panel.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Launch" Click="PlayButtonClicked">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/play.svg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Open box" Click="OpenMenuOptionClicked">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/open.svg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Open folder" Click="OpenFolderMenuOptionClicked">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/folder.svg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Copy Box ID" Click="CopyMenuOptionClicked">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Delete" Click="DeleteMenuOptionClicked">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/delete.svg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </ContextMenu>
+        </Panel.ContextMenu>
         <StackPanel Margin="20 20 20 20">
             <Border ClipToBounds="True" CornerRadius="4">
                 <Panel Width="155" Height="155">
                     <Image x:Name="BoxIcon" Stretch="Uniform" Source="{Binding Icon.IconLarge}" />
                     <Button x:Name="PlayButton" IsVisible="False" ToolTip.Tip="Launch box" Classes="transparent-green"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="PlayButtonClicked">
-                        <Image Source="/resources/icons/play.png" Width="14" Height="14" />
+                        <Image Source="{SvgImage /resources/icons/play.svg}" Width="14" Height="14" />
                     </Button>
                 </Panel>
             </Border>
@@ -57,10 +89,11 @@
                 <TextBlock FontSize="12" Classes="light" Margin="0 0 0 0">by</TextBlock>
                 <TextBlock x:Name="AuthorText" FontSize="12" Classes="title" Margin="5 0 0 0" Text="{Binding Author}" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Spacing="5">
-                <views:Badge x:Name="VersionBadge" Icon="/resources/icons/vanilla.png" />
-                <views:Badge x:Name="ModLoaderBadge" Icon="/resources/icons/vanilla.png" />
+            <StackPanel x:Name="Badges" Orientation="Horizontal" Spacing="5">
+                <views:Badge x:Name="VersionBadge"/>
+                <views:Badge x:Name="ModLoaderBadge"/>
             </StackPanel>
+            <TextBlock x:Name="DeletingText" IsVisible="False" Classes="title">Deleting...</TextBlock>
         </StackPanel>
         <Image x:Name="SnapshotStripe" IsVisible="False" Source="/resources/snapshot_stripe.png" Width="68"
                HorizontalAlignment="Right" VerticalAlignment="Bottom" IsHitTestVisible="False" />

@@ -46,7 +46,7 @@ public partial class DataMigrationPopup : UserControl
         });
 
         Navigation.ShowPopup(new MessageBoxPopup("Migration successful",
-            "All data have been migrated to the target location"));
+            "All data have been migrated to the target location", MessageStatus.Success));
     }
 
     private void CancelButtonClicked(object? sender, RoutedEventArgs e)

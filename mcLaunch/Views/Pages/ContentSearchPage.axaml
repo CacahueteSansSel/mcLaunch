@@ -28,7 +28,7 @@
                             <DockPanel Margin="0 20 0 0">
                                 <Button IsDefault="True" Classes="secondary" DockPanel.Dock="Right" Margin="5 0 0 0"
                                         Click="SearchButtonClicked">
-                                    <Image Width="16" Height="16" Source="/resources/icons/search.png" />
+                                    <Image Width="16" Height="16" Source="{SvgImage /resources/icons/search.svg}" />
                                 </Button>
                                 <TextBox x:Name="SearchBoxInput" VerticalContentAlignment="Center"
                                          Watermark="Search here" />

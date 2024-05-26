@@ -31,23 +31,41 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
             true
         );
 
-    private List<MinecraftContent> fullContentList = new();
+    public static readonly AttachedProperty<bool> HidePageSelectorProperty
+        = AvaloniaProperty.RegisterAttached<MinecraftContentList, UserControl, bool>(
+            nameof(HidePageSelector),
+            false,
+            true
+        );
+
+    private readonly PageSelector[] pageSelectors;
 
     private Box lastBox;
     private string lastQuery;
+
+    private List<MinecraftContent> list = new();
 
     public MinecraftContentList()
     {
         InitializeComponent();
 
-        LoadMoreButton.IsVisible = false;
+        pageSelectors =
+        [
+            PageSelectorComponentTop,
+            PageSelectorComponentBottom
+        ];
+
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = false;
 
         DataContext = new Data();
     }
 
     public bool HideInstalledBadges { get; set; }
     public MinecraftContentType ContentType { get; set; }
+    public bool HidePageSelector { get; set; }
     public MinecraftContent[] Contents => ((Data) DataContext).Contents;
+    public MinecraftContent[] SelectedContent => ContentList.SelectedItems!.Cast<MinecraftContent>().ToArray();
 
     public void OnContentAdded(MinecraftContent content)
     {
@@ -71,6 +89,13 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         });
     }
 
+    public void SetupMultipleSelection(bool selectAllByDefault = false)
+    {
+        ContentList.SelectionMode = SelectionMode.Multiple;
+        
+        if (selectAllByDefault) ContentList.SelectAll();
+    }
+
     public void SetBox(Box box)
     {
         lastBox = box;
@@ -79,25 +104,29 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
     public void ShowLoadMoreButton()
     {
-        LoadMoreButton.IsVisible = true;
-        LoadMoreButton.IsEnabled = true;
+        if (HidePageSelector) return;
+
+        foreach (PageSelector component in pageSelectors)
+        {
+            component.IsVisible = true;
+            component.IsEnabled = true;
+        }
     }
 
     public void HideLoadMoreButton()
     {
-        LoadMoreButton.IsEnabled = false;
-        LoadMoreButton.IsVisible = false;
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = false;
     }
 
     public void SetContents(MinecraftContent[] contents)
     {
         Data ctx = (Data) DataContext;
+
         ctx.Contents = contents;
+        list = contents.ToList();
 
         NtsBanner.IsVisible = false;
-
-        fullContentList = [..contents];
-
         ApplyContentAttributes();
     }
 
@@ -105,36 +134,40 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     {
         Data ctx = (Data) DataContext;
         ctx.Contents = string.IsNullOrWhiteSpace(query)
-            ? fullContentList.ToArray()
-            : fullContentList.Where(mod => mod.MatchesQuery(query)).ToArray();
+            ? list.ToArray()
+            : list.Where(mod => mod.MatchesQuery(query)).ToArray();
     }
 
     private void ApplyContentAttributes()
     {
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = false;
+        
         if (lastBox == null) return;
 
         Data ctx = (Data) DataContext;
-        List<MinecraftContent> newList = new List<MinecraftContent>(ctx.Contents);
 
-        foreach (MinecraftContent content in newList)
+        foreach (MinecraftContent content in ctx.Contents)
         {
             content.IsInstalledOnCurrentBox = lastBox.HasContentSoft(content);
             content.IsInstalledOnCurrentBoxUi = !HideInstalledBadges && content.IsInstalledOnCurrentBox;
         }
 
-        ctx.Contents = newList.ToArray();
-
         NtsBanner.IsVisible = ctx.Contents.Length == 0;
-        LoadMoreButton.IsVisible = !NtsBanner.IsVisible;
+
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = !NtsBanner.IsVisible && !HidePageSelector;
     }
 
     public void SetLoadingCircle(bool isLoading)
     {
         LoadCircle.IsVisible = isLoading;
-        LoadMoreButton.IsVisible = !isLoading;
         if (isLoading) NtsBanner.IsVisible = false;
 
-        if (!isLoading && !NtsBanner.IsVisible) LoadMoreButton.IsVisible = true;
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = !isLoading;
+
+        if (!isLoading && !NtsBanner.IsVisible) PageSelectorComponentBottom.IsVisible = !HidePageSelector;
     }
 
     public async void Search(Box box, string query)
@@ -153,7 +186,9 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         ApplyContentAttributes();
 
         SetLoadingCircle(false);
-        LoadMoreButton.IsVisible = ctx.Contents.Length >= 10;
+
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = ctx.Contents.Length >= 10 && !HidePageSelector;
     }
 
     private async Task<MinecraftContent[]> SearchContentsAsync(Box box, string query)
@@ -166,27 +201,35 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         lastBox = box;
         lastQuery = query;
 
+        foreach (PageSelector component in pageSelectors)
+        {
+            component.Setup(mods.TotalPageCount, PageSelectedCallback);
+            component.SetPage(ctx.Page, false);
+        }
+
         return mods.Items.ToArray();
     }
 
-    private async void LoadMoreButtonClicked(object? sender, RoutedEventArgs e)
+    private async void PageSelectedCallback(int index)
     {
+        foreach (PageSelector component in pageSelectors)
+            component.IsEnabled = false;
+
         Data ctx = (Data) DataContext;
 
-        LoadingButtonFrame.IsVisible = true;
+        ctx.Page = index;
+        ctx.Contents = await SearchContentsAsync(lastBox, lastQuery);
 
-        ctx.Page++;
-
-        List<MinecraftContent> contents = new List<MinecraftContent>(ctx.Contents);
-        contents.AddRange(await SearchContentsAsync(lastBox, lastQuery));
-
-        ctx.Contents = contents.ToArray();
-
-        LoadingButtonFrame.IsVisible = false;
+        foreach (PageSelector component in pageSelectors)
+            component.IsEnabled = true;
+        
+        ApplyContentAttributes();
     }
 
     private void ContentSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        if (ContentList.SelectionMode != SelectionMode.Single) return;
+        
         if (e.AddedItems.Count > 0)
         {
             MinecraftContent selectedContent = (MinecraftContent) e.AddedItems[0];
@@ -208,6 +251,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     {
         private MinecraftContent[] contents;
         private int page;
+        private bool isMultipleSelection;
 
         public MinecraftContent[] Contents
         {
@@ -219,6 +263,12 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         {
             get => page;
             set => this.RaiseAndSetIfChanged(ref page, value);
+        }
+
+        public bool IsMultipleSelection
+        {
+            get => isMultipleSelection;
+            set => this.RaiseAndSetIfChanged(ref isMultipleSelection, value);
         }
     }
 }

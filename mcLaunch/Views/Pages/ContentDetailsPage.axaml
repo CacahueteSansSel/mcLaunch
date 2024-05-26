@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
              xmlns:avalonia1="clr-namespace:TheArtOfDev.HtmlRenderer.Avalonia;assembly=Avalonia.HtmlRenderer"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.ContentDetailsPage">
     <UserControl.Styles>
@@ -11,7 +12,7 @@
     </UserControl.Styles>
     <Panel>
         <Image x:Name="DefaultBackground" Stretch="UniformToFill" Source="/resources/background_default.png" />
-        <Image Stretch="UniformToFill" Source="{Binding Background}" />
+        <Image Stretch="UniformToFill" asyncImageLoader:ImageLoader.Source="{Binding BackgroundPath}" />
         <ScrollViewer>
             <StackPanel>
                 <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
@@ -24,7 +25,8 @@
                 <Border Classes="frame" Margin="0 10 0 100" Width="888">
                     <StackPanel Margin="1" Orientation="Vertical">
                         <DockPanel Margin="38 38 38 0" LastChildFill="True">
-                            <Image DockPanel.Dock="Left" Source="{Binding Icon.IconLarge}" Height="155" Width="155"
+                            <Image DockPanel.Dock="Left" asyncImageLoader:ImageLoader.Source="{Binding IconUrl}"
+                                   Height="155" Width="155"
                                    Stretch="Uniform" />
                             <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
                                 <Button x:Name="InstallButton" Classes="primary" Width="124"
@@ -58,11 +60,11 @@
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0" Spacing="5">
                                     <views:Badge x:Name="ModPlatformBadge" HorizontalAlignment="Left" />
-                                    <views:Badge x:Name="ModLicenseBadge" Icon="/resources/icons/license.png"
+                                    <views:Badge x:Name="ModLicenseBadge"
                                                  HorizontalAlignment="Left" />
-                                    <views:Badge x:Name="ModOpenSource" Icon="/resources/icons/open_source.png"
+                                    <views:Badge x:Name="ModOpenSource"
                                                  Text="Open Source" HorizontalAlignment="Left" />
-                                    <views:Badge x:Name="ModClosedSource" Icon="/resources/icons/lock.png"
+                                    <views:Badge x:Name="ModClosedSource"
                                                  Text="Closed Source" HorizontalAlignment="Left" />
                                 </StackPanel>
                             </StackPanel>

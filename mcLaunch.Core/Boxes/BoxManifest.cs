@@ -50,31 +50,31 @@ public class BoxManifest : ReactiveObject
     public string DescriptionLine => $"{ModLoaderId.ToUpper()} {Version}";
 
     [JsonPropertyName("Modifications")] // For compatibility reasons
-    public List<BoxStoredContent> Content { get; set; } = [];
+    public List<BoxStoredContent> Contents { get; set; } = [];
 
     public List<string> AdditionalModloaderFiles { get; set; } = [];
 
     [JsonIgnore]
     public IEnumerable<BoxStoredContent> ContentModifications =>
-        Content.Where(content => content.Type == MinecraftContentType.Modification);
+        Contents.Where(content => content.Type == MinecraftContentType.Modification);
 
     [JsonIgnore]
     public IEnumerable<BoxStoredContent> ContentResourcepacks =>
-        Content.Where(content => content.Type == MinecraftContentType.ResourcePack);
+        Contents.Where(content => content.Type == MinecraftContentType.ResourcePack);
 
     [JsonIgnore]
     public IEnumerable<BoxStoredContent> ContentDatapacks =>
-        Content.Where(content => content.Type == MinecraftContentType.DataPack);
+        Contents.Where(content => content.Type == MinecraftContentType.DataPack);
 
     [JsonIgnore]
     public IEnumerable<BoxStoredContent> ContentShaders =>
-        Content.Where(content => content.Type == MinecraftContentType.ShaderPack);
+        Contents.Where(content => content.Type == MinecraftContentType.ShaderPack);
 
     [JsonIgnore]
     public IEnumerable<BoxStoredContent> ContentWorlds =>
-        Content.Where(content => content.Type == MinecraftContentType.World);
+        Contents.Where(content => content.Type == MinecraftContentType.World);
 
-    [JsonIgnore] public string ModificationCount => Content.Count.ToString();
+    [JsonIgnore] public string ModificationCount => Contents.Count.ToString();
 
     [JsonIgnore] public string ResourcepacksCount => ContentResourcepacks.Count().ToString();
 
@@ -108,15 +108,15 @@ public class BoxManifest : ReactiveObject
 
     public bool HasContentStrict(string id, string versionId, string platformId)
     {
-        return Content.FirstOrDefault(m => m.Id == id
-                                           && m.PlatformId == platformId
-                                           && m.VersionId == versionId) != null;
+        return Contents.FirstOrDefault(m => m.Id == id
+                                            && m.PlatformId == platformId
+                                            && m.VersionId == versionId) != null;
     }
 
     public bool HasContentStrict(string id, string platformId)
     {
-        return Content.FirstOrDefault(m => m.Id == id
-                                           && m.PlatformId == platformId) != null;
+        return Contents.FirstOrDefault(m => m.Id == id
+                                            && m.PlatformId == platformId) != null;
     }
 
     public bool HasContentSoft(MinecraftContent content)
@@ -124,59 +124,65 @@ public class BoxManifest : ReactiveObject
         if (content == null) return false;
 
         BoxStoredContent? storedContent =
-            Content.FirstOrDefault(m => content.IsSimilar(m) || HasContentStrict(content.Id, content.ModPlatformId));
+            Contents.FirstOrDefault(m => content.IsSimilar(m) || HasContentStrict(content.Id, content.ModPlatformId));
 
         return storedContent != null;
     }
 
     public BoxStoredContent? GetContent(string id)
     {
-        return Content.FirstOrDefault(content => content.Id == id);
+        return Contents.FirstOrDefault(content => content.Id == id);
     }
 
     public BoxStoredContent? GetContentByVersion(string versionId)
     {
-        return Content.FirstOrDefault(content => content.VersionId == versionId);
+        return Contents.FirstOrDefault(content => content.VersionId == versionId);
     }
 
     public BoxStoredContent[] GetContents(MinecraftContentType type)
     {
-        return Content.Where(c => c.Type == type).ToArray();
+        return Contents.Where(c => c.Content!.Type == type).ToArray();
     }
 
-    public void AddContent(string id, MinecraftContentType type, string versionId, string platformId,
-        string[] filenames)
+    public void AddContent(MinecraftContent content, string versionId, string[] filenames)
     {
         if (filenames.Length == 0) return;
-        if (HasContentStrict(id, versionId, platformId)) return;
+        if (HasContentStrict(content.Id, content.ModPlatformId)) return;
 
-        lock (Content)
+        lock (Contents)
         {
-            Content.Add(new BoxStoredContent
+            Contents.Add(new BoxStoredContent
             {
-                Id = id,
-                Type = type,
-                PlatformId = platformId,
+                Content = content,
                 VersionId = versionId,
                 Filenames = filenames
             });
         }
     }
 
-    public void RemoveContent(string id, Box box)
+    public Result RemoveContent(string id, Box box)
     {
         BoxStoredContent? content = GetContent(id);
-        if (content == null) return;
+        if (content == null) return Result.Error("Content not found");
 
-        content.Delete(box.Folder.CompletePath);
-
-        lock (Content)
+        try
         {
-            Content.Remove(content);
+            content.Delete(box.Folder.CompletePath);
         }
+        catch (Exception e)
+        {
+            return Result.Error("Cannot delete mod");
+        }
+
+        lock (Contents)
+        {
+            Contents.Remove(content);
+        }
+
+        return new Result();
     }
 
-    public async Task<bool> RunPostDeserializationChecks()
+    public async Task<bool> RunPostDeserializationChecksAsync()
     {
         bool hadChange = false;
 
@@ -185,6 +191,33 @@ public class BoxManifest : ReactiveObject
             Author = "Unknown";
             hadChange = true;
         }
+
+        await Parallel.ForEachAsync(Contents, async (content, token) =>
+        {
+            if (content.Content != null || string.IsNullOrEmpty(content.Id))
+                return;
+
+            content.Content = await ModPlatformManager.Platform.GetContentAsync(content.Id);
+            hadChange = true;
+        });
+
+        // Remove duplicates
+        HashSet<string> seenContents = [];
+        HashSet<string> toRemoveContents = [];
+        foreach (BoxStoredContent content in Contents)
+        {
+            if (content.Content == null) continue;
+
+            if (seenContents.Contains(content.Content!.Id))
+            {
+                toRemoveContents.Add(content.Content!.Id);
+                continue;
+            }
+
+            seenContents.Add(content.Content.Id);
+        }
+
+        Contents.RemoveAll(content => content.Content == null || toRemoveContents.Contains(content.Content!.Id));
 
         return hadChange;
     }
@@ -231,21 +264,54 @@ public class BoxManifest : ReactiveObject
         return new Result<MinecraftVersion>(setUpVersion);
     }
 
-    public override string ToString()
-    {
-        return $"Manifest {Id} {Name}";
-    }
+    public override string ToString() => $"Manifest {Id} {Name}";
 }
 
 public class BoxStoredContent
 {
-    public string Id { get; init; }
+    private string? id, platformId, name, author;
+    private MinecraftContentType? type;
+
+    public MinecraftContent? Content { get; set; }
+
+    [Obsolete("Use Content instead")]
+    public string Id
+    {
+        get => id ?? Content.Id;
+        set => id = value;
+    }
+
     public string VersionId { get; init; }
-    public string PlatformId { get; init; }
+
+    [Obsolete("Use Content instead")]
+    public string PlatformId
+    {
+        get => platformId ?? Content.ModPlatformId;
+        set => platformId = value;
+    }
+
     public string[] Filenames { get; set; }
-    public string Name { get; set; }
-    public string Author { get; set; }
-    public MinecraftContentType Type { get; set; } = MinecraftContentType.Modification;
+
+    [Obsolete("Use Content instead")]
+    public string Name
+    {
+        get => name ?? Content.Name;
+        set => name = value;
+    }
+
+    [Obsolete("Use Content instead")]
+    public string Author
+    {
+        get => author ?? Content.Author;
+        set => author = value;
+    }
+
+    [Obsolete("Use Content instead")]
+    public MinecraftContentType Type
+    {
+        get => type ?? Content.Type;
+        set => type = value;
+    }
 
     public void Delete(string boxRootPath)
     {

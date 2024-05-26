@@ -41,7 +41,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         Box.SetWatching(true);
 
-        if (box.Manifest.Type == BoxType.Temporary)
+        if (box.Manifest == null || box.Manifest.Type == BoxType.Temporary)
         {
             ContentsBox.IsVisible = false;
             return;
@@ -69,6 +69,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
     private async void RunBoxChecks()
     {
+        await Box.LoadIconAsync();
+        
         SubControlButtons.IsEnabled = false;
         LoadingIcon.IsVisible = true;
 
@@ -94,6 +96,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         CrashReportButton.IsVisible = Box.HasCrashReports;
         ModsButton.IsVisible = Box.ModLoader is not DirectJarMergingModLoaderSupport;
         DirectJarModsButton.IsVisible = Box.ModLoader is DirectJarMergingModLoaderSupport;
+
+        BoxCover.Source = Box.Manifest.Icon?.IconLarge;
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -159,7 +163,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         if (Box.Manifest.ModLoader == null)
         {
             Navigation.ShowPopup(new MessageBoxPopup("Can't run Minecraft",
-                $"The modloader {Box.Manifest.ModLoaderId.Capitalize()} isn't supported"));
+                $"The modloader {Box.Manifest.ModLoaderId.Capitalize()} isn't supported", MessageStatus.Error));
 
             return;
         }
@@ -279,15 +283,15 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
             {
                 try
                 {
-                    Directory.Delete(Box.Path, true);
+                    Box.Delete();
+                    
                     MainPage.Instance.PopulateBoxList();
-
                     Navigation.Pop();
                 }
                 catch (Exception exception)
                 {
                     Navigation.ShowPopup(new MessageBoxPopup("Failed to delete box",
-                        $"Failed to delete the box {Box.Manifest.Name} : {exception.Message}"));
+                        $"Failed to delete the box {Box.Manifest.Name} : {exception.Message}", MessageStatus.Error));
                 }
             }));
     }

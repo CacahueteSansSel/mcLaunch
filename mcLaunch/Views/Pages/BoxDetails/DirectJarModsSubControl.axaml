@@ -14,7 +14,7 @@
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Button DockPanel.Dock="Left" Classes="secondary square" Click="AddModsButtonClicked"
                             ToolTip.Tip="Import a direct jar mod">
-                        <Image Width="13" Height="13" Source="/resources/icons/plus.png" />
+                        <Image Width="13" Height="13" Source="{SvgImage /resources/icons/plus.svg}" />
                     </Button>
                 </StackPanel>
                 <StackPanel Height="15" x:Name="SearchingForUpdates" DockPanel.Dock="Left" IsVisible="False"

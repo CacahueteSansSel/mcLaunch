@@ -94,13 +94,13 @@ public class BoxBinaryModificationPack : ModificationPack
     {
         MinecraftContent content = await ModPlatformManager.Platform.GetContentAsync(mod.ModId);
         if (content == null) return;
-        
+
         await ModPlatformManager.Platform.InstallContentAsync(targetBox, new MinecraftContent
         {
             Id = mod.ModId,
             ModPlatformId = mod.PlatformId,
             Type = content.Type
-        }, mod.VersionId, false);
+        }, mod.VersionId, false, false);
     }
 
     public override async Task ExportAsync(Box box, string filename)
@@ -125,7 +125,7 @@ public class BoxBinaryModificationPack : ModificationPack
         bb.BackgroundData = backgroundStream.ToArray();
 
         List<Mod> mods = new();
-        foreach (BoxStoredContent mod in box.Manifest.Content)
+        foreach (BoxStoredContent mod in box.Manifest.Contents)
             mods.Add(new Mod
             {
                 Id = mod.Id,

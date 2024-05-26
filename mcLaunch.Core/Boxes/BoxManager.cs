@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.RegularExpressions;
 using Avalonia.Media.Imaging;
+using Avalonia.Utilities;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Core;
@@ -25,7 +26,7 @@ public static class BoxManager
 
     public static int BoxCount => Directory.GetDirectories(BoxesPath).Length;
 
-    public static Box[] LoadLocalBoxes(bool includeTemp = false)
+    public static async Task<Box[]> LoadLocalBoxesAsync(bool includeTemp = false, bool runChecks = true)
     {
         if (!Directory.Exists(BoxesPath))
         {
@@ -40,7 +41,9 @@ public static class BoxManager
             // Don't load invalid boxes
             if (!File.Exists($"{boxPath}/box.json")) continue;
 
-            Box box = new Box(boxPath);
+            Box box = new Box(boxPath, false);
+            await box.ReloadManifestAsync(true, runChecks);
+
             if (box.Manifest.Type == BoxType.Temporary && !includeTemp) continue;
 
             boxes.Add(box);
@@ -65,7 +68,7 @@ public static class BoxManager
                         fabricApi, "fabric", manifest.Version);
 
                     await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(box, fabricApi, versions[0].Id,
-                        false);
+                        false, true);
                 }
                 catch (Exception)
                 {
@@ -104,10 +107,11 @@ public static class BoxManager
         return new Result<string>(path);
     }
 
-    public static async Task<Result<Box>> CreateFromModificationPack(ModificationPack pack,
+    public static async Task<Result<Box>> CreateFromModificationPack(ModificationPack pack, string authorFallback,
         Action<string, float> progressCallback)
     {
-        BoxManifest manifest = new BoxManifest(pack.Name, pack.Description ?? "no description", pack.Author,
+        BoxManifest manifest = new BoxManifest(pack.Name, pack.Description ?? "no description",
+            string.IsNullOrWhiteSpace(pack.Author) ? authorFallback : pack.Author,
             pack.ModloaderId, pack.ModloaderVersion, null,
             await MinecraftManager.GetManifestAsync(pack.MinecraftVersion));
 
@@ -126,13 +130,21 @@ public static class BoxManager
 
         foreach (var mod in pack.Modifications)
         {
-            progressCallback?.Invoke($"Installing modification {index}/{pack.Modifications.Length}",
-                (float) index / pack.Modifications.Length / 2);
+            progressCallback?.Invoke($"Looking up modification {index}/{pack.Modifications.Length}",
+                MathUtilities.Clamp((float) index / pack.Modifications.Length, 0f, 1f) * (1f/3f));
 
             await pack.InstallModificationAsync(box, mod);
 
             index++;
         }
+        
+        progressCallback?.Invoke("Downloading modifications",
+            1f / 3f);
+
+        await DownloadManager.ProcessAll();
+        
+        progressCallback?.Invoke("Extracting files",
+            2f / 3f);
 
         Regex driveLetterRegex = new Regex("[A-Z]:[\\/\\\\]");
 
@@ -143,7 +155,7 @@ public static class BoxManager
                                                   || driveLetterRegex.IsMatch(additionalFile.Path)) continue;
 
             progressCallback?.Invoke("Extracting files",
-                0.5f + (float) index / pack.AdditionalFiles.Length / 2);
+                (2f/3f) + MathUtilities.Clamp((float) index / pack.AdditionalFiles.Length, 0f, 1f) * (1f/3f));
 
             string filename = $"{box.Folder.Path}/{additionalFile.Path}";
             string folderPath = filename.Replace(Path.GetFileName(filename), "");
@@ -183,18 +195,34 @@ public static class BoxManager
         DownloadManager.OnDownloadProgressUpdate -= ProgressUpdate;
 
         progressCallback?.Invoke("Initializing Minecraft", 0.5f);
+            
+        ModificationPack? modpack;
 
-        ModificationPack? modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
-        if (modpack == null) return Result<Box>.Error("Unable to find the modpack");
+        try
+        {
+            modpack = await pack.Platform.LoadModpackFileAsync(modpackTempFilename);
+            if (modpack == null) return Result<Box>.Error("Unable to find the modpack");
+        }
+        catch (Exception e)
+        {
+            return Result<Box>.Error($"The downloaded archive is not valid (error: {e.Message})");
+        }
 
-        Result<Box> boxResult = await CreateFromModificationPack(modpack,
+        Result<Box> boxResult = await CreateFromModificationPack(modpack, pack.Author,
             (status, percent) => { progressCallback?.Invoke(status, 0.5f + percent); });
         if (boxResult.IsError) return boxResult;
 
         Box box = boxResult.Data!;
 
-        if (pack.Icon != null) box.SetAndSaveIcon(pack.Icon);
-        if (pack.Background != null) box.SetAndSaveBackground(pack.Background);
+        await using Stream? iconStream = pack.IconPath == null
+            ? null
+            : await DownloadManager.DownloadFileAsync(pack.IconPath);
+        await using Stream? backgroundStream = pack.BackgroundPath == null
+            ? null
+            : await DownloadManager.DownloadFileAsync(pack.BackgroundPath);
+
+        if (iconStream != null) box.SetAndSaveIcon(iconStream, false);
+        if (backgroundStream != null) box.SetAndSaveBackground(backgroundStream, false);
 
         box.SaveManifest();
 

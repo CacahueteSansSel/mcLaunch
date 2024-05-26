@@ -10,20 +10,14 @@ namespace mcLaunch.Views.Popups;
 
 public partial class CrashPopup : UserControl
 {
-    private readonly Box? box;
+    private Box? box;
+    private string? fileToOpen;
 
     public CrashPopup(int exitCode, string boxId)
     {
         InitializeComponent();
 
-        box = BoxManager.LoadLocalBoxes()
-            .FirstOrDefault(b => b.Manifest.Id == boxId);
-
-        if (box == null) return;
-
-        BoxCard.SetBox(box);
-
-        PopulateCrashReportTextAsync(exitCode);
+        PopulateAsync(boxId, exitCode);
     }
 
     public CrashPopup()
@@ -31,24 +25,39 @@ public partial class CrashPopup : UserControl
         InitializeComponent();
     }
 
-    private async void PopulateCrashReportTextAsync(int exitCode)
+    private async void PopulateAsync(string boxId, int exitCode)
     {
         LoadingIcon.IsVisible = true;
         BodyText.IsVisible = false;
+        ButtonsRow.IsEnabled = false;
+
+        box = (await BoxManager.LoadLocalBoxesAsync(runChecks: false)).FirstOrDefault(b => b.Manifest.Id == boxId);
+        if (box == null) return;
 
         string bodyText;
         string latestLogsPath = $"{box.Folder.CompletePath}/logs/latest.log";
 
         if (File.Exists(latestLogsPath))
-            bodyText = await File.ReadAllTextAsync(latestLogsPath) + $"\n\nMinecraft exited with code {exitCode}";
-        else
-            bodyText =
-                $"Minecraft has exited with code {exitCode}. This indicates that Minecraft has encountered an error " +
-                $"and shut down. Verify that every mod is up to date, not duplicate, and compatible with each other";
+        {
+            fileToOpen = latestLogsPath;
 
-        BodyText.Text = bodyText;
+            BodyText.IsVisible = false;
+            OpenCrashReportButton.IsVisible = true;
+        }
+        else
+        {
+            bodyText =
+                $"Minecraft has exited with code {exitCode}.\nThis indicates that Minecraft has encountered an error " +
+                $"and shut down.\nVerify that every mod is up to date, not duplicate, and compatible with each other";
+
+            BodyText.Text = bodyText;
+            BodyText.IsVisible = true;
+            OpenCrashReportButton.IsVisible = false;
+        }
+
+        ButtonsRow.IsEnabled = true;
         LoadingIcon.IsVisible = false;
-        BodyText.IsVisible = true;
+        BoxCard.SetBox(box);
     }
 
     public CrashPopup WithCustomLog(string log)
@@ -78,5 +87,10 @@ public partial class CrashPopup : UserControl
         Navigation.Push(page);
 
         page.Run();
+    }
+
+    private void OpenCrashReportButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        if (fileToOpen != null) PlatformSpecific.OpenFile(fileToOpen);
     }
 }

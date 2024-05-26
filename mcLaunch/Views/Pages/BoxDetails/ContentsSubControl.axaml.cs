@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Managers;
 using mcLaunch.Launchsite.Core.ModLoaders;
@@ -68,24 +69,13 @@ public partial class ContentsSubControl : SubControl
         ModsList.HideLoadMoreButton();
         ModsList.SetLoadingCircle(true);
 
-        List<MinecraftContent> contents = new();
-
-        await Parallel.ForEachAsync(Box.Manifest.GetContents(ContentType), async (boxContent, token) =>
-        {
-            MinecraftContent content = await ModPlatformManager.Platform.GetContentAsync(boxContent.Id);
-            if (content == null) return;
-
-            string folder = $"{MinecraftContentUtils.GetInstallFolderName(ContentType)}/";
-            content.Filename = boxContent.Filenames.Length == 0
-                ? ""
-                : boxContent.Filenames[0]
-                    .Replace(folder, "").Trim();
-            content.InstalledVersion = boxContent.VersionId;
-
-            content.DownloadIconAsync();
-
-            contents.Add(content);
-        });
+        BoxStoredContent[] storedContents = Box.Manifest.GetContents(ContentType);
+        List<MinecraftContent> contents =
+        [
+            ..storedContents
+                .Where(content => content.Content != null)
+                .Select(content => content.Content!)
+        ];
 
         contents.Sort((left, right)
             => string.Compare(left.Name!, right.Name!, StringComparison.Ordinal));
@@ -99,42 +89,63 @@ public partial class ContentsSubControl : SubControl
         if (!canUpdate)
         {
             UpdateAllButton.IsVisible = false;
+            CheckForUpdatesButton.IsVisible = false;
+        }
+    }
+
+    public async Task UpdateAsync()
+    {
+        if (!canUpdate)
+        {
+            UpdateAllButton.IsVisible = false;
+            CheckForUpdatesButton.IsVisible = false;
+            
             return;
         }
-
+        
+        BoxStoredContent[] storedContents = Box.Manifest.GetContents(ContentType);
+        
+        CheckForUpdatesButton.IsVisible = false;
         SearchingForUpdates.IsVisible = true;
-
         isAnyUpdate = false;
 
         List<MinecraftContent> toUpdateContents = new();
         bool isChanges = false;
 
-        await Parallel.ForEachAsync(contents, async (content, token) =>
+        try
         {
-            ContentVersion[] versions = await ModPlatformManager.Platform.GetContentVersionsAsync(content,
-                Box.Manifest.ModLoaderId, Box.Manifest.Version);
-
-            content.IsInvalid = versions.Length == 0;
-
-            if (content.IsInvalid)
+            await Parallel.ForEachAsync(storedContents, async (storedContent, token) =>
             {
-                isChanges = true;
+                MinecraftContent content = storedContent.Content!;
+                ContentVersion[] versions = await ModPlatformManager.Platform.GetContentVersionsAsync(content,
+                    Box.Manifest.ModLoaderId, Box.Manifest.Version);
+
+                content.IsInvalid = versions.Length == 0;
+
+                if (content.IsInvalid)
+                {
+                    isChanges = true;
+                    toUpdateContents.Add(content);
+
+                    return;
+                }
+
+                content.IsUpdateRequired = versions[0].Id != storedContent.VersionId;
+                if (content.IsUpdateRequired)
+                {
+                    isChanges = true;
+                    isAnyUpdate = true;
+
+                    if (!isUpdating) updatableContentsList.Add(content);
+                }
+
                 toUpdateContents.Add(content);
-
-                return;
-            }
-
-            content.IsUpdateRequired = versions[0].Id != content.InstalledVersion;
-            if (content.IsUpdateRequired)
-            {
-                isChanges = true;
-                isAnyUpdate = true;
-
-                if (!isUpdating) updatableContentsList.Add(content);
-            }
-
-            toUpdateContents.Add(content);
-        });
+            });
+        }
+        catch (Exception e)
+        {
+            // ignored
+        }
 
         if (isChanges)
         {
@@ -148,8 +159,10 @@ public partial class ContentsSubControl : SubControl
 
         UpdateAllButton.IsVisible = isAnyUpdate;
         UpdateButtonCountText.Text = updatableContentsList.Count.ToString();
+        
+        CheckForUpdatesButton.IsVisible = !isAnyUpdate;
     }
-
+    
     private void AddModsButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.Push(new ContentSearchPage(Box, ContentType));
@@ -172,7 +185,7 @@ public partial class ContentsSubControl : SubControl
 
                 if (contents.Length == 0)
                 {
-                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated"));
+                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated", MessageStatus.None));
                     return;
                 }
 
@@ -214,10 +227,11 @@ public partial class ContentsSubControl : SubControl
 
         if (failedModUpdates > 0)
             Navigation.ShowPopup(new MessageBoxPopup("Warning",
-                $"{failedModUpdates} {ContentName}{(failedModUpdates > 1 ? "s" : "")} failed to update"));
+                $"{failedModUpdates} {ContentName}{(failedModUpdates > 1 ? "s" : "")} failed to update", MessageStatus.Warning));
 
         isUpdating = false;
         UpdateAllButton.IsVisible = false;
+        CheckForUpdatesButton.IsVisible = true;
     }
 
     private void MigrateToCurseForgeButtonClicked(object? sender, RoutedEventArgs e)
@@ -240,7 +254,7 @@ public partial class ContentsSubControl : SubControl
 
                 if (contents.Length == 0)
                 {
-                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated"));
+                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated", MessageStatus.None));
                     return;
                 }
 
@@ -253,5 +267,10 @@ public partial class ContentsSubControl : SubControl
     private void SearchBoxTextChanged(object? sender, TextChangedEventArgs e)
     {
         ModsList.SetQuery(SearchBox.Text);
+    }
+
+    private async void CheckForUpdatesButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        await UpdateAsync();
     }
 }

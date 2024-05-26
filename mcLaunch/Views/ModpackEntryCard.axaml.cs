@@ -29,9 +29,9 @@ public partial class ModpackEntryCard : UserControl
 
         VersionBadge.Text = modpack.LatestMinecraftVersion ?? "Unknown";
         PlatformBadge.Text = modpack.Platform.Name;
-        PlatformBadge.Icon = modpack.Platform.Icon;
+        //PlatformBadge.SetIcon("mod");
 
-        DownloadBackgroundAndApplyAsync();
+        ApplyModpackValues();
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
@@ -41,12 +41,14 @@ public partial class ModpackEntryCard : UserControl
         Navigation.Push(new ModpackDetailsPage(modpack));
     }
 
-    private async void DownloadBackgroundAndApplyAsync()
+    private async void ApplyModpackValues()
     {
-        Bitmap icon = modpack.Icon;
-
         // Download additional infos for the modpack
         modpack = await ModPlatformManager.Platform.GetModpackAsync(modpack.Id);
+        
+        Color accent = Color.FromUInt32(modpack.Color);
+        Header.Background = new SolidColorBrush(new Color(255, accent.R, accent.G, accent.B));
+        
         if (modpack == null)
         {
             IsEnabled = false;
@@ -55,10 +57,6 @@ public partial class ModpackEntryCard : UserControl
             return;
         }
 
-        modpack.Icon = icon;
-
-        await modpack.DownloadBackgroundAsync();
-
         DataContext = modpack;
 
         if (modpack.LatestVersion.ModLoader != null)
@@ -66,19 +64,11 @@ public partial class ModpackEntryCard : UserControl
             ModLoaderBadge.IsVisible = true;
 
             ModLoaderBadge.Text = modpack.LatestVersion.ModLoader.Capitalize();
-            ModLoaderBadge.Icon =
-                new Bitmap(AssetLoader.Open(
-                    new Uri($"avares://mcLaunch/resources/icons/{modpack.LatestVersion.ModLoader.ToLower()}.png")));
+            //ModLoaderBadge.SetIcon(modpack.LatestVersion.ModLoader.ToLower());
         }
         else
         {
             ModLoaderBadge.IsVisible = false;
-        }
-
-        if (modpack.Background == null)
-        {
-            Color accent = Color.FromUInt32(modpack.Color);
-            Header.Background = new SolidColorBrush(new Color(255, accent.R, accent.G, accent.B));
         }
     }
 }

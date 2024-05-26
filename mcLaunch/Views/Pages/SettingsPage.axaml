@@ -26,9 +26,10 @@
                         <TextBlock x:Name="CommitText" Classes="light" Opacity="0.2" Margin="0 5 0 0">unknown</TextBlock>
                         <TextBlock x:Name="BranchNameText" Classes="light" Opacity="0.2" Margin="0 5 0 0">unknown</TextBlock>
                     </StackPanel>
-                    <TextBlock>mcLaunch, Copyright (c) Cacahuète Dev and Contributors, 2023</TextBlock>
+                    <TextBlock x:Name="YearsText">mcLaunch is 0 years old</TextBlock>
+                    <TextBlock>mcLaunch, Copyright (c) Cacahuète Dev and Contributors, 2024</TextBlock>
                     <TextBlock>Licensed under the GNU General Public License v3.0</TextBlock>
-                    <TextBlock>Minecraft is the property of Mojang Studios, and they are not affiliated with this project</TextBlock>
+                    <TextBlock>Minecraft is the property of Mojang Studios, and they are not affiliated with this project in any way</TextBlock>
                     <StackPanel Orientation="Horizontal" Spacing="5">
                         <Button Classes="secondary" Click="AboutButtonClicked" Margin="0 0 5 0">About</Button>
                         <Button Classes="secondary" Click="OpenGithubRepoButtonClicked">GitHub</Button>

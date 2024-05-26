@@ -74,13 +74,7 @@ public static class CacheManager
         }
     }
 
-    public static bool HasBitmap(string id)
-    {
-        return File.Exists($"{FolderPath}/bitmaps/{id}.cache");
-    }
+    public static bool HasBitmap(string id) => File.Exists($"{FolderPath}/bitmaps/{id}.cache");
 
-    public static bool HasContent(string id)
-    {
-        return File.Exists($"{FolderPath}/contents/{id}.cache");
-    }
+    public static bool HasContent(string id) => File.Exists($"{FolderPath}/contents/{id}.cache");
 }

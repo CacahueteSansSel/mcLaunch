@@ -96,13 +96,6 @@ public class MinecraftContent : ReactiveObject
     public bool IsInvalid { get; set; }
 
     [JsonIgnore]
-    public IconCollection Icon
-    {
-        get => icon;
-        set => this.RaiseAndSetIfChanged(ref icon, value);
-    }
-
-    [JsonIgnore]
     public Bitmap? Background
     {
         get => background;
@@ -123,10 +116,9 @@ public class MinecraftContent : ReactiveObject
     public bool IsDownloadCountValid => DownloadCount.HasValue;
     public bool IsLastUpdatedValid => LastUpdated.HasValue;
 
-    public static MinecraftContent CreateIdOnly(string id)
-    {
-        return new MinecraftContent {Id = id};
-    }
+    [JsonIgnore] public bool IsComplete { get; set; }
+
+    public static MinecraftContent CreateIdOnly(string id) => new() {Id = id};
 
     public void WriteToStream(Stream stream)
     {
@@ -162,8 +154,8 @@ public class MinecraftContent : ReactiveObject
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(author))
             return false;
 
-        string nameNormalized = Name.NormalizeTitle();
-        string authorNormalized = Author.NormalizeUsername();
+        string? nameNormalized = Name?.NormalizeTitle();
+        string? authorNormalized = Author?.NormalizeUsername();
         string otherNameNormalized = name.NormalizeTitle();
         string otherAuthorNormalized = author.NormalizeUsername();
 
@@ -171,47 +163,16 @@ public class MinecraftContent : ReactiveObject
                && authorNormalized == otherAuthorNormalized;
     }
 
-    public bool IsSimilar(MinecraftContent other)
-    {
-        return IsSimilar(other.Name, other.Author);
-    }
+    public bool IsSimilar(MinecraftContent other) => IsSimilar(other.Name, other.Author);
 
-    public bool IsSimilar(BoxStoredContent other)
-    {
-        return IsSimilar(other.Name, other.Author);
-    }
+    public bool IsSimilar(BoxStoredContent other) => IsSimilar(other.Name, other.Author);
 
-    public bool MatchesQuery(string query)
-    {
-        return Name.Contains(query, StringComparison.InvariantCultureIgnoreCase)
-               || Author.Contains(query, StringComparison.InvariantCultureIgnoreCase)
-               || ModPlatformId.Contains(query, StringComparison.InvariantCultureIgnoreCase);
-    }
+    public bool MatchesQuery(string query) =>
+        Name.Contains(query, StringComparison.InvariantCultureIgnoreCase)
+        || Author.Contains(query, StringComparison.InvariantCultureIgnoreCase)
+        || ModPlatformId.Contains(query, StringComparison.InvariantCultureIgnoreCase);
 
-    public string GetLicenseDisplayName()
-    {
-        return License ?? "Unknown";
-    }
-
-    public void SetDefaultIcon()
-    {
-        Icon = IconCollection.Default!;
-    }
-
-    public async Task DownloadIconAsync()
-    {
-        if (string.IsNullOrWhiteSpace(IconUrl))
-        {
-            SetDefaultIcon();
-            return;
-        }
-
-        Icon = IconCollection.FromUrl(IconUrl);
-        await Icon.DownloadAllAsync();
-
-        if (Icon.IconLarge == null && Icon.IconSmall == null)
-            SetDefaultIcon();
-    }
+    public string GetLicenseDisplayName() => License ?? "Unknown";
 
     private async Task<Stream> LoadBackgroundStreamAsync()
     {

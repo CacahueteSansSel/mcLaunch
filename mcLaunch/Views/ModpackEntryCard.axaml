@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="261"
              Margin="5"
              Width="400" Height="261"
@@ -26,16 +27,10 @@
     <Panel>
         <StackPanel Margin="0">
             <Border x:Name="Header" CornerRadius="4">
-                <Border.Background>
-                    <ImageBrush
-                        AlignmentX="Left"
-                        AlignmentY="Top"
-                        Source="{Binding Background}"
-                        Stretch="UniformToFill" />
-                </Border.Background>
                 <Canvas Height="120">
                     <Border Canvas.Left="40" Canvas.Top="60" ClipToBounds="True" CornerRadius="4">
-                        <Image Stretch="Fill" Width="80" Height="80" Source="{Binding Icon}" />
+                        <Image Stretch="Fill" Width="80" Height="80"
+                               asyncImageLoader:ImageLoader.Source="{Binding IconPath}" />
                     </Border>
                     <StackPanel Canvas.Left="135" Canvas.Top="60" Width="250" ClipToBounds="True">
                         <TextBlock Classes="title" FontSize="20" Text="{Binding Name}" />
@@ -48,9 +43,9 @@
             </Border>
             <StackPanel Margin="20 30 20 20">
                 <StackPanel Orientation="Horizontal" Spacing="2">
-                    <views:Badge x:Name="PlatformBadge" Icon="/resources/icons/vanilla.png" />
-                    <views:Badge x:Name="VersionBadge" Icon="/resources/icons/vanilla.png" />
-                    <views:Badge x:Name="ModLoaderBadge" Icon="/resources/icons/vanilla.png" />
+                    <views:Badge x:Name="PlatformBadge" />
+                    <views:Badge x:Name="VersionBadge" />
+                    <views:Badge x:Name="ModLoaderBadge" />
                 </StackPanel>
                 <TextBlock Margin="0 5 0 0" Height="65" TextWrapping="Wrap" Classes="light"
                            Text="{Binding ShortDescription}" />

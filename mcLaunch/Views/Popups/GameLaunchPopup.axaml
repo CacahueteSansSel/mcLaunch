@@ -2,16 +2,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="150"
-             Width="450" Height="150"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="135"
+             Width="450" Height="135"
              x:Class="mcLaunch.Views.Popups.GameLaunchPopup">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
+        
+        <Style Selector="Border.loading">
+            <Style.Animations>
+                <Animation Duration="0:0:2" IterationCount="INFINITE"> 
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="50%">
+                        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
     </UserControl.Styles>
-    <Border Classes="frame">
+    <Border Classes="frame loading">
         <StackPanel Margin="38">
             <TextBlock Classes="title" FontSize="25">Preparing Minecraft</TextBlock>
-            <TextBlock Margin="0 20 0 0">The launcher will close when the process has started</TextBlock>
+            <TextBlock Margin="0 5 0 0">The launcher will close when Minecraft will start</TextBlock>
         </StackPanel>
     </Border>
 </UserControl>

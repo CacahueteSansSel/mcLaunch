@@ -39,10 +39,7 @@ public class HttpResourceDownloader : ResourceDownloader
         return true;
     }
 
-    public override async Task<bool> ChmodAsync(string target, string perms)
-    {
-        return false;
-    }
+    public override async Task<bool> ChmodAsync(string target, string perms) => false;
 
     public override async Task BeginSectionAsync(string sectionName, bool immediate)
     {

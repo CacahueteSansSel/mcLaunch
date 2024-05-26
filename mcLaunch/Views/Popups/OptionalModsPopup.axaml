@@ -12,14 +12,14 @@
     <Border Classes="frame">
         <DockPanel Margin="38">
             <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25">Optional modification to install</TextBlock>
-            <TextBlock x:Name="DescriptionText" DockPanel.Dock="Top" Classes="light">You can install these modifications alongside $MOD</TextBlock>
+            <TextBlock x:Name="DescriptionText" DockPanel.Dock="Top" Classes="light">Select the mods you want to install alongside $MOD</TextBlock>
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" Classes="primary" Click="OKButtonClicked">Install</Button>
                 <Button DockPanel.Dock="Right" Classes="secondary" Margin="0 0 10 0" Click="CancelButtonClicked">Ignore</Button>
-                <Panel />
+                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Opacity="0.5" Classes="light">Click to select, Ctrl+Click to unselect</TextBlock>
             </DockPanel>
             <ScrollViewer>
-                <views:MinecraftContentList x:Name="ModList" IsHitTestVisible="False" />
+                <views:MinecraftContentList x:Name="ModList" HidePageSelector="True" IsHitTestVisible="True"/>
             </ScrollViewer>
         </DockPanel>
     </Border>

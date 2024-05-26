@@ -37,20 +37,6 @@ public class PlatformModpack : ReactiveObject, IVersionContent
     public DateTime? LastUpdated { get; set; }
     public uint Color { get; set; }
 
-    [JsonIgnore]
-    public Bitmap? Icon
-    {
-        get => icon;
-        set => this.RaiseAndSetIfChanged(ref icon, value);
-    }
-
-    [JsonIgnore]
-    public Bitmap? Background
-    {
-        get => background;
-        set => this.RaiseAndSetIfChanged(ref background, value);
-    }
-
     public string ModPlatformId
     {
         get => Platform?.Name;
@@ -82,10 +68,7 @@ public class PlatformModpack : ReactiveObject, IVersionContent
                && authorNormalized == otherAuthorNormalized;
     }
 
-    public bool IsSimilar(PlatformModpack other)
-    {
-        return IsSimilar(other.Name, other.Author);
-    }
+    public bool IsSimilar(PlatformModpack other) => IsSimilar(other.Name, other.Author);
 
     private async Task<Stream> LoadIconStreamAsync()
     {
@@ -106,38 +89,6 @@ public class PlatformModpack : ReactiveObject, IVersionContent
         }
     }
 
-    public async Task DownloadIconAsync()
-    {
-        string cacheName = $"icon-mod-{Platform.Name}-{Id}";
-        if (CacheManager.HasBitmap(cacheName))
-        {
-            await Task.Run(() => { Icon = CacheManager.LoadBitmap(cacheName); });
-
-            return;
-        }
-
-        if (IconPath == null) return;
-
-        await using (var imageStream = await LoadIconStreamAsync())
-        {
-            if (imageStream == null) return;
-
-            Icon = await Task.Run(() =>
-            {
-                try
-                {
-                    return Bitmap.DecodeToWidth(imageStream, 400);
-                }
-                catch (Exception e)
-                {
-                    return null;
-                }
-            });
-
-            CacheManager.Store(Icon, cacheName);
-        }
-    }
-
     private async Task<Stream> LoadBackgroundStreamAsync()
     {
         if (BackgroundPath == null) return null;
@@ -154,38 +105,6 @@ public class PlatformModpack : ReactiveObject, IVersionContent
         catch (Exception e)
         {
             return null;
-        }
-    }
-
-    public async Task DownloadBackgroundAsync()
-    {
-        string cacheName = $"bkg-mod-{Platform.Name}-{Id}";
-        if (CacheManager.HasBitmap(cacheName))
-        {
-            await Task.Run(() => { Background = CacheManager.LoadBitmap(cacheName); });
-
-            return;
-        }
-
-        if (BackgroundPath == null) return;
-
-        await using (var imageStream = await LoadBackgroundStreamAsync())
-        {
-            if (imageStream == null) return;
-
-            Background = await Task.Run(() =>
-            {
-                try
-                {
-                    return Bitmap.DecodeToWidth(imageStream, 640);
-                }
-                catch (Exception e)
-                {
-                    return null;
-                }
-            });
-
-            CacheManager.Store(Background, cacheName);
         }
     }
 

@@ -16,10 +16,7 @@ public class ManifestMinecraftVersion
 
     [JsonPropertyName("releaseTime")] public DateTime ReleaseTime { get; set; }
 
-    public Task<MinecraftVersion?> GetAsync()
-    {
-        return Api.GetAsync<MinecraftVersion>(ManifestUrl);
-    }
+    public Task<MinecraftVersion?> GetAsync() => Api.GetAsync<MinecraftVersion>(ManifestUrl);
 
     public async Task<MinecraftVersion?> DownloadOrGetLocally(MinecraftFolder folder)
     {

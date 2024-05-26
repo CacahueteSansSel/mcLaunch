@@ -9,13 +9,22 @@ namespace mcLaunch.Views.Pages;
 
 public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
 {
+    private readonly PageSelector[] pageSelectors;
     private string lastMinecraftVersion = string.Empty;
-
     private string lastQuery = string.Empty;
 
     public BrowseModpacksPage()
     {
         InitializeComponent();
+
+        pageSelectors =
+        [
+            TopPageSelector,
+            BottomPageSelector
+        ];
+
+        foreach (PageSelector component in pageSelectors)
+            component.IsVisible = false;
 
         if (!Design.IsDesignMode) LoadModpacksAsync();
     }
@@ -36,9 +45,10 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
         BoxContainer.Children.Clear();
         LoadingCircleIcon.IsVisible = true;
         NtsBanner.IsVisible = false;
-        LoadMoreButton.IsVisible = false;
+        foreach (PageSelector component in pageSelectors)
+            component.IsEnabled = false;
 
-        PageIndex = 0;
+        PageIndex = page;
         lastQuery = query;
         lastMinecraftVersion = minecraftVersion;
 
@@ -49,10 +59,27 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
 
         LoadingCircleIcon.IsVisible = false;
         NtsBanner.IsVisible = packs.Length == 0;
-        LoadMoreButton.IsVisible = !NtsBanner.IsVisible;
+        foreach (PageSelector component in pageSelectors)
+        {
+            component.IsEnabled = true;
+            component.IsVisible = !NtsBanner.IsVisible;
+            component.Setup(packs.TotalPageCount, PageSelectedCallback);
+            component.SetPage(PageIndex, false);
+        }
     }
 
-    private async void LoadModpacksAsync()
+    private void PageSelectedCallback(int index)
+    {
+        foreach (PageSelector component in pageSelectors)
+            component.IsEnabled = false;
+
+        Search(index, lastQuery, lastMinecraftVersion);
+
+        foreach (PageSelector component in pageSelectors)
+            component.IsEnabled = true;
+    }
+
+    private void LoadModpacksAsync()
     {
         Search(0, "", "");
     }
@@ -64,7 +91,8 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
 
     private async void LoadMoreButtonClicked(object? sender, RoutedEventArgs e)
     {
-        LoadingButtonFrame.IsVisible = true;
+        foreach (PageSelector component in pageSelectors)
+            component.IsEnabled = false;
         PageIndex++;
 
         PaginatedResponse<PlatformModpack> additionalPacks = await ModPlatformManager.Platform.GetModpacksAsync(
@@ -74,6 +102,7 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
         foreach (PlatformModpack modpack in additionalPacks.Items)
             BoxContainer.Children.Add(new ModpackEntryCard(modpack));
 
-        LoadingButtonFrame.IsVisible = false;
+        foreach (PageSelector component in pageSelectors)
+            component.IsEnabled = true;
     }
 }

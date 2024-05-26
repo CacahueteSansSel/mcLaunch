@@ -126,9 +126,6 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             return m;
         }).ToArray();
 
-        // Download all contents images
-        foreach (MinecraftContent content in contents) content.DownloadIconAsync();
-
         return new PaginatedResponse<MinecraftContent>(page, (int) resp.Pagination.TotalCount, contents);
     }
 
@@ -169,10 +166,6 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             LastUpdated = modpack.DateModified.DateTime,
             Platform = this
         }).ToArray();
-
-        // Download all modpack images
-        // TODO: fix that causing slow loading process
-        foreach (PlatformModpack pack in modpacks) await pack.DownloadIconAsync();
 
         return new PaginatedResponse<PlatformModpack>(page, (int) resp.Pagination.TotalCount, modpacks);
     }
@@ -379,10 +372,20 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             return null;
         }
 
-        if (file.Dependencies != null && file.Dependencies.Count > 0 &&
-            contentType == MinecraftContentType.Modification)
+        if (file.Dependencies != null 
+            && file.Dependencies.Count > 0 
+            && contentType == MinecraftContentType.Modification)
+        {
             foreach (FileDependency dep in file.Dependencies)
             {
+                if (dep.ModId == file.ModId)
+                {
+                    // For some reason, some mods references themselves in dependencies (see Thermal Integration on modrinth)
+                    // We absolutely want to avoid that, because this will cause an infinite loop !
+                    
+                    continue;
+                }
+                
                 if (installOptional)
                 {
                     if (dep.RelationType != FileRelationType.RequiredDependency &&
@@ -396,6 +399,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
                 Mod cfMod = (await client.GetMod(dep.ModId)).Data;
                 await InstallFileAsync(targetBox, cfMod.LatestFiles[0], false, MinecraftContentType.Modification);
             }
+        }
 
         if (targetBox.Manifest.HasContentStrict(file.ModId.ToString(), Name))
         {
@@ -424,7 +428,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
 
         filenames.Add($"{folder}/{file.FileName}");
 
-        targetBox.Manifest.AddContent(file.ModId.ToString(), contentType, file.Id.ToString(), Name,
+        targetBox.Manifest.AddContent(await GetContentAsync(file.ModId.ToString()), file.Id.ToString(),
             filenames.ToArray());
 
         DownloadManager.End();
@@ -432,8 +436,15 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         return filenames.ToArray();
     }
 
+    private string DeduceCurseforgeFileUrl(File file)
+    {
+        string id = file.Id.ToString();
+
+        return $"https://mediafilez.forgecdn.net/files/{id[..4]}/{id.Substring(4, 3)}/{file.FileName}";
+    }
+
     public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent content, string versionId,
-        bool installOptional)
+        bool installOptional, bool processDownload)
     {
         if (content == null) return false;
 
@@ -442,6 +453,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         try
         {
             version = await client.GetModFile(uint.Parse(content.Id), uint.Parse(versionId));
+            if (string.IsNullOrWhiteSpace(version.Data.DownloadUrl))
+                version.Data.DownloadUrl = DeduceCurseforgeFileUrl(version.Data);
             if (version == null) return false;
         }
         catch (HttpRequestException)
@@ -457,16 +470,18 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
 
             if (filenames == null)
             {
-                await DownloadManager.ProcessAll();
+                if (processDownload) await DownloadManager.ProcessAll();
                 targetBox.SaveManifest();
 
                 return false;
             }
         }
 
-        await DownloadManager.ProcessAll();
+        bool isDatapackToInstall = content.Type == MinecraftContentType.DataPack && filenames != null;
 
-        if (content.Type == MinecraftContentType.DataPack && filenames != null)
+        if (processDownload || isDatapackToInstall) 
+            await DownloadManager.ProcessAll();
+        if (isDatapackToInstall)
             targetBox.InstallDatapack(versionId, filenames[0]);
 
         targetBox.SaveManifest();

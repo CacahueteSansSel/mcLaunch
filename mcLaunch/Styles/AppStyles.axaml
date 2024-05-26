@@ -4,7 +4,7 @@
         <Border Height="500" Padding="20" Background="white">
             <StackPanel Orientation="Vertical">
                 <Border Classes="frame-light" Margin="0 10 0 0">
-                    <TextBlock Classes="title-shadow">hello</TextBlock>
+                    <TextBlock Classes="title">hello</TextBlock>
                 </Border>
                 <Border Classes="frame">
                     <StackPanel Orientation="Horizontal">
@@ -12,7 +12,7 @@
                         <Button Classes="secondary" Margin="5">Secondary !</Button>
                         <Button Classes="transparent" Margin="5">Transparent !</Button>
                         <Button Classes="transparent-green" Margin="5">Tr Green</Button>
-                        <ProgressBar Value="70" />
+                        <ProgressBar Value="50" />
                     </StackPanel>
                 </Border>
                 <Border Classes="frame-light" Margin="0 10 0 0">
@@ -22,13 +22,39 @@
                     <StackPanel>
                         <CheckBox>Hello</CheckBox>
                         <CheckBox IsChecked="true">Checked</CheckBox>
-                        <ToggleButton>a</ToggleButton>
                         <Slider Value="15" />
                     </StackPanel>
                 </Border>
             </StackPanel>
         </Border>
     </Design.PreviewWith>
+
+    <Style Selector="ProgressBar:horizontal">
+        <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Value" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+        <Style.Animations>
+            <Animation Duration="0:0:2" IterationCount="INFINITE"> 
+                <KeyFrame Cue="0%">
+                    <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}"/>
+                </KeyFrame>
+                <KeyFrame Cue="50%">
+                    <Setter Property="Foreground" Value="{DynamicResource BrightAccent}"/>
+                </KeyFrame>
+                <KeyFrame Cue="0%">
+                    <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}"/>
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <Style Selector="Slider">
+        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}" />
+    </Style>
 
     <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
         <Setter Property="Background" Value="{DynamicResource DarkerAccent}" />
@@ -226,6 +252,7 @@
 
     <Style Selector="Button.transparent">
         <Setter Property="Background" Value="#AA232323" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundDarkest}" />
         <Setter Property="Padding" Value="10" />
         <Setter Property="Transitions">
             <Transitions>
@@ -237,6 +264,7 @@
 
     <Style Selector="Button.transparent:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="#AA3C3C3C" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundDarker}" />
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.2" />
@@ -264,9 +292,5 @@
                 <BrushTransition Property="Background" Duration="0:0:0.2" />
             </Transitions>
         </Setter>
-    </Style>
-
-    <Style Selector="ProgressBar:horizontal">
-        <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}" />
     </Style>
 </Styles>

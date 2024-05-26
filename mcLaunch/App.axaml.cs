@@ -33,7 +33,7 @@ public class App : Application
 
         CurrentBuild.Load();
         Settings.Load();
-        DownloadManager.Init();
+        DownloadManager.Init(CurrentBuild.Version.ToString());
         await MinecraftManager.InitAsync();
         ModLoaderManager.Init();
         ModPlatformManager.Init(new MultiplexerMinecraftContentPlatform(

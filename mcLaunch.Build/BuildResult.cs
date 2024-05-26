@@ -16,8 +16,5 @@ public class BuildResult
     public bool IsError { get; }
     public string? ErrorMessage { get; }
 
-    public static BuildResult Error(string message)
-    {
-        return new BuildResult(message);
-    }
+    public static BuildResult Error(string message) => new(message);
 }

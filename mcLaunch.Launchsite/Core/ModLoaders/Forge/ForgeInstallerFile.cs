@@ -58,10 +58,7 @@ public class ForgeInstallerFile : IDisposable
         File.WriteAllBytes(targetFilename, data);
     }
 
-    public bool HasFile(string filename)
-    {
-        return _archive.GetEntry(filename) != null;
-    }
+    public bool HasFile(string filename) => _archive.GetEntry(filename) != null;
 
     public LibraryEntry? GetProcessorLibrary(PostProcessor processor)
     {

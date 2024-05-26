@@ -110,9 +110,6 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             Platform = this
         }).ToArray();
 
-        // Download all content images
-        foreach (MinecraftContent content in contents) content.DownloadIconAsync();
-
         return new PaginatedResponse<MinecraftContent>(page, search.TotalHits / search.Limit, contents);
     }
 
@@ -160,9 +157,6 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 Color = !hit.Color.HasValue ? 0xFF000000 : (uint) hit.Color.Value.ToArgb(),
                 Platform = this
             }).ToArray();
-
-        // Download all modpack images
-        foreach (PlatformModpack pack in modpacks) pack.DownloadIconAsync();
 
         return new PaginatedResponse<PlatformModpack>(page, search.TotalHits / search.Limit, modpacks);
     }
@@ -370,8 +364,17 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         MinecraftContentType contentType)
     {
         if (version.Dependencies != null && contentType == MinecraftContentType.Modification)
+        {
             foreach (Dependency dependency in version.Dependencies)
             {
+                if (dependency.ProjectId == version.ProjectId)
+                {
+                    // For some reason, some mods references themselves in dependencies (see Thermal Integration on modrinth)
+                    // We absolutely want to avoid that, because this will cause an infinite loop !
+                    
+                    continue;
+                }
+                
                 if (installOptional)
                 {
                     if (dependency.DependencyType != DependencyType.Required &&
@@ -406,6 +409,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
                 await InstallVersionAsync(targetBox, dependencyVersion, false, contentType);
             }
+        }
 
         DownloadManager.Begin(version.Name);
 
@@ -423,7 +427,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             filenames.Add($"{folder}/{file.FileName}");
         }
 
-        targetBox.Manifest.AddContent(version.ProjectId, contentType, version.Id, Name,
+        targetBox.Manifest.AddContent(await GetContentAsync(version.ProjectId), version.Id,
             filenames.ToArray());
 
         DownloadManager.End();
@@ -432,7 +436,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
     }
 
     public override async Task<bool> InstallContentAsync(Box targetBox, MinecraftContent content, string versionId,
-        bool installOptional)
+        bool installOptional, bool processDownload)
     {
         Version version;
 
@@ -459,9 +463,11 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         if (!targetBox.HasContentSoft(content))
             paths = await InstallVersionAsync(targetBox, version, installOptional, content.Type);
 
-        await DownloadManager.ProcessAll();
-
-        if (content.Type == MinecraftContentType.DataPack && paths.Length > 0)
+        bool isDatapackToInstall = content.Type == MinecraftContentType.DataPack && paths.Length > 0;
+        
+        if (processDownload || isDatapackToInstall) 
+            await DownloadManager.ProcessAll();
+        if (isDatapackToInstall)
             targetBox.InstallDatapack(versionId, $"{targetBox.Folder.CompletePath}/{paths[0]}");
 
         targetBox.SaveManifest();

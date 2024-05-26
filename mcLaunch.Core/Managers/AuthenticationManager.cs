@@ -57,8 +57,5 @@ public static class AuthenticationManager
         return Account;
     }
 
-    public static async Task<bool> HasMinecraftAsync()
-    {
-        return await Platform.HasMinecraftAsync(Account);
-    }
+    public static async Task<bool> HasMinecraftAsync() => await Platform.HasMinecraftAsync(Account);
 }

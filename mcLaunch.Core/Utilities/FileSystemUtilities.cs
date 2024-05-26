@@ -17,9 +17,7 @@ public static class FileSystemUtilities
         }
     }
 
-    public static string NormalizePath(string path)
-    {
-        return path.Replace('\\', Path.DirectorySeparatorChar)
+    public static string NormalizePath(string path) =>
+        path.Replace('\\', Path.DirectorySeparatorChar)
             .Replace('/', Path.DirectorySeparatorChar);
-    }
 }

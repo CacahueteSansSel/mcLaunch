@@ -18,10 +18,10 @@ public class DirectJarMergingModLoaderSupport : ModLoaderSupport
         return minecraftVersion;
     }
 
-    public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion)
-    {
-        return [new DirectJarMergingModLoaderVersion {Name = minecraftVersion, MinecraftVersion = minecraftVersion}];
-    }
+    public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion) =>
+    [
+        new DirectJarMergingModLoaderVersion {Name = minecraftVersion, MinecraftVersion = minecraftVersion}
+    ];
 
     public override async Task<Result> FinalizeMinecraftInstallationAsync(string jarFilename, string[] additionalFiles)
     {

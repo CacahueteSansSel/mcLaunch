@@ -1,6 +1,12 @@
 ﻿using System.IO.Compression;
+using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Security.Cryptography;
+using System.Web;
+using Avalonia.Threading;
+using Downloader;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Download;
@@ -13,6 +19,7 @@ public static class DownloadManager
     private static List<DownloadEntry> currentSectionEntries = [];
     private static readonly List<DownloadSection> sections = [];
     private static HttpClient client;
+    private static string userAgent;
 
     public static DownloadSection? CurrentSection { get; private set; }
     public static int PendingSectionCount => sections.Count;
@@ -26,9 +33,10 @@ public static class DownloadManager
     public static event Action? OnDownloadPrepareEnding;
     public static event Action<string, int>? OnDownloadSectionStarting;
 
-    public static void Init()
+    public static void Init(string version)
     {
         Context.Init(new Downloader());
+        userAgent = $"mcLaunch/{version}";
     }
 
     public static void Begin(string name)
@@ -43,7 +51,6 @@ public static class DownloadManager
         currentSectionName = name;
 
         client = new HttpClient();
-        client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("mcLaunch", "1.0.0"));
 
         OnDownloadPrepareStarting?.Invoke(name);
     }
@@ -76,6 +83,17 @@ public static class DownloadManager
         currentSectionEntries.Add(new DownloadEntry {Source = source, Target = target, Hash = hash, Action = action});
     }
 
+    private static async Task<bool> UseFallbackDownloader(string sourceUrl, string targetFilename, Action<float> progressUpdated, Action<bool, Exception> finished)
+    {
+        Console.WriteLine($"Using Fallback Downloader for {sourceUrl}");
+
+        using FallbackDownloader downloader = new(userAgent);
+        downloader.ProgressUpdated += progressUpdated;
+        downloader.Finished += finished;
+
+        return await downloader.DownloadAsync(sourceUrl, targetFilename);
+    }
+
     private static async Task DownloadEntryAsync(DownloadEntry entry, DownloadSection section, int sectionIndex,
         int progress)
     {
@@ -95,80 +113,51 @@ public static class DownloadManager
 
             if (entry.Hash == null && File.Exists(entry.Target)) return;
 
-            HttpResponseMessage resp = await client.GetAsync(entry.Source,
-                HttpCompletionOption.ResponseHeadersRead);
-            resp.EnsureSuccessStatusCode();
-
             string folder = entry.Target.Replace(
                 Path.GetFileName(entry.Target), "").Trim('/');
             if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
 
-            Stream downloadStream = await resp.Content.ReadAsStreamAsync();
-            long size = resp.Content.Headers.ContentLength ?? 0;
-            MemoryStream ramStream = new();
-            long b = 0;
-            long blockSize = 1024;
-            long lastBytesInSecond = 0;
-            long bytesInSecond = 0;
-            DateTime lastSecond = DateTime.Now;
+            var download = DownloadBuilder.New()
+                .WithConfiguration(new DownloadConfiguration()
+                {
+                    RequestConfiguration = new RequestConfiguration()
+                    {
+                        UserAgent = userAgent,
+                        Accept = "*/*",
+                        AllowAutoRedirect = false,
+                        AuthenticationLevel = AuthenticationLevel.None,
+                        AutomaticDecompression = DecompressionMethods.All,
+                        PreAuthenticate = false
+                    }
+                })
+                .WithUrl(entry.Source)
+                .WithFolder(new DirectoryInfo(folder))
+                .WithFileName(Path.GetFileName(entry.Target))
+                .Build();
 
-            while (true)
+            download.DownloadProgressChanged += (sender, args) =>
             {
-                float oneEntryMax = 1f / section.Entries.Count;
-                double byteProgress = (double) b / size * oneEntryMax;
-
-                byte[] buffer = new byte[blockSize];
-                int input = await downloadStream.ReadAsync(buffer);
-                if (input == 0) break;
-
-                await ramStream.WriteAsync(buffer.AsMemory(0, input));
-
                 OnDownloadProgressUpdate?.Invoke(entry.Source,
-                    (float) progress / section.Entries.Count + (float) byteProgress,
+                    (float) progress / section.Entries.Count + (float) (args.ProgressPercentage / 100),
                     sectionIndex + 1);
+            };
 
-                DateTime now = DateTime.Now;
-                if ((now - lastSecond).TotalSeconds > 0)
+            await download.StartAsync();
+
+            if (download.Package.Status == DownloadStatus.Failed)
+            {
+                await UseFallbackDownloader(entry.Source, entry.Target, pp =>
                 {
-                    long delta = bytesInSecond - lastBytesInSecond;
-
-                    if (delta > 0 && blockSize < size) blockSize += 10; // Faster, increase block size
-                    else if (blockSize > 25) blockSize -= 10; // Slower, decrease block size
-
-                    bytesInSecond = 0;
-                }
-
-                lastSecond = now;
-
-                b += input;
-                bytesInSecond += input;
+                    OnDownloadProgressUpdate?.Invoke(entry.Source,
+                        (float) progress / section.Entries.Count + pp,
+                        sectionIndex + 1);
+                }, (success, error) =>
+                {
+                    if (!success) Console.WriteLine($"Fallback Downloader error : {error}");
+                    
+                    OnDownloadError?.Invoke(section.Name, entry.Source);
+                });
             }
-
-            string pathFolders = entry.Target.Replace(Path.GetFileName(entry.Target), "").Trim();
-
-            if (!Directory.Exists(pathFolders)) Directory.CreateDirectory(pathFolders);
-
-            byte[] data = ramStream.ToArray();
-
-            bool fileWritten = false;
-            for (int i = 0; i < 5; i++)
-                try
-                {
-                    await File.WriteAllBytesAsync(entry.Target, data);
-                    fileWritten = true;
-
-                    break;
-                }
-                catch (Exception e)
-                {
-                    await Task.Delay(500);
-                }
-
-            if (!fileWritten)
-                throw new Exception($"File {entry.Source} at {entry.Target} download failed : " +
-                                    $"file can't be accessed");
-
-            ramStream.Close();
         }
         catch (InvalidProgramException e)
         {
@@ -252,6 +241,14 @@ public static class DownloadManager
         OnDownloadFinished?.Invoke();
     }
 
+    public static async Task<Stream?> DownloadFileAsync(string url)
+    {
+        HttpResponseMessage resp = await client.GetAsync(url);
+        if (!resp.IsSuccessStatusCode) return null;
+
+        return await resp.Content.ReadAsStreamAsync();
+    }
+
     public class Downloader : ResourceDownloader
     {
         public override async Task<bool> DownloadAsync(string url, string target, string? hash)
@@ -303,15 +300,10 @@ public static class DownloadManager
             await ProcessAll();
         }
 
-        public override Task WaitForPendingProcessesAsync()
-        {
-            return WaitForPendingProcesses();
-        }
+        public override Task WaitForPendingProcessesAsync() => WaitForPendingProcesses();
 
-        public override async Task SetSectionProgressAsync(string itemName, float progressPercent)
-        {
+        public override async Task SetSectionProgressAsync(string itemName, float progressPercent) =>
             OnDownloadProgressUpdate?.Invoke(itemName, progressPercent, 0);
-        }
     }
 }
 

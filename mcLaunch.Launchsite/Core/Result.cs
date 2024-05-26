@@ -22,10 +22,7 @@ public class Result
     public bool IsError { get; }
     public string? ErrorMessage { get; }
 
-    public static Result Error(string message)
-    {
-        return new Result(message);
-    }
+    public static Result Error(string message) => new(message);
 }
 
 public class Result<T> : Result
@@ -45,8 +42,5 @@ public class Result<T> : Result
 
     public T? Data { get; }
 
-    public static Result<T> Error(string message)
-    {
-        return new Result<T>(message);
-    }
+    public static Result<T> Error(string message) => new(message);
 }

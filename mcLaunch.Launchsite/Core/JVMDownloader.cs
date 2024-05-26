@@ -24,15 +24,10 @@ public class JvmDownloader
     public string BasePath { get; }
     public event Action<string, JsonNode, string, string> GotJvmManifest;
 
-    public Task DownloadForCurrentPlatformAsync(string name)
-    {
-        return DownloadAsync(Utilities.GetJavaPlatformIdentifier(), name);
-    }
+    public Task DownloadForCurrentPlatformAsync(string name) =>
+        DownloadAsync(Utilities.GetJavaPlatformIdentifier(), name);
 
-    public string GetJvmPath(string platform, string name)
-    {
-        return $"{BasePath}/{name}/{platform}";
-    }
+    public string GetJvmPath(string platform, string name) => $"{BasePath}/{name}/{platform}";
 
     public string GetAndPrepareJvmExecPath(string platform, string name)
     {
@@ -47,10 +42,7 @@ public class JvmDownloader
         return $"{BasePath}/{name}/{platform}/bin/{(OperatingSystem.IsWindows() ? "javaw.exe" : "java")}";
     }
 
-    public bool HasJvm(string platform, string name)
-    {
-        return Directory.Exists(GetJvmPath(platform, name));
-    }
+    public bool HasJvm(string platform, string name) => Directory.Exists(GetJvmPath(platform, name));
 
     public async Task DownloadAsync(string platform, string name)
     {

@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800"
              x:Class="mcLaunch.Views.MinecraftContentEntry">
     <UserControl.Styles>
@@ -10,36 +11,35 @@
     </UserControl.Styles>
     <DockPanel>
         <Border DockPanel.Dock="Left" Width="40" Height="40" CornerRadius="4" ClipToBounds="True">
-            <Image Source="{Binding Icon.IconSmall}" />
+            <Image asyncImageLoader:ImageLoader.Source="{Binding IconUrl}" />
         </Border>
         <StackPanel Orientation="Vertical" VerticalAlignment="Center" DockPanel.Dock="Right" Margin="0 0 10 0">
             <StackPanel Orientation="Horizontal" Height="20" HorizontalAlignment="Right" Spacing="5"
                         IsVisible="{Binding IsDownloadCountValid}">
-                <Image Source="/resources/icons/download.png" Height="14" />
+                <Image Source="{SvgImage /resources/icons/download.svg}" Height="14" />
                 <TextBlock Classes="title" Text="{Binding DownloadCountFormatted}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Height="20" HorizontalAlignment="Right" Spacing="5"
                         IsVisible="{Binding IsLastUpdatedValid}">
-                <Image Source="/resources/icons/refresh.png" Height="14" />
+                <Image Source="{SvgImage /resources/icons/refresh.svg}" Height="14" />
                 <TextBlock Classes="title" Text="{Binding LastUpdatedFormatted}" />
             </StackPanel>
         </StackPanel>
         <StackPanel Margin="10 0 10 0" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Classes="title" Text="{Binding Name}" />
+                <TextBlock Classes="title" VerticalAlignment="Center" Text="{Binding Name}" />
                 <Image Margin="5 0 0 0" Height="14" Source="{Binding Platform.Icon}"
+                       VerticalAlignment="Center"
                        ToolTip.Tip="{Binding Platform.Name}" ClipToBounds="True" />
-                <StackPanel Orientation="Horizontal" Margin="5 2 0 0" Opacity="0.5">
+                <StackPanel Orientation="Horizontal" Margin="5 2 0 0" Opacity="0.5" 
+                            VerticalAlignment="Center">
                     <TextBlock Classes="light" FontSize="12">by</TextBlock>
                     <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{Binding Author}" />
                 </StackPanel>
-                <views:Badge IsVisible="{Binding IsInvalid}" Margin="10 0 0 0" Text="Not compatible"
-                             Icon="/resources/icons/close.png"
-                             ToolTip.Tip="mcLaunch did not find any version of this mod compatible with this Minecraft version and/or this modloader" />
-                <views:Badge IsVisible="{Binding IsInstalledOnCurrentBoxUi}" Margin="10 0 0 0" Text="Installed"
-                             Icon="/resources/icons/checkmark.png" />
-                <views:Badge x:Name="UpdateBadge" Margin="5 0 0 0" IsVisible="{Binding IsUpdateRequired}"
-                             Icon="/resources/icons/update.png" Text="Update available" />
+                <views:Badge x:Name="InstalledBadge" IsVisible="False" VerticalAlignment="Center"
+                             Margin="10 0 0 0" Text="Installed"/>
+                <views:Badge x:Name="UpdateBadge" Margin="5 0 0 0" IsVisible="False" VerticalAlignment="Center"
+                             Text="Update available" />
             </StackPanel>
             <StackPanel IsVisible="{Binding !IsFilenameEmpty}" Orientation="Horizontal" Opacity="0.5">
                 <TextBlock Classes="light" FontSize="12" Text="{Binding Filename}" />

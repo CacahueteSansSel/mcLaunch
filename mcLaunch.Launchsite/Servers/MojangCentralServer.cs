@@ -7,8 +7,5 @@ public class MojangCentralServer : CentralServer
 {
     public const string Url = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
 
-    public override Task<VersionManifest?> GetVersionManifestAsync()
-    {
-        return Api.GetAsync<VersionManifest>(Url);
-    }
+    public override Task<VersionManifest?> GetVersionManifestAsync() => Api.GetAsync<VersionManifest>(Url);
 }

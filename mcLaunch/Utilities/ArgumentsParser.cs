@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace mcLaunch.Utilities;
 
 public class ArgumentsParser
 {
     private readonly Dictionary<string, string> dict = new();
+
+    public int Count => dict.Count;
 
     public ArgumentsParser(string[] args)
     {
@@ -25,13 +28,8 @@ public class ArgumentsParser
         }
     }
 
-    public string Get(string key, string defaultValue = null)
-    {
-        return dict.ContainsKey(key) ? dict[key] : defaultValue;
-    }
+    public string? GetOrDefault(int index) => index >= Count ? null : dict.ElementAt(index).Key;
+    public string Get(string key, string defaultValue = null) => dict.ContainsKey(key) ? dict[key] : defaultValue;
 
-    public bool Contains(string key)
-    {
-        return dict.ContainsKey(key);
-    }
+    public bool Contains(string key) => dict.ContainsKey(key);
 }

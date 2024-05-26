@@ -55,7 +55,7 @@ public partial class EditBoxPopup : UserControl
 
         box.SaveManifest();
 
-        MainPage.Instance.PopulateBoxList();
+        MainPage.Instance?.PopulateBoxList();
 
         Navigation.Pop();
         Navigation.Push(new BoxDetailsPage(box));

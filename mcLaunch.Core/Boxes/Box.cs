@@ -46,7 +46,7 @@ public class Box : IEquatable<Box>
         QuickPlay = new QuickPlayManager(Folder);
     }
 
-    public Box(string path)
+    public Box(string path, bool loadManifest = true)
     {
         Path = path;
         manifestPath = $"{path}/box.json";
@@ -59,9 +59,7 @@ public class Box : IEquatable<Box>
 
         QuickPlay = new QuickPlayManager(Folder);
 
-        ReloadManifest(true);
-        if (File.Exists($"{path}/icon.png") && Manifest!.Icon == null)
-            LoadIcon();
+        if (loadManifest) ReloadManifest(true);
     }
 
     public bool UseDedicatedGraphics { get; set; }
@@ -86,10 +84,7 @@ public class Box : IEquatable<Box>
     public bool HasWorlds => Directory.Exists($"{Folder.Path}/saves") &&
                              Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
 
-    public bool Equals(Box? other)
-    {
-        return other?.Manifest.Id == Manifest.Id;
-    }
+    public bool Equals(Box? other) => other?.Manifest.Id == Manifest.Id;
 
     private void CreateWatcher()
     {
@@ -115,7 +110,7 @@ public class Box : IEquatable<Box>
 
         try
         {
-            foreach (BoxStoredContent mod in Manifest.Content)
+            foreach (BoxStoredContent mod in Manifest.Contents)
             {
                 if (!mod.Filenames.Contains(relativePath)) continue;
 
@@ -154,8 +149,7 @@ public class Box : IEquatable<Box>
             if (version == null || version.Content == null) return;
 
             // Add the mod to the list
-            Manifest.AddContent(version.Content.Id, contentType, version.Id,
-                version.Content.ModPlatformId, [relativePath]);
+            Manifest.AddContent(version.Content, version.Id, [relativePath]);
 
             EventListener?.OnContentAdded(version.Content);
         }
@@ -165,16 +159,9 @@ public class Box : IEquatable<Box>
         }
     }
 
-    private async void LoadIcon()
+    public void Delete()
     {
-        try
-        {
-            Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png");
-        }
-        catch (Exception)
-        {
-            // TODO: Set the manifest icon to default
-        }
+        Directory.Delete(Path, true);
     }
 
     public bool HasBackup(string name)
@@ -259,7 +246,7 @@ public class Box : IEquatable<Box>
                 SaveManifest();
 
                 // Reload icon and background
-                LoadIcon();
+                await LoadIconAsync();
                 LoadBackground();
 
                 return true;
@@ -309,18 +296,16 @@ public class Box : IEquatable<Box>
         watcher.EnableRaisingEvents = isWatching;
     }
 
-    public string? ReadReadmeFile()
+    public string? ReadReadmeFile() => HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
+
+    public async void ReloadManifest(bool force = false)
     {
-        return HasReadmeFile ? File.ReadAllText($"{Folder.Path}/README.md") : null;
+        await ReloadManifestAsync(force);
     }
 
-    public void ReloadManifest(bool force = false)
+    public async Task ReloadManifestAsync(bool force = false, bool runChecks = true)
     {
-        // Check if the manifest needs reloading
-        SHA1 sha = SHA1.Create();
-        string hash = Convert.ToHexString(sha.ComputeHash(File.ReadAllBytes(manifestPath)));
-        if (!force && Manifest != null && hash == Manifest.FileHash) return;
-
+        if (!force && Manifest != null) return;
         bool isReload = Manifest != null;
 
         IconCollection? icon = null;
@@ -333,16 +318,17 @@ public class Box : IEquatable<Box>
             background = Manifest.Background;
         }
 
-        Manifest = JsonSerializer.Deserialize<BoxManifest>(File.ReadAllText(manifestPath))!;
-        RunPostDeserializationChecks();
-
-        Manifest.FileHash = hash;
+        Manifest = JsonSerializer.Deserialize<BoxManifest>(await File.ReadAllTextAsync(manifestPath))!;
+        if (runChecks) await RunPostDeserializationChecksAsync();
 
         if (isReload)
         {
             Manifest.Icon = icon;
             Manifest.Background = background;
         }
+
+        if (File.Exists($"{Path}/icon.png") && Manifest!.Icon == null)
+            await LoadIconAsync();
     }
 
     public async Task<string[]> RunIntegrityChecks()
@@ -352,7 +338,7 @@ public class Box : IEquatable<Box>
 
         ReloadManifest();
 
-        foreach (BoxStoredContent mod in Manifest.Content)
+        foreach (BoxStoredContent mod in Manifest.Contents)
         {
             bool exists = false;
             foreach (string filename in mod.Filenames)
@@ -372,7 +358,7 @@ public class Box : IEquatable<Box>
 
         if (await AddMissingModsToList()) SaveManifest();
 
-        Manifest.Content.RemoveMany(modsToRemove);
+        Manifest.Contents.RemoveMany(modsToRemove);
 
         return changes.ToArray();
     }
@@ -391,8 +377,7 @@ public class Box : IEquatable<Box>
             if (version == null || version.Content == null) continue;
 
             // Add the mod to the list
-            Manifest.AddContent(version.Content.Id, MinecraftContentType.Modification, version.Id,
-                version.Content.ModPlatformId, new[] {modFilename});
+            Manifest.AddContent(version.Content, version.Id, [modFilename]);
 
             save = true;
         }
@@ -400,10 +385,9 @@ public class Box : IEquatable<Box>
         return save;
     }
 
-    private async void RunPostDeserializationChecks()
+    private async Task RunPostDeserializationChecksAsync()
     {
-        if (await Manifest.RunPostDeserializationChecks())
-            SaveManifest();
+        if (await Manifest.RunPostDeserializationChecksAsync()) SaveManifest();
     }
 
     private async Task<Result> SetupVersionAsync()
@@ -455,7 +439,7 @@ public class Box : IEquatable<Box>
 
                 try
                 {
-                    await ModPlatformManager.Platform.InstallContentAsync(this, dep.Content, versionId, false);
+                    await ModPlatformManager.Platform.InstallContentAsync(this, dep.Content, versionId, false, true);
                 }
                 catch (ModrinthApiException e)
                 {
@@ -468,7 +452,7 @@ public class Box : IEquatable<Box>
             }
         }
 
-        return await ModPlatformManager.Platform.InstallContentAsync(this, mod, version.Id, installOptional);
+        return await ModPlatformManager.Platform.InstallContentAsync(this, mod, version.Id, installOptional, true);
     }
 
     public MinecraftWorld[] LoadWorlds()
@@ -525,12 +509,10 @@ public class Box : IEquatable<Box>
             .ToArray();
     }
 
-    public string[] GetScreenshotPaths()
-    {
-        return !Directory.Exists($"{Folder.Path}/screenshots")
+    public string[] GetScreenshotPaths() =>
+        !Directory.Exists($"{Folder.Path}/screenshots")
             ? Array.Empty<string>()
             : Directory.GetFiles($"{Folder.Path}/screenshots", "*.png");
-    }
 
     public async Task<Result> CreateMinecraftAsync()
     {
@@ -583,7 +565,7 @@ public class Box : IEquatable<Box>
         {
             string absPath = file.Replace(Path, "").Replace('\\', '/')
                 .Replace("minecraft/", "").Replace(Path, "").Trim('/').Trim();
-            if (Manifest.Content.FirstOrDefault(mod => mod.Filenames.Contains(absPath)) != null)
+            if (Manifest.Contents.FirstOrDefault(mod => mod.Filenames.Contains(absPath)) != null)
                 continue;
 
             mods.Add(absPath);
@@ -619,13 +601,48 @@ public class Box : IEquatable<Box>
     public async void SetAndSaveIcon(Bitmap icon)
     {
         icon.Save($"{Path}/icon.png");
-        Manifest.Icon = await IconCollection.FromBitmapAsync(icon);
+        if (Manifest != null) Manifest.Icon = await IconCollection.FromBitmapAsync(icon);
+    }
+
+    public async void SetAndSaveIcon(Stream iconStream, bool reload = true)
+    {
+        using MemoryStream stream = new();
+
+        await iconStream.CopyToAsync(stream);
+        await File.WriteAllBytesAsync($"{Path}/icon.png", stream.ToArray());
+
+        if (reload && Manifest != null) await LoadIconAsync();
     }
 
     public void SetAndSaveBackground(Bitmap background)
     {
         background.Save($"{Path}/background.png");
-        Manifest.Background = background;
+        if (Manifest != null) Manifest.Background = background;
+    }
+
+    public async void SetAndSaveBackground(Stream backgroundStream, bool reload = true)
+    {
+        using MemoryStream stream = new();
+
+        await backgroundStream.CopyToAsync(stream);
+        await File.WriteAllBytesAsync($"{Path}/background.png", stream.ToArray());
+
+        if (reload && Manifest != null) LoadBackground();
+    }
+
+    public async Task LoadIconAsync()
+    {
+        if (Manifest.Icon != null) return;
+        if (!File.Exists($"{Path}/icon.png")) return;
+
+        try
+        {
+            Manifest.Icon = await IconCollection.FromFileAsync($"{Path}/icon.png");
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
     }
 
     public void LoadBackground()
@@ -633,7 +650,14 @@ public class Box : IEquatable<Box>
         if (Manifest.Background != null) return;
         if (!File.Exists($"{Path}/background.png")) return;
 
-        Manifest.Background = new Bitmap($"{Path}/background.png");
+        try
+        {
+            Manifest.Background = new Bitmap($"{Path}/background.png");
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
     }
 
     [MustUseReturnValue("Use the return value to catch problems if any")]
@@ -659,12 +683,12 @@ public class Box : IEquatable<Box>
         int cur = 0;
         List<MinecraftContent> migratedMods = new();
 
-        BoxStoredContent[] modsToMigrate = Manifest.Content.Where(m =>
+        BoxStoredContent[] modsToMigrate = Manifest.Contents.Where(m =>
             m.PlatformId.ToLower() != "modrinth").ToArray();
 
         foreach (BoxStoredContent mod in modsToMigrate)
         {
-            statusCallback?.Invoke(mod, cur, Manifest.Content.Count);
+            statusCallback?.Invoke(mod, cur, Manifest.Contents.Count);
             cur++;
 
             foreach (string filename in mod.Filenames)
@@ -682,11 +706,13 @@ public class Box : IEquatable<Box>
                 Manifest.RemoveContent(mod.Id, this);
                 bool success = await ModrinthMinecraftContentPlatform.Instance.InstallContentAsync(this,
                     modVersion.Content,
-                    modVersion.Id, false);
+                    modVersion.Id, false, false);
 
                 if (success) migratedMods.Add(modVersion.Content);
             }
         }
+
+        await DownloadManager.ProcessAll();
 
         return migratedMods.ToArray();
     }
@@ -696,12 +722,12 @@ public class Box : IEquatable<Box>
         int cur = 0;
         List<MinecraftContent> migratedMods = new();
 
-        BoxStoredContent[] modsToMigrate = Manifest.Content.Where(m =>
+        BoxStoredContent[] modsToMigrate = Manifest.Contents.Where(m =>
             m.PlatformId.ToLower() != "curseforge").ToArray();
 
         foreach (BoxStoredContent mod in modsToMigrate)
         {
-            statusCallback?.Invoke(mod, cur, Manifest.Content.Count);
+            statusCallback?.Invoke(mod, cur, Manifest.Contents.Count);
             cur++;
 
             foreach (string filename in mod.Filenames)
@@ -717,24 +743,20 @@ public class Box : IEquatable<Box>
                 Manifest.RemoveContent(mod.Id, this);
                 bool success = await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(this,
                     modVersion.Content,
-                    modVersion.Id, false);
+                    modVersion.Id, false, false);
 
                 if (success) migratedMods.Add(modVersion.Content);
             }
         }
 
+        await DownloadManager.ProcessAll();
+
         return migratedMods.ToArray();
     }
 
-    public bool HasContentStrict(MinecraftContent mod)
-    {
-        return Manifest.HasContentStrict(mod.Id, mod.Platform.Name);
-    }
+    public bool HasContentStrict(MinecraftContent mod) => Manifest.HasContentStrict(mod.Id, mod.Platform.Name);
 
-    public bool HasContentSoft(MinecraftContent mod)
-    {
-        return Manifest.HasContentSoft(mod);
-    }
+    public bool HasContentSoft(MinecraftContent mod) => Manifest.HasContentSoft(mod);
 
     public void SaveManifest()
     {
@@ -751,12 +773,10 @@ public class Box : IEquatable<Box>
     }
 
     // Launch Minecraft and directly connect to a server 
-    public Process Run(string serverAddress, string serverPort)
-    {
-        return Minecraft
+    public Process Run(string serverAddress, string serverPort) =>
+        Minecraft
             .WithServer(serverAddress, serverPort)
             .Run();
-    }
 
     // Launch a Minecraft world directly using QuickPlay
     public Process Run(MinecraftWorld world)
@@ -769,18 +789,9 @@ public class Box : IEquatable<Box>
             .Run();
     }
 
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as Box);
-    }
+    public override bool Equals(object? obj) => Equals(obj as Box);
 
-    public override int GetHashCode()
-    {
-        return Manifest.Id.GetHashCode();
-    }
+    public override int GetHashCode() => Manifest.Id.GetHashCode();
 
-    public override string ToString()
-    {
-        return $"Box {Manifest.Id} {Manifest.Name}";
-    }
+    public override string ToString() => $"Box {Manifest.Id} {Manifest.Name}";
 }

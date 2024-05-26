@@ -26,10 +26,7 @@ public class MinecraftOptions : Dictionary<string, object>
 
     public string Filename { get; }
 
-    public bool CanOptionBeChanged(string key)
-    {
-        return !key.StartsWith("key_") && !excludedOptions.Contains(key);
-    }
+    public bool CanOptionBeChanged(string key) => !key.StartsWith("key_") && !excludedOptions.Contains(key);
 
     public string Build()
     {

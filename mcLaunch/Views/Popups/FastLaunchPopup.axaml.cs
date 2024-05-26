@@ -69,7 +69,7 @@ public partial class FastLaunchPopup : UserControl
         {
             Navigation.HidePopup();
             Navigation.ShowPopup(new MessageBoxPopup("Failed to initialize the mod loader",
-                $"Failed to get any version of {modloader.Name} for Minecraft {minecraftVersion.Id}"));
+                $"Failed to get any version of {modloader.Name} for Minecraft {minecraftVersion.Id}", MessageStatus.Error));
             return;
         }
 
@@ -85,7 +85,9 @@ public partial class FastLaunchPopup : UserControl
         }
 
         string path = pathResult.Data!;
-        Box box = new Box(path);
+        Box box = new Box(path, false);
+
+        await box.ReloadManifestAsync();
         box.SetAndSaveIcon(new Bitmap(AssetLoader.Open(
             new Uri("avares://mcLaunch/resources/fastlaunch_box_logo.png"))));
 

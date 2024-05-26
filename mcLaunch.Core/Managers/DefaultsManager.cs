@@ -16,10 +16,9 @@ public static class DefaultsManager
         options.SaveTo($"{DefaultsPath}/options.txt");
     }
 
-    public static MinecraftOptions? LoadDefaultMinecraftOptions()
-    {
-        return File.Exists($"{DefaultsPath}/options.txt") ? new MinecraftOptions($"{DefaultsPath}/options.txt") : null;
-    }
+    public static MinecraftOptions? LoadDefaultMinecraftOptions() => File.Exists($"{DefaultsPath}/options.txt")
+        ? new MinecraftOptions($"{DefaultsPath}/options.txt")
+        : null;
 
     public static void ClearDefaultOptions()
     {

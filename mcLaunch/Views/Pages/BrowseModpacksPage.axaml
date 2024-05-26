@@ -23,11 +23,12 @@
                             <DockPanel Margin="28 10 28 0">
                                 <Button DockPanel.Dock="Right" Margin="10 0 0 0" Classes="secondary" IsDefault="True"
                                         Click="SearchButtonClicked">
-                                    <Image Width="16" Height="16" Source="/resources/icons/search.png" />
+                                    <Image Width="16" Height="16" Source="{SvgImage /resources/icons/search.svg}" />
                                 </Button>
                                 <TextBox x:Name="SearchTextboxInput" Watermark="Search"
                                          VerticalContentAlignment="Center" />
                             </DockPanel>
+                            <views:PageSelector x:Name="TopPageSelector" HorizontalAlignment="Center" Margin="0 10 0 0" />
                             <Panel>
                                 <WrapPanel x:Name="BoxContainer" HorizontalAlignment="Center" Margin="28 10 28 0">
                                     <views:ModpackEntryCard />
@@ -38,15 +39,8 @@
                                 <views:NothingToShowBanner x:Name="NtsBanner" IsVisible="False" />
                             </Panel>
                             <Panel HorizontalAlignment="Center" Margin="0 10 0 20">
-                                <Button Classes="secondary" x:Name="LoadMoreButton" Click="LoadMoreButtonClicked">
-                                    Load more
-                                </Button>
-                                <Border x:Name="LoadingButtonFrame" IsVisible="False" Width="124" Height="40"
-                                        Background="{DynamicResource BackgroundDarker}"
-                                        BorderBrush="{DynamicResource BackgroundLighter}" BorderThickness="1"
-                                        CornerRadius="4">
-                                    <views:LoadingCircle RenderTransform="scale(0.65)" />
-                                </Border>
+                                <views:PageSelector x:Name="BottomPageSelector" HorizontalAlignment="Center"
+                                                    Margin="0 0 0 0" />
                             </Panel>
                         </StackPanel>
                     </Panel>

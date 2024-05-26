@@ -8,10 +8,7 @@ public abstract class CreateMacosBundleStep : BuildStepBase
     public abstract string PlatformRuntimeIdentifier { get; }
     public override string Name => $"Create macOS bundle ({PlatformRuntimeIdentifier})";
 
-    public override bool IsSupportedOnThisPlatform()
-    {
-        return !OperatingSystem.IsWindows();
-    }
+    public override bool IsSupportedOnThisPlatform() => !OperatingSystem.IsWindows();
 
     public override async Task<BuildResult> RunAsync(BuildSystem system)
     {

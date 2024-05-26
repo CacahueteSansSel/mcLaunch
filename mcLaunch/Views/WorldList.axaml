@@ -30,8 +30,8 @@
                             <StackPanel Margin="10 0 10 0" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="title" Text="{Binding Name}" />
-                                    <views:Badge IsVisible="{Binding IsCheats}" Margin="10 0 0 0" Text="Commands"
-                                                 Icon="/resources/icons/mod.png" />
+                                    <views:Badge IsVisible="{Binding IsCheats}" 
+                                                 Margin="10 0 0 0" Text="Commands"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="title" FontSize="12" Margin="0 0 0 0" Text="{Binding GameMode}" />
