@@ -97,13 +97,20 @@ public class SoftwareInstaller
 
         if (CopyInstaller)
         {
-            Directory.CreateDirectory($"{Parameters.TargetDirectory}/installer");
-            File.Copy(Environment.GetCommandLineArgs()[0],
-                $"{Parameters.TargetDirectory}/installer/installer" + (OperatingSystem.IsWindows() ? ".exe" : ""),
-                true);
+            try
+            {
+                Directory.CreateDirectory($"{Parameters.TargetDirectory}/installer");
+                File.Copy(Environment.GetCommandLineArgs()[0],
+                    $"{Parameters.TargetDirectory}/installer/installer" + (OperatingSystem.IsWindows() ? ".exe" : ""),
+                    true);
 
-            if (!OperatingSystem.IsWindows())
-                File.SetUnixFileMode($"{Parameters.TargetDirectory}/installer/installer", UnixFileMode.UserExecute);
+                if (!OperatingSystem.IsWindows())
+                    File.SetUnixFileMode($"{Parameters.TargetDirectory}/installer/installer", UnixFileMode.UserExecute);
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
         }
 
         MainWindow.Instance.Next();
