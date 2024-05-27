@@ -8,6 +8,7 @@
                 </Border>
                 <Border Classes="frame">
                     <StackPanel Orientation="Horizontal">
+                        <CaptionButtons></CaptionButtons>
                         <Button Classes="primary" Margin="5">Primary !</Button>
                         <Button Classes="secondary" Margin="5">Secondary !</Button>
                         <Button Classes="transparent" Margin="5">Transparent !</Button>
@@ -28,6 +29,16 @@
             </StackPanel>
         </Border>
     </Design.PreviewWith>
+    
+    <Style Selector="CaptionButtons">
+        <Setter Property="MinHeight" Value="50"/>
+        <Setter Property="Height" Value="50"/>
+    </Style>
+    
+    <Style Selector="CaptionButtons#PART_FullScreenButton">
+        <Setter Property="MinHeight" Value="50"/>
+        <Setter Property="Height" Value="50"/>
+    </Style>
 
     <Style Selector="ProgressBar:horizontal">
         <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}" />
