@@ -24,6 +24,27 @@ public static class Utilities
                 return "unknown";
         }
     }
+    
+    public static string GetMcLaunchPlatformIdentifier()
+    {
+        switch (Environment.OSVersion.Platform)
+        {
+            case PlatformID.Win32S:
+            case PlatformID.Win32Windows:
+            case PlatformID.Win32NT:
+            case PlatformID.WinCE:
+                return "win";
+            case PlatformID.Unix:
+                if (OperatingSystem.IsMacOS())
+                    return "osx";
+
+                return "linux";
+            case PlatformID.MacOSX:
+                return "osx";
+            default:
+                return "unknown";
+        }
+    }
 
     public static string GetJavaPlatformIdentifier()
     {
