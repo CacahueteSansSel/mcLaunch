@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using mcLaunch.GitHub.Models;
 using mcLaunch.Installer.Win32;
+using mcLaunch.Launchsite.Core;
 using Microsoft.Win32;
 
 namespace mcLaunch.Installer.Core;
@@ -58,19 +59,29 @@ public class SoftwareInstaller
         }
     }
 
-    public async Task InstallAsync()
+    private GitHubReleaseAsset? FindMcLaunchForPlatform()
     {
         string platform = OperatingSystem.IsWindows()
             ? "windows"
             : OperatingSystem.IsLinux()
                 ? "linux"
                 : "unknown";
+        string newerPlatform = Utilities.GetMcLaunchPlatformIdentifier();
+        string arch = Utilities.GetArchitecture();
+        
+        return Parameters.ReleaseToDownload.Assets
+            .FirstOrDefault(asset => asset.Name.ToLower() == $"mclaunch-{platform}.zip"
+                || asset.Name.ToLower() == $"mclaunch-{newerPlatform}-{arch}.zip");
+    }
 
-        GitHubReleaseAsset platformAsset = Parameters.ReleaseToDownload.Assets
-            .First(asset => asset.Name.ToLower() == $"mclaunch-{platform}.zip");
+    public async Task InstallAsync()
+    {
+        GitHubReleaseAsset? platformAsset = FindMcLaunchForPlatform();
 
         using MemoryStream archiveStream =
-            await Downloader.DownloadToMemoryAsync(platformAsset.DownloadUrl, (long) platformAsset.Size);
+            await DownloadManager.DownloadToMemoryAsync(platformAsset.DownloadUrl, (long) platformAsset.Size);
+        
+        await File.WriteAllBytesAsync("test.zip", archiveStream.GetBuffer());
 
         OnExtractionStarted?.Invoke();
 

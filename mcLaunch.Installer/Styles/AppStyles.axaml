@@ -1,33 +1,95 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
-        <Border Padding="20" Background="white">
+        <Border Height="500" Padding="20" Background="white">
             <StackPanel Orientation="Vertical">
+                <Border Classes="frame-light" Margin="0 10 0 0">
+                    <TextBlock Classes="title">hello</TextBlock>
+                </Border>
                 <Border Classes="frame">
                     <StackPanel Orientation="Horizontal">
+                        <CaptionButtons></CaptionButtons>
                         <Button Classes="primary" Margin="5">Primary !</Button>
                         <Button Classes="secondary" Margin="5">Secondary !</Button>
                         <Button Classes="transparent" Margin="5">Transparent !</Button>
-                        <ProgressBar Value="70" />
+                        <Button Classes="transparent-green" Margin="5">Tr Green</Button>
+                        <ProgressBar Value="50" />
                     </StackPanel>
                 </Border>
                 <Border Classes="frame-light" Margin="0 10 0 0">
-                    <StackPanel Orientation="Horizontal">
-                        <Button Classes="primary" Margin="5">Primary !</Button>
-                        <Button Classes="secondary" Margin="5">Secondary !</Button>
-                        <Button Classes="transparent" Margin="5">Transparent !</Button>
-                        <ProgressBar Value="70" />
+                    <ListBox ItemsSource="test" />
+                </Border>
+                <Border Classes="frame" Padding="5" Margin="0 10 0 0">
+                    <StackPanel>
+                        <CheckBox>Hello</CheckBox>
+                        <CheckBox IsChecked="true">Checked</CheckBox>
+                        <Slider Value="15" />
                     </StackPanel>
                 </Border>
             </StackPanel>
         </Border>
     </Design.PreviewWith>
+    
+    <Style Selector="CaptionButtons">
+        <Setter Property="MinHeight" Value="50"/>
+        <Setter Property="Height" Value="50"/>
+    </Style>
+    
+    <Style Selector="CaptionButtons#PART_FullScreenButton">
+        <Setter Property="MinHeight" Value="50"/>
+        <Setter Property="Height" Value="50"/>
+    </Style>
+
+    <Style Selector="ProgressBar:horizontal">
+        <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Value" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+        <Style.Animations>
+            <Animation Duration="0:0:2" IterationCount="INFINITE"> 
+                <KeyFrame Cue="0%">
+                    <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}"/>
+                </KeyFrame>
+                <KeyFrame Cue="50%">
+                    <Setter Property="Foreground" Value="{DynamicResource BrightAccent}"/>
+                </KeyFrame>
+                <KeyFrame Cue="0%">
+                    <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}"/>
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <Style Selector="Slider">
+        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}" />
+    </Style>
+
+    <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource DarkerAccent}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}" />
+    </Style>
+
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource DefaultAccent}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Border.badge-large">
+        <Setter Property="Background" Value="{DynamicResource Background}" />
+        <Setter Property="Padding" Value="10 5 10 5" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
+    </Style>
 
     <Style Selector="StackPanel.smoothShowLeft">
         <Style.Animations>
-            <Animation Duration="0:0:.5" Easing="QuinticEaseInOut" IterationCount="1">
+            <Animation Duration="0:0:.25" Easing="QuinticEaseInOut" IterationCount="0" FillMode="Forward">
                 <KeyFrame Cue="0%">
-                    <Setter Property="TranslateTransform.X" Value="-10" />
+                    <Setter Property="TranslateTransform.X" Value="-5" />
                     <Setter Property="Opacity" Value="0" />
                 </KeyFrame>
                 <KeyFrame Cue="100%">
@@ -87,6 +149,28 @@
         <Setter Property="BoxShadow" Value="0 3 10 1 #AA000000" />
     </Style>
 
+    <Style Selector="Border.frame-dark">
+        <Setter Property="Background" Value="{DynamicResource BackgroundMiddle}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
+        <Setter Property="BoxShadow" Value="0 3 10 1 #AA000000" />
+    </Style>
+
+    <Style Selector="Border.frame-dark-without-shadow">
+        <Setter Property="Background" Value="{DynamicResource BackgroundMiddle}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
+    </Style>
+
+    <Style Selector="Border.frame-without-shadow">
+        <Setter Property="Background" Value="{DynamicResource Background}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
+    </Style>
+
     <Style Selector="Border.frame-light">
         <Setter Property="Background" Value="{DynamicResource BackgroundLighter}" />
         <Setter Property="CornerRadius" Value="4" />
@@ -122,6 +206,12 @@
     <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource MiddleAccent}" />
         <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}" />
+
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
     </Style>
 
     <Style Selector="Button.primary:pressed /template/ ContentPresenter">
@@ -149,6 +239,11 @@
         </Setter>
     </Style>
 
+    <Style Selector="Image.icon">
+        <Setter Property="Height" Value="16" />
+        <Setter Property="Width" Value="16" />
+    </Style>
+
     <Style Selector="Button.square">
         <Setter Property="Padding" Value="10" />
         <Setter Property="Height" Value="39" />
@@ -158,10 +253,17 @@
     <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource Background}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
+
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
     </Style>
 
     <Style Selector="Button.transparent">
         <Setter Property="Background" Value="#AA232323" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundDarkest}" />
         <Setter Property="Padding" Value="10" />
         <Setter Property="Transitions">
             <Transitions>
@@ -173,9 +275,33 @@
 
     <Style Selector="Button.transparent:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="#AA3C3C3C" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundDarker}" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
     </Style>
 
-    <Style Selector="ProgressBar:horizontal">
-        <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}" />
+    <Style Selector="Button.transparent-green">
+        <Setter Property="Background" Value="{DynamicResource MiddleAccent}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.transparent-green:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource DefaultAccent}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
     </Style>
 </Styles>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Avalonia.Threading;
 using mcLaunch.Installer.Core;
 
 namespace mcLaunch.Installer.Pages;
@@ -13,7 +14,7 @@ public partial class InstallationPage : InstallerPage
         InitializeComponent();
 
         installer = new SoftwareInstaller(MainWindow.Instance.Parameters);
-        Downloader.OnDownloadProgressUpdate += DownloadProgressUpdate;
+        DownloadManager.OnDownloadProgressUpdate += DownloadProgressUpdate;
         installer.OnExtractionStarted += OnExtractionStarted;
     }
 
@@ -33,8 +34,11 @@ public partial class InstallationPage : InstallerPage
 
     private void DownloadProgressUpdate(string file, float percent)
     {
-        StatusBar.Value = (int) MathF.Round(percent * 100);
-        StatusText.Text = $"Downloading {Path.GetFileName(file)}...";
+        Dispatcher.UIThread.Post(() =>
+        {
+            StatusBar.Value = (int) MathF.Round(percent * 100);
+            StatusText.Text = $"Downloading {Path.GetFileName(file)}...";
+        });
     }
 
     public override async void OnShow()
