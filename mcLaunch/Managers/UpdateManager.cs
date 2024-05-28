@@ -5,6 +5,7 @@ using mcLaunch.Core.Managers;
 using mcLaunch.GitHub;
 using mcLaunch.GitHub.Models;
 using mcLaunch.Utilities;
+using mcLaunch.Views.Popups;
 
 namespace mcLaunch.Managers;
 
@@ -57,17 +58,26 @@ public static class UpdateManager
         return false;
     }
 
-    public static async Task<bool> UpdateAsync()
+    public static async Task<bool> UpdateInstallerAsync(bool popup = true)
     {
-        if (!OperatingSystem.IsWindows()) return false;
-
-        GitHubRelease? latestRelease = await GitHubRepository.GetLatestReleaseAsync();
-        if (latestRelease == null) return false;
-
-        if (LaunchInstaller()) return true;
-
         string? installerUrl = await FindInstallerUrlAsync();
         if (installerUrl == null) return false;
+        
+        void ProgressUpdate(string str, float percent, int _)
+        {
+            StatusPopup.Instance.StatusPercent = percent;
+        }
+
+        if (popup)
+        {
+            Navigation.ShowPopup(new StatusPopup("Downloading installer", "Downloading latest mcLaunch installer"));
+            StatusPopup.Instance.ShowDownloadBanner = false;
+
+            DownloadManager.OnDownloadProgressUpdate += ProgressUpdate;
+        }
+        
+        if (File.Exists("installer/installer")) File.Delete("installer/installer");
+        if (File.Exists("installer/installer.exe")) File.Delete("installer/installer.exe");
 
         Directory.CreateDirectory("installer");
         
@@ -77,6 +87,22 @@ public static class UpdateManager
 
         await DownloadManager.ProcessAll();
 
+        if (popup)
+        {
+            DownloadManager.OnDownloadProgressUpdate -= ProgressUpdate;
+            Navigation.HidePopup();
+        }
+
+        return Directory.Exists("installer") && PlatformSpecific.ProcessExists("installer/installer");
+    }
+
+    public static async Task<bool> UpdateAsync()
+    {
+        if (!OperatingSystem.IsWindows()) return false;
+        
+        if (LaunchInstaller()) return true;
+
+        if (!await UpdateInstallerAsync()) return false;
         if (LaunchInstaller()) return true;
 
         return false;

@@ -1,6 +1,7 @@
 ﻿using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.Settings;
 using mcLaunch.Views.Windows;
@@ -19,6 +20,10 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
         VersionText.Text = CurrentBuild.Version.ToString();
         CommitText.Text = CurrentBuild.Commit;
         BranchNameText.Text = CurrentBuild.Branch;
+
+#if !DEBUG
+        CrashButton.IsVisible = false;
+#endif
 
         int years = (int) MathF.Floor((float) (DateTime.Now - Constants.McLaunchBirthDate).TotalDays / 365);
         YearsText.Text = $"{years} year{(years > 1 ? "s" : "")} old";
@@ -50,5 +55,10 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
     private void AboutButtonClicked(object? sender, RoutedEventArgs e)
     {
         new AboutWindow().Show(MainWindow.Instance);
+    }
+
+    private async void UpdateInstallerButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        await UpdateManager.UpdateInstallerAsync();
     }
 }
