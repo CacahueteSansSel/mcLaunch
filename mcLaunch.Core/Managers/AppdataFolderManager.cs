@@ -34,9 +34,9 @@ public static class AppdataFolderManager
 #endif
 
         if (OperatingSystem.IsWindows() || OperatingSystem.IsMacOS())
-            Path = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/.mclaunch{suffix}";
+            Path = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/.mclaunch{suffix}".FixPath();
         else if (OperatingSystem.IsLinux())
-            Path = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.mclaunch{suffix}";
+            Path = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.mclaunch{suffix}".FixPath();
 
         if (!Directory.Exists(Path)) Directory.CreateDirectory(Path);
     }
@@ -89,7 +89,7 @@ public static class AppdataFolderManager
     {
         if (Path == null) Init();
 
-        return $"{Path}/{folderName}";
+        return $"{Path}/{folderName}".FixPath();
     }
 
     public static string GetValidPath(string folderName)
@@ -99,6 +99,6 @@ public static class AppdataFolderManager
         string path = $"{Path}/{folderName}";
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
-        return path;
+        return path.FixPath();
     }
 }
