@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using mcLaunch.Launchsite.Models;
+using mcLaunch.Launchsite.Utils;
 
 namespace mcLaunch.Launchsite.Core;
 
@@ -19,7 +20,7 @@ public class AssetsDownloader
 
     private async Task DownloadVirtualAsync(AssetIndex index, MinecraftVersion version, Action<float> percentCallback)
     {
-        VirtualPath = $"{Path}/virtual/{version.AssetIndex.Id}";
+        VirtualPath = $"{Path}/virtual/{version.AssetIndex.Id}".FixPath();
         if (!Directory.Exists(VirtualPath)) Directory.CreateDirectory(VirtualPath);
 
         Asset[] assets = index.ParseAll();
@@ -34,7 +35,7 @@ public class AssetsDownloader
             if (!string.IsNullOrWhiteSpace(directoriesPath) && !Directory.Exists(directoriesPath))
                 Directory.CreateDirectory(directoriesPath);
 
-            string assetPath = $"{VirtualPath}/{asset.Name}";
+            string assetPath = $"{VirtualPath}/{asset.Name}".FixPath();
 
             await Context.Downloader.DownloadAsync(asset.Url, assetPath, asset.Hash);
 
@@ -48,8 +49,8 @@ public class AssetsDownloader
     public async Task DownloadAsync(MinecraftVersion version, Action<float> percentCallback)
     {
         AssetIndex? index = await version.GetAssetIndexAsync();
-        string objectsFolder = $"{Path}/objects";
-        string indexesFolder = $"{Path}/indexes";
+        string objectsFolder = $"{Path}/objects".FixPath();
+        string indexesFolder = $"{Path}/indexes".FixPath();
 
         if (index != null && index.MapToResources)
         {
@@ -62,7 +63,7 @@ public class AssetsDownloader
         if (!Directory.Exists(objectsFolder)) Directory.CreateDirectory(objectsFolder);
         if (!Directory.Exists(indexesFolder)) Directory.CreateDirectory(indexesFolder);
 
-        await File.WriteAllTextAsync($"{indexesFolder}/{version.AssetIndex.Id}.json",
+        await File.WriteAllTextAsync($"{indexesFolder}/{version.AssetIndex.Id}.json".FixPath(),
             JsonSerializer.Serialize(index!));
 
         Asset[] assets = index.ParseAll();
@@ -71,10 +72,10 @@ public class AssetsDownloader
         {
             float percent = cur / (float) assets.Length;
 
-            string prefixFolder = $"{objectsFolder}/{asset.Prefix}";
+            string prefixFolder = $"{objectsFolder}/{asset.Prefix}".FixPath();
             if (!Directory.Exists(prefixFolder)) Directory.CreateDirectory(prefixFolder);
 
-            string assetPath = $"{prefixFolder}/{asset.Hash}";
+            string assetPath = $"{prefixFolder}/{asset.Hash}".FixPath();
 
             await Context.Downloader.DownloadAsync(asset.Url, assetPath, null);
 

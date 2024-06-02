@@ -119,11 +119,4 @@ public static class Extensions
 
         return new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/icons/{modLoader.Id}.png")));
     }
-    
-    public static string FixPath(this string path)
-    {
-        return path
-            .Replace('/', Path.DirectorySeparatorChar)
-            .Replace('\\', Path.DirectorySeparatorChar);
-    }
 }
