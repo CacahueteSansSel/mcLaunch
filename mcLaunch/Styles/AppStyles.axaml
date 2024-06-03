@@ -273,6 +273,10 @@
         </Setter>
     </Style>
 
+    <Style Selector="Button.borderless">
+        <Setter Property="BorderThickness" Value="0"></Setter>
+    </Style>
+
     <Style Selector="Button.transparent:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="#AA3C3C3C" />
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundDarker}" />
