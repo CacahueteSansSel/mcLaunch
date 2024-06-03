@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using mcLaunch.Core.Managers;
 
@@ -10,12 +11,14 @@ public static class LauncherCrashReport
     {
         StringWriter wr = new();
 
-        wr.WriteLine($"[!] mcLaunch v{CurrentBuild.Version} commit {CurrentBuild.Commit}");
+        wr.WriteLine($"[!] mcLaunch v{CurrentBuild.Version} commit {CurrentBuild.Commit} on branch {CurrentBuild.Branch}");
         wr.WriteLine("If you are reporting this, please include this crash report");
         wr.WriteLine($"Platform: {Environment.OSVersion}");
         wr.WriteLine($"Platform ID: {Launchsite.Core.Utilities.GetPlatformIdentifier()}");
         wr.WriteLine($"Java Platform ID: {Launchsite.Core.Utilities.GetJavaPlatformIdentifier()}");
         wr.WriteLine($"Architecture: {Launchsite.Core.Utilities.GetArchitecture()}");
+        wr.WriteLine($"Dotnet version: {Environment.Version:0.0.0}");
+        wr.WriteLine($"System language: {CultureInfo.CurrentCulture.EnglishName} [{CultureInfo.CurrentCulture.Name}]");
         wr.WriteLine();
         wr.WriteLine("Crash Type: Exception");
         wr.WriteLine();
