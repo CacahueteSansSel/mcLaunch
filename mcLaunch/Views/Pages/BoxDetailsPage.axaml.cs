@@ -48,6 +48,11 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         }
 
         ContentsBox.IsVisible = true;
+        
+        TimeSpan lastPlayedSpan = DateTime.Now - box.Manifest.LastLaunchTime;
+        LastPlayedTimeText.Text = lastPlayedSpan.TotalMinutes <= 1 
+            ? "Last played just now" 
+            : $"Last played {lastPlayedSpan.ToDisplay()}";
 
         MinecraftButtonText.Text = box.Manifest.Version;
         ModloaderButtonLoaderIcon.Source = Box.ModLoader?.LoadIcon();
@@ -105,7 +110,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         Box?.SetWatching(true);
         Reload();
 
-        DiscordManager.SetPresenceBox(Box);
+        if (!Design.IsDesignMode) DiscordManager.SetPresenceBox(Box);
 
         base.OnLoaded(e);
     }
