@@ -25,6 +25,9 @@
         <SolidColorBrush x:Key="MiddleAccent">#007A42</SolidColorBrush>
         <SolidColorBrush x:Key="DarkerAccent">#006035</SolidColorBrush>
         <SolidColorBrush x:Key="WarningAccent">#AF3400</SolidColorBrush>
+        <SolidColorBrush x:Key="CaptionButtonBackground">#3C3C3C</SolidColorBrush>
+        <x:Double x:Key="CaptionButtonWidth">50</x:Double>
+        <x:Double x:Key="CaptionButtonHeight">50</x:Double>
     </Application.Resources>
     <NativeMenu.Menu>
         <NativeMenu>

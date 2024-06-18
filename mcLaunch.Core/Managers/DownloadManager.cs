@@ -115,7 +115,14 @@ public static class DownloadManager
 
             string folder = entry.Target.Replace(
                 Path.GetFileName(entry.Target), "").Trim('/');
-            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+            if (!Directory.Exists(folder))
+            {
+                try
+                {
+                    Directory.CreateDirectory(folder);
+                }
+                catch (Exception e) {}
+            }
 
             var download = DownloadBuilder.New()
                 .WithConfiguration(new DownloadConfiguration()
@@ -138,7 +145,7 @@ public static class DownloadManager
             download.DownloadProgressChanged += (sender, args) =>
             {
                 OnDownloadProgressUpdate?.Invoke(entry.Source,
-                    (float) progress / section.Entries.Count + (float) (args.ProgressPercentage / 100),
+                    (float) (args.ProgressPercentage / 100),
                     sectionIndex + 1);
             };
 

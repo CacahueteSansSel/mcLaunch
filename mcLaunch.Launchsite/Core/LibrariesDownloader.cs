@@ -1,4 +1,5 @@
 ﻿using mcLaunch.Launchsite.Models;
+using mcLaunch.Launchsite.Utils;
 
 namespace mcLaunch.Launchsite.Core;
 
@@ -9,7 +10,8 @@ public class LibrariesDownloader
     public LibrariesDownloader(MinecraftFolder folder, string path = "libraries", string nativesPath = "bin") : this(
         $"{folder.Path}/{path}")
     {
-        NativesPath = $"{folder.Path}/{nativesPath}/{Guid.NewGuid().ToString().Replace("-", "")}";
+        NativesPath = $"{folder.Path}/{nativesPath}/{Guid.NewGuid().ToString().Replace("-", "")}"
+            .FixPath();
     }
 
     public LibrariesDownloader(string absolutePath)
@@ -39,9 +41,9 @@ public class LibrariesDownloader
         LibraryName name = new LibraryName(library.Name);
 
         string filename = library.GetFinalJarFilename();
-        string path = $"{Path}/{name.Package.Replace('.', '/')}/{filename}";
+        string path = $"{Path}/{name.Package.Replace('.', '/')}/{filename}".FixPath();
         string url = library.DeduceUrl()!;
-        string dir = path.Replace(filename, "").Trim('/');
+        string dir = path.Replace(filename, "").Trim('/').FixPath();
 
         if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path)))
             ClassPath.Add(System.IO.Path.GetFullPath(path));
@@ -57,10 +59,10 @@ public class LibrariesDownloader
     {
         if (artifact == null) return null;
 
-        string path = $"{Path}/{artifact.Path}";
+        string path = $"{Path}/{artifact.Path}".FixPath();
         string url = artifact.Url;
         string filename = System.IO.Path.GetFileName(path);
-        string dir = path.Replace(filename, "").Trim('/');
+        string dir = path.Replace(filename, "").Trim('/').FixPath();
 
         if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path)))
             ClassPath.Add(System.IO.Path.GetFullPath(path));

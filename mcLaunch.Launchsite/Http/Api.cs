@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Xml;
 
 namespace mcLaunch.Launchsite.Http;
 
@@ -16,6 +17,46 @@ public static class Api
     public static void SetUserAgent(ProductInfoHeaderValue ua)
     {
         userAgent = ua;
+    }
+    
+    public static async Task<XmlDocument?> GetAsyncXml(string url)
+    {
+        HttpClient client = new HttpClient();
+        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+
+        HttpResponseMessage resp = null;
+        int t = 0;
+        while (true)
+        {
+            if (t >= RetryCount)
+            {
+                OnNetworkError?.Invoke(url);
+                return null;
+            }
+
+            try
+            {
+                resp = await client.GetAsync(url);
+                if (resp.IsSuccessStatusCode) break;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{url} => (Exception) {e}");
+            }
+
+            t++;
+        }
+
+        if (!resp.IsSuccessStatusCode) return default;
+
+        string xml = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
+
+        OnNetworkSuccess?.Invoke(url);
+
+        XmlDocument doc = new XmlDocument();
+        doc.LoadXml(xml);
+        
+        return doc;
     }
 
     public static async Task<T?> GetAsync<T>(string url, bool patchDateTimes = false)

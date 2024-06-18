@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using mcLaunch.Launchsite.Models;
+using mcLaunch.Launchsite.Utils;
 
 namespace mcLaunch.Launchsite.Core;
 
@@ -18,7 +19,7 @@ public class MinecraftFolder
     public bool HasVersion(string id) =>
         Directory.Exists($"{Path}/versions/{id}") && File.Exists($"{Path}/versions/{id}/{id}.jar");
 
-    public string GetVersionPath(string id) => $"{Path}/versions/{id}";
+    public string GetVersionPath(string id) => $"{Path}/versions/{id}".FixPath();
 
     public MinecraftVersion? GetVersion(string id) =>
         JsonSerializer.Deserialize<MinecraftVersion>(File.ReadAllText($"{GetVersionPath(id)}/{id}.json"));
@@ -38,13 +39,13 @@ public class MinecraftFolder
     {
         string platform = $"{Utilities.GetPlatformIdentifier()}-{Utilities.GetArchitecture()}";
 
-        return $"{Path}/runtime/{jvmName}/{platform}/{jvmName}/bin/javaw" +
-               (platform.StartsWith("windows") ? ".exe" : "");
+        return ($"{Path}/runtime/{jvmName}/{platform}/{jvmName}/bin/javaw" +
+               (platform.StartsWith("windows") ? ".exe" : "")).FixPath();
     }
 
     public async Task InstallVersionAsync(MinecraftVersion version, bool force = false)
     {
-        string path = $"{Path}/versions/{version.Id}";
+        string path = $"{Path}/versions/{version.Id}".FixPath();
 
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 

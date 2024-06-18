@@ -2,6 +2,7 @@
 using System.Text.Json.Nodes;
 using mcLaunch.Launchsite.Http;
 using mcLaunch.Launchsite.Models;
+using mcLaunch.Launchsite.Utils;
 
 namespace mcLaunch.Launchsite.Core;
 
@@ -17,7 +18,7 @@ public class JvmDownloader
 
     public JvmDownloader(string customPath)
     {
-        BasePath = customPath;
+        BasePath = customPath.FixPath();
     }
 
     public MinecraftFolder SystemFolder { get; private set; }
@@ -27,19 +28,19 @@ public class JvmDownloader
     public Task DownloadForCurrentPlatformAsync(string name) =>
         DownloadAsync(Utilities.GetJavaPlatformIdentifier(), name);
 
-    public string GetJvmPath(string platform, string name) => $"{BasePath}/{name}/{platform}";
+    public string GetJvmPath(string platform, string name) => $"{BasePath}/{name}/{platform}".FixPath();
 
     public string GetAndPrepareJvmExecPath(string platform, string name)
     {
         if (OperatingSystem.IsMacOS())
         {
-            string path = $"{BasePath}/{name}/{platform}/jre.bundle/Contents/Home/bin/java";
+            string path = $"{BasePath}/{name}/{platform}/jre.bundle/Contents/Home/bin/java".FixPath();
             //File.SetUnixFileMode(path, UnixFileMode.UserExecute);
 
             return path;
         }
 
-        return $"{BasePath}/{name}/{platform}/bin/{(OperatingSystem.IsWindows() ? "javaw.exe" : "java")}";
+        return $"{BasePath}/{name}/{platform}/bin/{(OperatingSystem.IsWindows() ? "javaw.exe" : "java")}".FixPath();
     }
 
     public bool HasJvm(string platform, string name) => Directory.Exists(GetJvmPath(platform, name));
@@ -82,7 +83,7 @@ public class JvmDownloader
             // On macOS, we have a .bundle folder
             // We need to make the java executable inside this bundle folder executable
 
-            string macosJavaPath = $"{targetPath}/jre.bundle/Contents/Home/bin/java";
+            string macosJavaPath = $"{targetPath}/jre.bundle/Contents/Home/bin/java".FixPath();
 
             await Context.Downloader.ChmodAsync(macosJavaPath, "+x");
         }

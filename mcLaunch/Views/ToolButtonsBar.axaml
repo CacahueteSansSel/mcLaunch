@@ -55,7 +55,7 @@
                     <StackPanel Margin="5 0 0 0" VerticalAlignment="Center">
                         <TextBlock Classes="light" Text="{Binding Account.Username}" />
                     </StackPanel>
-                    <Button Margin="10 0 10 0" Classes="transparent square" ToolTip.Tip="Disconnect"
+                    <Button Margin="10 0 10 0" Classes="transparent square borderless" ToolTip.Tip="Disconnect"
                             Click="DisconnectButtonClicked">
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/logout.svg}" />
                     </Button>

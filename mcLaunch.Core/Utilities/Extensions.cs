@@ -105,6 +105,8 @@ public static class Extensions
         if (months == 1) return "a month ago";
         if (years == 1) return "a year ago";
 
+        if (span.TotalMinutes < 1) return "less than a minute ago";
+        if (span.TotalHours < 1) return $"{span.Minutes}m ago";
         if (span.TotalDays < 1) return $"{span.Hours}h ago";
         if (span.TotalDays < 7) return $"{days} days ago";
         if (span.TotalDays < 30) return $"{weeks} weeks ago";

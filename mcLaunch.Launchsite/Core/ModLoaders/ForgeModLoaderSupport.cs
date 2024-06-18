@@ -1,4 +1,5 @@
-﻿using mcLaunch.Launchsite.Http;
+﻿using System.Xml;
+using mcLaunch.Launchsite.Http;
 using mcLaunch.Launchsite.Models.Forge;
 
 namespace mcLaunch.Launchsite.Core.ModLoaders;
@@ -27,47 +28,25 @@ public class ForgeModLoaderSupport : ModLoaderSupport
         if (Version.TryParse(minecraftVersion, out Version? version) && version < new Version("1.12.2"))
             return [];
 
-        ForgePromotionsManifest promos = await Api.GetAsync<ForgePromotionsManifest>(PromosUrl);
-        string keyRecommended = $"{minecraftVersion}-recommended";
-        string keyLatest = $"{minecraftVersion}-latest";
+        XmlDocument? forgeVersionXml =
+            await Api.GetAsyncXml("https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml");
 
-        string? forgeRecommendedVersion = null;
-        string? forgeLatestVersion = null;
+        XmlNode versionsNode = forgeVersionXml!.DocumentElement!.SelectNodes("versioning/versions")![0]!;
+        List<ForgeModLoaderVersion> versions = [];
 
-        try
+        foreach (XmlNode childVersionNode in versionsNode.ChildNodes)
         {
-            forgeRecommendedVersion = promos.Promos.GetProperty(keyRecommended).GetString();
-        }
-        catch
-        {
-        }
-
-        try
-        {
-            forgeLatestVersion = promos.Promos.GetProperty(keyLatest).GetString();
-        }
-        catch
-        {
-        }
-
-        List<ForgeModLoaderVersion> versions = new();
-
-        if (forgeLatestVersion != null)
-            versions.Add(new ForgeModLoaderVersion
+            string currentVersion = childVersionNode.InnerText;
+            if (!currentVersion.StartsWith(minecraftVersion)) continue;
+            
+            versions.Add(new ForgeModLoaderVersion()
             {
+                Name = currentVersion.Replace($"{minecraftVersion}-", "").Trim(),
                 MinecraftVersion = minecraftVersion,
-                Name = forgeLatestVersion,
                 JvmExecutablePath = JvmExecutablePath,
                 SystemFolderPath = SystemFolderPath
             });
-        if (forgeRecommendedVersion != null)
-            versions.Add(new ForgeModLoaderVersion
-            {
-                MinecraftVersion = minecraftVersion,
-                Name = forgeRecommendedVersion,
-                JvmExecutablePath = JvmExecutablePath,
-                SystemFolderPath = SystemFolderPath
-            });
+        }
 
         return versions.ToArray();
     }

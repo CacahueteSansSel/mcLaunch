@@ -36,4 +36,11 @@ public static class Extensions
 
     public static string ReadAllText(this ZipArchive zip, string path) =>
         Encoding.UTF8.GetString(ReadAllBytes(zip, path));
+    
+    public static string FixPath(this string path)
+    {
+        return path
+            .Replace('/', Path.DirectorySeparatorChar)
+            .Replace('\\', Path.DirectorySeparatorChar);
+    }
 }

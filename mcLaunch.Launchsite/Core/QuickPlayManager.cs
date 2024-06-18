@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using mcLaunch.Launchsite.Models.QuickPlay;
+using mcLaunch.Launchsite.Utils;
 
 namespace mcLaunch.Launchsite.Core;
 
@@ -11,14 +12,14 @@ public class QuickPlayManager
     public QuickPlayManager(MinecraftFolder folder)
     {
         this.folder = folder;
-        path = $"{folder.CompletePath}/quickPlay/java";
+        path = $"{folder.CompletePath}/quickPlay/java".FixPath();
 
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
     }
 
     public string[] Profiles
         => Directory.GetFiles(path, "*.json")
-            .Select(f => Path.GetFileNameWithoutExtension(f))
+            .Select(Path.GetFileNameWithoutExtension)
             .ToArray();
 
     public string Create(QuickPlayWorldType worldType, QuickPlayGameMode gamemode, string worldName)
@@ -32,7 +33,7 @@ public class QuickPlayManager
             Gamemode = gamemode.ToString().ToLower()
         };
 
-        string path = $"{this.path}/{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.json";
+        string path = $"{this.path}/{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.json".FixPath();
 
         File.WriteAllText(path, JsonSerializer.Serialize(new[] {profile}));
 
