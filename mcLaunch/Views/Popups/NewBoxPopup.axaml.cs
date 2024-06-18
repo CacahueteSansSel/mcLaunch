@@ -9,6 +9,7 @@ using Avalonia.Platform;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
+using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Core.ModLoaders;
 using mcLaunch.Launchsite.Models;
 using mcLaunch.Utilities;
@@ -105,12 +106,22 @@ public partial class NewBoxPopup : UserControl
 
         StatusPopup.Instance.ShowDownloadBanner = true;
 
-        await BoxManager.Create(newBoxManifest);
+        Result<string> result = await BoxManager.Create(newBoxManifest);
+        if (result.IsError)
+        {
+            Navigation.HidePopup();
+            Navigation.ShowPopup(new MessageBoxPopup("Failed to create the box", 
+                result.ErrorMessage ?? "No details specified", MessageStatus.Error));
+            return;
+        }
 
         StatusPopup.Instance.ShowDownloadBanner = false;
         Navigation.HidePopup();
 
         MainPage.Instance?.PopulateBoxList();
+
+        Box box = new Box(newBoxManifest, result.Data!);
+        Navigation.Push(new BoxDetailsPage(box));
     }
 
     private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
