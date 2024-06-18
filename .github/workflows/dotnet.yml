@@ -10,7 +10,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-releases:
 
     runs-on: ubuntu-latest
 
@@ -24,8 +24,28 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
+    - name: Publish
+      run: dotnet run --project mcLaunch.Build/ .
+    - name: Upload win-x64 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: mcLaunch-win-x64.zip
+        path: output/releases/mcLaunch-win-x64.zip
+    - name: Upload win-arm64 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: mcLaunch-win-arm64.zip
+        path: output/releases/mcLaunch-win-arm64.zip
+    - name: Upload linux-x64 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: mcLaunch-linux-x64.zip
+        path: output/releases/mcLaunch-linux-x64.zip
+    - name: Upload linux-arm64 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: mcLaunch-linux-arm64.zip
+        path: output/releases/mcLaunch-linux-arm64.zip
   build-macos:
 
     runs-on: macos-latest
