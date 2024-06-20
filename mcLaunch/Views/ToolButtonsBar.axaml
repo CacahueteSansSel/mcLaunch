@@ -51,7 +51,10 @@
             <Border Classes="frame-without-shadow" Margin="5 10 10 10" BoxShadow=""
                     Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="{Binding HeadIcon}" Margin="10 7 7 7" />
+                    <Button Margin="10 0 10 0" Classes="transparent square borderless" ToolTip.Tip="Manage Skins"
+                            Click="ManageSkinsButtonClicked">
+                        <Image Source="{Binding HeadIcon}" Width="24" Height="24" />
+                    </Button>
                     <StackPanel Margin="5 0 0 0" VerticalAlignment="Center">
                         <TextBlock Classes="light" Text="{Binding Account.Username}" />
                     </StackPanel>

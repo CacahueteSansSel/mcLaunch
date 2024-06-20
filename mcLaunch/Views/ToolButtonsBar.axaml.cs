@@ -183,4 +183,9 @@ public partial class ToolButtonsBar : UserControl
             }
         }
     }
+
+    void ManageSkinsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        //Navigation.Push<SkinsPage>();
+    }
 }

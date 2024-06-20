@@ -326,6 +326,8 @@
         <AvaloniaResource Include="resources\status\warning.svg" />
         <None Remove="resources\icons\copy.svg" />
         <AvaloniaResource Include="resources\icons\copy.svg" />
+        <None Remove="resources\default_skin.png" />
+        <AvaloniaResource Include="resources\default_skin.png" />
     </ItemGroup>
 
     <ItemGroup>

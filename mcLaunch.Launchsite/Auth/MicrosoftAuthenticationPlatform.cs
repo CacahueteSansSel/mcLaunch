@@ -164,4 +164,13 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
 
         return store.Items.Length > 0;
     }
+
+    public override async Task<MinecraftProfile> FetchProfileAsync(string accessToken)
+    {
+        MinecraftProfile? profile = await Api.GetAsyncAuthBearer<MinecraftProfile>(
+            "https://api.minecraftservices.com/minecraft/profile",
+            accessToken);
+
+        return profile;
+    }
 }

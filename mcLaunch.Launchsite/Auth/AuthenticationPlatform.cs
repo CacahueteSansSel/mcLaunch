@@ -14,6 +14,7 @@ public abstract class AuthenticationPlatform
     public abstract Task<MinecraftAuthenticationResult?> AuthenticateAsync(ProgressCallback? callback);
     public abstract Task<bool> DisconnectAsync();
     public abstract Task<bool> HasMinecraftAsync(MinecraftAuthenticationResult result);
+    public abstract Task<MinecraftProfile> FetchProfileAsync(string accessToken);
 
     public AuthenticationPlatform WithBrowserLoginCallback(Action<BrowserLoginCallbackParameters> callback)
     {
