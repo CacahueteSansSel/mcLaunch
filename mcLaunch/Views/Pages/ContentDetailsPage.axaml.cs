@@ -168,6 +168,9 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
                             ShownContent.Type == MinecraftContentType.Modification
                                 ? TargetBox.Manifest.ModLoaderId
                                 : null, TargetBox.Manifest.Version);
+                        
+                        // No version is available, so we continue
+                        if (versions.Length == 0) continue;
 
                         versionId = versions[0].Id;
                     }
