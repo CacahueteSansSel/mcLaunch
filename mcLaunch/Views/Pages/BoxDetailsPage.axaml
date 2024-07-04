@@ -28,6 +28,11 @@
                         <Image Source="{SvgImage /resources/icons/edit.svg}" RenderOptions.BitmapInterpolationMode="HighQuality"
                                Width="13" Height="13" />
                     </Button>
+                    <Button Margin="5 0 0 0" Classes="transparent" Click="DuplicateButtonClicked"
+                            ToolTip.Tip="Duplicate box">
+                        <Image Source="{SvgImage /resources/icons/copy.svg}" RenderOptions.BitmapInterpolationMode="HighQuality"
+                               Width="13" Height="13" />
+                    </Button>
                     <Button Margin="5 0 0 0" Classes="transparent" Click="DeleteBoxButtonClicked"
                             ToolTip.Tip="Delete box">
                         <Image Source="{SvgImage /resources/icons/delete.svg}" RenderOptions.BitmapInterpolationMode="HighQuality"

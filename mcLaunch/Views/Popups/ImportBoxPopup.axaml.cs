@@ -32,25 +32,25 @@ public partial class ImportBoxPopup : UserControl
 
     private async void ImportMcLaunchBoxButtonClicked(object? sender, RoutedEventArgs e)
     {
-        string[] files = await FileSystemUtilities.PickFiles(false, "Import a box file", ["box"]);
+        string[] files = await FilePickerUtilities.PickFiles(false, "Import a box file", ["box"]);
         if (files.Length == 0) return;
 
-        await BoxImportUtilities.ImportBoxAsync(files[0]);
+        await BoxUtilities.ImportBoxAsync(files[0]);
     }
 
     private async void ImportCurseForgeModpackButtonClicked(object? sender, RoutedEventArgs e)
     {
-        string[] files = await FileSystemUtilities.PickFiles(false, "Import a CurseForge modpack", ["zip"]);
+        string[] files = await FilePickerUtilities.PickFiles(false, "Import a CurseForge modpack", ["zip"]);
         if (files.Length == 0) return;
 
-        await BoxImportUtilities.ImportCurseforgeAsync(files[0]);
+        await BoxUtilities.ImportCurseforgeAsync(files[0]);
     }
 
     private async void ImportModrinthModpackButtonClicked(object? sender, RoutedEventArgs e)
     {
-        string[] files = await FileSystemUtilities.PickFiles(false, "Import a Modrinth modpack", ["mrpack"]);
+        string[] files = await FilePickerUtilities.PickFiles(false, "Import a Modrinth modpack", ["mrpack"]);
         if (files.Length == 0) return;
 
-        await BoxImportUtilities.ImportModrinthAsync(files[0]);
+        await BoxUtilities.ImportModrinthAsync(files[0]);
     }
 }

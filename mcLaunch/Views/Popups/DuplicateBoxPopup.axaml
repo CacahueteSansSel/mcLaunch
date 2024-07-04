@@ -1,0 +1,40 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="400"
+             Width="400" Height="310"
+             x:Class="mcLaunch.Views.Popups.DuplicateBoxPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <StackPanel DockPanel.Dock="Right" Margin="38">
+            <TextBlock Classes="title" FontSize="25">Duplicate a box</TextBlock>
+            <DockPanel Margin="0 20 0 0">
+                <StackPanel>
+                    <TextBlock Classes="light" Margin="0 0 0 3">Icon</TextBlock>
+                    <Panel>
+                        <Image x:Name="BoxIconImage" Source="/resources/default_box_logo.png" Width="103" />
+                        <Button Classes="transparent" ToolTip.Tip="Edit icon" Margin="0 0 5 5"
+                                HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="SelectFileButtonClicked">
+                            <Image Source="{SvgImage /resources/icons/edit.svg}" Width="18" Height="18" />
+                        </Button>
+                    </Panel>
+                </StackPanel>
+                <StackPanel Margin="20 0 0 0" Orientation="Vertical">
+                    <TextBlock Classes="light" Margin="0 0 0 3">New box name</TextBlock>
+                    <TextBox x:Name="BoxNameTb" Watermark="Name" UseFloatingWatermark="False" />
+                    <TextBlock Classes="light" Margin="0 20 0 3">New box author name</TextBlock>
+                    <TextBox x:Name="BoxAuthorTb" Watermark="Author" UseFloatingWatermark="False" />
+                </StackPanel>
+            </DockPanel>
+            <DockPanel Margin="0 20 0 0">
+                <Button DockPanel.Dock="Right" x:Name="CancelButton" Classes="secondary" Click="CancelButtonClicked">Cancel</Button>
+                <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="primary" Click="ApplyButtonClicked">Duplicate</Button>
+                <Panel />
+            </DockPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

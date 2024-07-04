@@ -1,6 +1,8 @@
 ﻿using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
@@ -8,28 +10,27 @@ using mcLaunch.Views.Pages;
 
 namespace mcLaunch.Views.Popups;
 
-public partial class EditBoxPopup : UserControl
+public partial class DuplicateBoxPopup : UserControl
 {
-    private readonly Box box;
-
-    public EditBoxPopup()
+    public Box SourceBox { get; private set; }
+    
+    public DuplicateBoxPopup()
     {
         InitializeComponent();
     }
 
-    public EditBoxPopup(Box box, bool cancelEnabled = true)
+    public DuplicateBoxPopup(Box sourceBox)
     {
         InitializeComponent();
 
-        this.box = box;
-        BoxNameTb.Text = box.Manifest.Name;
-        AuthorNameTb.Text = box.Manifest.Author;
-        BoxIconImage.Source = box.Manifest.Icon?.IconLarge;
+        SourceBox = sourceBox;
 
-        CancelButton.IsVisible = cancelEnabled;
+        BoxNameTb.Text = sourceBox.Manifest.Name;
+        BoxAuthorTb.Text = sourceBox.Manifest.Author;
+        BoxIconImage.Source = sourceBox.Manifest.Icon?.IconLarge;
     }
 
-    private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
+    async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
     {
         Bitmap[]? files = await FilePickerUtilities.PickBitmaps(false, "Select a new icon image");
         if (files.Length == 0) return;
@@ -38,15 +39,15 @@ public partial class EditBoxPopup : UserControl
         if (bmp != null) BoxIconImage.Source = bmp;
     }
 
-    private void CancelButtonClicked(object? sender, RoutedEventArgs e)
+    void CancelButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.HidePopup();
     }
 
-    private void ApplyButtonClicked(object? sender, RoutedEventArgs e)
+    async void ApplyButtonClicked(object? sender, RoutedEventArgs e)
     {
-        box.Manifest.Name = BoxNameTb.Text;
-        box.Manifest.Author = AuthorNameTb.Text;
+        Box box = await BoxUtilities.DuplicateAsync(SourceBox, BoxNameTb.Text, BoxAuthorTb.Text);
+        
         if (BoxIconImage.Source != null)
             box.SetAndSaveIcon((Bitmap) BoxIconImage.Source);
 

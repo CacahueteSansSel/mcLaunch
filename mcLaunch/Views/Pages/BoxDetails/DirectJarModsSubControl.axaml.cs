@@ -38,7 +38,7 @@ public partial class DirectJarModsSubControl : SubControl
 
     private async void AddModsButtonClicked(object? sender, RoutedEventArgs e)
     {
-        string[] result = await FileSystemUtilities.PickFiles(true, "Select Direct Jar Mods", ["zip"]);
+        string[] result = await FilePickerUtilities.PickFiles(true, "Select Direct Jar Mods", ["zip"]);
         foreach (string filename in result) Box.AddDirectJarMod(filename);
 
         await PopulateAsync();

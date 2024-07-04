@@ -150,4 +150,9 @@ public partial class BoxEntryCard : UserControl
     {
         PlatformSpecific.OpenFolder(Box.Path);
     }
+
+    void DuplicateOptionClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new DuplicateBoxPopup(Box));
+    }
 }

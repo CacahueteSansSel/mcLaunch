@@ -20,7 +20,6 @@ using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.BoxDetails;
 using mcLaunch.Views.Popups;
 using mcLaunch.Views.Windows;
-using FileSystemUtilities = mcLaunch.Utilities.FileSystemUtilities;
 
 namespace mcLaunch.Views.Pages;
 
@@ -263,7 +262,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
     private async void EditIconButtonClicked(object? sender, RoutedEventArgs e)
     {
-        Bitmap[] files = await FileSystemUtilities.PickBitmaps(false, "Select a new icon image");
+        Bitmap[] files = await FilePickerUtilities.PickBitmaps(false, "Select a new icon image");
         if (files.Length == 0) return;
 
         Bitmap? bmp = files.FirstOrDefault();
@@ -434,5 +433,10 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     {
         ModloaderButtonEditIcon.IsVisible = false;
         ModloaderButtonLoaderIcon.IsVisible = true;
+    }
+
+    void DuplicateButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new DuplicateBoxPopup(Box));
     }
 }

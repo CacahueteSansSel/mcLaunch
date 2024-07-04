@@ -185,6 +185,6 @@ public partial class MainWindow : Window
         }
 
         string? filename = App.Args.GetOrDefault(0);
-        if (filename != null && File.Exists(filename)) await BoxImportUtilities.ImportAsync(filename);
+        if (filename != null && File.Exists(filename)) await BoxUtilities.ImportAsync(filename);
     }
 }

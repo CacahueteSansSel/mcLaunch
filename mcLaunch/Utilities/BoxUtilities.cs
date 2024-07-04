@@ -5,13 +5,14 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents.Packs;
+using mcLaunch.Core.Utilities;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
 
 namespace mcLaunch.Utilities;
 
-public static class BoxImportUtilities
+public static class BoxUtilities
 {
     public static async Task ImportBoxAsync(string filename, bool popup = true, bool openBoxAfterImport = true)
     {
@@ -211,5 +212,32 @@ public static class BoxImportUtilities
                 await ImportCurseforgeAsync(filename, popup, openBoxAfterImport);
                 break;
         }
+    }
+
+    public static async Task<Box> DuplicateAsync(Box sourceBox, string name, string author, bool popup = true)
+    {
+        if (popup)
+        {
+            Navigation.ShowPopup(new StatusPopup($"Duplicating {sourceBox.Manifest.Name}", 
+                "Please wait for the box to be duplicated"));
+        }
+
+        string boxId = IdGenerator.Generate();
+        string newBoxPath = $"{BoxManager.BoxesPath}/{boxId}";
+        Directory.CreateDirectory(newBoxPath);
+        FileSystemUtilities.CopyDirectory(sourceBox.Path, newBoxPath);
+
+        Box box = new Box(newBoxPath, false);
+        await box.ReloadManifestAsync(true);
+        
+        box.Manifest.Id = boxId;
+        box.Manifest.Name = name;
+        box.Manifest.Author = author;
+
+        box.SaveManifest();
+
+        if (popup) Navigation.HidePopup();
+
+        return box;
     }
 }
