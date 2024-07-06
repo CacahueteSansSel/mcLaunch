@@ -75,8 +75,8 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             ModLicenseBadge.IsVisible = false;
         }
 
-        ModOpenSource.IsVisible = shownContent.IsOpenSource;
-        ModClosedSource.IsVisible = !shownContent.IsOpenSource;
+        ModOpenSource.IsVisible = shownContent.License != null && shownContent.IsOpenSource;
+        ModClosedSource.IsVisible = shownContent.License != null && !shownContent.IsOpenSource;
 
         SetInstalled(targetBox != null && targetBox.HasContentSoft(shownContent));
         FetchAdditionalInfos();
