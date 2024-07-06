@@ -110,6 +110,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             MinecraftContent m = new MinecraftContent
             {
                 Id = mod.Id.ToString(),
+                Slug = mod.Slug,
+                Url = $"https://www.curseforge.com/minecraft/mc-mods/{mod.Slug}",
                 Type = contentType,
                 Name = mod.Name,
                 ShortDescription = mod.Summary,
@@ -205,6 +207,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             MinecraftContent content = new MinecraftContent
             {
                 Id = cfMod.Id.ToString(),
+                Slug = cfMod.Slug,
+                Url = $"https://www.curseforge.com/minecraft/mc-mods/{cfMod.Slug}",
                 Type = GetTypeFromClassId(cfMod.ClassId ?? ModsClassId), // TODO: Check if cfMod.ClassId is safe to use
                 Name = cfMod.Name,
                 ShortDescription = cfMod.Summary,
@@ -515,6 +519,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             ? string.Empty
             : (await client.GetModFileChangelog(cfMod.Id, cfMod.LatestFiles.FirstOrDefault().Id)).Data;
         content.LongDescriptionBody = (await client.GetModDescription(id)).Data;
+        content.Url = $"https://www.curseforge.com/minecraft/mc-mods/{cfMod.Slug}";
 
         return content;
     }

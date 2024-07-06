@@ -155,4 +155,32 @@ public partial class BoxEntryCard : UserControl
     {
         Navigation.ShowPopup(new DuplicateBoxPopup(Box));
     }
+
+    async void CompleteReportOptionClicked(object? sender, RoutedEventArgs e)
+    {
+        if (MainWindow.Instance.Clipboard == null)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Error", "Unable to access clipboard", MessageStatus.Error));
+            return;
+        }
+        
+        string report = await BoxUtilities.GenerateReportAsync(Box);
+        MainWindow.Instance.Clipboard?.SetTextAsync(report);
+        
+        Navigation.ShowPopup(new MessageBoxPopup("Success", "Report copied to clipboard", MessageStatus.Success));
+    }
+
+    async void RelativeReportOptionClicked(object? sender, RoutedEventArgs e)
+    {
+        if (MainWindow.Instance.Clipboard == null)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Error", "Unable to access clipboard", MessageStatus.Error));
+            return;
+        }
+        
+        string report = await BoxUtilities.GenerateReportAsync(Box, false);
+        MainWindow.Instance.Clipboard?.SetTextAsync(report);
+        
+        Navigation.ShowPopup(new MessageBoxPopup("Success", "Report copied to clipboard", MessageStatus.Success));
+    }
 }

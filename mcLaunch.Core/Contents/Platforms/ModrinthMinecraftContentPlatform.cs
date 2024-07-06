@@ -95,6 +95,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         MinecraftContent[] contents = search.Hits.Select(hit => new MinecraftContent
         {
             Id = hit.ProjectId,
+            Slug = hit.Slug,
             Type = contentType,
             Name = hit.Title,
             License = hit.License,
@@ -235,6 +236,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             MinecraftContent content = new MinecraftContent
             {
                 Id = project.Id,
+                Slug = project.Slug,
                 Type = GetContentTypeFromProjectType(project.ProjectType),
                 Name = project.Title,
                 ShortDescription = project.Description,

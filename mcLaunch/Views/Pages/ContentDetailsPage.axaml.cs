@@ -84,8 +84,6 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         UpdateButton.IsEnabled = shownContent.IsUpdateRequired;
         UpdateButton.IsVisible = shownContent.IsUpdateRequired;
 
-        OpenInBrowserButton.IsVisible = shownContent.Url != null;
-
         if (TargetBox == null)
         {
             InstallButton.IsVisible = false;
@@ -119,6 +117,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             ShownContent.Background = TargetBox.Manifest.Background;
 
         LoadCircle.IsVisible = false;
+        OpenInBrowserButton.IsVisible = ShownContent.Url != null;
     }
 
     public void SetInstalled(bool isInstalled)

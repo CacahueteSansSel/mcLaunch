@@ -72,6 +72,18 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator></Separator>
+                <MenuItem Header="Copy Mod List Report">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
+                    </MenuItem.Icon>
+                    <MenuItem.Items>
+                        <MenuItem Header="Complete" Click="CompleteReportOptionClicked">
+                        </MenuItem>
+                        <MenuItem Header="Only mods added since launcher start" Click="RelativeReportOptionClicked">
+                        </MenuItem>
+                    </MenuItem.Items>
+                </MenuItem>
+                <Separator></Separator>
                 <MenuItem Header="Delete" Click="DeleteMenuOptionClicked">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/delete.svg}" />
