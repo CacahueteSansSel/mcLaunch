@@ -65,7 +65,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         ModPlatformBadge.Text = shownContent.Platform.Name;
         //ModPlatformBadge.SetIcon(shownContent.Platform.Name.ToLower());
         
-        if (shownContent.License != null)
+        if (!string.IsNullOrWhiteSpace(shownContent.License))
         {
             ModLicenseBadge.Text = shownContent.GetLicenseDisplayName();
             ModLicenseBadge.IsVisible = true;
