@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Core.Boxes;
@@ -26,32 +27,36 @@ public partial class ExportBoxPopup : UserControl
 
     private async void ExportAsync<T>(string extension, string extensionDesc) where T : ModificationPack, new()
     {
-        SaveFileDialog sfd = new SaveFileDialog();
-        sfd.Title = $"Export {box.Manifest.Name}";
-        sfd.Filters = new List<FileDialogFilter>
-        {
-            new()
-            {
-                Extensions = new List<string>
-                {
-                    extension
-                },
-                Name = extensionDesc
-            }
-        };
-
-        string? filename = await sfd.ShowAsync(MainWindow.Instance);
-        if (filename == null) return;
-
-        Navigation.ShowPopup(new StatusPopup($"Exporting {box.Manifest.Name}",
-            $"Exporting {box.Manifest.Name} to {extensionDesc}"));
-
-        T bb = new();
-        await bb.ExportAsync(box, filename);
-
         Navigation.HidePopup();
-        Navigation.ShowPopup(new MessageBoxPopup("Success !",
-            $"{box.Manifest.Name} have been exported successfully", MessageStatus.Success));
+        Navigation.ShowPopup(new ExportBoxFilesSelectionPopup(box, async entries =>
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Title = $"Export {box.Manifest.Name}";
+            sfd.Filters = new List<FileDialogFilter>
+            {
+                new()
+                {
+                    Extensions = new List<string>
+                    {
+                        extension
+                    },
+                    Name = extensionDesc
+                }
+            };
+
+            string? filename = await sfd.ShowAsync(MainWindow.Instance);
+            if (filename == null) return;
+
+            Navigation.ShowPopup(new StatusPopup($"Exporting {box.Manifest.Name}",
+                $"Exporting {box.Manifest.Name} to {extensionDesc}"));
+
+            T bb = new();
+            await bb.ExportAsync(box, filename, entries.Select(entry => entry.Name).ToArray());
+
+            Navigation.HidePopup();
+            Navigation.ShowPopup(new MessageBoxPopup("Success !",
+                $"{box.Manifest.Name} have been exported successfully", MessageStatus.Success));
+        }));
     }
 
     private void ClosePopupButtonClicked(object? sender, RoutedEventArgs e)

@@ -28,7 +28,7 @@ public abstract class ModificationPack
 
     public abstract Task InstallModificationAsync(Box targetBox, SerializedMinecraftContent mod);
 
-    public abstract Task ExportAsync(Box box, string filename);
+    public abstract Task ExportAsync(Box box, string filename, string[]? includedFiles);
 
     public class SerializedMinecraftContent
     {

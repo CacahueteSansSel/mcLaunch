@@ -103,7 +103,7 @@ public class BoxBinaryModificationPack : ModificationPack
         }, mod.VersionId, false, false);
     }
 
-    public override async Task ExportAsync(Box box, string filename)
+    public override async Task ExportAsync(Box box, string filename, string[]? includedFiles)
     {
         SerializedBox bb = new SerializedBox
         {
@@ -126,6 +126,7 @@ public class BoxBinaryModificationPack : ModificationPack
 
         List<Mod> mods = new();
         foreach (BoxStoredContent mod in box.Manifest.Contents)
+        {
             mods.Add(new Mod
             {
                 Id = mod.Id,
@@ -133,21 +134,25 @@ public class BoxBinaryModificationPack : ModificationPack
                 Platform = mod.PlatformId,
                 Version = mod.VersionId
             });
+        }
         bb.Mods = mods.ToArray();
 
         List<FSFile> files = new();
-        foreach (string file in box.GetAdditionalFiles())
+        if (includedFiles != null)
         {
-            string completePath = $"{box.Path}/minecraft/{file}";
-            if (!File.Exists(completePath)) continue;
-
-            byte[] data = await File.ReadAllBytesAsync(completePath);
-
-            files.Add(new FSFile
+            foreach (string file in includedFiles)
             {
-                AbsFilename = file,
-                Data = data
-            });
+                string completePath = $"{box.Path}/minecraft/{file}";
+                if (!File.Exists(completePath)) continue;
+
+                byte[] data = await File.ReadAllBytesAsync(completePath);
+
+                files.Add(new FSFile
+                {
+                    AbsFilename = file,
+                    Data = data
+                });
+            }
         }
 
         foreach (string modFile in box.GetUnlistedMods())
