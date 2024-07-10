@@ -132,13 +132,28 @@ public class CurseForgeModificationPack : ModificationPack
             foreach (string file in includedFiles)
             {
                 string completePath = $"{box.Path}/minecraft/{file}";
-                if (!File.Exists(completePath)) continue;
+                if (File.Exists(completePath))
+                {
+                    ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
+                    await using Stream entryStream = overrideEntry.Open();
+                    using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
 
-                ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
-                await using Stream entryStream = overrideEntry.Open();
-                using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
+                    await modFileStream.CopyToAsync(entryStream);
+                }
+                
+                if (System.IO.Directory.Exists(completePath))
+                {
+                    foreach (string dirFile in Directory.GetFiles(completePath, "*", SearchOption.AllDirectories))
+                    {
+                        string relativePath = dirFile.Replace(completePath, "")
+                            .TrimStart(Path.DirectorySeparatorChar);
+                        ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}/{relativePath}");
+                        await using Stream entryStream = overrideEntry.Open();
+                        using FileStream modFileStream = new FileStream(dirFile, FileMode.Open);
 
-                await modFileStream.CopyToAsync(entryStream);
+                        await modFileStream.CopyToAsync(entryStream);
+                    }
+                }
             }
         }
 

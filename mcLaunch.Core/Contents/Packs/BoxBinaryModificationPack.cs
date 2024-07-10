@@ -143,15 +143,33 @@ public class BoxBinaryModificationPack : ModificationPack
             foreach (string file in includedFiles)
             {
                 string completePath = $"{box.Path}/minecraft/{file}";
-                if (!File.Exists(completePath)) continue;
-
-                byte[] data = await File.ReadAllBytesAsync(completePath);
-
-                files.Add(new FSFile
+                if (File.Exists(completePath))
                 {
-                    AbsFilename = file,
-                    Data = data
-                });
+                    byte[] data = await File.ReadAllBytesAsync(completePath);
+
+                    files.Add(new FSFile
+                    {
+                        AbsFilename = file,
+                        Data = data
+                    });
+                }
+
+                if (Directory.Exists(completePath))
+                {
+                    foreach (string dirFile in Directory.GetFiles(completePath, "*", SearchOption.AllDirectories))
+                    {
+                        string relativePath = dirFile.Replace(completePath, "")
+                            .TrimStart(Path.DirectorySeparatorChar);
+                        
+                        byte[] data = await File.ReadAllBytesAsync(dirFile);
+
+                        files.Add(new FSFile
+                        {
+                            AbsFilename = $"{file}/{relativePath}",
+                            Data = data
+                        });
+                    }
+                }
             }
         }
 
