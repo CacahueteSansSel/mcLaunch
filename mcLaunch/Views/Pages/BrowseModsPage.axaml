@@ -27,7 +27,7 @@
                                 <TextBox x:Name="SearchTextboxInput" Watermark="Search"
                                          VerticalContentAlignment="Center" />
                             </DockPanel>
-                            <views:MinecraftContentList x:Name="ModList" Margin="28 10 28 10" />
+                            <views:MinecraftContentList x:Name="ModList" Margin="28 0 28 10" />
                         </StackPanel>
                     </Panel>
                 </Border>

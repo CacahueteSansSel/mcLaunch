@@ -102,7 +102,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         box.EventListener = this;
     }
 
-    public void ShowLoadMoreButton()
+    public void ShowPageSelectors()
     {
         if (HidePageSelector) return;
 
@@ -113,7 +113,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         }
     }
 
-    public void HideLoadMoreButton()
+    public void HidePageSelectors()
     {
         foreach (PageSelector component in pageSelectors)
             component.IsVisible = false;
@@ -140,8 +140,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
     private void ApplyContentAttributes()
     {
-        foreach (PageSelector component in pageSelectors)
-            component.IsVisible = false;
+        HidePageSelectors();
         
         if (lastBox == null) return;
 
