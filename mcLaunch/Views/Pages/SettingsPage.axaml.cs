@@ -1,4 +1,5 @@
 ﻿using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Managers;
@@ -60,5 +61,10 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
     private async void UpdateInstallerButtonClicked(object? sender, RoutedEventArgs e)
     {
         await UpdateManager.UpdateInstallerAsync();
+    }
+
+    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        ScrollArea.Offset = Vector.Zero;
     }
 }

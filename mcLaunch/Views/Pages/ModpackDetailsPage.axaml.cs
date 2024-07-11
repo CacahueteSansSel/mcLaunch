@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
@@ -95,5 +96,10 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
     private void OpenButtonClicked(object? sender, RoutedEventArgs e)
     {
         PlatformSpecific.OpenUrl(modpack.Url);
+    }
+
+    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        ScrollArea.Offset = Vector.Zero;
     }
 }

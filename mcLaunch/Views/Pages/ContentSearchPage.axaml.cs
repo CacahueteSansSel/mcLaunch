@@ -1,4 +1,5 @@
 ﻿using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Core.Boxes;
@@ -50,5 +51,10 @@ public partial class ContentSearchPage : UserControl, ITopLevelPageControl
         ModList.SetContents(Array.Empty<MinecraftContent>());
 
         ModList.Search(Box, SearchBoxInput.Text);
+    }
+
+    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        ScrollArea.Offset = Vector.Zero;
     }
 }

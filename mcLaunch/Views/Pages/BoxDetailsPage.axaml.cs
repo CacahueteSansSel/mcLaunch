@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -438,5 +439,10 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     void DuplicateButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.ShowPopup(new DuplicateBoxPopup(Box));
+    }
+
+    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        ContentsBox.Offset = Vector.Zero;
     }
 }

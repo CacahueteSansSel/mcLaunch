@@ -19,6 +19,11 @@
             <Image Source="{SvgImage /resources/icons/edit.svg}" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
                    Height="13" />
         </Button>
+        <Button Margin="0 0 15 20" ZIndex="10" IsHitTestVisible="True" VerticalAlignment="Bottom"
+                HorizontalAlignment="Right" Classes="transparent" Click="UpButtonClicked">
+            <Image Source="{SvgImage /resources/icons/arrow_up.svg}" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
+                   Height="13" />
+        </Button>
         <ScrollViewer x:Name="ContentsBox" ClipToBounds="True">
             <StackPanel>
                 <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">

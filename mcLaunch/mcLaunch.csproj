@@ -31,7 +31,7 @@
         <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
         <PackageReference Include="Jdenticon-net" Version="3.1.2" />
         <PackageReference Include="Markdown.Avalonia" Version="11.0.2" />
-        <PackageReference Include="ReverseMarkdown" Version="4.5.0" />
+        <PackageReference Include="ReverseMarkdown" Version="4.6.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -328,6 +328,8 @@
         <AvaloniaResource Include="resources\icons\copy.svg" />
         <None Remove="resources\default_skin.png" />
         <AvaloniaResource Include="resources\default_skin.png" />
+        <None Remove="resources\icons\arrow_up.svg" />
+        <AvaloniaResource Include="resources\icons\arrow_up.svg" />
     </ItemGroup>
 
     <ItemGroup>
