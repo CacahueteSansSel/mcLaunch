@@ -29,8 +29,13 @@ public class MinecraftFolder
         List<MinecraftVersion> versions = new();
 
         foreach (string versionDirectory in Directory.GetDirectories($"{Path}/versions"))
+        {
+            string jsonPath = $"{versionDirectory}/{System.IO.Path.GetFileName(versionDirectory)}.json";
+            if (!File.Exists(jsonPath)) continue;
+            
             versions.Add(JsonSerializer.Deserialize<MinecraftVersion>(
-                File.ReadAllText($"{versionDirectory}/{System.IO.Path.GetFileName(versionDirectory)}.json"))!);
+                File.ReadAllText(jsonPath))!);
+        }
 
         return versions.ToArray();
     }

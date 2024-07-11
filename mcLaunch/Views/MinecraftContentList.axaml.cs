@@ -140,10 +140,9 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
     private void ApplyContentAttributes()
     {
-        HidePageSelectors();
-        
         if (lastBox == null) return;
 
+        HidePageSelectors();
         Data ctx = (Data) DataContext;
 
         foreach (MinecraftContent content in ctx.Contents)
