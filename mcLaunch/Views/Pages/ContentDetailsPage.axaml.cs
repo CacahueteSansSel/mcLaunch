@@ -298,7 +298,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             return;
         }
 
-        TargetBox.SaveManifest();
+        await TargetBox.SaveManifestAsync();
 
         BoxDetailsPage.LastOpened?.Reload();
 

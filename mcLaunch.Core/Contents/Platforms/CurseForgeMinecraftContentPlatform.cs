@@ -475,7 +475,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             if (filenames == null)
             {
                 if (processDownload) await DownloadManager.ProcessAll();
-                targetBox.SaveManifest();
+                await targetBox.SaveManifestAsync();
 
                 return false;
             }
@@ -488,7 +488,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         if (isDatapackToInstall)
             targetBox.InstallDatapack(versionId, filenames[0]);
 
-        targetBox.SaveManifest();
+        await targetBox.SaveManifestAsync();
         return true;
     }
 

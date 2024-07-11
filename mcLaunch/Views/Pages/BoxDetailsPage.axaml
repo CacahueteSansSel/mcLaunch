@@ -74,11 +74,23 @@
                                 </Button>
                             </StackPanel>
                             <StackPanel Classes="smoothShowLeft" Margin="29 0 0 0" Orientation="Vertical">
-                                <TextBlock Classes="title" FontSize="32" Text="{Binding Manifest.Name}" />
-                                <StackPanel Orientation="Horizontal">
+                                <Panel>
+                                    <TextBlock x:Name="BoxNameText" Classes="title" Cursor="IBeam" FontSize="32" Text="{Binding Manifest.Name, FallbackValue='Box Name'}" PointerPressed="BoxNameTextBlockClicked" />
+                                    <TextBox x:Name="BoxNameTextbox" Classes="title" IsVisible="False" Margin="0 0 20 0" FontSize="32" Padding="0" KeyDown="BoxNameTextBoxKeyPressed" LostFocus="BoxNameTextLostFocus"></TextBox>
+                                </Panel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                                     <TextBlock Classes="light" FontSize="16">by</TextBlock>
-                                    <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16"
-                                               Text="{Binding Manifest.Author}" />
+                                    <Panel Width="200">
+                                        <TextBlock x:Name="BoxAuthorText" Classes="title" Margin="5 0 0 0" 
+                                                   FontSize="16" Text="{Binding Manifest.Author, 
+                                                        FallbackValue='Box Author'}"
+                                                   PointerPressed="InputElement_OnPointerPressed" Cursor="IBeam"/>
+                                        <TextBox HorizontalAlignment="Stretch" x:Name="BoxAuthorTextbox" 
+                                                 Classes="title" IsVisible="False" Padding="0" 
+                                                 Margin="5 0 0 0" FontSize="16" 
+                                                 VerticalAlignment="Center" KeyDown="BoxAuthorTextBoxKeyPressed" 
+                                                 LostFocus="BoxAuthorTextLostFocus"></TextBox>
+                                    </Panel>
                                 </StackPanel>
                                 <Border Margin="0 10 0 0" HorizontalAlignment="Left">
                                     <StackPanel Orientation="Horizontal" Spacing="10">

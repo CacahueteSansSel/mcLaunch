@@ -54,7 +54,7 @@ public partial class DuplicateBoxPopup : UserControl
         if (!CancelButton.IsVisible && box.Manifest.Type == BoxType.Temporary)
             box.Manifest.Type = BoxType.Default;
 
-        box.SaveManifest();
+        await box.SaveManifestAsync();
 
         MainPage.Instance?.PopulateBoxList();
 

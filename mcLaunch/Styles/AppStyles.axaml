@@ -183,6 +183,10 @@
         <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-SemiBold.ttf#Lexend Deca" />
     </Style>
 
+    <Style Selector="TextBox.title">
+        <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-SemiBold.ttf#Lexend Deca" />
+    </Style>
+
     <Style Selector="TextBlock.light">
         <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-Light.ttf#Lexend Deca" />
     </Style>

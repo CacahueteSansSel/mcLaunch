@@ -472,7 +472,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         if (isDatapackToInstall)
             targetBox.InstallDatapack(versionId, $"{targetBox.Folder.CompletePath}/{paths[0]}");
 
-        targetBox.SaveManifest();
+        await targetBox.SaveManifestAsync();
         return true;
     }
 

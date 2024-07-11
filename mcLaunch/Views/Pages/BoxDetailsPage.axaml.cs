@@ -82,7 +82,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         string[] changes = await Box.RunIntegrityChecks();
         if (changes.Length > 0)
         {
-            Box.SaveManifest();
+            await Box.SaveManifestAsync();
 
             ShowWarning(
                 $"Some changes have been applied to your box: \n{string.Join('\n', changes.Select(c => $"    - {c}"))}");
@@ -378,10 +378,10 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         Navigation.ShowPopup(new ConfirmMessageBoxPopup("Warning",
             "Changing the Minecraft version can break mods, your worlds, and other important things. " +
             "Proceed with caution ! Do you wish to continue ?",
-            () =>
+            async () =>
             {
                 Box.Manifest.Version = newVersion.Id;
-                Box.SaveManifest();
+                await Box.SaveManifestAsync();
 
                 Navigation.Pop();
                 Navigation.Push(new BoxDetailsPage(Box));
@@ -413,10 +413,10 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
             Navigation.ShowPopup(new ConfirmMessageBoxPopup("Warning",
                 "Changing the mod loader version can break some mods and other important things. " +
                 "Proceed with caution ! Do you wish to continue ?",
-                () =>
+                async () =>
                 {
                     Box.Manifest.ModLoaderVersion = mlVersion.Id;
-                    Box.SaveManifest();
+                    await Box.SaveManifestAsync();
 
                     Navigation.Pop();
                     Navigation.Push(new BoxDetailsPage(Box));
@@ -444,5 +444,63 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     void UpButtonClicked(object? sender, RoutedEventArgs e)
     {
         ContentsBox.Offset = Vector.Zero;
+    }
+
+    void BoxNameTextBlockClicked(object? sender, PointerPressedEventArgs e)
+    {
+        BoxNameTextbox.Text = Box.Manifest.Name;
+        BoxNameTextbox.IsVisible = true;
+    }
+
+    void BoxNameTextBoxKeyPressed(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter) return;
+
+        SaveEditedName();
+    }
+
+    void BoxNameTextLostFocus(object? sender, RoutedEventArgs e)
+    {
+        SaveEditedName();
+    }
+
+    async void SaveEditedName()
+    {
+        Box.Manifest.Name = BoxNameTextbox.Text;
+        BoxNameText.Text = Box.Manifest.Name;
+        BoxNameTextbox.IsVisible = false;
+        
+        await Box.SaveManifestAsync();
+        
+        MainPage.Instance.PopulateBoxList();
+    }
+
+    async void SaveEditedAuthor()
+    {
+        Box.Manifest.Author = BoxAuthorTextbox.Text;
+        BoxAuthorText.Text = Box.Manifest.Author;
+        BoxAuthorTextbox.IsVisible = false;
+        
+        await Box.SaveManifestAsync();
+        
+        MainPage.Instance.PopulateBoxList();
+    }
+
+    void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        BoxAuthorTextbox.Text = Box.Manifest.Author;
+        BoxAuthorTextbox.IsVisible = true;
+    }
+
+    void BoxAuthorTextBoxKeyPressed(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter) return;
+
+        SaveEditedAuthor();
+    }
+
+    void BoxAuthorTextLostFocus(object? sender, RoutedEventArgs e)
+    {
+        SaveEditedAuthor();
     }
 }

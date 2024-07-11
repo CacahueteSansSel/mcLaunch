@@ -237,7 +237,7 @@ public static class BoxUtilities
         box.Manifest.Name = name;
         box.Manifest.Author = author;
 
-        box.SaveManifest();
+        await box.SaveManifestAsync();
 
         if (popup) Navigation.HidePopup();
 

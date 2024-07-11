@@ -166,7 +166,7 @@ public static class BoxManager
             index++;
         }
 
-        box.SaveManifest();
+        await box.SaveManifestAsync();
 
         return new Result<Box>(new Box(manifest, path.Data!, false));
     }
@@ -224,7 +224,7 @@ public static class BoxManager
         if (iconStream != null) box.SetAndSaveIcon(iconStream, false);
         if (backgroundStream != null) box.SetAndSaveBackground(backgroundStream, false);
 
-        box.SaveManifest();
+        await box.SaveManifestAsync();
 
         return boxResult;
     }

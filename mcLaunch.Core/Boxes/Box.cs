@@ -201,7 +201,7 @@ public class Box : IEquatable<Box>
 
         BoxBackup backup = new(name, BoxBackupType.Complete, DateTime.Now, path);
         Manifest.Backups.Add(backup);
-        SaveManifest();
+        await SaveManifestAsync();
 
         return backup;
     }
@@ -243,7 +243,7 @@ public class Box : IEquatable<Box>
                 // Ensure the backups are still listed even when restoring an earlier backup
                 ReloadManifest(true);
                 Manifest.Backups = backups;
-                SaveManifest();
+                await SaveManifestAsync();
 
                 // Reload icon and background
                 await LoadIconAsync();
@@ -356,7 +356,7 @@ public class Box : IEquatable<Box>
             changes.Add($"Mod {mod.Name} has been removed because it is not present on disk anymore");
         }
 
-        if (await AddMissingModsToList()) SaveManifest();
+        if (await AddMissingModsToList()) await SaveManifestAsync();
 
         Manifest.Contents.RemoveMany(modsToRemove);
 
@@ -387,7 +387,7 @@ public class Box : IEquatable<Box>
 
     private async Task RunPostDeserializationChecksAsync()
     {
-        if (await Manifest.RunPostDeserializationChecksAsync()) SaveManifest();
+        if (await Manifest.RunPostDeserializationChecksAsync()) await SaveManifestAsync();
     }
 
     private async Task<Result> SetupVersionAsync()
@@ -542,7 +542,7 @@ public class Box : IEquatable<Box>
         launcherVersion = version;
     }
 
-    public void AddDirectJarMod(string filename)
+    public async void AddDirectJarMod(string filename)
     {
         if (!Directory.Exists($"{Path}/directjar"))
             Directory.CreateDirectory($"{Path}/directjar");
@@ -551,7 +551,7 @@ public class Box : IEquatable<Box>
         File.Copy(filename, $"{Path}/{relativePath}");
 
         Manifest.AdditionalModloaderFiles.Add(relativePath);
-        SaveManifest();
+        await SaveManifestAsync();
     }
 
     public List<string> GetUnlistedMods()
@@ -734,17 +734,15 @@ public class Box : IEquatable<Box>
 
     public bool HasContentSoft(MinecraftContent mod) => Manifest.HasContentSoft(mod);
 
-    public void SaveManifest()
+    public async Task SaveManifestAsync()
     {
-        File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
+        await File.WriteAllTextAsync(manifestPath, JsonSerializer.Serialize(Manifest));
     }
 
     // Launch Minecraft normally
     public Process Run()
     {
         Manifest.LastLaunchTime = DateTime.Now;
-        SaveManifest();
-
         return Minecraft.Run();
     }
 
