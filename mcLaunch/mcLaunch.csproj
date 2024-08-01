@@ -36,6 +36,8 @@
 
     <ItemGroup>
         <None Remove="resources\logo.png" />
+        <AvaloniaResource Include="resources\icons\babric.png" />
+        <AvaloniaResource Include="resources\icons\babric.svg" />
         <AvaloniaResource Include="resources\logo.png" />
         <None Remove="resources\fonts\LexendDeca-Black.ttf" />
         <AvaloniaResource Include="resources\fonts\LexendDeca-Black.ttf" />
