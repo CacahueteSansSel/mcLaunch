@@ -32,9 +32,10 @@ public class DirectJarMergingModLoaderSupport : ModLoaderSupport
 
         using ZipArchive minecraftJar = new(new FileStream(jarFilename, FileMode.Open, FileAccess.ReadWrite),
             ZipArchiveMode.Update);
-        minecraftJar.GetEntry("META-INF/MOJANG_C.SF")?.Delete();
-        minecraftJar.GetEntry("META-INF/MOJANG_C.DSA")?.Delete();
-        minecraftJar.GetEntry("META-INF/MANIFEST.MF")?.Delete();
+
+        ZipArchiveEntry[] entries = minecraftJar.Entries.Where(entry => entry.FullName.StartsWith("META-INF")).ToArray();
+        foreach (var entry in entries)
+            entry.Delete();
         minecraftJar.GetEntry("META-INF")?.Delete();
 
         foreach (string additionalFile in additionalFiles)
