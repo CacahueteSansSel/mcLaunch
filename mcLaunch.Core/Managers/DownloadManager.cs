@@ -151,7 +151,7 @@ public static class DownloadManager
 
             await download.StartAsync();
 
-            if (download.Package.Status == DownloadStatus.Failed)
+            if (download.Package.Status == DownloadStatus.Failed || !File.Exists(entry.Target))
             {
                 await UseFallbackDownloader(entry.Source, entry.Target, pp =>
                 {
@@ -200,20 +200,37 @@ public static class DownloadManager
 
             int progress = 0;
             float progressPercent = 0f;
-            await Parallel.ForEachAsync(section.Entries.Where(entry => entry.Action == EntryAction.Download),
-                async (entry, token) =>
+            foreach (DownloadEntry entry in section.Entries.Where(entry => entry.Action == EntryAction.Download))
+            {
+                await DownloadEntryAsync(entry, section, sectionIndex, progress);
+
+                progress++;
+                float percent = (float) progress / section.Entries.Count;
+
+                if (progressPercent < percent)
                 {
-                    await DownloadEntryAsync(entry, section, sectionIndex, progress);
+                    progressPercent = percent;
+                    OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
+                }
+            }
+            
+            /*
+             *await Parallel.ForEachAsync(section.Entries.Where(entry => entry.Action == EntryAction.Download),
+               async (entry, token) =>
+               {
+                   if (entry.Source.Contains(".jar")) Console.WriteLine(entry.Source);
+                   await DownloadEntryAsync(entry, section, sectionIndex, progress);
 
-                    progress++;
-                    float percent = (float) progress / section.Entries.Count;
+                   progress++;
+                   float percent = (float) progress / section.Entries.Count;
 
-                    if (progressPercent < percent)
-                    {
-                        progressPercent = percent;
-                        OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
-                    }
-                });
+                   if (progressPercent < percent)
+                   {
+                       progressPercent = percent;
+                       OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
+                   }
+               });
+             */
 
             foreach (DownloadEntry entry in section.Entries.Where(entry => entry.Action != EntryAction.Download))
             {

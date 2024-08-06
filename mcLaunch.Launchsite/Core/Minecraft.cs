@@ -194,13 +194,6 @@ public class Minecraft
                 info.FileName = "/usr/bin/prime-run";
             }
 
-        if (!OperatingSystem.IsWindows())
-        {
-            info.UseShellExecute = true;
-            info.RedirectStandardError = false;
-            info.RedirectStandardOutput = false;
-        }
-
         // An attempt to fix the "java opens in TextEdit" bug
         if (OperatingSystem.IsMacOS()) File.SetUnixFileMode(info.FileName, UnixFileMode.UserExecute);
 
