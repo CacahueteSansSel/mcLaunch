@@ -40,7 +40,7 @@ public class DirectJarMergingModLoaderSupport : ModLoaderSupport
 
         foreach (string additionalFile in additionalFiles)
         {
-            if (!additionalFile.EndsWith(".zip")) continue;
+            if (!additionalFile.EndsWith(".zip") && !additionalFile.EndsWith(".jar")) continue;
 
             using ZipArchive modFile = new(new FileStream(additionalFile, FileMode.Open));
             foreach (ZipArchiveEntry entry in modFile.Entries)

@@ -183,8 +183,7 @@ public class Minecraft
             FileName = jvm,
             UseShellExecute = false,
             WorkingDirectory = Folder.CompletePath,
-            RedirectStandardError = true,
-            RedirectStandardOutput = true
+            RedirectStandardError = true
         };
 
         if (useDedicatedGraphics)

@@ -234,8 +234,12 @@ public class BoxManifest : ReactiveObject
     {
         if (setUpVersion != null) return new Result<MinecraftVersion>(setUpVersion);
 
-        MinecraftVersion mcVersion =
-            await MinecraftManager.Manifest.Get(Version).DownloadOrGetLocally(BoxManager.SystemFolder);
+        ManifestMinecraftVersion mcManifestVersion = MinecraftManager.Manifest.Get(Version);
+        MinecraftVersion? mcVersion = mcManifestVersion != null 
+            ? (await mcManifestVersion.DownloadOrGetLocally(BoxManager.SystemFolder))
+            : BoxManager.SystemFolder.GetVersion(Version);
+        
+        if (mcVersion == null) return Result<MinecraftVersion>.Error($"Failed to find/fetch Minecraft version {Version}");
 
         if (ModLoader != null) mcVersion = await ModLoader.PostProcessMinecraftVersionAsync(mcVersion);
 

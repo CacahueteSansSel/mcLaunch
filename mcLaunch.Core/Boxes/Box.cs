@@ -71,8 +71,18 @@ public class Box : IEquatable<Box>
     public QuickPlayManager QuickPlay { get; }
     public BoxManifest Manifest { get; private set; }
     public ModLoaderSupport? ModLoader => ModLoaderManager.Get(Manifest.ModLoaderId);
-    public Version MinecraftVersion => new(Manifest.Version);
-    public bool SupportsQuickPlay => MinecraftVersion >= new Version("1.20");
+
+    public Version? MinecraftVersion
+    {
+        get
+        {
+            System.Version.TryParse(Manifest.Version, out System.Version? ver);
+
+            return ver;
+        }
+    }
+
+    public bool SupportsQuickPlay => MinecraftVersion != null && MinecraftVersion >= new Version("1.20");
     public IBoxEventListener? EventListener { get; set; }
 
     public bool HasReadmeFile => File.Exists($"{Folder.Path}/README.md");
