@@ -332,6 +332,14 @@
         <AvaloniaResource Include="resources\default_skin.png" />
         <None Remove="resources\icons\arrow_up.svg" />
         <AvaloniaResource Include="resources\icons\arrow_up.svg" />
+        <None Remove="resources\icons\star.svg" />
+        <AvaloniaResource Include="resources\icons\star.svg" />
+        <None Remove="resources\logo_beta_lanuch.png" />
+        <AvaloniaResource Include="resources\logo_beta_lanuch.png" />
+        <None Remove="resources\logo_dev_lanuch.png" />
+        <AvaloniaResource Include="resources\logo_dev_lanuch.png" />
+        <None Remove="resources\logo_lanuch.png" />
+        <AvaloniaResource Include="resources\logo_lanuch.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -400,6 +408,10 @@
         <Compile Update="Views\Popups\LauncherUpdatedPopup.axaml.cs">
             <DependentUpon>LauncherUpdatedPopup.axaml</DependentUpon>
             <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Pages\AdvancedFeaturesPage.axaml.cs">
+          <DependentUpon>AdvancedFeaturesPage.axaml</DependentUpon>
+          <SubType>Code</SubType>
         </Compile>
     </ItemGroup>
 

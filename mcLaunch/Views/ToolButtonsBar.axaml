@@ -44,6 +44,10 @@
                     Click="SettingsButtonClicked">
                 <Image Source="{SvgImage /resources/icons/cog.svg}" Width="16" Height="16" />
             </Button>
+            <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary square" ToolTip.Tip="Advanced features"
+                    Click="AdvancedFeaturesButtonClicked" IsVisible="False" x:Name="AdvancedFeaturesButton">
+                <Image Source="{SvgImage /resources/icons/star.svg}" Width="16" Height="16" />
+            </Button>
             <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary square" ToolTip.Tip="Manage defaults"
                     Click="DefaultsButtonClicked">
                 <Image Source="{SvgImage /resources/icons/game_settings.svg}" Width="13" Height="13" />

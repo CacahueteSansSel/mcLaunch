@@ -46,6 +46,8 @@ public class AssetsDownloader
         percentCallback?.Invoke(1);
     }
 
+    public string GetAssetLocalPath(Asset asset) => $"{Path}/objects/{asset.Prefix}/{asset.Hash}".FixPath();
+
     public async Task DownloadAsync(MinecraftVersion version, Action<float> percentCallback)
     {
         AssetIndex? index = await version.GetAssetIndexAsync();

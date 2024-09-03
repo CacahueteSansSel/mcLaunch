@@ -16,13 +16,21 @@ public partial class HeaderBar : UserControl
 
         Api.OnNetworkError += OnApiNetworkError;
         Api.OnNetworkSuccess += OnApiNetworkSuccess;
+
+        bool isLanuchEasterEgg = Random.Shared.Next(1, 1000) == 1;
         
 #if DEBUG
-        LogoDevelopment.IsVisible = true;
+        LogoDevelopment.IsVisible = !isLanuchEasterEgg;
+        LogoDevelopmentLanuch.IsVisible = isLanuchEasterEgg;
+        
         LogoBeta.IsVisible = false;
+        LogoBetaLanuch.IsVisible = false;
 #else
         LogoDevelopment.IsVisible = false;
-        LogoBeta.IsVisible = true;
+        LogoDevelopmentLanuch.IsVisible = false;
+
+        LogoBeta.IsVisible = !isLanuchEasterEgg;
+        LogoBetaLanuch.IsVisible = isLanuchEasterEgg;
 #endif
     }
 

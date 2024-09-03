@@ -188,4 +188,9 @@ public partial class ToolButtonsBar : UserControl
     {
         //Navigation.Push<SkinsPage>();
     }
+
+    void AdvancedFeaturesButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.Push<AdvancedFeaturesPage>();
+    }
 }
