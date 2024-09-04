@@ -31,6 +31,9 @@ public class Settings
     [Setting(Name = "Anonymize box name & icons", Group = "Display")]
     public bool AnonymizeBoxIdentity { get; set; }
 
+    [Setting(Name = "Show advanced features", Group = "Display")]
+    public bool ShowAdvancedFeatures { get; set; }
+
     [Setting(Name = "Use Discord's Rich Presence", Group = "Discord")]
     public bool UseDiscordRpc { get; set; } = true;
 

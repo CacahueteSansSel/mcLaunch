@@ -14,6 +14,7 @@ using mcLaunch.Launchsite.Http;
 using mcLaunch.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
+using mcLaunch.Views;
 using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
 using mcLaunch.Views.Windows;
@@ -22,6 +23,8 @@ namespace mcLaunch;
 
 public partial class MainWindow : Window
 {
+    public static MainWindow Instance { get; private set; }
+    
     public MainWindow()
     {
         Instance = this;
@@ -45,8 +48,6 @@ public partial class MainWindow : Window
         MainWindowDataContext.Instance.ShowStartingPage();
         Initialize();
     }
-
-    public static MainWindow Instance { get; private set; }
 
     public void SetTitle(string title)
     {

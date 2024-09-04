@@ -34,6 +34,11 @@ public partial class ToolButtonsBar : UserControl
 
     public Data UIDataContext => (Data) DataContext;
 
+    public void RefreshButtons()
+    {
+        AdvancedFeaturesButton.IsVisible = Settings.Instance.ShowAdvancedFeatures;
+    }
+
     private async void NewBoxButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.ShowPopup(new NewBoxPopup());

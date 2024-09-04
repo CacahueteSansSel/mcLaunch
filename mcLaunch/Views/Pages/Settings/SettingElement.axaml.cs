@@ -29,11 +29,15 @@ public partial class SettingElement : UserControl
     {
         Setting.Property.SetValue(Utilities.Settings.Instance, true);
         Utilities.Settings.Save();
+        
+        MainWindow.Instance.TopBar.RefreshButtons();
     }
 
     private void BooleanCheckboxUnchecked(object? sender, RoutedEventArgs e)
     {
         Setting.Property.SetValue(Utilities.Settings.Instance, false);
         Utilities.Settings.Save();
+        
+        MainWindow.Instance.TopBar.RefreshButtons();
     }
 }
