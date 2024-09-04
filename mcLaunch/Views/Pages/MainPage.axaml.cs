@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Managers;
+using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Pages;
 
@@ -56,5 +57,10 @@ public partial class MainPage : UserControl, ITopLevelPageControl
     private void SearchBoxTextChanged(object? sender, TextChangedEventArgs e)
     {
         PopulateBoxList(SearchBox.Text, false);
+    }
+
+    void OpenFolderButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        PlatformSpecific.OpenFolder(BoxManager.BoxesPath);
     }
 }
