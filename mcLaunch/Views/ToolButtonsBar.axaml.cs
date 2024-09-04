@@ -30,6 +30,8 @@ public partial class ToolButtonsBar : UserControl
             UIDataContext.ResourceName = "Test";
             UIDataContext.ResourceDetailsText = "file.txt";
         }
+        
+        RefreshButtons();
     }
 
     public Data UIDataContext => (Data) DataContext;
