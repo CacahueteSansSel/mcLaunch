@@ -13,6 +13,7 @@
                         <Button Classes="secondary" Margin="5">Secondary !</Button>
                         <Button Classes="transparent" Margin="5">Transparent !</Button>
                         <Button Classes="transparent-green" Margin="5">Tr Green</Button>
+                        <Button Classes="primary" IsEnabled="False" Margin="5">Disabled</Button>
                         <ProgressBar Value="50" />
                     </StackPanel>
                 </Border>
@@ -103,6 +104,11 @@
                 </KeyFrame>
             </Animation>
         </Style.Animations>
+    </Style>
+
+    <Style Selector="Button:disabled /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
     </Style>
 
     <Style Selector="Button.picture">
