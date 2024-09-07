@@ -39,6 +39,11 @@
         <Setter Property="MinHeight" Value="50"/>
         <Setter Property="Height" Value="50"/>
     </Style>
+    
+    <Style Selector="CaptionButtons#PART_CloseButton">
+        <Setter Property="Background" Value="#c42b1c"/>
+        <Setter Property="BorderBrush" Value="#c42b1c"/>
+    </Style>
 
     <Style Selector="ProgressBar:horizontal">
         <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}" />
@@ -257,10 +262,10 @@
     <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource Background}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
-
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.2" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
             </Transitions>
         </Setter>
     </Style>
