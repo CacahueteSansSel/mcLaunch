@@ -12,14 +12,21 @@ public partial class VersionSelectWindow : Window
 {
     private readonly ManifestMinecraftVersion[] versions;
     private ManifestMinecraftVersion? selectedVersion;
+    IMinecraftVersionSelectionListener? listener;
 
-    public VersionSelectWindow()
+    public VersionSelectWindow(IMinecraftVersionSelectionListener? listener = null)
     {
         InitializeComponent();
+        this.listener = listener;
 
         versions = Settings.Instance.EnableSnapshots
             ? MinecraftManager.Manifest!.Versions
             : MinecraftManager.ManifestVersions;
+
+        if (this.listener != null)
+        {
+            versions = versions.Where(version => this.listener.ShouldShowMinecraftVersion(version)).ToArray();
+        }
 
         DataContext = versions;
     }
@@ -86,4 +93,9 @@ public partial class VersionSelectWindow : Window
         if (selectedVersion != null)
             Close(selectedVersion);
     }
+}
+
+public interface IMinecraftVersionSelectionListener
+{
+    bool ShouldShowMinecraftVersion(ManifestMinecraftVersion version);
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -15,15 +16,25 @@ using mcLaunch.Launchsite.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.DataContexts;
 using mcLaunch.Views.Pages;
+using mcLaunch.Views.Windows;
 
 namespace mcLaunch.Views.Popups;
 
-public partial class NewBoxPopup : UserControl
+public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListener
 {
-    public NewBoxPopup()
+    INewBoxPopupListener? listener;
+    
+    public NewBoxPopup(INewBoxPopupListener? listener = null)
     {
         InitializeComponent();
         DataContext = new MinecraftVersionSelectionDataContext();
+
+        this.listener = listener;
+        if (this.listener != null && this.listener.CustomShownText != null)
+        {
+            ((MinecraftVersionSelectionDataContext) DataContext!).CustomText = this.listener.CustomShownText;
+            CustomText.IsVisible = true;
+        }
 
         Random rng = new Random();
 
@@ -33,6 +44,7 @@ public partial class NewBoxPopup : UserControl
 
         if (AuthenticationManager.Account != null) AuthorNameTb.Text = AuthenticationManager.Account.Username;
 
+        VersionSelector.Listener = this;
         VersionSelector.OnVersionChanged += version => { FetchModLoadersLatestVersions(version.Id); };
 
         FetchModLoadersLatestVersions(VersionSelector.Version.Id);
@@ -40,12 +52,16 @@ public partial class NewBoxPopup : UserControl
 
     private async void FetchModLoadersLatestVersions(string versionId)
     {
+        if (listener != null) await listener.InitializeAsync();
+        
         CreateButton.IsEnabled = false;
         MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext!;
         List<ModLoaderSupport> all = [];
 
         foreach (ModLoaderSupport ml in ModLoaderManager.All)
         {
+            if (listener != null && !listener.ShouldShowModLoader(ml)) continue;
+            
             ModLoaderVersion? version = await ml.FetchLatestVersion(versionId);
             if (version != null) all.Add(ml);
         }
@@ -55,8 +71,11 @@ public partial class NewBoxPopup : UserControl
         CreateButton.IsEnabled = true;
     }
 
-    private void CloseButtonClicked(object? sender, RoutedEventArgs e)
+    private async void CloseButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (listener != null) 
+            await listener.WhenCancelledAsync();
+        
         Navigation.HidePopup();
     }
 
@@ -115,13 +134,15 @@ public partial class NewBoxPopup : UserControl
             return;
         }
 
-        StatusPopup.Instance.ShowDownloadBanner = false;
-        Navigation.HidePopup();
-
-        MainPage.Instance?.PopulateBoxList();
+    await MainPage.Instance?.PopulateBoxListAsync();
 
         Box box = new Box(newBoxManifest, result.Data!);
-        Navigation.Push(new BoxDetailsPage(box));
+        
+        if (listener == null || await listener.WhenBoxCreatedAsync(box)) 
+            Navigation.Push(new BoxDetailsPage(box));
+
+        StatusPopup.Instance.ShowDownloadBanner = false;
+        Navigation.HidePopup();
     }
 
     private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
@@ -146,10 +167,6 @@ public partial class NewBoxPopup : UserControl
         BoxIconImage.Source = new Bitmap(files[0]);
     }
 
-    private void NewMinecraftVersionSelectedCallback(object? sender, SelectionChangedEventArgs e)
-    {
-    }
-
     private void BoxNameTextChanged(object? sender, KeyEventArgs e)
     {
         Random rng = new Random((BoxNameTb.Text ?? string.Empty).GetHashCode());
@@ -159,4 +176,23 @@ public partial class NewBoxPopup : UserControl
 
         BoxIconImage.Source = bmp;
     }
+
+    public bool ShouldShowMinecraftVersion(ManifestMinecraftVersion version)
+    {
+        if (listener != null)
+            return listener.ShouldShowMinecraftVersion(version);
+
+        return true;
+    }
+}
+
+public interface INewBoxPopupListener
+{
+    string? CustomShownText { get; }
+
+    Task InitializeAsync();
+    bool ShouldShowModLoader(ModLoaderSupport modLoader);
+    bool ShouldShowMinecraftVersion(ManifestMinecraftVersion version);
+    Task<bool> WhenBoxCreatedAsync(Box box);
+    Task WhenCancelledAsync();
 }

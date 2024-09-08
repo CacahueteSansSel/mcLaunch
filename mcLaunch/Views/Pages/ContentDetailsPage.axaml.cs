@@ -87,10 +87,10 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
         if (TargetBox == null)
         {
-            InstallButton.IsVisible = false;
             UpdateButton.IsVisible = false;
             UninstallButton.IsVisible = false;
 
+            InstallButton.IsVisible = true;
             TestButton.IsVisible = true;
         }
         else
@@ -232,7 +232,12 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
     private async void InstallButtonClicked(object? sender, RoutedEventArgs e)
     {
-        if (TargetBox == null) return;
+        if (TargetBox == null)
+        {
+            Navigation.ShowPopup(new InstallContentOnPopup(ShownContent));
+            
+            return;
+        }
 
         if (TargetBox != null && !TargetBox.HasWorlds && ShownContent.Type == MinecraftContentType.DataPack)
         {

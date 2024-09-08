@@ -21,7 +21,7 @@ public partial class MainPage : UserControl, ITopLevelPageControl
         InitializeComponent();
         anonSession = AnonymityManager.CreateSession();
 
-        PopulateBoxList();
+        PopulateBoxListAsync();
     }
 
     public static MainPage Instance { get; private set; }
@@ -34,7 +34,7 @@ public partial class MainPage : UserControl, ITopLevelPageControl
         DiscordManager.SetPresenceBoxList();
     }
 
-    public async void PopulateBoxList(string? query = null, bool reloadAll = true)
+    public async Task PopulateBoxListAsync(string? query = null, bool reloadAll = true)
     {
         if (reloadAll || loadedBoxes == null)
         {
@@ -54,9 +54,9 @@ public partial class MainPage : UserControl, ITopLevelPageControl
         BoxesContainer.ItemsSource = loadedBoxes.Where(box => box.MatchesQuery(query));
     }
 
-    private void SearchBoxTextChanged(object? sender, TextChangedEventArgs e)
+    private async void SearchBoxTextChanged(object? sender, TextChangedEventArgs e)
     {
-        PopulateBoxList(SearchBox.Text, false);
+        await PopulateBoxListAsync(SearchBox.Text, false);
     }
 
     void OpenFolderButtonClicked(object? sender, RoutedEventArgs e)

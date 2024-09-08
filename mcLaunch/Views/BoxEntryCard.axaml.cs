@@ -142,7 +142,7 @@ public partial class BoxEntryCard : UserControl
             () =>
             {
                 Box.Delete();
-                MainPage.Instance.PopulateBoxList();
+                MainPage.Instance.PopulateBoxListAsync();
             }));
     }
 

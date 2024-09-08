@@ -90,7 +90,7 @@ public partial class BackupList : UserControl
                     }
 
                     MainWindowDataContext.Instance.Reset();
-                    MainPage.Instance.PopulateBoxList();
+                    await MainPage.Instance.PopulateBoxListAsync();
                     Navigation.Push(new BoxDetailsPage(lastBox));
 
                     Navigation.ShowPopup(new MessageBoxPopup("Backup restored",

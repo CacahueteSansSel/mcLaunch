@@ -12,6 +12,7 @@
     <Border Classes="frame">
         <StackPanel Margin="38">
             <TextBlock Classes="title" FontSize="25">Create a new box</TextBlock>
+            <TextBlock x:Name="CustomText" IsVisible="False" Opacity="0.5" Text="{Binding CustomText}"/>
             <DockPanel Margin="0 20 0 0">
                 <StackPanel>
                     <TextBlock Classes="light" Margin="0 0 0 5">Icon</TextBlock>

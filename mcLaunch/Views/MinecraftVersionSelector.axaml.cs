@@ -16,13 +16,14 @@ public partial class MinecraftVersionSelector : UserControl
         SetVersion(MinecraftManager.ManifestVersions[0]);
     }
 
+    public IMinecraftVersionSelectionListener? Listener { get; set; }
     public ManifestMinecraftVersion Version { get; private set; }
 
     public event Action<ManifestMinecraftVersion>? OnVersionChanged;
 
-    private async void ChangeMinecraftVersionButtonClicked(object? sender, RoutedEventArgs e)
+    async void ChangeMinecraftVersionButtonClicked(object? sender, RoutedEventArgs e)
     {
-        VersionSelectWindow selectWindow = new();
+        VersionSelectWindow selectWindow = new(Listener);
 
         ManifestMinecraftVersion? newVersion = await selectWindow
             .ShowDialog<ManifestMinecraftVersion?>(MainWindow.Instance);

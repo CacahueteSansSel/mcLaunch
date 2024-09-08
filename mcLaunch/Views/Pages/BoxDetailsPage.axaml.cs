@@ -290,7 +290,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
                 {
                     Box.Delete();
                     
-                    MainPage.Instance.PopulateBoxList();
+                    MainPage.Instance.PopulateBoxListAsync();
                     Navigation.Pop();
                 }
                 catch (Exception exception)
@@ -472,7 +472,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         
         await Box.SaveManifestAsync();
         
-        MainPage.Instance.PopulateBoxList();
+        await MainPage.Instance.PopulateBoxListAsync();
     }
 
     async void SaveEditedAuthor()
@@ -483,7 +483,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         
         await Box.SaveManifestAsync();
         
-        MainPage.Instance.PopulateBoxList();
+        await MainPage.Instance.PopulateBoxListAsync();
     }
 
     void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)

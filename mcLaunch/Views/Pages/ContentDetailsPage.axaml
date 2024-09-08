@@ -34,7 +34,7 @@
                                    Height="155" Width="155"
                                    Stretch="Uniform" />
                             <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
-                                <Button x:Name="InstallButton" Classes="primary" Width="124"
+                                <Button x:Name="InstallButton" Classes="primary" Width="124" Margin="0 0 0 10"
                                         HorizontalContentAlignment="Center" Click="InstallButtonClicked">
                                     Install
                                 </Button>
@@ -42,9 +42,9 @@
                                         HorizontalContentAlignment="Center" Click="UpdateButtonClicked">
                                     Update
                                 </Button>
-                                <Button x:Name="TestButton" Classes="primary" Width="250" Margin="0 0 0 10"
+                                <Button x:Name="TestButton" Classes="secondary" Width="124" Margin="0 0 0 10"
                                         HorizontalContentAlignment="Center" Click="TestButtonClicked">
-                                    Test with Fast Launch
+                                    Test
                                 </Button>
                                 <Button x:Name="UninstallButton" Classes="secondary" Width="124"
                                         HorizontalContentAlignment="Center" Click="UninstallButtonClicked">

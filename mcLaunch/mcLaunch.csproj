@@ -413,6 +413,14 @@
           <DependentUpon>AdvancedFeaturesPage.axaml</DependentUpon>
           <SubType>Code</SubType>
         </Compile>
+        <Compile Update="Views\Popups\InstallContentOnPopup.axaml.cs">
+          <DependentUpon>InstallContentOnPopup.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Popups\SelectBoxPopup.axaml.cs">
+          <DependentUpon>SelectBoxPopup.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

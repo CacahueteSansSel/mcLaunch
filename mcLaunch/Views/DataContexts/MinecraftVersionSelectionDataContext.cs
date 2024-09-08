@@ -33,6 +33,7 @@ public class MinecraftVersionSelectionDataContext : ReactiveObject
     private ModLoaderVersion latestVersion;
     private DataContextModLoader[] modLoaders;
     private DataContextModLoader selectedModLoader;
+    private string? customText;
 
     public MinecraftVersionSelectionDataContext()
     {
@@ -45,6 +46,12 @@ public class MinecraftVersionSelectionDataContext : ReactiveObject
     }
 
     public ManifestMinecraftVersion[] Versions { get; }
+    
+    public string CustomText
+    {
+        get => customText;
+        set => this.RaiseAndSetIfChanged(ref customText, value);
+    }
 
     public DataContextModLoader[] ModLoaders
     {

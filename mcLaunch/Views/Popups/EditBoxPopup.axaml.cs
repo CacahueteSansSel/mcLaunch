@@ -55,7 +55,7 @@ public partial class EditBoxPopup : UserControl
 
         await box.SaveManifestAsync();
 
-        MainPage.Instance?.PopulateBoxList();
+        await MainPage.Instance?.PopulateBoxListAsync();
 
         Navigation.Pop();
         Navigation.Push(new BoxDetailsPage(box));

@@ -69,7 +69,7 @@ public static class BoxUtilities
         if (openBoxAfterImport)
         {
             Navigation.Push(new BoxDetailsPage(box));
-            MainPage.Instance.PopulateBoxList();
+            await MainPage.Instance.PopulateBoxListAsync();
         }
     }
 
@@ -127,7 +127,7 @@ public static class BoxUtilities
         if (openBoxAfterImport)
         {
             Navigation.Push(new BoxDetailsPage(box));
-            MainPage.Instance.PopulateBoxList();
+            await MainPage.Instance.PopulateBoxListAsync();
         }
     }
 
@@ -197,7 +197,7 @@ public static class BoxUtilities
         if (openBoxAfterImport)
         {
             Navigation.Push(new BoxDetailsPage(box));
-            MainPage.Instance.PopulateBoxList();
+            await MainPage.Instance.PopulateBoxListAsync();
         }
     }
 

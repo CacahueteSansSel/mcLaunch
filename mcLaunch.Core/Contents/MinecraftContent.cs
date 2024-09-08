@@ -106,7 +106,7 @@ public class MinecraftContent : ReactiveObject
     public string ModPlatformId
     {
         get => Platform?.Name;
-        set => Platform = ModPlatformManager.Platform.GetModPlatform(value);
+        set => Platform = ModPlatformManager.Platform?.GetModPlatform(value);
     }
 
     [JsonIgnore] public MinecraftContentPlatform? Platform { get; set; }

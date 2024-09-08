@@ -7,7 +7,7 @@ namespace mcLaunch.Launchsite.Core.ModLoaders;
 public class DirectJarMergingModLoaderSupport : ModLoaderSupport
 {
     public override string Id { get; } = "directjar";
-    public override string Name { get; set; } = "Direct Jar Merging";
+    public override string Name { get; set; } = "Jar mods";
     public override string Type { get; set; } = "vanilla";
     public override ModLoaderVersion LatestVersion { get; set; }
 

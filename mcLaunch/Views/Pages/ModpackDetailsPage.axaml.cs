@@ -90,7 +90,7 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
         Navigation.HidePopup();
 
         Navigation.Push(new BoxDetailsPage(box));
-        MainPage.Instance.PopulateBoxList();
+        await MainPage.Instance.PopulateBoxListAsync();
     }
 
     private void OpenButtonClicked(object? sender, RoutedEventArgs e)

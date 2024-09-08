@@ -235,6 +235,14 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         }
     }
 
+    ModLoaderType ParseModLoaderType(string input)
+    {
+        if (input.ToLower() == "neoforge")
+            return (ModLoaderType) 6;
+
+        return Enum.Parse<ModLoaderType>(input, true);
+    }
+
     public override async Task<ContentVersion[]> GetContentVersionsAsync(MinecraftContent content, string? modLoaderId,
         string? minecraftVersionId)
     {
@@ -245,7 +253,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             ModLoaderType? modLoader = string.IsNullOrWhiteSpace(modLoaderId)
                                        || content.Type != MinecraftContentType.Modification
                 ? null
-                : Enum.Parse<ModLoaderType>(modLoaderId, true);
+                : ParseModLoaderType(modLoaderId);
             List<ContentVersion> modVersions = new();
 
             foreach (File file in (await client.GetModFiles(id, minecraftVersionId, modLoader)).Data)
