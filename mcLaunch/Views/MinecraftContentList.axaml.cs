@@ -163,7 +163,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         if (isLoading) NtsBanner.IsVisible = false;
 
         foreach (PageSelector component in pageSelectors)
-            component.IsVisible = !isLoading;
+            component.IsEnabled = !isLoading;
 
         if (!isLoading && !NtsBanner.IsVisible) PageSelectorComponentBottom.IsVisible = !HidePageSelector;
     }
@@ -189,7 +189,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
             component.IsVisible = ctx.Contents.Length >= 10 && !HidePageSelector;
     }
 
-    private async Task<MinecraftContent[]> SearchContentsAsync(Box box, string query)
+    private async Task<MinecraftContent[]> SearchContentsAsync(Box box, string query, bool resetPageCounter = true)
     {
         Data ctx = (Data) DataContext;
 
@@ -198,11 +198,12 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
         lastBox = box;
         lastQuery = query;
+        if (resetPageCounter) ctx.Page = 0;
 
         foreach (PageSelector component in pageSelectors)
         {
             component.Setup(mods.TotalPageCount, PageSelectedCallback);
-            component.SetPage(ctx.Page, false);
+            component.SetPage(ctx.Page, resetPageCounter);
         }
 
         return mods.Items.ToArray();
@@ -216,7 +217,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         Data ctx = (Data) DataContext;
 
         ctx.Page = index;
-        ctx.Contents = await SearchContentsAsync(lastBox, lastQuery);
+        ctx.Contents = await SearchContentsAsync(lastBox, lastQuery, false);
 
         foreach (PageSelector component in pageSelectors)
             component.IsEnabled = true;
