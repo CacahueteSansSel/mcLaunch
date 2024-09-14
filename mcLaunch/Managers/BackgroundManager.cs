@@ -16,9 +16,12 @@ namespace mcLaunch.Managers;
 
 public static class BackgroundManager
 {
-    public static bool IsInBackground { get; private set; }
     static TrayIcon? icon;
     static Process? javaProcess;
+
+    public static bool IsInBackground { get; private set; }
+    public static Box? RunningBox { get; private set; }
+    public static bool IsMinecraftRunning => RunningBox != null && javaProcess != null && !javaProcess.HasExited;
 
     public static void EnterBackgroundState(NativeMenuItemBase[]? additionalItems = null)
     {
@@ -45,14 +48,13 @@ public static class BackgroundManager
 
         icon?.Dispose();
         icon = null;
+        //RunningBox = null;
     }
 
-    public static async Task<bool> RunMinecraftMonitoring(Process javaProcess, Box box)
+    public static async Task<bool> RunMinecraftMonitoring(Process process, Box box)
     {
-        if (!IsInBackground)
-            return false;
-
-        BackgroundManager.javaProcess = javaProcess;
+        javaProcess = process;
+        RunningBox = box;
         if (icon != null)
             icon.ToolTipText = $"{box.Manifest.Name} - mcLaunch";
 
@@ -70,12 +72,17 @@ public static class BackgroundManager
             await ProcessFastLaunchBoxAsync(box);
         }
 
+        RunningBox = null;
+
         return true;
     }
 
     public static void KillMinecraftProcess()
     {
         javaProcess?.Kill();
+        
+        javaProcess = null;
+        RunningBox = null;
     }
 
     static async Task ProcessFastLaunchBoxAsync(Box box)

@@ -28,11 +28,14 @@ public class Settings
     [Setting(Name = "Force dedicated graphics", Group = "Minecraft")]
     public bool ForceDedicatedGraphics { get; set; } = true;
 
-    [Setting(Name = "Anonymize box name & icons", Group = "Display")]
+    [Setting(Name = "Anonymize box name & icons", Group = "Launcher")]
     public bool AnonymizeBoxIdentity { get; set; }
 
-    [Setting(Name = "Show advanced features", Group = "Display")]
+    [Setting(Name = "Show advanced features", Group = "Launcher")]
     public bool ShowAdvancedFeatures { get; set; }
+
+    [Setting(Name = "Close the launcher when launching Minecraft", Group = "Launcher")]
+    public bool CloseLauncherAtLaunch { get; set; }
 
     [Setting(Name = "Use Discord's Rich Presence", Group = "Discord")]
     public bool UseDiscordRpc { get; set; } = true;
@@ -45,6 +48,7 @@ public class Settings
         ExposeLauncherNameToMinecraft = true;
         ForceDedicatedGraphics = true;
         UseDiscordRpc = true;
+        CloseLauncherAtLaunch = true;
 
         return this;
     }

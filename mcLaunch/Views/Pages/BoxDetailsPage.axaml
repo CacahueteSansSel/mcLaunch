@@ -64,9 +64,13 @@
                                 </Button>
                             </Panel>
                             <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
-                                <Button Classes="primary" Width="124" HorizontalContentAlignment="Center"
+                                <Button x:Name="RunButton" Classes="primary" Width="124" HorizontalContentAlignment="Center"
                                         Click="RunButtonClicked">
                                     Run
+                                </Button>
+                                <Button x:Name="StopButton" IsVisible="False" Classes="red" Width="124" HorizontalContentAlignment="Center"
+                                        Click="StopButtonClicked">
+                                    Stop
                                 </Button>
                                 <Button Classes="secondary" Margin="0 14 0 0" Width="124"
                                         HorizontalContentAlignment="Center" Click="ExportButtonClicked">

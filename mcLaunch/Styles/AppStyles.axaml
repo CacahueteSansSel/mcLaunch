@@ -11,6 +11,7 @@
                         <CaptionButtons></CaptionButtons>
                         <Button Classes="primary" Margin="5">Primary !</Button>
                         <Button Classes="secondary" Margin="5">Secondary !</Button>
+                        <Button Classes="red" Margin="5">Red !</Button>
                         <Button Classes="transparent" Margin="5">Transparent !</Button>
                         <Button Classes="transparent-green" Margin="5">Tr Green</Button>
                         <Button Classes="primary" IsEnabled="False" Margin="5">Disabled</Button>
@@ -234,6 +235,42 @@
     </Style>
 
     <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="White" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.red">
+        <Setter Property="Background" Value="#6F1010" />
+        <Setter Property="BorderBrush" Value="#FF3E3E" />
+        <Setter Property="Padding" Value="20 10 20 10" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.red:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#A12323" />
+        <Setter Property="BorderBrush" Value="#FF3E3E" />
+
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.red:pressed /template/ ContentPresenter">
+        <Setter Property="RenderTransform" Value="scale(0.99)" />
+    </Style>
+
+    <Style Selector="Button.red:pointerover /template/ ContentPresenter">
         <Setter Property="TextBlock.Foreground" Value="White" />
         <Setter Property="Transitions">
             <Transitions>

@@ -99,6 +99,10 @@
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="PlayButtonClicked">
                         <Image Source="{SvgImage /resources/icons/play.svg}" Width="14" Height="14" />
                     </Button>
+                    <Button x:Name="StopButton" IsVisible="False" ToolTip.Tip="Stop box" Classes="red square"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="StopButtonClicked">
+                        <Image Source="{SvgImage /resources/icons/close.svg}" Width="14" Height="14" />
+                    </Button>
                 </Panel>
             </Border>
             <TextBlock x:Name="BoxNameText" FontSize="20" Classes="title" Margin="0 5 0 0" Text="{Binding Name}" />

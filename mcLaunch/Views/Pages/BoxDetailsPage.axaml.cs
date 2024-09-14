@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.MinecraftFormats;
@@ -62,6 +63,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         DefaultBackground.IsVisible = box.Manifest.Background == null;
 
         RunBoxChecks();
+        
+        UpdateButtons();
     }
 
     public static BoxDetailsPage? LastOpened { get; private set; }
@@ -121,6 +124,12 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         base.OnUnloaded(e);
     }
 
+    protected override void OnGotFocus(GotFocusEventArgs e)
+    {
+        base.OnGotFocus(e);
+        UpdateButtons();
+    }
+
     public void ShowWarning(string text)
     {
         WarningStripe.IsVisible = true;
@@ -165,6 +174,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
     public async Task RunAsync(string? serverAddress = null, string? serverPort = null, MinecraftWorld? world = null)
     {
+        if (BackgroundManager.IsMinecraftRunning) return;
+        
         if (Box.Manifest.ModLoader == null)
         {
             Navigation.ShowPopup(new MessageBoxPopup("Can't run Minecraft",
@@ -216,13 +227,37 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         */
         
         Box.DisposeWatcher();
-        BackgroundManager.EnterBackgroundState(CreateBackgroundMenu());
 
-        if (await BackgroundManager.RunMinecraftMonitoring(java, Box))
+        if (Utilities.Settings.Instance.CloseLauncherAtLaunch)
+        {
+            BackgroundManager.EnterBackgroundState(CreateBackgroundMenu());
+
+            if (await BackgroundManager.RunMinecraftMonitoring(java, Box))
+                Navigation.HidePopup();
+        
+            BackgroundManager.LeaveBackgroundState();
+            UpdateButtons();
+        }
+        else
+        {
+            UpdateButtons();
             Navigation.HidePopup();
+
+            await BackgroundManager.RunMinecraftMonitoring(java, Box);
+        }
         
         Box.CreateWatcher();
-        BackgroundManager.LeaveBackgroundState();
+        UpdateButtons();
+    }
+
+    public void UpdateButtons()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            RunButton.IsEnabled = !BackgroundManager.IsMinecraftRunning;
+            RunButton.IsVisible = !BackgroundManager.IsMinecraftRunning && BackgroundManager.RunningBox != Box;
+            StopButton.IsVisible = BackgroundManager.IsMinecraftRunning && BackgroundManager.RunningBox == Box;
+        });
     }
 
     NativeMenuItemBase[] CreateBackgroundMenu()
@@ -525,5 +560,13 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     void BoxAuthorTextLostFocus(object? sender, RoutedEventArgs e)
     {
         SaveEditedAuthor();
+    }
+
+    void StopButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        if (BackgroundManager.IsMinecraftRunning) return;
+        
+        BackgroundManager.KillMinecraftProcess();
+        UpdateButtons();
     }
 }

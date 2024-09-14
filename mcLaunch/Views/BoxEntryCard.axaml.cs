@@ -92,7 +92,22 @@ public partial class BoxEntryCard : UserControl
     {
         base.OnPointerEntered(e);
 
-        PlayButton.IsVisible = true;
+        if (!BackgroundManager.IsMinecraftRunning)
+        {
+            PlayButton.IsVisible = true;
+            return;
+        }
+
+        if (BackgroundManager.RunningBox == Box)
+        {
+            StopButton.IsVisible = true;
+            PlayButton.IsVisible = false;
+        }
+        else
+        {
+            StopButton.IsVisible = false;
+            PlayButton.IsVisible = true;
+        }
     }
 
     protected override void OnPointerExited(PointerEventArgs e)
@@ -100,6 +115,7 @@ public partial class BoxEntryCard : UserControl
         base.OnPointerExited(e);
 
         PlayButton.IsVisible = false;
+        StopButton.IsVisible = false;
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
@@ -182,5 +198,11 @@ public partial class BoxEntryCard : UserControl
         MainWindow.Instance.Clipboard?.SetTextAsync(report);
         
         Navigation.ShowPopup(new MessageBoxPopup("Success", "Report copied to clipboard", MessageStatus.Success));
+    }
+
+    void StopButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        if (BackgroundManager.IsMinecraftRunning)
+            BackgroundManager.KillMinecraftProcess();
     }
 }
