@@ -26,7 +26,7 @@ public class Box : IEquatable<Box>
     private readonly string manifestPath;
     private bool exposeLauncher;
     private string launcherVersion = "0.0.0";
-    private FileSystemWatcher watcher;
+    private FileSystemWatcher? watcher;
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
@@ -96,8 +96,10 @@ public class Box : IEquatable<Box>
 
     public bool Equals(Box? other) => other?.Manifest.Id == Manifest.Id;
 
-    private void CreateWatcher()
+    public void CreateWatcher()
     {
+        if (watcher != null) return;
+        
         if (!Directory.Exists(Folder.CompletePath))
             Directory.CreateDirectory(Folder.CompletePath);
 
@@ -105,6 +107,14 @@ public class Box : IEquatable<Box>
         watcher.IncludeSubdirectories = true;
         watcher.Created += OnFileCreated;
         watcher.Deleted += OnFileDeleted;
+    }
+
+    public void DisposeWatcher()
+    {
+        if (watcher == null) return;
+        
+        watcher.Dispose();
+        watcher = null;
     }
 
     private void OnFileDeleted(object sender, FileSystemEventArgs e)
@@ -303,6 +313,8 @@ public class Box : IEquatable<Box>
 
     public void SetWatching(bool isWatching)
     {
+        if (watcher == null) CreateWatcher();
+        
         watcher.EnableRaisingEvents = isWatching;
     }
 

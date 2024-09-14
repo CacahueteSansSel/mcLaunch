@@ -21,6 +21,11 @@ public class Navigation
         MainWindowDataContext.Instance.Pop();
     }
 
+    public static void Reset()
+    {
+        MainWindowDataContext.Instance.Reset();
+    }
+
     public static void ShowPopup(Control value)
     {
         MainWindowDataContext.Instance.ShowPopup(value);

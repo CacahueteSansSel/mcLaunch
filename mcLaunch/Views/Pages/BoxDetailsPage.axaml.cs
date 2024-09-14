@@ -207,13 +207,22 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         // TODO: crash report parser
         // RegExp for mod dependencies error (Forge) : /(Failure message): .+/g
-
+        
+        /*
         if (PlatformSpecific.ProcessExists("mcLaunch.MinecraftGuard"))
             PlatformSpecific.LaunchProcess("mcLaunch.MinecraftGuard",
                 $"{java.Id.ToString()} {Box.Manifest.Id} {Box.Manifest.Type.ToString().ToLower()}",
                 hidden: true);
+        */
+        
+        Box.DisposeWatcher();
+        BackgroundManager.EnterBackgroundState();
 
-        Environment.Exit(0);
+        if (await BackgroundManager.RunMinecraftMonitoring(java, Box))
+            Navigation.HidePopup();
+        
+        Box.CreateWatcher();
+        BackgroundManager.LeaveBackgroundState();
     }
 
     private async void RunButtonClicked(object? sender, RoutedEventArgs e)

@@ -33,7 +33,7 @@ internal class Program
         }
         catch (Exception e)
         {
-            // Here, Avalonia is kind of broken and we can't show a window
+            // Here, Avalonia is kind of broken, and we can't show a window
             // So we need to use a weird trick in order to show a window
             // Basically, restarting the launcher and telling him that the last instance crashed
 

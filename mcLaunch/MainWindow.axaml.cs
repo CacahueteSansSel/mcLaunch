@@ -61,34 +61,6 @@ public partial class MainWindow : Window
         TopHeaderBar.IsVisible = showDecorations && !OperatingSystem.IsLinux();
     }
 
-    async Task ProcessFastLaunchBoxAsync()
-    {
-        string boxId = App.Args.Get("box-id");
-        Box? box = (await BoxManager.LoadLocalBoxesAsync(true, false))
-            .FirstOrDefault(b => b.Manifest.Id == boxId);
-
-        Navigation.ShowPopup(new ConfirmMessageBoxPopup("Keep this FastLaunch instance ?",
-            "Do you want to keep this FastLaunch instance ? If you delete it, it will be lost forever !",
-            () =>
-            {
-                if (box == null) return;
-
-                Navigation.ShowPopup(new EditBoxPopup(box, false));
-            }, () =>
-            {
-                if (box == null) return;
-
-                Directory.Delete(box.Path, true);
-            })
-        );
-
-        await Task.Run(async () =>
-        {
-            while (MainWindowDataContext.Instance.IsPopup)
-                await Task.Delay(100);
-        });
-    }
-
     private async void Initialize()
     {
         await Task.Run(async () =>
@@ -113,8 +85,7 @@ public partial class MainWindow : Window
             if (!int.TryParse(App.Args.Get("exit-code"), out int exitCode))
                 return;
 
-            if (exitCode == 0) await ProcessFastLaunchBoxAsync();
-            else Navigation.ShowPopup(new CrashPopup(exitCode, App.Args.Get("box-id")));
+            Navigation.ShowPopup(new CrashPopup(exitCode, App.Args.Get("box-id")));
         }
 
         bool macOSFileExists = File.Exists(AppdataFolderManager.GetPath("crash_report"))
