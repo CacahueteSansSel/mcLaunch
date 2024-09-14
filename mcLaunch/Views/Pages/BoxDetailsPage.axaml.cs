@@ -216,13 +216,27 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         */
         
         Box.DisposeWatcher();
-        BackgroundManager.EnterBackgroundState();
+        BackgroundManager.EnterBackgroundState(CreateBackgroundMenu());
 
         if (await BackgroundManager.RunMinecraftMonitoring(java, Box))
             Navigation.HidePopup();
         
         Box.CreateWatcher();
         BackgroundManager.LeaveBackgroundState();
+    }
+
+    NativeMenuItemBase[] CreateBackgroundMenu()
+    {
+        NativeMenuItem killItem = new NativeMenuItem("Force close Minecraft (immediate)");
+        killItem.Click += (_, _) =>
+        {
+            BackgroundManager.KillMinecraftProcess();
+        };
+
+        return
+        [
+            killItem
+        ];
     }
 
     private async void RunButtonClicked(object? sender, RoutedEventArgs e)
