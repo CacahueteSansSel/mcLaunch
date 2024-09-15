@@ -38,7 +38,9 @@ public partial class MainPage : UserControl, ITopLevelPageControl
     {
         if (reloadAll || loadedBoxes == null)
         {
-            loadedBoxes = (await Task.Run(() => BoxManager.LoadLocalBoxesAsync())).ToList();
+            loadedBoxes = (await Task.Run(() => BoxManager.LoadLocalBoxesAsync()))
+                .Where(box => box != null && box.Manifest != null && box.Manifest.LastLaunchTime != null)
+                .ToList();
             loadedBoxes.Sort((l, r) => -l.Manifest.LastLaunchTime.CompareTo(r.Manifest.LastLaunchTime));
         }
 

@@ -24,6 +24,7 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
 
 #if !DEBUG
         CrashButton.IsVisible = false;
+        ConsoleButton.IsVisible = false;
 #endif
 
         int years = (int) MathF.Floor((float) (DateTime.Now - Constants.McLaunchBirthDate).TotalDays / 365);
@@ -66,5 +67,10 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
     void UpButtonClicked(object? sender, RoutedEventArgs e)
     {
         ScrollArea.Offset = Vector.Zero;
+    }
+
+    void ConsoleButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        new ConsoleWindow().Show();
     }
 }

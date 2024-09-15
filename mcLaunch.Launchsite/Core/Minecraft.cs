@@ -6,17 +6,18 @@ namespace mcLaunch.Launchsite.Core;
 
 public class Minecraft
 {
-    private readonly Dictionary<string, string> args = new();
-    private bool disableChat;
-    private bool disableMultiplayer;
-    private string? jvmPath;
-    private QuickPlayWorldType? quickPlayMode;
-    private string? quickPlayPath;
-    private string? quickPlaySingleplayerWorldName;
-    private string? serverAddress;
-    private uint serverPort;
-    private MinecraftFolder sysFolder;
-    private bool useDedicatedGraphics;
+    readonly Dictionary<string, string> args = new();
+    bool disableChat;
+    bool disableMultiplayer;
+    string? jvmPath;
+    QuickPlayWorldType? quickPlayMode;
+    string? quickPlayPath;
+    string? quickPlaySingleplayerWorldName;
+    string? serverAddress;
+    uint serverPort;
+    MinecraftFolder sysFolder;
+    bool useDedicatedGraphics;
+    bool redirectOutput;
 
     public Minecraft(MinecraftVersion version, MinecraftFolder folder)
     {
@@ -49,6 +50,13 @@ public class Minecraft
     public Minecraft WithUseDedicatedGraphics(bool useDedicatedGraphics)
     {
         this.useDedicatedGraphics = useDedicatedGraphics;
+
+        return this;
+    }
+
+    public Minecraft WithRedirectOutput(bool redirectOutput)
+    {
+        this.redirectOutput = redirectOutput;
 
         return this;
     }
@@ -183,7 +191,8 @@ public class Minecraft
             FileName = jvm,
             UseShellExecute = false,
             WorkingDirectory = Folder.CompletePath,
-            RedirectStandardError = true
+            RedirectStandardError = true,
+            RedirectStandardOutput = true
         };
 
         if (useDedicatedGraphics)

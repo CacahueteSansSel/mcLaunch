@@ -190,6 +190,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         Box.UseDedicatedGraphics = Utilities.Settings.Instance.ForceDedicatedGraphics;
         Box.SetExposeLauncher(Utilities.Settings.Instance.ExposeLauncherNameToMinecraft);
         Box.SetLauncherVersion(CurrentBuild.Version.ToString());
+        Box.SetRedirectOutput(Utilities.Settings.Instance.EnableGameConsole);
 
         Result boxPrepareResult = await Box.PrepareAsync();
         if (boxPrepareResult.IsError)

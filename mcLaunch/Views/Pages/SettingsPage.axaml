@@ -40,6 +40,7 @@
                         <Button Classes="secondary" Click="OpenGithubRepoButtonClicked">GitHub</Button>
                         <Button Classes="secondary" Click="UpdateInstallerButtonClicked">Update installer</Button>
                         <Button x:Name="CrashButton" Classes="secondary" Click="CrashLauncherButtonClicked">Crash</Button>
+                        <Button x:Name="ConsoleButton" Classes="secondary" Click="ConsoleButtonClicked">Console</Button>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

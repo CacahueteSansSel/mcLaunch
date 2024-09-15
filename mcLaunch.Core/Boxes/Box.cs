@@ -27,6 +27,7 @@ public class Box : IEquatable<Box>
     private bool exposeLauncher;
     private string launcherVersion = "0.0.0";
     private FileSystemWatcher? watcher;
+    bool redirectOutput;
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
@@ -546,6 +547,7 @@ public class Box : IEquatable<Box>
         Minecraft = new Minecraft(Version, Folder)
             .WithSystemFolder(BoxManager.SystemFolder)
             .WithUseDedicatedGraphics(UseDedicatedGraphics)
+            .WithRedirectOutput(redirectOutput)
             .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher
                                                                     && (ModLoader?.SupportsLauncherExposure ?? true))
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
@@ -562,6 +564,11 @@ public class Box : IEquatable<Box>
     public void SetLauncherVersion(string version)
     {
         launcherVersion = version;
+    }
+
+    public void SetRedirectOutput(bool redirect)
+    {
+        redirectOutput = redirect;
     }
 
     public async void AddDirectJarMod(string filename)

@@ -37,6 +37,9 @@ public class Settings
     [Setting(Name = "Close the launcher when launching Minecraft", Group = "Launcher")]
     public bool CloseLauncherAtLaunch { get; set; }
 
+    [Setting(Name = "Enable the game console", Group = "Launcher")]
+    public bool EnableGameConsole { get; set; }
+
     [Setting(Name = "Use Discord's Rich Presence", Group = "Discord")]
     public bool UseDiscordRpc { get; set; } = true;
 
@@ -49,6 +52,7 @@ public class Settings
         ForceDedicatedGraphics = true;
         UseDiscordRpc = true;
         CloseLauncherAtLaunch = true;
+        EnableGameConsole = false;
 
         return this;
     }
