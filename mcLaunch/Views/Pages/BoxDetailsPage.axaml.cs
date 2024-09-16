@@ -231,7 +231,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         if (Utilities.Settings.Instance.CloseLauncherAtLaunch)
         {
-            BackgroundManager.EnterBackgroundState(CreateBackgroundMenu());
+            BackgroundManager.EnterBackgroundState(CreateBackgroundMenu(java));
 
             if (await BackgroundManager.RunMinecraftMonitoring(java, Box))
                 Navigation.HidePopup();
@@ -261,17 +261,23 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         });
     }
 
-    NativeMenuItemBase[] CreateBackgroundMenu()
+    NativeMenuItemBase[] CreateBackgroundMenu(Process javaProcess)
     {
         NativeMenuItem killItem = new NativeMenuItem("Force close Minecraft (immediate)");
+        NativeMenuItem showConsoleItem = new NativeMenuItem("Show game console");
         killItem.Click += (_, _) =>
         {
             BackgroundManager.KillMinecraftProcess();
         };
+        showConsoleItem.Click += (_, _) =>
+        {
+            new ConsoleWindow(javaProcess).Show();
+        };
 
         return
         [
-            killItem
+            killItem,
+            showConsoleItem
         ];
     }
 
