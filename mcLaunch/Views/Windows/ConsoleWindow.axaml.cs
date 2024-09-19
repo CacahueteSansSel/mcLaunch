@@ -28,6 +28,7 @@ public partial class ConsoleWindow : Window
         this.box.Minecraft.OnStandardOutputLineReceived += MinecraftStdOutLineReceived;
 
         ConsoleText.Text = string.Join("\n", this.box.Minecraft.StandardOutput);
+        ConsoleText.Options.AllowScrollBelowDocument = false;
 
         //ReadProcessOutput();
     }
@@ -46,7 +47,7 @@ public partial class ConsoleWindow : Window
             if (!IsVisible) return;
             
             ConsoleText.Text += $"{line}\n";
-            ConsoleText.ScrollToLine(ConsoleText.Text.Split('\n').Length - 1);
+            ConsoleText.ScrollToEnd();
         });
     }
 
@@ -58,10 +59,10 @@ public partial class ConsoleWindow : Window
         {
             string line = await process.StandardOutput.ReadLineAsync();
             ConsoleText.Text += $"{line}\n";
-            ConsoleText.ScrollToLine(ConsoleText.Text.Split('\n').Length - 1);
+            ConsoleText.ScrollToEnd();
         }
 
         ConsoleText.Text += $"Minecraft exited with code {process.ExitCode}";
-        ConsoleText.ScrollToLine(ConsoleText.Text.Split('\n').Length - 1);
+        ConsoleText.ScrollToEnd();
     }
 }
