@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
+using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Windows;
@@ -9,6 +11,7 @@ namespace mcLaunch.Views.Windows;
 public partial class ConsoleWindow : Window
 {
     Process? process;
+    Box? box;
     
     public ConsoleWindow()
     {
@@ -17,12 +20,34 @@ public partial class ConsoleWindow : Window
         ConsoleText.Text = "No process associated with this window";
     }
 
-    public ConsoleWindow(Process process)
+    public ConsoleWindow(Process process, Box box)
     {
         InitializeComponent();
         this.process = process;
+        this.box = box;
+        this.box.Minecraft.OnStandardOutputLineReceived += MinecraftStdOutLineReceived;
+
+        ConsoleText.Text = string.Join("\n", this.box.Minecraft.StandardOutput);
+
+        //ReadProcessOutput();
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        base.OnClosed(e);
         
-        ReadProcessOutput();
+        box.Minecraft.OnStandardOutputLineReceived -= MinecraftStdOutLineReceived;
+    }
+
+    void MinecraftStdOutLineReceived(string line)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!IsVisible) return;
+            
+            ConsoleText.Text += $"{line}\n";
+            ConsoleText.ScrollToLine(ConsoleText.Text.Split('\n').Length - 1);
+        });
     }
 
     async void ReadProcessOutput()

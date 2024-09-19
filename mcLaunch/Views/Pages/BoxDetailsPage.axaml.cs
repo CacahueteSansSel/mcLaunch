@@ -271,7 +271,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         };
         showConsoleItem.Click += (_, _) =>
         {
-            new ConsoleWindow(javaProcess).Show();
+            new ConsoleWindow(javaProcess, Box).Show();
         };
 
         return
