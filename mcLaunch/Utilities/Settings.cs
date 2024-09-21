@@ -34,6 +34,9 @@ public class Settings
     [Setting(Name = "Show advanced features", Group = "Launcher")]
     public bool ShowAdvancedFeatures { get; set; }
 
+    [Setting(Name = "Enable advanced modloaders", Group = "Launcher")]
+    public bool EnableAdvancedModLoaders { get; set; }
+
     [Setting(Name = "Close the launcher when launching Minecraft", Group = "Launcher")]
     public bool CloseLauncherAtLaunch { get; set; }
 

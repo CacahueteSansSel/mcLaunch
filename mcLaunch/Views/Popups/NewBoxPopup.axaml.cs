@@ -58,7 +58,8 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
         MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext!;
         List<ModLoaderSupport> all = [];
 
-        foreach (ModLoaderSupport ml in ModLoaderManager.All)
+        foreach (ModLoaderSupport ml in ModLoaderManager.All
+                     .Where(m => Settings.Instance.EnableAdvancedModLoaders || !m.IsAdvanced))
         {
             if (listener != null && !listener.ShouldShowModLoader(ml)) continue;
             

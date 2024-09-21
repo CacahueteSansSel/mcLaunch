@@ -10,6 +10,7 @@ public class DirectJarMergingModLoaderSupport : ModLoaderSupport
     public override string Name { get; set; } = "Jar mods";
     public override string Type { get; set; } = "vanilla";
     public override ModLoaderVersion LatestVersion { get; set; }
+    public override bool IsAdvanced => true;
 
     public override async Task<MinecraftVersion> PostProcessMinecraftVersionAsync(MinecraftVersion minecraftVersion)
     {

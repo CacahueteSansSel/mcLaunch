@@ -40,7 +40,9 @@ public class MinecraftVersionSelectionDataContext : ReactiveObject
         Versions = Settings.Instance.EnableSnapshots
             ? MinecraftManager.Manifest!.Versions
             : MinecraftManager.ManifestVersions;
-        ModLoaders = ModLoaderManager.All.Select(m => new DataContextModLoader(m)).ToArray();
+        ModLoaders = ModLoaderManager.All
+            .Where(m => Settings.Instance.EnableAdvancedModLoaders || !m.IsAdvanced)
+            .Select(m => new DataContextModLoader(m)).ToArray();
 
         selectedModLoader = ModLoaders[0];
     }

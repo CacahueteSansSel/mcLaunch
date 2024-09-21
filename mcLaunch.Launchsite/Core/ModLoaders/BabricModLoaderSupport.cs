@@ -10,6 +10,7 @@ public class BabricModLoaderSupport : ModLoaderSupport
     public override string Id { get; } = "babric";
     public override string Name { get; set; } = "Babric";
     public override string Type { get; set; } = "modded";
+    public override bool IsAdvanced => true;
     public override ModLoaderVersion LatestVersion { get; set; }
 
     public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion)

@@ -10,6 +10,7 @@ public abstract class ModLoaderSupport
     public abstract ModLoaderVersion LatestVersion { get; set; }
     public virtual bool NeedsMerging => true;
     public virtual bool SupportsLauncherExposure => true;
+    public virtual bool IsAdvanced => false;
 
     public abstract Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion);
 
