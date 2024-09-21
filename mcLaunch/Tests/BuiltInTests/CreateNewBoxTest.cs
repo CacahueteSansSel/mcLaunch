@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -16,13 +17,15 @@ namespace mcLaunch.Tests.BuiltInTests;
 
 public class CreateNewBoxTest : UnitTest
 {
-    const string BoxName = "No Therese Here";
+    public const string BoxName = "THERESE-TESTMCL--";
     
     public override async Task RunAsync()
     {
         ButtonClick(FindControlMain<Button>("NewBoxButton")!);
         
         Assert(IsPopupShown<NewBoxPopup>(), "New box popup shown");
+
+        await Task.Delay(100);
 
         ManifestMinecraftVersion mcVersion = MinecraftManager.ManifestVersions[0];
 
@@ -47,5 +50,10 @@ public class CreateNewBoxTest : UnitTest
         Assert(page.Box.Manifest.Version == mcVersion.Id, "Box's version is as requested");
         Assert(page.Box.ModLoader is VanillaModLoaderSupport, "Box is in vanilla as intended");
         Assert(page.Box.Manifest.Contents.Count == 0, "Box doesn't contains any content");
+        
+        Navigation.Pop();
+        page.Box.Delete();
+        
+        Assert(!Directory.Exists(page.Box.Path), "Box was deleted and its folder does not exist anymore");
     }
 }
