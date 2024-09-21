@@ -37,7 +37,8 @@ public partial class ConsoleWindow : Window
     {
         base.OnClosed(e);
         
-        box.Minecraft.OnStandardOutputLineReceived -= MinecraftStdOutLineReceived;
+        if (box != null)
+            box.Minecraft.OnStandardOutputLineReceived -= MinecraftStdOutLineReceived;
     }
 
     void MinecraftStdOutLineReceived(string line)
