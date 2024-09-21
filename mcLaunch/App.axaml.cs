@@ -13,6 +13,7 @@ using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Managers;
 using mcLaunch.Launchsite.Models;
 using mcLaunch.Managers;
+using mcLaunch.Tests;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Windows;
 using ReactiveUI;
@@ -32,6 +33,10 @@ public class App : Application
     {
         Args = new ArgumentsParser(Environment.GetCommandLineArgs().Skip(1).ToArray());
 
+        #if DEBUG
+        TestsManager.Load();
+        #endif
+        
         CurrentBuild.Load();
         Settings.Load();
         DownloadManager.Init(CurrentBuild.Version.ToString());

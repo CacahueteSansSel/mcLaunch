@@ -9,7 +9,7 @@
         WindowStartupLocation="CenterScreen"
         ExtendClientAreaTitleBarHeightHint="50"
         ExtendClientAreaToDecorationsHint="True"
-        Title="About mcLaunch"
+        Title="Game Console"
         Icon="/resources/icon.ico"
         Background="{DynamicResource BackgroundDarker}">
     <Window.Styles>
@@ -32,6 +32,7 @@
     </Window.Styles>
     <DockPanel>
         <DockPanel IsHitTestVisible="False" DockPanel.Dock="Top" Height="50" Background="{DynamicResource Background}">
+            <Image Source="/resources/logo_beta.png" DockPanel.Dock="Left" Height="30" Margin="20 0 0 0"></Image>
             <TextBlock Text="Game Console" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0"></TextBlock>
         </DockPanel>
         <avaloniaEdit:TextEditor x:Name="ConsoleText" Padding="10" IsReadOnly="True" FontFamily="JetBrains Mono,Cascadia Code,Consolas,Menlo,Monospace">

@@ -12,6 +12,7 @@ using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
+using mcLaunch.Views.Windows;
 using ReactiveUI;
 
 namespace mcLaunch.Views;
@@ -31,7 +32,7 @@ public partial class ToolButtonsBar : UserControl
             UIDataContext.ResourceName = "Test";
             UIDataContext.ResourceDetailsText = "file.txt";
         }
-        
+
         RefreshButtons();
     }
 
@@ -40,6 +41,12 @@ public partial class ToolButtonsBar : UserControl
     public void RefreshButtons()
     {
         AdvancedFeaturesButton.IsVisible = Settings.Instance.ShowAdvancedFeatures;
+
+#if DEBUG
+        UnitTestsButton.IsVisible = true;
+#else
+        UnitTestsButton.IsVisible = false;
+#endif
     }
 
     private async void NewBoxButtonClicked(object? sender, RoutedEventArgs e)
@@ -84,10 +91,11 @@ public partial class ToolButtonsBar : UserControl
     {
         if (BackgroundManager.IsMinecraftRunning)
         {
-            Navigation.ShowPopup(new MessageBoxPopup("FastLaunch not available", "Cannot use FastLaunch while another Minecraft instance is running", MessageStatus.Warning));
+            Navigation.ShowPopup(new MessageBoxPopup("FastLaunch not available",
+                "Cannot use FastLaunch while another Minecraft instance is running", MessageStatus.Warning));
             return;
         }
-        
+
         Navigation.ShowPopup(new FastLaunchPopup());
     }
 
@@ -206,5 +214,10 @@ public partial class ToolButtonsBar : UserControl
     void AdvancedFeaturesButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.Push<AdvancedFeaturesPage>();
+    }
+
+    void UnitTestsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        new UnitTestsWindow().Show();
     }
 }
