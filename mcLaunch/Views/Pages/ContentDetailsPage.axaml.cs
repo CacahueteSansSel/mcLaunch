@@ -14,6 +14,7 @@ using mcLaunch.Core.Managers;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Core.ModLoaders;
 using mcLaunch.Launchsite.Models;
+using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 
@@ -410,6 +411,12 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
     private async void TestButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (BackgroundManager.IsMinecraftRunning)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("FastLaunch not available", "Cannot use FastLaunch while another Minecraft instance is running", MessageStatus.Warning));
+            return;
+        }
+        
         ContentVersion[] versions = await ShownContent.Platform.GetContentVersionsAsync(ShownContent, null, null);
 
         Navigation.ShowPopup(new VersionSelectionPopup(new MinecraftContentVersionProvider(versions, ShownContent),

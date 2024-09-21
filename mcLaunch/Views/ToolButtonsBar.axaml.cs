@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using mcLaunch.Core.Managers;
 using mcLaunch.Launchsite.Auth;
+using mcLaunch.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
@@ -81,6 +82,12 @@ public partial class ToolButtonsBar : UserControl
 
     private void FastLaunchButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (BackgroundManager.IsMinecraftRunning)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("FastLaunch not available", "Cannot use FastLaunch while another Minecraft instance is running", MessageStatus.Warning));
+            return;
+        }
+        
         Navigation.ShowPopup(new FastLaunchPopup());
     }
 
