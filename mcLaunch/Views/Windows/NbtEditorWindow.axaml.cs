@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using DynamicData;
+using mcLaunch.Utilities;
 using SharpNBT;
 
 namespace mcLaunch.Views.Windows;
@@ -13,27 +18,43 @@ namespace mcLaunch.Views.Windows;
 public partial class NbtEditorWindow : Window
 {
     ObservableCollection<TagNode> nodes = [];
+    string path;
+    
     public CompoundTag? Root { get; private set; }
     
     public NbtEditorWindow()
     {
         InitializeComponent();
         
-        if (Design.IsDesignMode) SetRoot(NbtFile.Read("level.dat", FormatOptions.Java));
+        if (Design.IsDesignMode) Load("level.dat");
     }
 
-    public NbtEditorWindow(CompoundTag root) : this()
+    public NbtEditorWindow(string filename) : this()
     {
-        SetRoot(root);
+        Load(filename);
     }
 
-    public void SetRoot(CompoundTag root)
+    public void Load(string filename)
+    {
+        path = filename;
+        SetRoot(NbtFile.Read(filename, FormatOptions.Java), Path.GetFileName(filename));
+    }
+
+    public async void Save()
+    {
+        if (Root is null) return;
+
+        await NbtFile.WriteAsync(path, Root, FormatOptions.Java);
+    }
+
+    public void SetRoot(CompoundTag root, string name = "Root")
     {
         nodes.Clear();
         Root = root;
 
         TagNode rootNode = GetNodeForTag(root);
-        nodes.AddRange(rootNode.Children);
+        rootNode.Name = name;
+        nodes.Add(rootNode);
         DataContext = nodes;
     }
 
@@ -147,5 +168,19 @@ public partial class NbtEditorWindow : Window
             Type = tag.Type;
             Children = new ObservableCollection<TagNode>(children);
         }
+    }
+
+    void SaveButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Save();
+    }
+
+    async void OpenButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        string[] files = await FilePickerUtilities.PickFiles(false, "Open NBT File", ["nbt", "dat"]);
+        
+        if (files.Length != 1) return;
+        
+        Load(files[0]);
     }
 }

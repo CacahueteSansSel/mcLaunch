@@ -26,6 +26,7 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
 #if !DEBUG
         CrashButton.IsVisible = false;
         ConsoleButton.IsVisible = false;
+        NbtButton.IsVisible = false;
 #endif
 
         int years = (int) MathF.Floor((float) (DateTime.Now - Constants.McLaunchBirthDate).TotalDays / 365);
@@ -77,6 +78,6 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
 
     void NbtEditorButtonClicked(object? sender, RoutedEventArgs e)
     {
-        new NbtEditorWindow(NbtFile.Read("level.dat", FormatOptions.Java)).Show();
+        new NbtEditorWindow("level.dat").Show();
     }
 }

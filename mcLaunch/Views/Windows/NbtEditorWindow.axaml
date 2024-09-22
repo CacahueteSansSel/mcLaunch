@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+        xmlns:views="clr-namespace:mcLaunch.Views"
         mc:Ignorable="d"
         Width="600" Height="400" CanResize="True"
         x:Class="mcLaunch.Views.Windows.NbtEditorWindow"
@@ -21,6 +22,19 @@
             <TextBlock Text="NBT Editor" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0"></TextBlock>
         </DockPanel>
         <DockPanel>
+            <StackPanel DockPanel.Dock="Top" Height="60" Background="{DynamicResource Background}" Orientation="Horizontal" Spacing="10">
+                <Button x:Name="NewBoxButton" DockPanel.Dock="Left" ToolTip.Tip="New Tag" Classes="primary square" Margin="20 0 0 0">
+                    <Image Source="{SvgImage /resources/icons/plus.svg}" Width="13" Height="13" />
+                </Button>
+                <views:SeparatorLine/>
+                <Button x:Name="OpenButton" DockPanel.Dock="Left" ToolTip.Tip="Open NBT File" Classes="secondary square" Click="OpenButtonClicked">
+                    <Image Source="{SvgImage /resources/icons/import.svg}" Width="13" Height="13" />
+                </Button>
+                <Button x:Name="SaveButton" DockPanel.Dock="Left" ToolTip.Tip="Save" Classes="secondary square" Click="SaveButtonClicked">
+                    <Image Source="{SvgImage /resources/icons/download.svg}" Width="13" Height="13" />
+                </Button>
+            </StackPanel>
+            <Panel DockPanel.Dock="Top" Height="1" Background="{DynamicResource BackgroundLighter}" />
             <TreeView ItemsSource="{Binding .}">
                 <TreeView.ItemTemplate>
                     <TreeDataTemplate ItemsSource="{Binding Children}">
