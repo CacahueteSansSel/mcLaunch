@@ -12,6 +12,9 @@ public partial class ConsoleWindow : Window
 {
     Process? process;
     Box? box;
+    int lineCountForCurrentSecond = 0;
+    int lastSecond = 0;
+    string pendingTextBuffer = "";
     
     public ConsoleWindow()
     {
@@ -43,9 +46,30 @@ public partial class ConsoleWindow : Window
 
     void MinecraftStdOutLineReceived(string line)
     {
+        if (lastSecond != DateTime.Now.Second)
+        {
+            lastSecond = DateTime.Now.Second;
+            lineCountForCurrentSecond = 0;
+        }
+        else
+        {
+            lineCountForCurrentSecond++;
+            if (lineCountForCurrentSecond > 10)
+            {
+                pendingTextBuffer += $"{line}\n";
+                return;
+            }
+        }
+        
         Dispatcher.UIThread.Post(() =>
         {
             if (!IsVisible) return;
+
+            if (!string.IsNullOrEmpty(pendingTextBuffer))
+            {
+                ConsoleText.Text += pendingTextBuffer;
+                pendingTextBuffer = "";
+            }
             
             ConsoleText.Text += $"{line}\n";
             ConsoleText.ScrollToEnd();
