@@ -29,8 +29,6 @@ public class ImportCurseforgeModpackTest : UnitTest
             "Box does have Fabric API (as expected)");
         
         Navigation.Pop();
-        page.Box.Delete();
-        
-        Assert(!Directory.Exists(page.Box.Path), "Box was deleted and its folder does not exist anymore");
+        DeleteBoxAndCheck(page.Box);
     }
 }

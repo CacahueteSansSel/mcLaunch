@@ -135,7 +135,7 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
             return;
         }
 
-    await MainPage.Instance?.PopulateBoxListAsync();
+        await MainPage.Instance?.PopulateBoxListAsync();
 
         Box box = new Box(newBoxManifest, result.Data!);
         

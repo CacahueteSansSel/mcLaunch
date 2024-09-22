@@ -17,10 +17,10 @@ namespace mcLaunch.Tests.BuiltInTests;
 
 public class CreateNewBoxTest : UnitTest
 {
-    public const string BoxName = "THERESE-TESTMCL--";
-    
     public override async Task RunAsync()
     {
+        string boxName = GetType().Name;
+        
         ButtonClick(FindControlMain<Button>("NewBoxButton")!);
         
         Assert(IsPopupShown<NewBoxPopup>(), "New box popup shown");
@@ -36,7 +36,7 @@ public class CreateNewBoxTest : UnitTest
 
         Assert(versionSelector.Version.Id == mcVersion.Id, $"Selected Minecraft version is {mcVersion.Id} as requested");
         
-        boxNameTbox.Text = BoxName;
+        boxNameTbox.Text = boxName;
         createButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
         await Task.Run(async () =>
@@ -46,14 +46,12 @@ public class CreateNewBoxTest : UnitTest
         });
 
         BoxDetailsPage page = (BoxDetailsPage)MainWindowDataContext.Instance.CurrentPage;
-        Assert(page.Box.Manifest.Name == BoxName, "Box's name is as requested");
+        Assert(page.Box.Manifest.Name == boxName, "Box's name is as requested");
         Assert(page.Box.Manifest.Version == mcVersion.Id, "Box's version is as requested");
         Assert(page.Box.ModLoader is VanillaModLoaderSupport, "Box is in vanilla as intended");
         Assert(page.Box.Manifest.Contents.Count == 0, "Box doesn't contains any content");
         
         Navigation.Pop();
-        page.Box.Delete();
-        
-        Assert(!Directory.Exists(page.Box.Path), "Box was deleted and its folder does not exist anymore");
+        DeleteBoxAndCheck(page.Box);
     }
 }
