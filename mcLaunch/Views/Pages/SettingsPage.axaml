@@ -41,6 +41,7 @@
                         <Button Classes="secondary" Click="UpdateInstallerButtonClicked">Update installer</Button>
                         <Button x:Name="CrashButton" Classes="secondary" Click="CrashLauncherButtonClicked">Crash</Button>
                         <Button x:Name="ConsoleButton" Classes="secondary" Click="ConsoleButtonClicked">Console</Button>
+                        <Button x:Name="NbtButton" Classes="secondary" Click="NbtEditorButtonClicked">NBT Editor</Button>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

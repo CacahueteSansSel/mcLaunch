@@ -352,6 +352,30 @@
         <AvaloniaResource Include="resources\logo_lanuch.png" />
         <None Remove="resources\icons\unit_test.svg" />
         <AvaloniaResource Include="resources\icons\unit_test.svg" />
+        <None Remove="resources\nbt\byte.svg" />
+        <AvaloniaResource Include="resources\nbt\byte.svg" />
+        <None Remove="resources\nbt\byte_array.svg" />
+        <AvaloniaResource Include="resources\nbt\byte_array.svg" />
+        <None Remove="resources\nbt\compound.svg" />
+        <AvaloniaResource Include="resources\nbt\compound.svg" />
+        <None Remove="resources\nbt\double.svg" />
+        <AvaloniaResource Include="resources\nbt\double.svg" />
+        <None Remove="resources\nbt\float.svg" />
+        <AvaloniaResource Include="resources\nbt\float.svg" />
+        <None Remove="resources\nbt\int.svg" />
+        <AvaloniaResource Include="resources\nbt\int.svg" />
+        <None Remove="resources\nbt\int_array.svg" />
+        <AvaloniaResource Include="resources\nbt\int_array.svg" />
+        <None Remove="resources\nbt\list.svg" />
+        <AvaloniaResource Include="resources\nbt\list.svg" />
+        <None Remove="resources\nbt\long.svg" />
+        <AvaloniaResource Include="resources\nbt\long.svg" />
+        <None Remove="resources\nbt\long_array.svg" />
+        <AvaloniaResource Include="resources\nbt\long_array.svg" />
+        <None Remove="resources\nbt\short.svg" />
+        <AvaloniaResource Include="resources\nbt\short.svg" />
+        <None Remove="resources\nbt\string.svg" />
+        <AvaloniaResource Include="resources\nbt\string.svg" />
     </ItemGroup>
 
     <ItemGroup>

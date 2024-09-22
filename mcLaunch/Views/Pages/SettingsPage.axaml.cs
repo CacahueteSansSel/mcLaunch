@@ -6,6 +6,7 @@ using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.Settings;
 using mcLaunch.Views.Windows;
+using SharpNBT;
 
 namespace mcLaunch.Views.Pages;
 
@@ -72,5 +73,10 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
     void ConsoleButtonClicked(object? sender, RoutedEventArgs e)
     {
         new ConsoleWindow().Show();
+    }
+
+    void NbtEditorButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        new NbtEditorWindow(NbtFile.Read("level.dat", FormatOptions.Java)).Show();
     }
 }
