@@ -10,6 +10,15 @@
     </PropertyGroup>
     <ItemGroup>
         <None Remove=".gitignore" />
+        <None Update="TestModpacks\curseforge.zip">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestModpacks\modrinth.mrpack">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestModpacks\mclaunch.box">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -432,5 +441,6 @@
 
     <ItemGroup>
         <Folder Include="resources\internal\" />
+        <Folder Include="TestModpacks\" />
     </ItemGroup>
 </Project>

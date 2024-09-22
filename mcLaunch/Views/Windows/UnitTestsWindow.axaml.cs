@@ -81,7 +81,7 @@ public partial class UnitTestsWindow : Window
             catch (Exception e)
             {
                 entry.State = UnitTestStateType.Failed;
-                entry.Output = e.ToString();
+                entry.Output = $"{entry.TestName} failed\n{entry.Test.AssertLog}\n{e}";
                 
                 UpdateEntries();
             }

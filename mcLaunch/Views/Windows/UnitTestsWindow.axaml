@@ -5,7 +5,7 @@
         xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
         xmlns:views="clr-namespace:mcLaunch.Views"
         mc:Ignorable="d"
-        Width="600" Height="400" CanResize="True"
+        Width="1280" Height="720" CanResize="True"
         x:Class="mcLaunch.Views.Windows.UnitTestsWindow"
         WindowStartupLocation="CenterScreen"
         ExtendClientAreaTitleBarHeightHint="50"
