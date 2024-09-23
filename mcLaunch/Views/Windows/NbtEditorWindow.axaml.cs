@@ -198,4 +198,9 @@ public partial class NbtEditorWindow : Window
         path = file.TryGetLocalPath()!;
         Save();
     }
+
+    void NewTagButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        NewBoxButton.ContextMenu!.Open(NewBoxButton);
+    }
 }
