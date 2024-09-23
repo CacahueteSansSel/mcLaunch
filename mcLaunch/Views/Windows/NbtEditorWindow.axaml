@@ -31,7 +31,10 @@
                     <Image Source="{SvgImage /resources/icons/import.svg}" Width="13" Height="13" />
                 </Button>
                 <Button x:Name="SaveButton" DockPanel.Dock="Left" ToolTip.Tip="Save" Classes="secondary square" Click="SaveButtonClicked">
-                    <Image Source="{SvgImage /resources/icons/download.svg}" Width="13" Height="13" />
+                    <Image Source="{SvgImage /resources/icons/save.svg}" Width="13" Height="13" />
+                </Button>
+                <Button x:Name="SaveAsButton" DockPanel.Dock="Left" ToolTip.Tip="Save as" Classes="secondary square" Click="SaveAsButtonClicked">
+                    <Image Source="{SvgImage /resources/icons/save.svg}" Width="13" Height="13" />
                 </Button>
             </StackPanel>
             <Panel DockPanel.Dock="Top" Height="1" Background="{DynamicResource BackgroundLighter}" />

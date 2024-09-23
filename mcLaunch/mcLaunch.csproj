@@ -376,6 +376,8 @@
         <AvaloniaResource Include="resources\nbt\short.svg" />
         <None Remove="resources\nbt\string.svg" />
         <AvaloniaResource Include="resources\nbt\string.svg" />
+        <None Remove="resources\icons\save.svg" />
+        <AvaloniaResource Include="resources\icons\save.svg" />
     </ItemGroup>
 
     <ItemGroup>

@@ -177,10 +177,25 @@ public partial class NbtEditorWindow : Window
 
     async void OpenButtonClicked(object? sender, RoutedEventArgs e)
     {
-        string[] files = await FilePickerUtilities.PickFiles(false, "Open NBT File", ["nbt", "dat"]);
+        string[] files = await FilePickerUtilities.PickFiles(false, "Open NBT File", ["dat", "nbt"]);
         
         if (files.Length != 1) return;
         
         Load(files[0]);
+    }
+
+    async void SaveAsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        IStorageFile? file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
+        {
+            DefaultExtension = "dat",
+            FileTypeChoices = [new FilePickerFileType("nbt") {Patterns = ["*.nbt"]}, new FilePickerFileType("dat") {Patterns = ["*.dat"]}],
+            Title = "Save NBT File"
+        });
+        
+        if (file == null) return;
+        
+        path = file.TryGetLocalPath()!;
+        Save();
     }
 }
