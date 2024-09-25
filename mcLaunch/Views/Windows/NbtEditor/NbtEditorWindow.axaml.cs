@@ -10,10 +10,11 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using DynamicData;
+using mcLaunch.Models;
 using mcLaunch.Utilities;
 using SharpNBT;
 
-namespace mcLaunch.Views.Windows;
+namespace mcLaunch.Views.Windows.NbtEditor;
 
 public partial class NbtEditorWindow : Window
 {
@@ -27,6 +28,8 @@ public partial class NbtEditorWindow : Window
         InitializeComponent();
         
         if (Design.IsDesignMode) Load("level.dat");
+
+        DataContext = new NbtEditorWindowDataContext(null);
     }
 
     public NbtEditorWindow(string filename) : this()
@@ -65,7 +68,7 @@ public partial class NbtEditorWindow : Window
             List<TagNode> childrenNodes = [];
 
             foreach (Tag childrenTag in compoundTag)
-                childrenNodes.Add(GetNodeForTag(childrenTag));
+                childrenNodes.Add(GetNodeForTag(childrenTag).WithParent(tag));
             
             return new TagNode(tag, childrenNodes.ToArray());
         }
@@ -75,7 +78,7 @@ public partial class NbtEditorWindow : Window
             List<TagNode> childrenNodes = [];
 
             foreach (Tag childrenTag in listTag)
-                childrenNodes.Add(GetNodeForTag(childrenTag));
+                childrenNodes.Add(GetNodeForTag(childrenTag).WithParent(tag));
             
             return new TagNode(tag, childrenNodes.ToArray());
         }
@@ -85,6 +88,7 @@ public partial class NbtEditorWindow : Window
 
     public class TagNode
     {
+        public Tag Parent { get; set; }
         public Tag Tag { get; set; }
         public string? Name { get; set; }
         public TagType Type { get; set; }
@@ -168,6 +172,12 @@ public partial class NbtEditorWindow : Window
             Type = tag.Type;
             Children = new ObservableCollection<TagNode>(children);
         }
+
+        public TagNode WithParent(Tag parent)
+        {
+            Parent = parent;
+            return this;
+        }
     }
 
     void SaveButtonClicked(object? sender, RoutedEventArgs e)
@@ -202,5 +212,41 @@ public partial class NbtEditorWindow : Window
     void NewTagButtonClicked(object? sender, RoutedEventArgs e)
     {
         NewBoxButton.ContextMenu!.Open(NewBoxButton);
+    }
+
+    async void RenameButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        if (TagTree.SelectedItem == null) return;
+
+        TagNode node = (TagNode) TagTree.SelectedItem;
+        if (node.Parent is not CompoundTag compoundTag) return;
+        
+        string newName = await new NbtEditTagNameWindow(node.Type, node.Name ?? "").ShowDialog<string>(this);
+        if (string.IsNullOrWhiteSpace(newName)) return;
+        
+        compoundTag.Remove(node.Tag);
+
+        Tag? newTag = null;
+        if (node.Tag is ByteTag byteTag) newTag = new ByteTag(newName, byteTag.Value);
+        if (node.Tag is ByteArrayTag byteArrayTag) newTag = new ByteArrayTag(newName, byteArrayTag);
+        if (node.Tag is CompoundTag compTag) newTag = new CompoundTag(newName, compTag.Values);
+        if (node.Tag is DoubleTag doubleTag) newTag = new DoubleTag(newName, doubleTag.Value);
+        if (node.Tag is FloatTag floatTag) newTag = new FloatTag(newName, floatTag.Value);
+        if (node.Tag is IntTag intTag) newTag = new IntTag(newName, intTag.Value);
+        if (node.Tag is IntArrayTag intArrayTag) newTag = new IntArrayTag(newName, intArrayTag);
+        if (node.Tag is ListTag listTag)
+        {
+            newTag = new ListTag(newName, listTag.Type);
+            ((ListTag)newTag).AddRange(listTag);
+        }
+        if (node.Tag is LongTag longTag) newTag = new LongTag(newName, longTag.Value);
+        if (node.Tag is LongArrayTag longArrayTag) newTag = new LongArrayTag(newName, longArrayTag);
+        if (node.Tag is ShortTag shortTag) newTag = new ShortTag(newName, shortTag.Value);
+        if (node.Tag is StringTag stringTag) newTag = new StringTag(newName, stringTag.Value);
+
+        compoundTag.Add(newName, newTag ?? node.Tag);
+
+        // Refresh the tree
+        SetRoot(Root!);
     }
 }

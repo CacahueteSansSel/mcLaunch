@@ -378,6 +378,12 @@
         <AvaloniaResource Include="resources\nbt\string.svg" />
         <None Remove="resources\icons\save.svg" />
         <AvaloniaResource Include="resources\icons\save.svg" />
+        <None Remove="resources\icons\save_as.svg" />
+        <AvaloniaResource Include="resources\icons\save_as.svg" />
+        <None Remove="resources\icons\rename.svg" />
+        <AvaloniaResource Include="resources\icons\rename.svg" />
+        <None Remove="resources\icons\nbt.svg" />
+        <AvaloniaResource Include="resources\icons\nbt.svg" />
     </ItemGroup>
 
     <ItemGroup>
@@ -461,6 +467,10 @@
         </Compile>
         <Compile Update="Views\Windows\ConsoleWindow.axaml.cs">
           <DependentUpon>ConsoleWindow.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Windows\NbtEditor\NbtEditorWindow.axaml.cs">
+          <DependentUpon>NbtEditorWindow.axaml</DependentUpon>
           <SubType>Code</SubType>
         </Compile>
     </ItemGroup>

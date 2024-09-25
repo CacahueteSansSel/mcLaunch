@@ -1,0 +1,27 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" Width="300" Height="110"
+        x:Class="mcLaunch.Views.Windows.NbtEditor.NbtEditTagNameWindow"
+        Title="Edit tag name"
+        Background="{DynamicResource BackgroundDarker}">
+    <Window.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+    </Window.Styles>
+    <DockPanel Margin="10">
+        <DockPanel DockPanel.Dock="Bottom">
+            <Button DockPanel.Dock="Right" Classes="primary" Margin="10 0 0 0" Click="ConfirmButtonClicked">Confirm</Button>
+            <Button DockPanel.Dock="Right" Classes="secondary" Click="CancelButtonClicked">Cancel</Button>
+            <Panel></Panel>
+        </DockPanel>
+        <DockPanel Height="20">
+            <Panel>
+                <Image Source="{SvgImage /resources/nbt/byte.svg}" IsVisible="{Binding IsByte}"
+                       Height="30">
+                </Image>
+            </Panel>
+            <TextBox x:Name="NameTextBox" Margin="10 0 0 0"></TextBox>
+        </DockPanel>
+    </DockPanel>
+</Window>

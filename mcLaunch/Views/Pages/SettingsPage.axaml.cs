@@ -6,6 +6,7 @@ using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.Settings;
 using mcLaunch.Views.Windows;
+using mcLaunch.Views.Windows.NbtEditor;
 using SharpNBT;
 
 namespace mcLaunch.Views.Pages;
