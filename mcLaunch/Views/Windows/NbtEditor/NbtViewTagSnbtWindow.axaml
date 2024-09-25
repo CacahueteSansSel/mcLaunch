@@ -1,0 +1,16 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+        mc:Ignorable="d" Width="800" Height="480"
+        x:Class="mcLaunch.Views.Windows.NbtEditor.NbtViewTagSnbtWindow"
+        Title="SNBT Viewer"
+        Background="{DynamicResource BackgroundDarker}">
+    <Window.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+    </Window.Styles>
+    <avaloniaEdit:TextEditor x:Name="SnbtTextEditor" Classes="id" ShowLineNumbers="True" IsReadOnly="True" FontFamily="JetBrains Mono,Cascadia Code,Consolas,Menlo,Monospace">
+        
+    </avaloniaEdit:TextEditor>
+</Window>

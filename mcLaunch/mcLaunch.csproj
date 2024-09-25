@@ -384,6 +384,8 @@
         <AvaloniaResource Include="resources\icons\rename.svg" />
         <None Remove="resources\icons\nbt.svg" />
         <AvaloniaResource Include="resources\icons\nbt.svg" />
+        <None Remove="resources\icons\snbt.svg" />
+        <AvaloniaResource Include="resources\icons\snbt.svg" />
     </ItemGroup>
 
     <ItemGroup>

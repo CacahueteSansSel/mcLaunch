@@ -67,6 +67,10 @@
                             Classes="secondary square" Click="RenameButtonClicked">
                         <Image Source="{SvgImage /resources/icons/rename.svg}" Width="13" Height="13" />
                     </Button>
+                    <Button x:Name="SnbtButton" DockPanel.Dock="Left" ToolTip.Tip="View current tag's SNBT"
+                            Classes="secondary square" Click="SnbtButtonClicked">
+                        <Image Source="{SvgImage /resources/icons/snbt.svg}" Width="13" Height="13" />
+                    </Button>
                 </StackPanel>
                 <Panel DockPanel.Dock="Top" Height="1" Background="{DynamicResource BackgroundLighter}" />
                 <TreeView x:Name="TagTree" ItemsSource="{Binding .}" SelectionChanged="TagTreeSelectionChanged">

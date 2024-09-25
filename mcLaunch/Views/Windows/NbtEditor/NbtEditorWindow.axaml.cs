@@ -254,10 +254,19 @@ public partial class NbtEditorWindow : Window
     void UpdateButtons()
     {
         RenameButton.IsEnabled = TagTree.SelectedItem != null && ((TagNode)TagTree.SelectedItem).Parent != null;
+        SnbtButton.IsEnabled = TagTree.SelectedItem != null;
     }
 
     void TagTreeSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         UpdateButtons();
+    }
+
+    void SnbtButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        TagNode? tag = (TagNode?)TagTree.SelectedItem;
+        if (tag == null) return;
+
+        new NbtViewTagSnbtWindow(tag.Tag).ShowDialog(this);
     }
 }
