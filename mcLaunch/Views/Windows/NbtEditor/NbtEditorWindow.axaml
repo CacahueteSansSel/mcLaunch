@@ -69,7 +69,7 @@
                     </Button>
                 </StackPanel>
                 <Panel DockPanel.Dock="Top" Height="1" Background="{DynamicResource BackgroundLighter}" />
-                <TreeView x:Name="TagTree" ItemsSource="{Binding .}">
+                <TreeView x:Name="TagTree" ItemsSource="{Binding .}" SelectionChanged="TagTreeSelectionChanged">
                     <TreeView.ItemTemplate>
                         <TreeDataTemplate ItemsSource="{Binding Children}">
                             <StackPanel Orientation="Horizontal" Spacing="8">

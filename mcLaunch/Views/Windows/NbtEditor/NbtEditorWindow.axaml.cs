@@ -30,6 +30,7 @@ public partial class NbtEditorWindow : Window
         if (Design.IsDesignMode) Load("level.dat");
 
         DataContext = new NbtEditorWindowDataContext(null);
+        UpdateButtons();
     }
 
     public NbtEditorWindow(string filename) : this()
@@ -248,5 +249,15 @@ public partial class NbtEditorWindow : Window
 
         // Refresh the tree
         SetRoot(Root!);
+    }
+
+    void UpdateButtons()
+    {
+        RenameButton.IsEnabled = TagTree.SelectedItem != null && ((TagNode)TagTree.SelectedItem).Parent != null;
+    }
+
+    void TagTreeSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        UpdateButtons();
     }
 }

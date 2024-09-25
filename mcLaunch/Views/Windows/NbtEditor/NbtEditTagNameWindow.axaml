@@ -5,6 +5,7 @@
         mc:Ignorable="d" Width="300" Height="110"
         x:Class="mcLaunch.Views.Windows.NbtEditor.NbtEditTagNameWindow"
         Title="Edit tag name"
+        WindowStartupLocation="CenterOwner"
         Background="{DynamicResource BackgroundDarker}">
     <Window.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
@@ -17,7 +18,40 @@
         </DockPanel>
         <DockPanel Height="20">
             <Panel>
-                <Image Source="{SvgImage /resources/nbt/byte.svg}" IsVisible="{Binding IsByte}"
+                <Image x:Name="IconTagByte" Source="{SvgImage /resources/nbt/byte.svg}" IsVisible="False"
+                       Height="30">
+                </Image>
+                <Image x:Name="IconTagByteArray" Source="{SvgImage /resources/nbt/byte_array.svg}" IsVisible="False"
+                       Height="30">
+                </Image>
+                <Image x:Name="IconTagCompound" Source="{SvgImage /resources/nbt/compound.svg}" IsVisible="False"
+                       Height="30">
+                </Image>
+                <Image x:Name="IconTagDouble" Source="{SvgImage /resources/nbt/double.svg}" IsVisible="False"
+                       Height="30">
+                </Image>
+                <Image x:Name="IconTagFloat" Source="{SvgImage /resources/nbt/float.svg}" IsVisible="False"
+                       Height="30">
+                </Image>
+                <Image x:Name="IconTagInt" Source="{SvgImage /resources/nbt/int.svg}" IsVisible="False"
+                       Height="30">
+                </Image>
+                <Image x:Name="IconTagIntArray" Source="{SvgImage /resources/nbt/int_array.svg}" IsVisible="False"
+                       Height="30">
+                </Image>
+                <Image x:Name="IconTagList" Source="{SvgImage /resources/nbt/list.svg}" IsVisible="False"
+                       Height="30">
+                </Image>
+                <Image x:Name="IconTagLong" Source="{SvgImage /resources/nbt/long.svg}" IsVisible="False"
+                       Height="30">
+                </Image>
+                <Image x:Name="IconTagLongArray" Source="{SvgImage /resources/nbt/long_array.svg}" IsVisible="False"
+                       Height="30">
+                </Image>
+                <Image x:Name="IconTagShort" Source="{SvgImage /resources/nbt/short.svg}" IsVisible="False"
+                       Height="30">
+                </Image>
+                <Image x:Name="IconTagString" Source="{SvgImage /resources/nbt/string.svg}" IsVisible="False"
                        Height="30">
                 </Image>
             </Panel>

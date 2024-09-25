@@ -16,6 +16,8 @@ public partial class NbtEditTagNameWindow : Window
     public NbtEditTagNameWindow(TagType type, string tagName) : this()
     {
         NameTextBox.Text = tagName;
+
+        this.GetControl<Image>($"IconTag{type}").IsVisible = true;
     }
 
     void ConfirmButtonClicked(object? sender, RoutedEventArgs e)
