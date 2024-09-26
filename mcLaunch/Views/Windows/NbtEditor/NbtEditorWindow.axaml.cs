@@ -89,7 +89,7 @@ public partial class NbtEditorWindow : Window
 
     public class TagNode
     {
-        public Tag Parent { get; set; }
+        public Tag? Parent { get; set; }
         public Tag Tag { get; set; }
         public string? Name { get; set; }
         public TagType Type { get; set; }
@@ -268,5 +268,76 @@ public partial class NbtEditorWindow : Window
         if (tag == null) return;
 
         new NbtViewTagSnbtWindow(tag.Tag).ShowDialog(this);
+    }
+
+    async void TagMenuItemClicked(object? sender, RoutedEventArgs e)
+    {
+        if (e.Source is not MenuItem menu) return;
+        if (!Enum.TryParse(menu.Name!.Replace("ItemTag", ""), out TagType type)) return;
+        
+        TagNode? selectedTag = (TagNode?)TagTree.SelectedItem;
+        if (selectedTag == null) return;
+
+        CompoundTag parent = selectedTag.Tag.Type != TagType.Compound 
+            ? (CompoundTag)selectedTag.Parent 
+            : (CompoundTag)selectedTag.Tag;
+
+        string name = await new NbtEditTagNameWindow(type, "").ShowDialog<string>(this);
+        if (string.IsNullOrWhiteSpace(name)) return;
+
+        Tag? toAddTag = null;
+
+        switch (type)
+        {
+            case TagType.Byte:
+                toAddTag = new ByteTag(name, 0);
+                break;
+            case TagType.Short:
+                toAddTag = new ShortTag(name, 0);
+                break;
+            case TagType.Int:
+                toAddTag = new IntTag(name, 0);
+                break;
+            case TagType.Long:
+                toAddTag = new LongTag(name, 0);
+                break;
+            case TagType.Float:
+                toAddTag = new FloatTag(name, 0);
+                break;
+            case TagType.Double:
+                toAddTag = new DoubleTag(name, 0);
+                break;
+            case TagType.ByteArray:
+                toAddTag = new ByteArrayTag(name, []);
+                break;
+            case TagType.String:
+                toAddTag = new StringTag(name, string.Empty);
+                break;
+            case TagType.List:
+                // todo
+                break;
+            case TagType.Compound:
+                toAddTag = new CompoundTag(name);
+                break;
+            case TagType.IntArray:
+                toAddTag = new IntArrayTag(name, []);
+                break;
+            case TagType.LongArray:
+                toAddTag = new LongArrayTag(name, []);
+                break;
+        }
+        
+        if (toAddTag != null) parent.Add(name, toAddTag);
+        
+        SetRoot(Root);
+    }
+
+    void DeleteButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        TagNode? selectedTag = (TagNode?)TagTree.SelectedItem;
+        if (selectedTag == null || selectedTag.Parent is not CompoundTag parent) return;
+
+        parent.Remove(selectedTag.Tag);
+        SetRoot(Root);
     }
 }

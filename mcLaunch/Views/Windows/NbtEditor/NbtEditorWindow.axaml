@@ -31,23 +31,27 @@
                         <Button.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="New NBT Tag" IsEnabled="False"></MenuItem>
-                                <MenuItem Header="Compound" Icon="{SvgImage /resources/nbt/compound.svg}" />
-                                <MenuItem Header="List" Icon="{SvgImage /resources/nbt/list.svg}" />
+                                <MenuItem x:Name="ItemTagCompound" Header="Compound" Icon="{SvgImage /resources/nbt/compound.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagList" Header="List" Icon="{SvgImage /resources/nbt/list.svg}" Click="TagMenuItemClicked" />
                                 <Separator></Separator>
-                                <MenuItem Header="Byte" Icon="{SvgImage /resources/nbt/byte.svg}" />
-                                <MenuItem Header="Short" Icon="{SvgImage /resources/nbt/short.svg}" />
-                                <MenuItem Header="Int" Icon="{SvgImage /resources/nbt/int.svg}" />
-                                <MenuItem Header="Long" Icon="{SvgImage /resources/nbt/long.svg}" />
-                                <MenuItem Header="Double" Icon="{SvgImage /resources/nbt/double.svg}" />
-                                <MenuItem Header="Float" Icon="{SvgImage /resources/nbt/float.svg}" />
-                                <MenuItem Header="String" Icon="{SvgImage /resources/nbt/string.svg}" />
+                                <MenuItem x:Name="ItemTagByte" Header="Byte" Icon="{SvgImage /resources/nbt/byte.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagShort" Header="Short" Icon="{SvgImage /resources/nbt/short.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagInt" Header="Int" Icon="{SvgImage /resources/nbt/int.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagLong" Header="Long" Icon="{SvgImage /resources/nbt/long.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagDouble" Header="Double" Icon="{SvgImage /resources/nbt/double.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagFloat" Header="Float" Icon="{SvgImage /resources/nbt/float.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagString" Header="String" Icon="{SvgImage /resources/nbt/string.svg}" Click="TagMenuItemClicked" />
                                 <Separator></Separator>
-                                <MenuItem Header="Byte Array" Icon="{SvgImage /resources/nbt/byte_array.svg}" />
-                                <MenuItem Header="Int Array" Icon="{SvgImage /resources/nbt/int_array.svg}" />
-                                <MenuItem Header="Long Array" Icon="{SvgImage /resources/nbt/long_array.svg}" />
+                                <MenuItem x:Name="ItemTagByteArray" Header="Byte Array" Icon="{SvgImage /resources/nbt/byte_array.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagIntArray" Header="Int Array" Icon="{SvgImage /resources/nbt/int_array.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagLongArray" Header="Long Array" Icon="{SvgImage /resources/nbt/long_array.svg}" Click="TagMenuItemClicked" />
                             </ContextMenu>
                         </Button.ContextMenu>
                         <Image Source="{SvgImage /resources/icons/plus.svg}" Width="13" Height="13" />
+                    </Button>
+                    <Button DockPanel.Dock="Left" ToolTip.Tip="Delete Tag" Classes="secondary square"
+                            Click="DeleteButtonClicked">
+                        <Image Source="{SvgImage /resources/icons/delete.svg}" Width="13" Height="13" />
                     </Button>
                     <views:SeparatorLine />
                     <Button x:Name="OpenButton" DockPanel.Dock="Left" ToolTip.Tip="Open NBT File"
