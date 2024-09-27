@@ -60,7 +60,7 @@ public static class BackgroundManager
 
         await javaProcess.WaitForExitAsync();
 
-        if (javaProcess.ExitCode != 0)
+        if (javaProcess != null && javaProcess.ExitCode != 0)
         {
             Navigation.ShowPopup(new CrashPopup(javaProcess.ExitCode, box.Manifest.Id));
             return false;
