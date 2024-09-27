@@ -9,11 +9,12 @@ public class MinecraftWorld
     {
     }
 
-    public MinecraftWorld(string completePath)
+    public MinecraftWorld(string path)
     {
-        CompoundTag levelDat = (CompoundTag) NbtFile.Read($"{completePath}/level.dat", FormatOptions.Java)["Data"];
+        CompoundTag levelDat = (CompoundTag) NbtFile.Read($"{path}/level.dat", FormatOptions.Java)["Data"];
 
-        FolderName = Path.GetFileNameWithoutExtension(completePath);
+        WorldPath = path;
+        FolderName = Path.GetFileNameWithoutExtension(path);
         Name = ((StringTag) levelDat["LevelName"]).Value;
         GameMode = (MinecraftGameMode) ((IntTag) levelDat["GameType"]).Value;
         long unix = ((LongTag) levelDat["LastPlayed"]).Value;
@@ -21,11 +22,12 @@ public class MinecraftWorld
         IsCheats = ((ByteTag) levelDat["allowCommands"]).Value == 1;
         Version = ((StringTag) ((CompoundTag) levelDat["Version"])["Name"]).Value;
 
-        if (!File.Exists($"{completePath}/icon.png")) return;
+        if (!File.Exists($"{path}/icon.png")) return;
 
-        Icon = new Bitmap($"{completePath}/icon.png");
+        Icon = new Bitmap($"{path}/icon.png");
     }
 
+    public string WorldPath { get; init; }
     public string Name { get; init; }
     public string FolderName { get; init; }
     public Bitmap Icon { get; init; }
