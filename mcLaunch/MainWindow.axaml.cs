@@ -49,6 +49,21 @@ public partial class MainWindow : Window
         Initialize();
     }
 
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        if (e.CloseReason != WindowCloseReason.WindowClosing)
+        {
+            base.OnClosing(e);
+            return;
+        }
+
+        if (BackgroundManager.IsMinecraftRunning)
+        {
+            e.Cancel = true;
+            BackgroundManager.EnterBackgroundState(BackgroundManager.LastMenuAdditionalItemsProvider);
+        }
+    }
+
     public void SetTitle(string title)
     {
         Title = $"{title} - mcLaunch";

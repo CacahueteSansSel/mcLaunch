@@ -22,12 +22,14 @@ public static class BackgroundManager
     public static bool IsInBackground { get; private set; }
     public static Box? RunningBox { get; private set; }
     public static bool IsMinecraftRunning => RunningBox != null && javaProcess != null && !javaProcess.HasExited;
+    public static Func<NativeMenuItemBase[]>? LastMenuAdditionalItemsProvider { get; private set; }
 
-    public static void EnterBackgroundState(NativeMenuItemBase[]? additionalItems = null)
+    public static void EnterBackgroundState(Func<NativeMenuItemBase[]>? additionalItems = null)
     {
         if (IsInBackground) return;
 
         IsInBackground = true;
+        LastMenuAdditionalItemsProvider = additionalItems;
         MainWindow.Instance.Hide();
 
         icon = new TrayIcon()
@@ -35,7 +37,7 @@ public static class BackgroundManager
             Icon = new WindowIcon(AssetLoader.Open(new Uri("avares://mcLaunch/resources/icon.ico"))),
             IsVisible = true,
             ToolTipText = "mcLaunch",
-            Menu = GetIconNativeMenu(additionalItems)
+            Menu = GetIconNativeMenu(additionalItems?.Invoke())
         };
     }
 

@@ -231,7 +231,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         if (Utilities.Settings.Instance.CloseLauncherAtLaunch)
         {
-            BackgroundManager.EnterBackgroundState(CreateBackgroundMenu(java));
+            BackgroundManager.EnterBackgroundState(() => CreateBackgroundMenu(java));
 
             if (await BackgroundManager.RunMinecraftMonitoring(java, Box))
                 Navigation.HidePopup();
