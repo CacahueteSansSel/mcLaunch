@@ -17,7 +17,7 @@
     </Window.Styles>
     <DockPanel>
         <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-            <Image DockPanel.Dock="Left" Source="resources/sidebar.png" />
+            <Image DockPanel.Dock="Left" Source="resources/sidebar.png" IsHitTestVisible="False" />
             <DockPanel IsHitTestVisible="False" DockPanel.Dock="Top" Height="50">
                 <TextBlock Text="mcLaunch Installer" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0"></TextBlock>
             </DockPanel>
