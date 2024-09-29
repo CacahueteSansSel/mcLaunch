@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform;
+using ExCSS;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Models;
@@ -96,11 +97,29 @@ public static class BackgroundManager
                 if (box == null) return;
 
                 Navigation.ShowPopup(new EditBoxPopup(box, false));
-            }, () =>
+            }, async () =>
             {
                 if (box == null) return;
 
-                Directory.Delete(box.Path, true);
+                for (int i = 0; i < 10; i++)
+                {
+                    try
+                    {
+                        Directory.Delete(box.Path, true);
+                        break;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        await Task.Delay(10);
+                    }
+                }
+
+                if (Directory.Exists(box.Path))
+                {
+                    Navigation.ShowPopup(new MessageBoxPopup("Box folder deletion", 
+                        "Failed to delete the box's folder, is the game still running ?", MessageStatus.Warning));
+                }
 
                 Navigation.Reset();
                 Navigation.Push<MainPage>();

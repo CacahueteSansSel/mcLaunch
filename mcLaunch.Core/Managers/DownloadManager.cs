@@ -145,7 +145,7 @@ public static class DownloadManager
             download.DownloadProgressChanged += (sender, args) =>
             {
                 OnDownloadProgressUpdate?.Invoke(entry.Source,
-                    (float) (args.ProgressPercentage / 100),
+                    progress / (float)section.Entries.Count + (float) (args.ProgressPercentage / 100) * (1/(float)section.Entries.Count),
                     sectionIndex + 1);
             };
 
