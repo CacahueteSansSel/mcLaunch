@@ -3,7 +3,14 @@
              x:Class="mcLaunch.Installer.App"
              RequestedThemeVariant="Dark">
     <Application.Styles>
-        <FluentTheme />
+        <FluentTheme>
+            <FluentTheme.Palettes>
+                <!-- Palette for Light theme variant -->
+                <ColorPaletteResources x:Key="Light" Accent="#008F58" />
+                <!-- Palette for Dark theme variant -->
+                <ColorPaletteResources x:Key="Dark" Accent="#008F58" />
+            </FluentTheme.Palettes>
+        </FluentTheme>
     </Application.Styles>
     <Application.Resources>
         <SolidColorBrush x:Key="Background">#282828</SolidColorBrush>
@@ -17,5 +24,9 @@
         <SolidColorBrush x:Key="MiddleAccent">#007A42</SolidColorBrush>
         <SolidColorBrush x:Key="DarkerAccent">#006035</SolidColorBrush>
         <SolidColorBrush x:Key="WarningAccent">#AF3400</SolidColorBrush>
+        <SolidColorBrush x:Key="CaptionButtonBorderBrush">#505050</SolidColorBrush>
+        <SolidColorBrush x:Key="CaptionButtonBackground">#3C3C3C</SolidColorBrush>
+        <x:Double x:Key="CaptionButtonWidth">50</x:Double>
+        <x:Double x:Key="CaptionButtonHeight">50</x:Double>
     </Application.Resources>
 </Application>

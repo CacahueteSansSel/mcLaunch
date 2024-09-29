@@ -37,7 +37,7 @@ public partial class MainWindow : Window
         GitHubRelease? release = await GitHubRepository.GetLatestReleaseAsync();
         if (release == null)
         {
-            Environment.Exit(1);
+            SetPages(new FailedPage("Failed to get the latest version from GitHub. Check if you are connected to the Internet and that you can access GitHub."));
             return;
         }
 
@@ -64,6 +64,7 @@ public partial class MainWindow : Window
         }
 
         if (OperatingSystem.IsWindows())
+        {
             pages =
             [
                 new WelcomePage(),
@@ -72,7 +73,9 @@ public partial class MainWindow : Window
                 new InstallationPage(),
                 new InstalledPage()
             ];
+        }
         else
+        {
             pages =
             [
                 new WelcomePage(),
@@ -80,6 +83,7 @@ public partial class MainWindow : Window
                 new InstallationPage(),
                 new InstalledPage()
             ];
+        }
 
         SetupPageContainer.Content = pages[0];
         pages[0].OnShow();
@@ -87,6 +91,15 @@ public partial class MainWindow : Window
         Title = $"mcLaunch Installer (for mcLaunch {release.Name})";
     }
 
+    public void SetPages(params InstallerPage[] pages)
+    {
+        this.pages = pages;
+
+        pageCounter = 0;
+        SetupPageContainer.Content = pages[0];
+        pages[0].OnShow();
+    }
+    
     public void HideBottomButtons()
     {
         PreviousButton.IsVisible = false;

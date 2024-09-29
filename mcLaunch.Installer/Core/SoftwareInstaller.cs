@@ -80,8 +80,6 @@ public class SoftwareInstaller
 
         using MemoryStream archiveStream =
             await DownloadManager.DownloadToMemoryAsync(platformAsset.DownloadUrl, (long) platformAsset.Size);
-        
-        await File.WriteAllBytesAsync("test.zip", archiveStream.GetBuffer());
 
         OnExtractionStarted?.Invoke();
 

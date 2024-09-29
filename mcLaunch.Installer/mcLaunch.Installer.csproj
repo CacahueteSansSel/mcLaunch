@@ -65,4 +65,11 @@
     <ItemGroup>
         <ProjectReference Include="..\mcLaunch.GitHub\mcLaunch.GitHub.csproj"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Pages\FailedPage.axaml.cs">
+        <DependentUpon>FailedPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

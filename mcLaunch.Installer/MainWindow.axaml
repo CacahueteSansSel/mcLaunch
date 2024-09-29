@@ -7,19 +7,30 @@
         x:Class="mcLaunch.Installer.MainWindow"
         Title="mcLaunch Installer"
         WindowStartupLocation="CenterScreen"
+        ExtendClientAreaTitleBarHeightHint="50"
+        ExtendClientAreaToDecorationsHint="True"
         CanResize="False"
         Icon="/resources/icon.ico"
         Background="{DynamicResource BackgroundDarker}">
     <Window.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>
-    <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Image DockPanel.Dock="Left" Source="resources/sidebar.png" />
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="10" Margin="10"
-                    VerticalAlignment="Center" HorizontalAlignment="Right">
-            <Button x:Name="PreviousButton" IsVisible="False" Click="PreviousButtonClicked" Classes="secondary">Previous</Button>
-            <Button x:Name="NextButton" Click="NextButtonClicked" Classes="primary">Next</Button>
-        </StackPanel>
-        <ContentControl Margin="10" Width="600" x:Name="SetupPageContainer" />
+    <DockPanel>
+        <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Image DockPanel.Dock="Left" Source="resources/sidebar.png" />
+            <DockPanel IsHitTestVisible="False" DockPanel.Dock="Top" Height="50">
+                <TextBlock Text="mcLaunch Installer" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0"></TextBlock>
+            </DockPanel>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="10" Margin="20"
+                        VerticalAlignment="Center" HorizontalAlignment="Right">
+                <Button x:Name="PreviousButton" IsVisible="False" Click="PreviousButtonClicked" Classes="secondary">Previous</Button>
+                <Button x:Name="NextButton" Click="NextButtonClicked" Classes="primary">Next</Button>
+            </StackPanel>
+            <TransitioningContentControl Margin="20" Width="580" x:Name="SetupPageContainer">
+                <TransitioningContentControl.PageTransition>
+                    <PageSlide Orientation="Horizontal" Duration="0:00:00.200" SlideOutEasing="QuarticEaseOut" SlideInEasing="QuarticEaseOut" />
+                </TransitioningContentControl.PageTransition>
+            </TransitioningContentControl>
+        </DockPanel>
     </DockPanel>
 </Window>

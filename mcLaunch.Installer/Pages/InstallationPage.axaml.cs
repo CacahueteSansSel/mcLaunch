@@ -53,8 +53,9 @@ public partial class InstallationPage : InstallerPage
         }
         catch (Exception e)
         {
-            File.WriteAllText("error.log", e.ToString());
-            Environment.Exit(1);
+            await File.WriteAllTextAsync("error.log", e.ToString());
+            
+            MainWindow.Instance.SetPages(new FailedPage($"Internal Error\n{e}"));
         }
     }
 }

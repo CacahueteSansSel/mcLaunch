@@ -11,8 +11,10 @@
                         <CaptionButtons></CaptionButtons>
                         <Button Classes="primary" Margin="5">Primary !</Button>
                         <Button Classes="secondary" Margin="5">Secondary !</Button>
+                        <Button Classes="red" Margin="5">Red !</Button>
                         <Button Classes="transparent" Margin="5">Transparent !</Button>
                         <Button Classes="transparent-green" Margin="5">Tr Green</Button>
+                        <Button Classes="primary" IsEnabled="False" Margin="5">Disabled</Button>
                         <ProgressBar Value="50" />
                     </StackPanel>
                 </Border>
@@ -38,6 +40,11 @@
     <Style Selector="CaptionButtons#PART_FullScreenButton">
         <Setter Property="MinHeight" Value="50"/>
         <Setter Property="Height" Value="50"/>
+    </Style>
+    
+    <Style Selector="CaptionButtons#PART_CloseButton">
+        <Setter Property="Background" Value="#c42b1c"/>
+        <Setter Property="BorderBrush" Value="#c42b1c"/>
     </Style>
 
     <Style Selector="ProgressBar:horizontal">
@@ -98,6 +105,11 @@
                 </KeyFrame>
             </Animation>
         </Style.Animations>
+    </Style>
+
+    <Style Selector="Button:disabled /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
     </Style>
 
     <Style Selector="Button.picture">
@@ -183,6 +195,10 @@
         <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-SemiBold.ttf#Lexend Deca" />
     </Style>
 
+    <Style Selector="TextBox.title">
+        <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-SemiBold.ttf#Lexend Deca" />
+    </Style>
+
     <Style Selector="TextBlock.light">
         <Setter Property="FontFamily" Value="/resources/fonts/LexendDeca-Light.ttf#Lexend Deca" />
     </Style>
@@ -227,6 +243,42 @@
         </Setter>
     </Style>
 
+    <Style Selector="Button.red">
+        <Setter Property="Background" Value="#6F1010" />
+        <Setter Property="BorderBrush" Value="#FF3E3E" />
+        <Setter Property="Padding" Value="20 10 20 10" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.red:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#A12323" />
+        <Setter Property="BorderBrush" Value="#FF3E3E" />
+
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.red:pressed /template/ ContentPresenter">
+        <Setter Property="RenderTransform" Value="scale(0.99)" />
+    </Style>
+
+    <Style Selector="Button.red:pointerover /template/ ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="White" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+    </Style>
+
     <Style Selector="Button.secondary">
         <Setter Property="Background" Value="{DynamicResource BackgroundMiddle}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
@@ -253,10 +305,10 @@
     <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource Background}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
-
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.2" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
             </Transitions>
         </Setter>
     </Style>
@@ -271,6 +323,10 @@
                 <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
             </Transitions>
         </Setter>
+    </Style>
+
+    <Style Selector="Button.borderless">
+        <Setter Property="BorderThickness" Value="0"></Setter>
     </Style>
 
     <Style Selector="Button.transparent:pointerover /template/ ContentPresenter">
