@@ -26,7 +26,7 @@
                     <DataTemplate>
                         <DockPanel>
                             <Image Source="{Binding World.Icon}" DockPanel.Dock="Left" Width="40" Height="40" />
-                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                            <StackPanel IsVisible="{Binding ShowAdvancedFeatures}" Orientation="Horizontal" DockPanel.Dock="Right">
                                 <Button Classes="transparent square" ToolTip.Tip="Open level.dat in NBT Editor" Command="{Binding OpenLevelDatCommand}">
                                     <Image Source="{SvgImage /resources/icons/nbt.svg}" Width="13" Height="13" />
                                 </Button>

@@ -15,6 +15,7 @@ using mcLaunch.Launchsite.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 using mcLaunch.Views.Windows;
+using mcLaunch.Views.Windows.NbtEditor;
 
 namespace mcLaunch.Views.Pages;
 
@@ -103,5 +104,10 @@ public partial class AdvancedFeaturesPage : UserControl, ITopLevelPageControl
         Navigation.HidePopup();
         
         PlatformSpecific.OpenFolder(folder);
+    }
+
+    void OpenNBTEditorButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        new NbtEditorWindow().Show();
     }
 }

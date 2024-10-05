@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
         xmlns:views="clr-namespace:mcLaunch.Views"
+        xmlns:nbtEditor="clr-namespace:mcLaunch.Views.Windows.NbtEditor"
         mc:Ignorable="d"
         Width="800" Height="600" CanResize="True"
         x:Class="mcLaunch.Views.Windows.NbtEditor.NbtEditorWindow"

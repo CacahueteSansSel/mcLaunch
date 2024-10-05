@@ -100,6 +100,7 @@ public partial class WorldList : UserControl
         public class ModelWorld : ReactiveObject
         {
             public MinecraftWorld World { get; set; }
+            public bool ShowAdvancedFeatures => Settings.Instance?.ShowAdvancedFeatures ?? false;
 
             public ModelWorld(MinecraftWorld world)
             {

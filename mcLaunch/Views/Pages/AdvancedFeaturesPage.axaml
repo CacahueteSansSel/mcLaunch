@@ -31,6 +31,21 @@
                                 </StackPanel>
                             </DockPanel>
                         </Border>
+                        <Border Padding="10" Classes="frame-without-shadow">
+                            <DockPanel>
+                                <Button x:Name="RunButton" DockPanel.Dock="Right" Classes="secondary"
+                                        Click="OpenNBTEditorButtonClicked">
+                                    Open
+                                </Button>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <TextBlock VerticalAlignment="Center" Classes="title">NBT Editor</TextBlock>
+                                        <views:Badge VerticalAlignment="Center" Text="Experimental"></views:Badge>
+                                    </StackPanel>
+                                    <TextBlock>Open the built-in NBT editor window (currently work in progress)</TextBlock>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
                     </StackPanel>
                 </Border>
             </StackPanel>

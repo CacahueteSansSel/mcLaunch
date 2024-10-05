@@ -4,14 +4,17 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
+using Avalonia.VisualTree;
 using DynamicData;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
+using ReactiveUI;
 using SharpNBT;
 
 namespace mcLaunch.Views.Windows.NbtEditor;
@@ -83,22 +86,86 @@ public partial class NbtEditorWindow : Window
             
             return new TagNode(tag, childrenNodes.ToArray());
         }
+
+        if (tag is IntArrayTag intArrayTag)
+        {
+            List<TagNode> childrenNodes = [];
+
+            for (int i = 0; i < intArrayTag.Count; i++)
+                childrenNodes.Add(new TagNode(intArrayTag, i));
+            
+            return new TagNode(tag, childrenNodes.ToArray());
+        }
+
+        if (tag is LongArrayTag longArrayTag)
+        {
+            List<TagNode> childrenNodes = [];
+
+            for (int i = 0; i < longArrayTag.Count; i++)
+                childrenNodes.Add(new TagNode(longArrayTag, i));
+            
+            return new TagNode(tag, childrenNodes.ToArray());
+        }
+
+        if (tag is ByteArrayTag byteArrayTag)
+        {
+            List<TagNode> childrenNodes = [];
+
+            for (int i = 0; i < byteArrayTag.Count; i++)
+                childrenNodes.Add(new TagNode(byteArrayTag, i));
+            
+            return new TagNode(tag, childrenNodes.ToArray());
+        }
         
         return new TagNode(tag);
     }
 
-    public class TagNode
+    public class TagNode : ReactiveObject
     {
-        public Tag? Parent { get; set; }
-        public Tag Tag { get; set; }
-        public string? Name { get; set; }
-        public TagType Type { get; set; }
+        Tag? parent;
+        Tag? tag;
+        string? name;
+        TagType type;
+
+        public Tag? Parent
+        {
+            get => parent;
+            set => this.RaiseAndSetIfChanged(ref parent, value);
+        }
+
+        public Tag? Tag
+        {
+            get => tag;
+            set => this.RaiseAndSetIfChanged(ref tag, value);
+        }
+
+        public string? Name
+        {
+            get => name;
+            set => this.RaiseAndSetIfChanged(ref name, value);
+        }
+
+        public TagType Type
+        {
+            get => type;
+            set => this.RaiseAndSetIfChanged(ref type, value);
+        }
+        
         public ObservableCollection<TagNode> Children { get; set; }
+        public bool IsArrayChildren { get; set; }
+        public int ArrayChildrenIndex { get; set; }
 
         public string? Value
         {
             get
             {
+                if (Parent is IntArrayTag intArrayTag && IsArrayChildren)
+                    return intArrayTag[ArrayChildrenIndex].ToString();
+                if (Parent is LongArrayTag longArrayTag && IsArrayChildren)
+                    return longArrayTag[ArrayChildrenIndex].ToString();
+                if (Parent is ByteArrayTag byteArrayTag && IsArrayChildren)
+                    return byteArrayTag[ArrayChildrenIndex].ToString();
+                
                 switch (Tag.Type)
                 {
                     case TagType.Byte:
@@ -121,6 +188,15 @@ public partial class NbtEditorWindow : Window
             }
             set
             {
+                if (Parent is IntArrayTag intArrayTag && IsArrayChildren)
+                    intArrayTag[ArrayChildrenIndex] = int.TryParse(value, out int parsedValue) ? parsedValue : 0;
+                if (Parent is LongArrayTag longArrayTag && IsArrayChildren)
+                    longArrayTag[ArrayChildrenIndex] = long.TryParse(value, out long parsedValue) ? parsedValue : 0;
+                if (Parent is ByteArrayTag byteArrayTag && IsArrayChildren)
+                    byteArrayTag[ArrayChildrenIndex] = byte.TryParse(value, out byte parsedValue) ? parsedValue : (byte)0;
+                
+                if (IsArrayChildren) return;
+                
                 switch (Tag.Type)
                 {
                     case TagType.Byte:
@@ -174,6 +250,30 @@ public partial class NbtEditorWindow : Window
             Children = new ObservableCollection<TagNode>(children);
         }
 
+        public TagNode(IntArrayTag parent, int index)
+        {
+            Type = TagType.Int;
+            Parent = parent;
+            IsArrayChildren = true;
+            ArrayChildrenIndex = index;
+        }
+
+        public TagNode(LongArrayTag parent, int index)
+        {
+            Type = TagType.Long;
+            Parent = parent;
+            IsArrayChildren = true;
+            ArrayChildrenIndex = index;
+        }
+
+        public TagNode(ByteArrayTag parent, int index)
+        {
+            Type = TagType.Byte;
+            Parent = parent;
+            IsArrayChildren = true;
+            ArrayChildrenIndex = index;
+        }
+
         public TagNode WithParent(Tag parent)
         {
             Parent = parent;
@@ -210,8 +310,35 @@ public partial class NbtEditorWindow : Window
         Save();
     }
 
-    void NewTagButtonClicked(object? sender, RoutedEventArgs e)
+    async void NewTagButtonClicked(object? sender, RoutedEventArgs e)
     {
+        TagNode? selectedTag = (TagNode?)TagTree.SelectedItem;
+        if (selectedTag == null) return;
+        Tag parentTag = selectedTag.Tag.Type != TagType.Compound 
+            ? selectedTag.Parent 
+            : selectedTag.Tag;
+
+        if (parentTag is ListTag listTag)
+        {
+            await CreateTagAsync(listTag.ChildType);
+            return;
+        }
+        if (parentTag is IntArrayTag)
+        {
+            await CreateTagAsync(TagType.Int);
+            return;
+        }
+        if (parentTag is LongArrayTag)
+        {
+            await CreateTagAsync(TagType.Long);
+            return;
+        }
+        if (parentTag is ByteArrayTag)
+        {
+            await CreateTagAsync(TagType.Byte);
+            return;
+        }
+        
         NewBoxButton.ContextMenu!.Open(NewBoxButton);
     }
 
@@ -253,7 +380,7 @@ public partial class NbtEditorWindow : Window
 
     void UpdateButtons()
     {
-        RenameButton.IsEnabled = TagTree.SelectedItem != null && ((TagNode)TagTree.SelectedItem).Parent != null;
+        RenameButton.IsEnabled = TagTree.SelectedItem != null && ((TagNode)TagTree.SelectedItem).Parent != null && ((TagNode)TagTree.SelectedItem).Parent is CompoundTag;
         SnbtButton.IsEnabled = TagTree.SelectedItem != null;
     }
 
@@ -270,20 +397,21 @@ public partial class NbtEditorWindow : Window
         new NbtViewTagSnbtWindow(tag.Tag).ShowDialog(this);
     }
 
-    async void TagMenuItemClicked(object? sender, RoutedEventArgs e)
+    async Task CreateTagAsync(TagType type)
     {
-        if (e.Source is not MenuItem menu) return;
-        if (!Enum.TryParse(menu.Name!.Replace("ItemTag", ""), out TagType type)) return;
-        
         TagNode? selectedTag = (TagNode?)TagTree.SelectedItem;
         if (selectedTag == null) return;
 
-        CompoundTag parent = selectedTag.Tag.Type != TagType.Compound 
-            ? (CompoundTag)selectedTag.Parent 
-            : (CompoundTag)selectedTag.Tag;
+        Tag parentTag = selectedTag.Tag.Type != TagType.Compound 
+            ? selectedTag.Parent 
+            : selectedTag.Tag;
 
-        string name = await new NbtEditTagNameWindow(type, "").ShowDialog<string>(this);
-        if (string.IsNullOrWhiteSpace(name)) return;
+        string name = null;
+        if (parentTag is CompoundTag)
+        {
+            name = await new NbtEditTagNameWindow(type, "").ShowDialog<string>(this);
+            if (string.IsNullOrWhiteSpace(name)) return;
+        }
 
         Tag? toAddTag = null;
 
@@ -326,10 +454,24 @@ public partial class NbtEditorWindow : Window
                 toAddTag = new LongArrayTag(name, []);
                 break;
         }
-        
-        if (toAddTag != null) parent.Add(name, toAddTag);
+
+        if (toAddTag != null)
+        {
+            if (parentTag is CompoundTag compoundTag)
+                compoundTag.Add(name, toAddTag);
+            if (parentTag is ListTag listTag)
+                listTag.Add(toAddTag);
+        }
         
         SetRoot(Root);
+    }
+
+    async void TagMenuItemClicked(object? sender, RoutedEventArgs e)
+    {
+        if (e.Source is not MenuItem menu) return;
+        if (!Enum.TryParse(menu.Name!.Replace("ItemTag", ""), out TagType type)) return;
+
+        await CreateTagAsync(type);
     }
 
     void DeleteButtonClicked(object? sender, RoutedEventArgs e)
