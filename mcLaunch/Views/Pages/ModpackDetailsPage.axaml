@@ -13,7 +13,12 @@
     <Panel>
         <Image x:Name="DefaultBackground" Stretch="UniformToFill" Source="/resources/background_default.png" />
         <Image Stretch="UniformToFill" asyncImageLoader:ImageLoader.Source="{Binding BackgroundPath}" />
-        <ScrollViewer>
+        <Button Margin="0 0 15 20" ZIndex="10" IsHitTestVisible="True" VerticalAlignment="Bottom"
+                HorizontalAlignment="Right" Classes="transparent" Click="UpButtonClicked">
+            <Image Source="{SvgImage /resources/icons/arrow_up.svg}" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
+                   Height="13" />
+        </Button>
+        <ScrollViewer x:Name="ScrollArea">
             <StackPanel>
                 <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
                     <views:BackButton />

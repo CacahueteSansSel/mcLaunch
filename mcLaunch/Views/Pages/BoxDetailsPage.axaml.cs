@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.MinecraftFormats;
@@ -20,7 +22,6 @@ using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.BoxDetails;
 using mcLaunch.Views.Popups;
 using mcLaunch.Views.Windows;
-using FileSystemUtilities = mcLaunch.Utilities.FileSystemUtilities;
 
 namespace mcLaunch.Views.Pages;
 
@@ -62,6 +63,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         DefaultBackground.IsVisible = box.Manifest.Background == null;
 
         RunBoxChecks();
+        
+        UpdateButtons();
     }
 
     public static BoxDetailsPage? LastOpened { get; private set; }
@@ -82,7 +85,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         string[] changes = await Box.RunIntegrityChecks();
         if (changes.Length > 0)
         {
-            Box.SaveManifest();
+            await Box.SaveManifestAsync();
 
             ShowWarning(
                 $"Some changes have been applied to your box: \n{string.Join('\n', changes.Select(c => $"    - {c}"))}");
@@ -119,6 +122,12 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     {
         Box?.SetWatching(false);
         base.OnUnloaded(e);
+    }
+
+    protected override void OnGotFocus(GotFocusEventArgs e)
+    {
+        base.OnGotFocus(e);
+        UpdateButtons();
     }
 
     public void ShowWarning(string text)
@@ -165,6 +174,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
     public async Task RunAsync(string? serverAddress = null, string? serverPort = null, MinecraftWorld? world = null)
     {
+        if (BackgroundManager.IsMinecraftRunning) return;
+        
         if (Box.Manifest.ModLoader == null)
         {
             Navigation.ShowPopup(new MessageBoxPopup("Can't run Minecraft",
@@ -179,6 +190,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         Box.UseDedicatedGraphics = Utilities.Settings.Instance.ForceDedicatedGraphics;
         Box.SetExposeLauncher(Utilities.Settings.Instance.ExposeLauncherNameToMinecraft);
         Box.SetLauncherVersion(CurrentBuild.Version.ToString());
+        Box.SetRedirectOutput(Utilities.Settings.Instance.EnableGameConsole);
 
         Result boxPrepareResult = await Box.PrepareAsync();
         if (boxPrepareResult.IsError)
@@ -207,13 +219,66 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         // TODO: crash report parser
         // RegExp for mod dependencies error (Forge) : /(Failure message): .+/g
-
+        
+        /*
         if (PlatformSpecific.ProcessExists("mcLaunch.MinecraftGuard"))
             PlatformSpecific.LaunchProcess("mcLaunch.MinecraftGuard",
                 $"{java.Id.ToString()} {Box.Manifest.Id} {Box.Manifest.Type.ToString().ToLower()}",
                 hidden: true);
+        */
+        
+        Box.DisposeWatcher();
 
-        Environment.Exit(0);
+        if (Utilities.Settings.Instance.CloseLauncherAtLaunch)
+        {
+            BackgroundManager.EnterBackgroundState(() => CreateBackgroundMenu(java));
+
+            if (await BackgroundManager.RunMinecraftMonitoring(java, Box))
+                Navigation.HidePopup();
+        
+            BackgroundManager.LeaveBackgroundState();
+            UpdateButtons();
+        }
+        else
+        {
+            UpdateButtons();
+            Navigation.HidePopup();
+
+            await BackgroundManager.RunMinecraftMonitoring(java, Box);
+        }
+        
+        Box.CreateWatcher();
+        UpdateButtons();
+    }
+
+    public void UpdateButtons()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            RunButton.IsEnabled = !BackgroundManager.IsMinecraftRunning;
+            StopButton.IsVisible = BackgroundManager.IsMinecraftRunning && BackgroundManager.IsBoxRunning(Box);
+            RunButton.IsVisible = !StopButton.IsVisible;
+        });
+    }
+
+    NativeMenuItemBase[] CreateBackgroundMenu(Process javaProcess)
+    {
+        NativeMenuItem killItem = new NativeMenuItem("Force close Minecraft (immediate)");
+        NativeMenuItem showConsoleItem = new NativeMenuItem("Show game console");
+        killItem.Click += (_, _) =>
+        {
+            BackgroundManager.KillMinecraftProcess();
+        };
+        showConsoleItem.Click += (_, _) =>
+        {
+            new ConsoleWindow(javaProcess, Box).Show();
+        };
+
+        return
+        [
+            killItem,
+            showConsoleItem
+        ];
     }
 
     private async void RunButtonClicked(object? sender, RoutedEventArgs e)
@@ -263,7 +328,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
     private async void EditIconButtonClicked(object? sender, RoutedEventArgs e)
     {
-        Bitmap[] files = await FileSystemUtilities.PickBitmaps(false, "Select a new icon image");
+        Bitmap[] files = await FilePickerUtilities.PickBitmaps(false, "Select a new icon image");
         if (files.Length == 0) return;
 
         Bitmap? bmp = files.FirstOrDefault();
@@ -290,7 +355,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
                 {
                     Box.Delete();
                     
-                    MainPage.Instance.PopulateBoxList();
+                    MainPage.Instance.PopulateBoxListAsync();
                     Navigation.Pop();
                 }
                 catch (Exception exception)
@@ -378,10 +443,10 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         Navigation.ShowPopup(new ConfirmMessageBoxPopup("Warning",
             "Changing the Minecraft version can break mods, your worlds, and other important things. " +
             "Proceed with caution ! Do you wish to continue ?",
-            () =>
+            async () =>
             {
                 Box.Manifest.Version = newVersion.Id;
-                Box.SaveManifest();
+                await Box.SaveManifestAsync();
 
                 Navigation.Pop();
                 Navigation.Push(new BoxDetailsPage(Box));
@@ -413,10 +478,10 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
             Navigation.ShowPopup(new ConfirmMessageBoxPopup("Warning",
                 "Changing the mod loader version can break some mods and other important things. " +
                 "Proceed with caution ! Do you wish to continue ?",
-                () =>
+                async () =>
                 {
                     Box.Manifest.ModLoaderVersion = mlVersion.Id;
-                    Box.SaveManifest();
+                    await Box.SaveManifestAsync();
 
                     Navigation.Pop();
                     Navigation.Push(new BoxDetailsPage(Box));
@@ -434,5 +499,81 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     {
         ModloaderButtonEditIcon.IsVisible = false;
         ModloaderButtonLoaderIcon.IsVisible = true;
+    }
+
+    void DuplicateButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new DuplicateBoxPopup(Box));
+    }
+
+    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        ContentsBox.Offset = Vector.Zero;
+    }
+
+    void BoxNameTextBlockClicked(object? sender, PointerPressedEventArgs e)
+    {
+        BoxNameTextbox.Text = Box.Manifest.Name;
+        BoxNameTextbox.IsVisible = true;
+    }
+
+    void BoxNameTextBoxKeyPressed(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter) return;
+
+        SaveEditedName();
+    }
+
+    void BoxNameTextLostFocus(object? sender, RoutedEventArgs e)
+    {
+        SaveEditedName();
+    }
+
+    async void SaveEditedName()
+    {
+        Box.Manifest.Name = BoxNameTextbox.Text;
+        BoxNameText.Text = Box.Manifest.Name;
+        BoxNameTextbox.IsVisible = false;
+        
+        await Box.SaveManifestAsync();
+        
+        await MainPage.Instance.PopulateBoxListAsync();
+    }
+
+    async void SaveEditedAuthor()
+    {
+        Box.Manifest.Author = BoxAuthorTextbox.Text;
+        BoxAuthorText.Text = Box.Manifest.Author;
+        BoxAuthorTextbox.IsVisible = false;
+        
+        await Box.SaveManifestAsync();
+        
+        await MainPage.Instance.PopulateBoxListAsync();
+    }
+
+    void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        BoxAuthorTextbox.Text = Box.Manifest.Author;
+        BoxAuthorTextbox.IsVisible = true;
+    }
+
+    void BoxAuthorTextBoxKeyPressed(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter) return;
+
+        SaveEditedAuthor();
+    }
+
+    void BoxAuthorTextLostFocus(object? sender, RoutedEventArgs e)
+    {
+        SaveEditedAuthor();
+    }
+
+    void StopButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        if (!BackgroundManager.IsMinecraftRunning) return;
+        
+        BackgroundManager.KillMinecraftProcess();
+        UpdateButtons();
     }
 }

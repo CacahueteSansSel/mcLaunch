@@ -52,6 +52,7 @@ public class MinecraftContent : ReactiveObject
     }
 
     public string? Name { get; set; }
+    public string? Slug { get; set; }
     public string Id { get; set; }
     public string Author { get; set; }
     public MinecraftContentType Type { get; set; }
@@ -105,7 +106,7 @@ public class MinecraftContent : ReactiveObject
     public string ModPlatformId
     {
         get => Platform?.Name;
-        set => Platform = ModPlatformManager.Platform.GetModPlatform(value);
+        set => Platform = ModPlatformManager.Platform?.GetModPlatform(value);
     }
 
     [JsonIgnore] public MinecraftContentPlatform? Platform { get; set; }

@@ -1,0 +1,47 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="500"
+             Width="450" Height="500"
+             x:Class="mcLaunch.Views.Popups.ExportBoxFilesSelectionPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <DockPanel Margin="38">
+            <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25">Select what to export</TextBlock>
+            <DockPanel Margin="0 20 0 0" Dock="Bottom">
+                <Button DockPanel.Dock="Right" x:Name="CancelButton" Classes="secondary" Click="CancelButtonClicked">Cancel</Button>
+                <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="primary" Click="ExportButtonClicked">Export</Button>
+                <Panel />
+            </DockPanel>
+            <ScrollViewer>
+                <ItemsControl x:Name="FilesList" Margin="0 20 0 0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <Panel>
+                                    <StackPanel IsVisible="{Binding !IsMandatory}" Orientation="Horizontal" Spacing="10">
+                                        <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"></CheckBox>
+                                        <Image VerticalAlignment="Center" IsVisible="{Binding IsDirectory}" Height="16" Width="16" Source="{SvgImage /resources/icons/folder.svg}"></Image>
+                                        <Image VerticalAlignment="Center" IsVisible="{Binding !IsDirectory}" Height="16" Width="16" Source="{SvgImage /resources/icons/readme.svg}"></Image>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Comment}" Opacity="0.2"></TextBlock>
+                                    </StackPanel>
+                                    <StackPanel IsVisible="{Binding IsMandatory}" Orientation="Horizontal" Spacing="10" Opacity="0.5">
+                                        <CheckBox IsEnabled="False" IsChecked="True"></CheckBox>
+                                        <Image VerticalAlignment="Center" IsVisible="{Binding IsDirectory}" Height="16" Width="16" Source="{SvgImage /resources/icons/folder.svg}"></Image>
+                                        <Image VerticalAlignment="Center" IsVisible="{Binding !IsDirectory}" Height="16" Width="16" Source="{SvgImage /resources/icons/readme.svg}"></Image>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Comment}" Opacity="0.4"></TextBlock>
+                                    </StackPanel>
+                                </Panel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</UserControl>

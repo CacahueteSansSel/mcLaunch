@@ -9,134 +9,59 @@ namespace mcLaunch.Models;
 
 public class MainWindowDataContext : PageNavigator
 {
-    private readonly Stack<ITopLevelPageControl> stack = new();
-    private ITopLevelPageControl curPage;
-    private Control curPopup;
-    private bool isPopupShown;
-
-    public MainWindowDataContext(ITopLevelPageControl? mainPage, bool decorations)
-    {
-        Instance = this;
-
-        ShowDecorations = decorations;
-        if (mainPage != null) Push(mainPage);
-        HidePopup();
-    }
-
     public static MainWindowDataContext Instance { get; private set; }
-
-    public ITopLevelPageControl CurrentPage
-    {
-        get => curPage;
-        set => this.RaiseAndSetIfChanged(ref curPage, value);
-    }
-
-    public Control CurrentPopup
-    {
-        get => curPopup;
-        set => this.RaiseAndSetIfChanged(ref curPopup, value);
-    }
-
-    public bool IsPopup
-    {
-        get => isPopupShown;
-        set => this.RaiseAndSetIfChanged(ref isPopupShown, value);
-    }
 
     public bool ShowDecorations
     {
         set => MainWindow.Instance.SetDecorations(value);
     }
-
-    private void Set<T>() where T : ITopLevelPageControl, new()
+    
+    public MainWindowDataContext(ITopLevelPageControl? mainPage, bool decorations) : base(mainPage)
     {
-        CurrentPage = new T();
-
-        MainWindow.Instance.SetTitle(CurrentPage.Title);
-    }
-
-    private void Set(ITopLevelPageControl value)
-    {
-        CurrentPage = value;
-
-        MainWindow.Instance.SetTitle(CurrentPage.Title);
-    }
-
-    public void Reset()
-    {
-        stack.Clear();
-    }
-
-    public void ShowLoadingPopup()
-    {
-        ShowPopup(new LoadingPopup());
-    }
-
-    public void HideLoadingPopup()
-    {
-        HidePopup();
-    }
-
-    public void ShowLoadingPage()
-    {
-        CurrentPage = new LoadingPage();
-
-        MainWindow.Instance.SetTitle(CurrentPage.Title);
-    }
-
-    public void ShowStartingPage()
-    {
-        CurrentPage = new StartingPage();
-
-        MainWindow.Instance.SetTitle(CurrentPage.Title);
-    }
-
-    public void HideLoadingPage()
-    {
-        CurrentPage = stack.Count == 0 ? null : stack.Peek();
-
-        MainWindow.Instance.SetTitle(CurrentPage.Title);
-    }
-
-    public void Push<T>(bool decorations = true) where T : ITopLevelPageControl, new()
-    {
-        Push(new T(), decorations);
-    }
-
-    public void Push(ITopLevelPageControl value, bool decorations = true)
-    {
-        stack.Push(value);
-
-        CurrentPage = value;
+        Instance = this;
         ShowDecorations = decorations;
+    }
 
+    public override void ShowLoadingPage()
+    {
+        base.ShowLoadingPage();
         MainWindow.Instance.SetTitle(CurrentPage.Title);
     }
 
-    public void Pop()
+    public override void ShowStartingPage()
     {
-        if (stack.Count <= 1) return;
-
-        stack.Pop();
-
-        // Force the current page to update
-        CurrentPage = null;
-        this.RaisePropertyChanged(nameof(CurrentPage));
-        CurrentPage = stack.Peek();
-        this.RaisePropertyChanged(nameof(CurrentPage));
-
+        base.ShowStartingPage();
         MainWindow.Instance.SetTitle(CurrentPage.Title);
     }
 
-    public void ShowPopup(Control popup)
+    public override void HideLoadingPage()
     {
-        CurrentPopup = popup;
-        IsPopup = true;
+        base.HideLoadingPage();
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
     }
 
-    public void HidePopup()
+    public override void Push(ITopLevelPageControl value, bool decorations = true)
     {
-        CurrentPopup = null;
-        IsPopup = false;
+        base.Push(value, decorations);
+        ShowDecorations = decorations;
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
+    }
+
+    public override void Pop()
+    {
+        base.Pop();
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
+    }
+
+    public override void Set<T>()
+    {
+        base.Set<T>();
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
+    }
+
+    public override void Set(ITopLevelPageControl value)
+    {
+        base.Set(value);
+        MainWindow.Instance.SetTitle(CurrentPage.Title);
     }
 }

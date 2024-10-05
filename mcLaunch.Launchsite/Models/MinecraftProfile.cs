@@ -20,6 +20,8 @@ public class MinecraftProfile
 
         [JsonPropertyName("variant")] public string Variant { get; set; }
 
+        [JsonPropertyName("textureKey")] public string TextureKey { get; set; }
+
         [JsonPropertyName("alias")] public string Alias { get; set; }
     }
 }

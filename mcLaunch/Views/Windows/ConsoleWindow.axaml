@@ -1,0 +1,42 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+        mc:Ignorable="d"
+        Width="600" Height="400" CanResize="True"
+        x:Class="mcLaunch.Views.Windows.ConsoleWindow"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaTitleBarHeightHint="50"
+        ExtendClientAreaToDecorationsHint="True"
+        Title="Game Console"
+        Icon="/resources/icon.ico"
+        Background="{DynamicResource BackgroundDarker}">
+    <Window.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+        
+        <Style Selector="TextBox.console">
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="FontFamily" Value="/resources/fonts/JetBrainsMono-Regular.ttf#JetBrains Mono" />
+        </Style>
+        
+        <Style Selector="TextBox.console:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        
+        <Style Selector="TextBox.console:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderThickness" Value="0"></Setter>
+        </Style>
+    </Window.Styles>
+    <DockPanel>
+        <DockPanel IsHitTestVisible="False" DockPanel.Dock="Top" Height="50" Background="{DynamicResource Background}">
+            <Image Source="/resources/logo_beta.png" DockPanel.Dock="Left" Height="30" Margin="20 0 0 0"></Image>
+            <TextBlock Text="Game Console" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0"></TextBlock>
+        </DockPanel>
+        <avaloniaEdit:TextEditor x:Name="ConsoleText" Padding="10" IsReadOnly="True" FontFamily="JetBrains Mono,Cascadia Code,Consolas,Menlo,Monospace">
+            
+        </avaloniaEdit:TextEditor>
+    </DockPanel>
+</Window>

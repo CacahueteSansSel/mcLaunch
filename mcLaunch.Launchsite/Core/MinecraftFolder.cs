@@ -20,6 +20,7 @@ public class MinecraftFolder
         Directory.Exists($"{Path}/versions/{id}") && File.Exists($"{Path}/versions/{id}/{id}.jar");
 
     public string GetVersionPath(string id) => $"{Path}/versions/{id}".FixPath();
+    public string GetVersionPath(MinecraftVersion version) => $"{Path}/versions/{version.Id}".FixPath();
 
     public MinecraftVersion? GetVersion(string id) =>
         JsonSerializer.Deserialize<MinecraftVersion>(File.ReadAllText($"{GetVersionPath(id)}/{id}.json"));
@@ -29,8 +30,13 @@ public class MinecraftFolder
         List<MinecraftVersion> versions = new();
 
         foreach (string versionDirectory in Directory.GetDirectories($"{Path}/versions"))
+        {
+            string jsonPath = $"{versionDirectory}/{System.IO.Path.GetFileName(versionDirectory)}.json";
+            if (!File.Exists(jsonPath)) continue;
+            
             versions.Add(JsonSerializer.Deserialize<MinecraftVersion>(
-                File.ReadAllText($"{versionDirectory}/{System.IO.Path.GetFileName(versionDirectory)}.json"))!);
+                File.ReadAllText(jsonPath))!);
+        }
 
         return versions.ToArray();
     }

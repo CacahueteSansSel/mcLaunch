@@ -61,6 +61,6 @@ Libraries used by the project :
 + [DiscordRichPresence](https://github.com/Lachee/discord-rpc-csharp) (for Discord Rich Presence)
 + [LibGit2Sharp](https://github.com/libgit2/libgit2sharp) (for Git integration in the build system)
 + [AsyncImageLoader.Avalonia](https://github.com/libgit2/libgit2sharp) (for loading and displaying remote images)
-
++ [Avalonia.AvaloniaEdit](https://github.com/AvaloniaUI/AvaloniaEdit/?tab=readme-ov-file)
 This project takes huge inspiration of :
 + [portablemc](https://github.com/mindstorm38/portablemc) (general Minecraft launcher stuff + basis of the new Forge installer code)

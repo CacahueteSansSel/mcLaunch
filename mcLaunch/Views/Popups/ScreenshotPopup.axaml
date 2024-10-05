@@ -15,18 +15,18 @@
             <DockPanel x:Name="Overlay" IsVisible="False" PointerEntered="EnterScreenshot"
                        PointerExited="LeaveScreenshot">
                 <StackPanel Margin="10" DockPanel.Dock="Right">
-                    <Button Classes="transparent" Click="CloseButtonClicked">
+                    <Button Classes="transparent" Click="CloseButtonClicked" ToolTip.Tip="Close">
                         <Image Source="{SvgImage /resources/icons/close.svg}" Width="15" />
                     </Button>
                 </StackPanel>
                 <StackPanel Margin="10" Spacing="10" Orientation="Horizontal" DockPanel.Dock="Bottom">
-                    <Button Classes="transparent" Margin="0" Click="OpenButtonClicked">
+                    <Button Classes="transparent" Margin="0" Click="OpenButtonClicked" ToolTip.Tip="Open Screenshot">
                         <Image Source="{SvgImage /resources/icons/open.svg}" Width="15" Height="15" />
                     </Button>
-                    <Button Classes="transparent" Margin="0" Click="OpenFolderButtonClicked">
+                    <Button Classes="transparent" Margin="0" Click="OpenFolderButtonClicked" ToolTip.Tip="Open Screenshot Folder">
                         <Image Source="{SvgImage /resources/icons/folder.svg}" Width="15" Height="15" />
                     </Button>
-                    <Button Classes="transparent" Margin="0" Click="SetAsBoxBackgroundButtonClicked">
+                    <Button Classes="transparent" Margin="0" Click="SetAsBoxBackgroundButtonClicked" ToolTip.Tip="Set Screenshot as Box Background">
                         <Image Source="{SvgImage /resources/icons/screenshot.svg}" Width="15" Height="15" />
                     </Button>
                 </StackPanel>

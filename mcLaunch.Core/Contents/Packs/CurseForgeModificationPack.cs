@@ -73,7 +73,7 @@ public class CurseForgeModificationPack : ModificationPack
         }, mod.VersionId, false, false);
     }
 
-    public override async Task ExportAsync(Box box, string filename)
+    public override async Task ExportAsync(Box box, string filename, string[]? includedFiles)
     {
         using FileStream fs = new(filename, FileMode.Create);
         using ZipArchive zip = new(fs, ZipArchiveMode.Create);
@@ -127,16 +127,34 @@ public class CurseForgeModificationPack : ModificationPack
 
         manifest.Files = files.ToArray();
 
-        foreach (string file in box.GetAdditionalFiles())
+        if (includedFiles != null)
         {
-            string completePath = $"{box.Path}/minecraft/{file}";
-            if (!File.Exists(completePath)) continue;
+            foreach (string file in includedFiles)
+            {
+                string completePath = $"{box.Path}/minecraft/{file}";
+                if (File.Exists(completePath))
+                {
+                    ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
+                    await using Stream entryStream = overrideEntry.Open();
+                    using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
 
-            ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
-            await using Stream entryStream = overrideEntry.Open();
-            using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
+                    await modFileStream.CopyToAsync(entryStream);
+                }
+                
+                if (System.IO.Directory.Exists(completePath))
+                {
+                    foreach (string dirFile in Directory.GetFiles(completePath, "*", SearchOption.AllDirectories))
+                    {
+                        string relativePath = dirFile.Replace(completePath, "")
+                            .TrimStart(Path.DirectorySeparatorChar);
+                        ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}/{relativePath}");
+                        await using Stream entryStream = overrideEntry.Open();
+                        using FileStream modFileStream = new FileStream(dirFile, FileMode.Open);
 
-            await modFileStream.CopyToAsync(entryStream);
+                        await modFileStream.CopyToAsync(entryStream);
+                    }
+                }
+            }
         }
 
         foreach (string modFile in box.GetUnlistedMods())

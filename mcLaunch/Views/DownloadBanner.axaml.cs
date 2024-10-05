@@ -118,7 +118,7 @@ public partial class DownloadBanner : UserControl
 
     private void OnDownloadProgressUpdate(string file, float percent, int currentSectionIndex)
     {
-        if (lastProgress >= percent) return;
+        //if (lastProgress >= percent) return;
         lastProgress = percent;
         
         Dispatcher.UIThread.Post(() =>

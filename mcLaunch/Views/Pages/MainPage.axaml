@@ -12,9 +12,13 @@
     </UserControl.Styles>
     <Panel>
         <DockPanel Margin="20, 10, 20 10">
-            <StackPanel DockPanel.Dock="Top" Margin="5 0 5 5">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="5 0 5 5">
                 <TextBox x:Name="SearchBox" Width="300" HorizontalAlignment="Left" Watermark="Search"
-                         TextChanged="SearchBoxTextChanged" />
+                         TextChanged="SearchBoxTextChanged" VerticalContentAlignment="Center" />
+                <views:SeparatorLine />
+                <Button Classes="secondary square" ToolTip.Tip="Open boxes folder" Click="OpenFolderButtonClicked">
+                    <Image Source="{SvgImage /resources/icons/folder.svg}" Width="16" Height="16"></Image>
+                </Button>
             </StackPanel>
             <ScrollViewer>
                 <ItemsRepeater x:Name="BoxesContainer">

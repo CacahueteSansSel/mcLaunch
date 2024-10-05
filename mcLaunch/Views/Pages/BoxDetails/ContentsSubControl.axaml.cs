@@ -47,7 +47,7 @@ public partial class ContentsSubControl : SubControl
             && (ContentType == MinecraftContentType.Modification
                 || ContentType == MinecraftContentType.ShaderPack))
         {
-            ModsList.HideLoadMoreButton();
+            ModsList.HidePageSelectors();
             VanillaDisclaimer.IsVisible = true;
             ContentPanel.IsVisible = false;
 
@@ -66,7 +66,7 @@ public partial class ContentsSubControl : SubControl
 
         VanillaDisclaimer.IsVisible = false;
 
-        ModsList.HideLoadMoreButton();
+        ModsList.HidePageSelectors();
         ModsList.SetLoadingCircle(true);
 
         BoxStoredContent[] storedContents = Box.Manifest.GetContents(ContentType);

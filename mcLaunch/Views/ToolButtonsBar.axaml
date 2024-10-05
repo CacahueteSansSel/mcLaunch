@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="65"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="65"
              Height="65" Background="{DynamicResource Background}"
              x:Class="mcLaunch.Views.ToolButtonsBar">
     <UserControl.Styles>
@@ -13,7 +13,7 @@
         <Panel DockPanel.Dock="Bottom" Height="1" Background="{DynamicResource BackgroundLighter}" />
         <DockPanel>
             <StackPanel Orientation="Horizontal" Margin="20 0 0 0" Spacing="10">
-                <Button DockPanel.Dock="Left" ToolTip.Tip="New box" Classes="primary square"
+                <Button x:Name="NewBoxButton" DockPanel.Dock="Left" ToolTip.Tip="New box" Classes="primary square"
                         Click="NewBoxButtonClicked">
                     <Image Source="{SvgImage /resources/icons/plus.svg}" Width="13" Height="13" />
                 </Button>
@@ -44,14 +44,25 @@
                     Click="SettingsButtonClicked">
                 <Image Source="{SvgImage /resources/icons/cog.svg}" Width="16" Height="16" />
             </Button>
+            <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary square" ToolTip.Tip="Advanced features"
+                    Click="AdvancedFeaturesButtonClicked" IsVisible="False" x:Name="AdvancedFeaturesButton">
+                <Image Source="{SvgImage /resources/icons/star.svg}" Width="16" Height="16" />
+            </Button>
             <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary square" ToolTip.Tip="Manage defaults"
                     Click="DefaultsButtonClicked">
                 <Image Source="{SvgImage /resources/icons/game_settings.svg}" Width="13" Height="13" />
             </Button>
+            <Button DockPanel.Dock="Right" Margin="0 0 10 0" Classes="secondary square" ToolTip.Tip="Unit Tests"
+                    Click="UnitTestsButtonClicked" IsVisible="False" x:Name="UnitTestsButton">
+                <Image Source="{SvgImage /resources/icons/unit_test.svg}" Width="16" Height="16" />
+            </Button>
             <Border Classes="frame-without-shadow" Margin="5 10 10 10" BoxShadow=""
                     Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="{Binding HeadIcon}" Margin="10 7 7 7" />
+                    <Button Margin="10 0 10 0" Classes="transparent square borderless" ToolTip.Tip="Manage Skins"
+                            Click="ManageSkinsButtonClicked">
+                        <Image Source="{Binding HeadIcon}" Width="24" Height="24" />
+                    </Button>
                     <StackPanel Margin="5 0 0 0" VerticalAlignment="Center">
                         <TextBlock Classes="light" Text="{Binding Account.Username}" />
                     </StackPanel>

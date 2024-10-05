@@ -61,10 +61,27 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator></Separator>
+                <MenuItem Header="Duplicate" Click="DuplicateOptionClicked">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="Copy Box ID" Click="CopyMenuOptionClicked">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
                     </MenuItem.Icon>
+                </MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Copy Mod List Report">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
+                    </MenuItem.Icon>
+                    <MenuItem.Items>
+                        <MenuItem Header="Complete" Click="CompleteReportOptionClicked">
+                        </MenuItem>
+                        <MenuItem Header="Only mods added since launcher start" Click="RelativeReportOptionClicked">
+                        </MenuItem>
+                    </MenuItem.Items>
                 </MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Delete" Click="DeleteMenuOptionClicked">
@@ -81,6 +98,10 @@
                     <Button x:Name="PlayButton" IsVisible="False" ToolTip.Tip="Launch box" Classes="transparent-green"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="PlayButtonClicked">
                         <Image Source="{SvgImage /resources/icons/play.svg}" Width="14" Height="14" />
+                    </Button>
+                    <Button x:Name="StopButton" IsVisible="False" ToolTip.Tip="Stop box" Classes="red square"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="StopButtonClicked">
+                        <Image Source="{SvgImage /resources/icons/close.svg}" Width="14" Height="14" />
                     </Button>
                 </Panel>
             </Border>

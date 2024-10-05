@@ -31,7 +31,7 @@ public partial class EditBoxPopup : UserControl
 
     private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
     {
-        Bitmap[]? files = await FileSystemUtilities.PickBitmaps(false, "Select a new icon image");
+        Bitmap[]? files = await FilePickerUtilities.PickBitmaps(false, "Select a new icon image");
         if (files.Length == 0) return;
 
         Bitmap? bmp = files.FirstOrDefault();
@@ -43,7 +43,7 @@ public partial class EditBoxPopup : UserControl
         Navigation.HidePopup();
     }
 
-    private void ApplyButtonClicked(object? sender, RoutedEventArgs e)
+    private async void ApplyButtonClicked(object? sender, RoutedEventArgs e)
     {
         box.Manifest.Name = BoxNameTb.Text;
         box.Manifest.Author = AuthorNameTb.Text;
@@ -53,9 +53,9 @@ public partial class EditBoxPopup : UserControl
         if (!CancelButton.IsVisible && box.Manifest.Type == BoxType.Temporary)
             box.Manifest.Type = BoxType.Default;
 
-        box.SaveManifest();
+        await box.SaveManifestAsync();
 
-        MainPage.Instance?.PopulateBoxList();
+        await MainPage.Instance?.PopulateBoxListAsync();
 
         Navigation.Pop();
         Navigation.Push(new BoxDetailsPage(box));

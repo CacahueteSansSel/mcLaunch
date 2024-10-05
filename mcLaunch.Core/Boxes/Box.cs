@@ -26,7 +26,8 @@ public class Box : IEquatable<Box>
     private readonly string manifestPath;
     private bool exposeLauncher;
     private string launcherVersion = "0.0.0";
-    private FileSystemWatcher watcher;
+    private FileSystemWatcher? watcher;
+    bool redirectOutput;
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
@@ -71,8 +72,18 @@ public class Box : IEquatable<Box>
     public QuickPlayManager QuickPlay { get; }
     public BoxManifest Manifest { get; private set; }
     public ModLoaderSupport? ModLoader => ModLoaderManager.Get(Manifest.ModLoaderId);
-    public Version MinecraftVersion => new(Manifest.Version);
-    public bool SupportsQuickPlay => MinecraftVersion >= new Version("1.20");
+
+    public Version? MinecraftVersion
+    {
+        get
+        {
+            System.Version.TryParse(Manifest.Version, out System.Version? ver);
+
+            return ver;
+        }
+    }
+
+    public bool SupportsQuickPlay => MinecraftVersion != null && MinecraftVersion >= new Version("1.20");
     public IBoxEventListener? EventListener { get; set; }
 
     public bool HasReadmeFile => File.Exists($"{Folder.Path}/README.md");
@@ -86,8 +97,10 @@ public class Box : IEquatable<Box>
 
     public bool Equals(Box? other) => other?.Manifest.Id == Manifest.Id;
 
-    private void CreateWatcher()
+    public void CreateWatcher()
     {
+        if (watcher != null) return;
+        
         if (!Directory.Exists(Folder.CompletePath))
             Directory.CreateDirectory(Folder.CompletePath);
 
@@ -95,6 +108,14 @@ public class Box : IEquatable<Box>
         watcher.IncludeSubdirectories = true;
         watcher.Created += OnFileCreated;
         watcher.Deleted += OnFileDeleted;
+    }
+
+    public void DisposeWatcher()
+    {
+        if (watcher == null) return;
+        
+        watcher.Dispose();
+        watcher = null;
     }
 
     private void OnFileDeleted(object sender, FileSystemEventArgs e)
@@ -201,7 +222,7 @@ public class Box : IEquatable<Box>
 
         BoxBackup backup = new(name, BoxBackupType.Complete, DateTime.Now, path);
         Manifest.Backups.Add(backup);
-        SaveManifest();
+        await SaveManifestAsync();
 
         return backup;
     }
@@ -243,7 +264,7 @@ public class Box : IEquatable<Box>
                 // Ensure the backups are still listed even when restoring an earlier backup
                 ReloadManifest(true);
                 Manifest.Backups = backups;
-                SaveManifest();
+                await SaveManifestAsync();
 
                 // Reload icon and background
                 await LoadIconAsync();
@@ -293,6 +314,8 @@ public class Box : IEquatable<Box>
 
     public void SetWatching(bool isWatching)
     {
+        if (watcher == null) CreateWatcher();
+        
         watcher.EnableRaisingEvents = isWatching;
     }
 
@@ -356,7 +379,7 @@ public class Box : IEquatable<Box>
             changes.Add($"Mod {mod.Name} has been removed because it is not present on disk anymore");
         }
 
-        if (await AddMissingModsToList()) SaveManifest();
+        if (await AddMissingModsToList()) await SaveManifestAsync();
 
         Manifest.Contents.RemoveMany(modsToRemove);
 
@@ -387,7 +410,7 @@ public class Box : IEquatable<Box>
 
     private async Task RunPostDeserializationChecksAsync()
     {
-        if (await Manifest.RunPostDeserializationChecksAsync()) SaveManifest();
+        if (await Manifest.RunPostDeserializationChecksAsync()) await SaveManifestAsync();
     }
 
     private async Task<Result> SetupVersionAsync()
@@ -524,6 +547,7 @@ public class Box : IEquatable<Box>
         Minecraft = new Minecraft(Version, Folder)
             .WithSystemFolder(BoxManager.SystemFolder)
             .WithUseDedicatedGraphics(UseDedicatedGraphics)
+            .WithRedirectOutput(redirectOutput)
             .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher
                                                                     && (ModLoader?.SupportsLauncherExposure ?? true))
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
@@ -542,7 +566,12 @@ public class Box : IEquatable<Box>
         launcherVersion = version;
     }
 
-    public void AddDirectJarMod(string filename)
+    public void SetRedirectOutput(bool redirect)
+    {
+        redirectOutput = redirect;
+    }
+
+    public async void AddDirectJarMod(string filename)
     {
         if (!Directory.Exists($"{Path}/directjar"))
             Directory.CreateDirectory($"{Path}/directjar");
@@ -551,7 +580,7 @@ public class Box : IEquatable<Box>
         File.Copy(filename, $"{Path}/{relativePath}");
 
         Manifest.AdditionalModloaderFiles.Add(relativePath);
-        SaveManifest();
+        await SaveManifestAsync();
     }
 
     public List<string> GetUnlistedMods()
@@ -572,30 +601,6 @@ public class Box : IEquatable<Box>
         }
 
         return mods;
-    }
-
-    public List<string> GetAdditionalFiles()
-    {
-        List<string> files = new();
-
-        // TODO: Ask the user for the folders/files to export
-        string[] inclusions =
-        {
-            "config",
-            "servers.dat",
-            "options.txt"
-        };
-
-        foreach (string file in Directory.GetFiles($"{Path}/minecraft", "*", SearchOption.AllDirectories))
-        {
-            string absPath = file.Replace(Path, "").Replace('\\', '/')
-                .Replace("minecraft/", "").Replace(Path, "").Trim('/').Trim();
-            if (inclusions.Count(ex => absPath.ToLower().StartsWith(ex)) == 0) continue;
-
-            files.Add(absPath);
-        }
-
-        return files;
     }
 
     public async void SetAndSaveIcon(Bitmap icon)
@@ -758,6 +763,11 @@ public class Box : IEquatable<Box>
 
     public bool HasContentSoft(MinecraftContent mod) => Manifest.HasContentSoft(mod);
 
+    public async Task SaveManifestAsync()
+    {
+        await File.WriteAllTextAsync(manifestPath, JsonSerializer.Serialize(Manifest));
+    }
+    
     public void SaveManifest()
     {
         File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
@@ -768,19 +778,27 @@ public class Box : IEquatable<Box>
     {
         Manifest.LastLaunchTime = DateTime.Now;
         SaveManifest();
-
+        
         return Minecraft.Run();
     }
 
     // Launch Minecraft and directly connect to a server 
-    public Process Run(string serverAddress, string serverPort) =>
-        Minecraft
+    public Process Run(string serverAddress, string serverPort)
+    {
+        Manifest.LastLaunchTime = DateTime.Now;
+        SaveManifest();
+        
+        return Minecraft
             .WithServer(serverAddress, serverPort)
             .Run();
+    }
 
     // Launch a Minecraft world directly using QuickPlay
     public Process Run(MinecraftWorld world)
     {
+        Manifest.LastLaunchTime = DateTime.Now;
+        SaveManifest();
+        
         string profilePath = QuickPlay.Create(QuickPlayWorldType.Singleplayer,
             (QuickPlayGameMode) world.GameMode, world.FolderName);
 

@@ -1,0 +1,3 @@
+[submodule "SharpNBT"]
+	path = SharpNBT
+	url = https://github.com/ForeverZer0/SharpNBT

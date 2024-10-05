@@ -27,7 +27,7 @@
     <Border Classes="frame loading">
         <StackPanel Margin="38">
             <TextBlock Classes="title" FontSize="25">Preparing Minecraft</TextBlock>
-            <TextBlock Margin="0 5 0 0">The launcher will close when Minecraft will start</TextBlock>
+            <TextBlock x:Name="FooterText" Margin="0 5 0 0">The launcher will close when Minecraft will start</TextBlock>
         </StackPanel>
     </Border>
 </UserControl>

@@ -18,13 +18,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.11" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.11" />
+        <PackageReference Include="Avalonia" Version="11.1.3" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.1.3" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.11" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.11" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.11" />
-        <PackageReference Include="Downloader" Version="3.0.6" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.3" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.3" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.3" />
+        <PackageReference Include="Downloader" Version="3.2.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -64,5 +64,12 @@
 
     <ItemGroup>
         <ProjectReference Include="..\mcLaunch.GitHub\mcLaunch.GitHub.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Pages\FailedPage.axaml.cs">
+        <DependentUpon>FailedPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>

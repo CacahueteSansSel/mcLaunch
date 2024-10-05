@@ -6,6 +6,7 @@
         Width="300" Height="400" CanResize="False"
         x:Class="mcLaunch.Views.Windows.AboutWindow"
         WindowStartupLocation="CenterScreen"
+        ExtendClientAreaTitleBarHeightHint="50"
         ExtendClientAreaToDecorationsHint="True"
         Title="About mcLaunch"
         Icon="/resources/icon.ico"

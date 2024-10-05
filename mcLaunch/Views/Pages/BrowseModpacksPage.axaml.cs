@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Core;
@@ -104,5 +105,10 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
 
         foreach (PageSelector component in pageSelectors)
             component.IsEnabled = true;
+    }
+
+    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        ScrollArea.Offset = Vector.Zero;
     }
 }

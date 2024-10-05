@@ -31,23 +31,23 @@ public static class BoxManager
         if (!Directory.Exists(BoxesPath))
         {
             Directory.CreateDirectory(BoxesPath);
-            return Array.Empty<Box>();
+            return [];
         }
 
-        List<Box> boxes = new();
+        List<Box> boxes = [];
 
-        foreach (string boxPath in Directory.GetDirectories(BoxesPath))
+        await Parallel.ForEachAsync(Directory.GetDirectories(BoxesPath), async (boxPath, token) =>
         {
             // Don't load invalid boxes
-            if (!File.Exists($"{boxPath}/box.json")) continue;
+            if (!File.Exists($"{boxPath}/box.json")) return;
 
             Box box = new Box(boxPath, false);
             await box.ReloadManifestAsync(true, runChecks);
 
-            if (box.Manifest.Type == BoxType.Temporary && !includeTemp) continue;
+            if (box.Manifest.Type == BoxType.Temporary && !includeTemp) return;
 
             boxes.Add(box);
-        }
+        });
 
         return boxes.ToArray();
     }
@@ -166,7 +166,7 @@ public static class BoxManager
             index++;
         }
 
-        box.SaveManifest();
+        await box.SaveManifestAsync();
 
         return new Result<Box>(new Box(manifest, path.Data!, false));
     }
@@ -224,7 +224,7 @@ public static class BoxManager
         if (iconStream != null) box.SetAndSaveIcon(iconStream, false);
         if (backgroundStream != null) box.SetAndSaveBackground(backgroundStream, false);
 
-        box.SaveManifest();
+        await box.SaveManifestAsync();
 
         return boxResult;
     }

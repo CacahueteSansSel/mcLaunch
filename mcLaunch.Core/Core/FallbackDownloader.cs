@@ -24,6 +24,9 @@ public class FallbackDownloader : IDisposable
             
             return false;
         }
+
+        string? directory = Path.GetDirectoryName(targetFilename);
+        if (directory != null && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
         
         await using Stream stream = await response.Content.ReadAsStreamAsync();
         await using FileStream fileStream = new(targetFilename, FileMode.Create);

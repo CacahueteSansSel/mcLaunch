@@ -1,4 +1,3 @@
-.idea
 bin
 obj
 Tester
@@ -6,3 +5,5 @@ Tester
 output
 server
 mcLaunch.sln.DotSettings.user
+.idea/.idea.mcLaunch/.idea/discord.xml
+.idea/.idea.mcLaunch/.idea/encodings.xml

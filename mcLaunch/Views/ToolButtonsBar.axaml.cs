@@ -7,10 +7,12 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using mcLaunch.Core.Managers;
 using mcLaunch.Launchsite.Auth;
+using mcLaunch.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
+using mcLaunch.Views.Windows;
 using ReactiveUI;
 
 namespace mcLaunch.Views;
@@ -30,9 +32,22 @@ public partial class ToolButtonsBar : UserControl
             UIDataContext.ResourceName = "Test";
             UIDataContext.ResourceDetailsText = "file.txt";
         }
+
+        RefreshButtons();
     }
 
     public Data UIDataContext => (Data) DataContext;
+
+    public void RefreshButtons()
+    {
+        AdvancedFeaturesButton.IsVisible = Settings.Instance.ShowAdvancedFeatures;
+
+#if DEBUG
+        UnitTestsButton.IsVisible = true;
+#else
+        UnitTestsButton.IsVisible = false;
+#endif
+    }
 
     private async void NewBoxButtonClicked(object? sender, RoutedEventArgs e)
     {
@@ -74,6 +89,13 @@ public partial class ToolButtonsBar : UserControl
 
     private void FastLaunchButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (BackgroundManager.IsMinecraftRunning)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("FastLaunch not available",
+                "Cannot use FastLaunch while another Minecraft instance is running", MessageStatus.Warning));
+            return;
+        }
+
         Navigation.ShowPopup(new FastLaunchPopup());
     }
 
@@ -182,5 +204,20 @@ public partial class ToolButtonsBar : UserControl
                 return null;
             }
         }
+    }
+
+    void ManageSkinsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        //Navigation.Push<SkinsPage>();
+    }
+
+    void AdvancedFeaturesButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.Push<AdvancedFeaturesPage>();
+    }
+
+    void UnitTestsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        new UnitTestsWindow().Show();
     }
 }

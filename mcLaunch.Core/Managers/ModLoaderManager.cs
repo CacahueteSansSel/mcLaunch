@@ -32,6 +32,9 @@ public static class ModLoaderManager
         // Quilt
         All.Add(new QuiltModLoaderSupport());
 
+        // Babric (Fabric for Minecraft b1.7.3)
+        All.Add(new BabricModLoaderSupport());
+
         // Direct Jar Merging
         All.Add(new DirectJarMergingModLoaderSupport());
     }

@@ -7,9 +7,10 @@ namespace mcLaunch.Launchsite.Core.ModLoaders;
 public class DirectJarMergingModLoaderSupport : ModLoaderSupport
 {
     public override string Id { get; } = "directjar";
-    public override string Name { get; set; } = "Direct Jar Merging";
+    public override string Name { get; set; } = "Jar mods";
     public override string Type { get; set; } = "vanilla";
     public override ModLoaderVersion LatestVersion { get; set; }
+    public override bool IsAdvanced => true;
 
     public override async Task<MinecraftVersion> PostProcessMinecraftVersionAsync(MinecraftVersion minecraftVersion)
     {
@@ -32,14 +33,15 @@ public class DirectJarMergingModLoaderSupport : ModLoaderSupport
 
         using ZipArchive minecraftJar = new(new FileStream(jarFilename, FileMode.Open, FileAccess.ReadWrite),
             ZipArchiveMode.Update);
-        minecraftJar.GetEntry("META-INF/MOJANG_C.SF")?.Delete();
-        minecraftJar.GetEntry("META-INF/MOJANG_C.DSA")?.Delete();
-        minecraftJar.GetEntry("META-INF/MANIFEST.MF")?.Delete();
+
+        ZipArchiveEntry[] entries = minecraftJar.Entries.Where(entry => entry.FullName.StartsWith("META-INF")).ToArray();
+        foreach (var entry in entries)
+            entry.Delete();
         minecraftJar.GetEntry("META-INF")?.Delete();
 
         foreach (string additionalFile in additionalFiles)
         {
-            if (!additionalFile.EndsWith(".zip")) continue;
+            if (!additionalFile.EndsWith(".zip") && !additionalFile.EndsWith(".jar")) continue;
 
             using ZipArchive modFile = new(new FileStream(additionalFile, FileMode.Open));
             foreach (ZipArchiveEntry entry in modFile.Entries)

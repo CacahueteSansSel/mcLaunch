@@ -12,6 +12,7 @@ public partial class CrashPopup : UserControl
 {
     private Box? box;
     private string? fileToOpen;
+    string? customLog;
 
     public CrashPopup(int exitCode, string boxId)
     {
@@ -46,7 +47,7 @@ public partial class CrashPopup : UserControl
         }
         else
         {
-            bodyText =
+            bodyText = customLog ??
                 $"Minecraft has exited with code {exitCode}.\nThis indicates that Minecraft has encountered an error " +
                 $"and shut down.\nVerify that every mod is up to date, not duplicate, and compatible with each other";
 
@@ -62,6 +63,7 @@ public partial class CrashPopup : UserControl
 
     public CrashPopup WithCustomLog(string log)
     {
+        customLog = log;
         BodyText.Text = log;
 
         return this;

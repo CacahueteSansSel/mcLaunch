@@ -6,17 +6,18 @@ namespace mcLaunch.Launchsite.Core;
 
 public class Minecraft
 {
-    private readonly Dictionary<string, string> args = new();
-    private bool disableChat;
-    private bool disableMultiplayer;
-    private string? jvmPath;
-    private QuickPlayWorldType? quickPlayMode;
-    private string? quickPlayPath;
-    private string? quickPlaySingleplayerWorldName;
-    private string? serverAddress;
-    private uint serverPort;
-    private MinecraftFolder sysFolder;
-    private bool useDedicatedGraphics;
+    readonly Dictionary<string, string> args = new();
+    bool disableChat;
+    bool disableMultiplayer;
+    string? jvmPath;
+    QuickPlayWorldType? quickPlayMode;
+    string? quickPlayPath;
+    string? quickPlaySingleplayerWorldName;
+    string? serverAddress;
+    uint serverPort;
+    MinecraftFolder sysFolder;
+    bool useDedicatedGraphics;
+    bool redirectOutput;
 
     public Minecraft(MinecraftVersion version, MinecraftFolder folder)
     {
@@ -30,6 +31,8 @@ public class Minecraft
 
     public MinecraftVersion Version { get; }
     public MinecraftFolder Folder { get; }
+    public List<string> StandardOutput { get; } = [];
+    public event Action<string> OnStandardOutputLineReceived;
 
     public Minecraft WithSystemFolder(MinecraftFolder systemFolder)
     {
@@ -49,6 +52,13 @@ public class Minecraft
     public Minecraft WithUseDedicatedGraphics(bool useDedicatedGraphics)
     {
         this.useDedicatedGraphics = useDedicatedGraphics;
+
+        return this;
+    }
+
+    public Minecraft WithRedirectOutput(bool redirectOutput)
+    {
+        this.redirectOutput = redirectOutput;
 
         return this;
     }
@@ -134,6 +144,20 @@ public class Minecraft
         return this;
     }
 
+    void ReadOutput(Process process)
+    {
+        while (!process.HasExited)
+        {
+            string? line = process.StandardOutput.ReadLine();
+            if (line == null) break;
+            
+            StandardOutput.Add(line);
+            OnStandardOutputLineReceived?.Invoke(line);
+        }
+        
+        StandardOutput.Add($"Minecraft exited with code {process.ExitCode}");
+    }
+
     public Process Run()
     {
         string jvm = jvmPath ?? sysFolder.GetJvm(Version.JavaVersion!.Component);
@@ -184,8 +208,9 @@ public class Minecraft
             UseShellExecute = false,
             WorkingDirectory = Folder.CompletePath,
             RedirectStandardError = true,
-            RedirectStandardOutput = true
+            RedirectStandardOutput = redirectOutput
         };
+        
 
         if (useDedicatedGraphics)
             if (OperatingSystem.IsLinux() && File.Exists("/usr/bin/prime-run"))
@@ -194,16 +219,12 @@ public class Minecraft
                 info.FileName = "/usr/bin/prime-run";
             }
 
-        if (!OperatingSystem.IsWindows())
-        {
-            info.UseShellExecute = true;
-            info.RedirectStandardError = false;
-            info.RedirectStandardOutput = false;
-        }
-
         // An attempt to fix the "java opens in TextEdit" bug
         if (OperatingSystem.IsMacOS()) File.SetUnixFileMode(info.FileName, UnixFileMode.UserExecute);
 
-        return Process.Start(info);
+        Process java = Process.Start(info)!;
+        if (redirectOutput) new Thread(() => ReadOutput(java)).Start();
+
+        return java;
     }
 }

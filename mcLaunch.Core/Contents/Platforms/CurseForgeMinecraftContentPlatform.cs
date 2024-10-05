@@ -110,6 +110,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             MinecraftContent m = new MinecraftContent
             {
                 Id = mod.Id.ToString(),
+                Slug = mod.Slug,
+                Url = $"https://www.curseforge.com/minecraft/mc-mods/{mod.Slug}",
                 Type = contentType,
                 Name = mod.Name,
                 ShortDescription = mod.Summary,
@@ -205,6 +207,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             MinecraftContent content = new MinecraftContent
             {
                 Id = cfMod.Id.ToString(),
+                Slug = cfMod.Slug,
+                Url = $"https://www.curseforge.com/minecraft/mc-mods/{cfMod.Slug}",
                 Type = GetTypeFromClassId(cfMod.ClassId ?? ModsClassId), // TODO: Check if cfMod.ClassId is safe to use
                 Name = cfMod.Name,
                 ShortDescription = cfMod.Summary,
@@ -231,6 +235,14 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         }
     }
 
+    ModLoaderType ParseModLoaderType(string input)
+    {
+        if (input.ToLower() == "neoforge")
+            return (ModLoaderType) 6;
+
+        return Enum.Parse<ModLoaderType>(input, true);
+    }
+
     public override async Task<ContentVersion[]> GetContentVersionsAsync(MinecraftContent content, string? modLoaderId,
         string? minecraftVersionId)
     {
@@ -241,7 +253,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             ModLoaderType? modLoader = string.IsNullOrWhiteSpace(modLoaderId)
                                        || content.Type != MinecraftContentType.Modification
                 ? null
-                : Enum.Parse<ModLoaderType>(modLoaderId, true);
+                : ParseModLoaderType(modLoaderId);
             List<ContentVersion> modVersions = new();
 
             foreach (File file in (await client.GetModFiles(id, minecraftVersionId, modLoader)).Data)
@@ -471,7 +483,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             if (filenames == null)
             {
                 if (processDownload) await DownloadManager.ProcessAll();
-                targetBox.SaveManifest();
+                await targetBox.SaveManifestAsync();
 
                 return false;
             }
@@ -484,7 +496,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         if (isDatapackToInstall)
             targetBox.InstallDatapack(versionId, filenames[0]);
 
-        targetBox.SaveManifest();
+        await targetBox.SaveManifestAsync();
         return true;
     }
 
@@ -515,6 +527,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             ? string.Empty
             : (await client.GetModFileChangelog(cfMod.Id, cfMod.LatestFiles.FirstOrDefault().Id)).Data;
         content.LongDescriptionBody = (await client.GetModDescription(id)).Data;
+        content.Url = $"https://www.curseforge.com/minecraft/mc-mods/{cfMod.Slug}";
 
         return content;
     }

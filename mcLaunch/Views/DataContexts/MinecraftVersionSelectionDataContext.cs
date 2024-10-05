@@ -33,18 +33,27 @@ public class MinecraftVersionSelectionDataContext : ReactiveObject
     private ModLoaderVersion latestVersion;
     private DataContextModLoader[] modLoaders;
     private DataContextModLoader selectedModLoader;
+    private string? customText;
 
     public MinecraftVersionSelectionDataContext()
     {
         Versions = Settings.Instance.EnableSnapshots
             ? MinecraftManager.Manifest!.Versions
             : MinecraftManager.ManifestVersions;
-        ModLoaders = ModLoaderManager.All.Select(m => new DataContextModLoader(m)).ToArray();
+        ModLoaders = ModLoaderManager.All
+            .Where(m => Settings.Instance.EnableAdvancedModLoaders || !m.IsAdvanced)
+            .Select(m => new DataContextModLoader(m)).ToArray();
 
         selectedModLoader = ModLoaders[0];
     }
 
     public ManifestMinecraftVersion[] Versions { get; }
+    
+    public string CustomText
+    {
+        get => customText;
+        set => this.RaiseAndSetIfChanged(ref customText, value);
+    }
 
     public DataContextModLoader[] ModLoaders
     {

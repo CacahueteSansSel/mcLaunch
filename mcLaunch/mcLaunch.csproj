@@ -10,6 +10,15 @@
     </PropertyGroup>
     <ItemGroup>
         <None Remove=".gitignore" />
+        <None Update="TestModpacks\curseforge.zip">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestModpacks\modrinth.mrpack">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestModpacks\mclaunch.box">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -17,25 +26,28 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.2.1" />
-        <PackageReference Include="Avalonia" Version="11.0.11" />
-        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.0.11" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.11" />
+        <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.3.0" />
+        <PackageReference Include="Avalonia" Version="11.1.3" />
+        <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.1.0" />
+        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.1.3" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.1.3" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.11" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.11" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.3" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.3" />
         <PackageReference Include="Avalonia.HtmlRenderer" Version="11.0.0" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.11" />
-        <PackageReference Include="Avalonia.Svg" Version="11.0.0.18" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.11" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.3" />
+        <PackageReference Include="Avalonia.Svg" Version="11.1.0.1" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.3" />
         <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
         <PackageReference Include="Jdenticon-net" Version="3.1.2" />
         <PackageReference Include="Markdown.Avalonia" Version="11.0.2" />
-        <PackageReference Include="ReverseMarkdown" Version="4.5.0" />
+        <PackageReference Include="ReverseMarkdown" Version="4.6.0" />
     </ItemGroup>
 
     <ItemGroup>
         <None Remove="resources\logo.png" />
+        <AvaloniaResource Include="resources\icons\babric.png" />
+        <AvaloniaResource Include="resources\icons\babric.svg" />
         <AvaloniaResource Include="resources\logo.png" />
         <None Remove="resources\fonts\LexendDeca-Black.ttf" />
         <AvaloniaResource Include="resources\fonts\LexendDeca-Black.ttf" />
@@ -326,6 +338,54 @@
         <AvaloniaResource Include="resources\status\warning.svg" />
         <None Remove="resources\icons\copy.svg" />
         <AvaloniaResource Include="resources\icons\copy.svg" />
+        <None Remove="resources\default_skin.png" />
+        <AvaloniaResource Include="resources\default_skin.png" />
+        <None Remove="resources\icons\arrow_up.svg" />
+        <AvaloniaResource Include="resources\icons\arrow_up.svg" />
+        <None Remove="resources\icons\star.svg" />
+        <AvaloniaResource Include="resources\icons\star.svg" />
+        <None Remove="resources\logo_beta_lanuch.png" />
+        <AvaloniaResource Include="resources\logo_beta_lanuch.png" />
+        <None Remove="resources\logo_dev_lanuch.png" />
+        <AvaloniaResource Include="resources\logo_dev_lanuch.png" />
+        <None Remove="resources\logo_lanuch.png" />
+        <AvaloniaResource Include="resources\logo_lanuch.png" />
+        <None Remove="resources\icons\unit_test.svg" />
+        <AvaloniaResource Include="resources\icons\unit_test.svg" />
+        <None Remove="resources\nbt\byte.svg" />
+        <AvaloniaResource Include="resources\nbt\byte.svg" />
+        <None Remove="resources\nbt\byte_array.svg" />
+        <AvaloniaResource Include="resources\nbt\byte_array.svg" />
+        <None Remove="resources\nbt\compound.svg" />
+        <AvaloniaResource Include="resources\nbt\compound.svg" />
+        <None Remove="resources\nbt\double.svg" />
+        <AvaloniaResource Include="resources\nbt\double.svg" />
+        <None Remove="resources\nbt\float.svg" />
+        <AvaloniaResource Include="resources\nbt\float.svg" />
+        <None Remove="resources\nbt\int.svg" />
+        <AvaloniaResource Include="resources\nbt\int.svg" />
+        <None Remove="resources\nbt\int_array.svg" />
+        <AvaloniaResource Include="resources\nbt\int_array.svg" />
+        <None Remove="resources\nbt\list.svg" />
+        <AvaloniaResource Include="resources\nbt\list.svg" />
+        <None Remove="resources\nbt\long.svg" />
+        <AvaloniaResource Include="resources\nbt\long.svg" />
+        <None Remove="resources\nbt\long_array.svg" />
+        <AvaloniaResource Include="resources\nbt\long_array.svg" />
+        <None Remove="resources\nbt\short.svg" />
+        <AvaloniaResource Include="resources\nbt\short.svg" />
+        <None Remove="resources\nbt\string.svg" />
+        <AvaloniaResource Include="resources\nbt\string.svg" />
+        <None Remove="resources\icons\save.svg" />
+        <AvaloniaResource Include="resources\icons\save.svg" />
+        <None Remove="resources\icons\save_as.svg" />
+        <AvaloniaResource Include="resources\icons\save_as.svg" />
+        <None Remove="resources\icons\rename.svg" />
+        <AvaloniaResource Include="resources\icons\rename.svg" />
+        <None Remove="resources\icons\nbt.svg" />
+        <AvaloniaResource Include="resources\icons\nbt.svg" />
+        <None Remove="resources\icons\snbt.svg" />
+        <AvaloniaResource Include="resources\icons\snbt.svg" />
     </ItemGroup>
 
     <ItemGroup>
@@ -395,9 +455,30 @@
             <DependentUpon>LauncherUpdatedPopup.axaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
+        <Compile Update="Views\Pages\AdvancedFeaturesPage.axaml.cs">
+          <DependentUpon>AdvancedFeaturesPage.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Popups\InstallContentOnPopup.axaml.cs">
+          <DependentUpon>InstallContentOnPopup.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Popups\SelectBoxPopup.axaml.cs">
+          <DependentUpon>SelectBoxPopup.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Windows\ConsoleWindow.axaml.cs">
+          <DependentUpon>ConsoleWindow.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Windows\NbtEditor\NbtEditorWindow.axaml.cs">
+          <DependentUpon>NbtEditorWindow.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
         <Folder Include="resources\internal\" />
+        <Folder Include="TestModpacks\" />
     </ItemGroup>
 </Project>

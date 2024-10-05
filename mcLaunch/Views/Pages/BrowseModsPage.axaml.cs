@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Managers;
 
@@ -25,5 +26,10 @@ public partial class BrowseModsPage : UserControl, ITopLevelPageControl
     private void SearchButtonClicked(object? sender, RoutedEventArgs e)
     {
         ModList.Search(null, SearchTextboxInput.Text);
+    }
+
+    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        ScrollArea.Offset = Vector.Zero;
     }
 }

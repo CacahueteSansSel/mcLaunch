@@ -92,7 +92,22 @@ public partial class BoxEntryCard : UserControl
     {
         base.OnPointerEntered(e);
 
-        PlayButton.IsVisible = true;
+        if (!BackgroundManager.IsMinecraftRunning)
+        {
+            PlayButton.IsVisible = true;
+            return;
+        }
+
+        if (BackgroundManager.IsBoxRunning(Box))
+        {
+            StopButton.IsVisible = true;
+            PlayButton.IsVisible = false;
+        }
+        else
+        {
+            StopButton.IsVisible = false;
+            PlayButton.IsVisible = true;
+        }
     }
 
     protected override void OnPointerExited(PointerEventArgs e)
@@ -100,6 +115,7 @@ public partial class BoxEntryCard : UserControl
         base.OnPointerExited(e);
 
         PlayButton.IsVisible = false;
+        StopButton.IsVisible = false;
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
@@ -142,12 +158,51 @@ public partial class BoxEntryCard : UserControl
             () =>
             {
                 Box.Delete();
-                MainPage.Instance.PopulateBoxList();
+                MainPage.Instance.PopulateBoxListAsync();
             }));
     }
 
     private void OpenFolderMenuOptionClicked(object? sender, RoutedEventArgs e)
     {
         PlatformSpecific.OpenFolder(Box.Path);
+    }
+
+    void DuplicateOptionClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new DuplicateBoxPopup(Box));
+    }
+
+    async void CompleteReportOptionClicked(object? sender, RoutedEventArgs e)
+    {
+        if (MainWindow.Instance.Clipboard == null)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Error", "Unable to access clipboard", MessageStatus.Error));
+            return;
+        }
+        
+        string report = await BoxUtilities.GenerateReportAsync(Box);
+        MainWindow.Instance.Clipboard?.SetTextAsync(report);
+        
+        Navigation.ShowPopup(new MessageBoxPopup("Success", "Report copied to clipboard", MessageStatus.Success));
+    }
+
+    async void RelativeReportOptionClicked(object? sender, RoutedEventArgs e)
+    {
+        if (MainWindow.Instance.Clipboard == null)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Error", "Unable to access clipboard", MessageStatus.Error));
+            return;
+        }
+        
+        string report = await BoxUtilities.GenerateReportAsync(Box, false);
+        MainWindow.Instance.Clipboard?.SetTextAsync(report);
+        
+        Navigation.ShowPopup(new MessageBoxPopup("Success", "Report copied to clipboard", MessageStatus.Success));
+    }
+
+    void StopButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        if (BackgroundManager.IsMinecraftRunning)
+            BackgroundManager.KillMinecraftProcess();
     }
 }

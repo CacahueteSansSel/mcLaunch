@@ -1,10 +1,16 @@
-﻿using Avalonia.Controls;
+﻿using System;
+using System.Linq;
+using System.Reactive;
+using Avalonia.Controls;
+using Avalonia.Threading;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
+using mcLaunch.Views.Windows.NbtEditor;
 using ReactiveUI;
+using SharpNBT;
 
 namespace mcLaunch.Views;
 
@@ -20,20 +26,18 @@ public partial class WorldList : UserControl
 
         DataContext = new Data();
 
-        /*
         SetWorlds(new []
         {
             new MinecraftWorld
             {
-                Name = "Survie hardcore",
+                Name = "Test world",
                 GameMode = MinecraftGameMode.Creative,
                 Icon = null,
                 LastPlayed = DateTime.Now,
                 IsCheats = true,
-                Version = "1.19.84"
+                Version = "1.21"
             }
         });
-        */
     }
 
     public bool HideInstalledBadges { get; set; }
@@ -52,7 +56,7 @@ public partial class WorldList : UserControl
     {
         Data ctx = (Data) DataContext;
 
-        ctx.Worlds = worlds;
+        ctx.Worlds = worlds.Select(w => new Data.ModelWorld(w)).ToArray();
 
         NtsBanner.IsVisible = worlds.Length == 0;
     }
@@ -66,11 +70,11 @@ public partial class WorldList : UserControl
     {
         if (e.AddedItems.Count > 0 && launchPage != null && launchPage.Box.SupportsQuickPlay)
         {
-            MinecraftWorld world = (MinecraftWorld) e.AddedItems[0];
+            Data.ModelWorld world = (Data.ModelWorld) e.AddedItems[0];
 
-            Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Launch world {world.Name} ?",
-                $"Minecraft will start and automatically launch the world {world.Name}",
-                () => { launchPage.Run(world: world); }));
+            Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Launch world {world.World.Name} ?",
+                $"Minecraft will start and automatically launch the world {world.World.Name}",
+                () => { launchPage.Run(world: world.World); }));
         }
 
         WorldsList.UnselectAll();
@@ -79,9 +83,9 @@ public partial class WorldList : UserControl
     public class Data : ReactiveObject
     {
         private int page;
-        private MinecraftWorld[] worlds;
+        private ModelWorld[] worlds;
 
-        public MinecraftWorld[] Worlds
+        public ModelWorld[] Worlds
         {
             get => worlds;
             set => this.RaiseAndSetIfChanged(ref worlds, value);
@@ -91,6 +95,24 @@ public partial class WorldList : UserControl
         {
             get => page;
             set => this.RaiseAndSetIfChanged(ref page, value);
+        }
+
+        public class ModelWorld : ReactiveObject
+        {
+            public MinecraftWorld World { get; set; }
+            public bool ShowAdvancedFeatures => Settings.Instance?.ShowAdvancedFeatures ?? false;
+
+            public ModelWorld(MinecraftWorld world)
+            {
+                World = world;
+            }
+
+            public void OpenLevelDatCommand()
+            {
+                string levelDatFilename = $"{World.WorldPath}/level.dat";
+                
+                new NbtEditorWindow(levelDatFilename).Show(MainWindow.Instance);
+            }
         }
     }
 }

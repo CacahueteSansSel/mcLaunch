@@ -1,10 +1,13 @@
 ﻿using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.Settings;
 using mcLaunch.Views.Windows;
+using mcLaunch.Views.Windows.NbtEditor;
+using SharpNBT;
 
 namespace mcLaunch.Views.Pages;
 
@@ -23,6 +26,8 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
 
 #if !DEBUG
         CrashButton.IsVisible = false;
+        ConsoleButton.IsVisible = false;
+        NbtButton.IsVisible = false;
 #endif
 
         int years = (int) MathF.Floor((float) (DateTime.Now - Constants.McLaunchBirthDate).TotalDays / 365);
@@ -60,5 +65,20 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
     private async void UpdateInstallerButtonClicked(object? sender, RoutedEventArgs e)
     {
         await UpdateManager.UpdateInstallerAsync();
+    }
+
+    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        ScrollArea.Offset = Vector.Zero;
+    }
+
+    void ConsoleButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        new ConsoleWindow().Show();
+    }
+
+    void NbtEditorButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        new NbtEditorWindow("level.dat").Show();
     }
 }

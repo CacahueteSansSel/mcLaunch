@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
@@ -6,7 +7,7 @@ using Avalonia.Platform.Storage;
 
 namespace mcLaunch.Utilities;
 
-public class FileSystemUtilities
+public static class FilePickerUtilities
 {
     public static async Task<string[]> PickFiles(bool multiple, string title, FilePickerFileType[] types)
     {

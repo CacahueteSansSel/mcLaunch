@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -13,6 +14,7 @@ using mcLaunch.Core.Managers;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Core.ModLoaders;
 using mcLaunch.Launchsite.Models;
+using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Popups;
 
@@ -65,7 +67,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         ModPlatformBadge.Text = shownContent.Platform.Name;
         //ModPlatformBadge.SetIcon(shownContent.Platform.Name.ToLower());
         
-        if (shownContent.License != null)
+        if (!string.IsNullOrWhiteSpace(shownContent.License))
         {
             ModLicenseBadge.Text = shownContent.GetLicenseDisplayName();
             ModLicenseBadge.IsVisible = true;
@@ -75,8 +77,8 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             ModLicenseBadge.IsVisible = false;
         }
 
-        ModOpenSource.IsVisible = shownContent.IsOpenSource;
-        ModClosedSource.IsVisible = !shownContent.IsOpenSource;
+        ModOpenSource.IsVisible = shownContent.License != null && shownContent.IsOpenSource;
+        ModClosedSource.IsVisible = shownContent.License != null && !shownContent.IsOpenSource;
 
         SetInstalled(targetBox != null && targetBox.HasContentSoft(shownContent));
         FetchAdditionalInfos();
@@ -84,14 +86,12 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         UpdateButton.IsEnabled = shownContent.IsUpdateRequired;
         UpdateButton.IsVisible = shownContent.IsUpdateRequired;
 
-        OpenInBrowserButton.IsVisible = shownContent.Url != null;
-
         if (TargetBox == null)
         {
-            InstallButton.IsVisible = false;
             UpdateButton.IsVisible = false;
             UninstallButton.IsVisible = false;
 
+            InstallButton.IsVisible = true;
             TestButton.IsVisible = true;
         }
         else
@@ -119,6 +119,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             ShownContent.Background = TargetBox.Manifest.Background;
 
         LoadCircle.IsVisible = false;
+        OpenInBrowserButton.IsVisible = ShownContent.Url != null;
     }
 
     public void SetInstalled(bool isInstalled)
@@ -168,6 +169,9 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
                             ShownContent.Type == MinecraftContentType.Modification
                                 ? TargetBox.Manifest.ModLoaderId
                                 : null, TargetBox.Manifest.Version);
+                        
+                        // No version is available, so we continue
+                        if (versions.Length == 0) continue;
 
                         versionId = versions[0].Id;
                     }
@@ -229,7 +233,12 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
     private async void InstallButtonClicked(object? sender, RoutedEventArgs e)
     {
-        if (TargetBox == null) return;
+        if (TargetBox == null)
+        {
+            Navigation.ShowPopup(new InstallContentOnPopup(ShownContent));
+            
+            return;
+        }
 
         if (TargetBox != null && !TargetBox.HasWorlds && ShownContent.Type == MinecraftContentType.DataPack)
         {
@@ -295,7 +304,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             return;
         }
 
-        TargetBox.SaveManifest();
+        await TargetBox.SaveManifestAsync();
 
         BoxDetailsPage.LastOpened?.Reload();
 
@@ -402,9 +411,20 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
     private async void TestButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (BackgroundManager.IsMinecraftRunning)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("FastLaunch not available", "Cannot use FastLaunch while another Minecraft instance is running", MessageStatus.Warning));
+            return;
+        }
+        
         ContentVersion[] versions = await ShownContent.Platform.GetContentVersionsAsync(ShownContent, null, null);
 
         Navigation.ShowPopup(new VersionSelectionPopup(new MinecraftContentVersionProvider(versions, ShownContent),
             CreateFastLaunchModpackFromVersion));
+    }
+
+    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        ScrollArea.Offset = Vector.Zero;
     }
 }

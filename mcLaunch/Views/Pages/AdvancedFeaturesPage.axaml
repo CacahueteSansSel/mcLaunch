@@ -1,0 +1,54 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
+             mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="450"
+             Background="{DynamicResource BackgroundDarker}"
+             x:Class="mcLaunch.Views.Pages.AdvancedFeaturesPage">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+    </UserControl.Styles>
+    <Panel>
+        <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}" />
+        <ScrollViewer>
+            <StackPanel>
+                <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
+                    <views:BackButton />
+                    <TextBlock Classes="title" Margin="15 0 0 0" FontSize="30">Advanced Features</TextBlock>
+                </StackPanel>
+                <Border Width="888" Margin="0 10 0 0" Classes="frame">
+                    <StackPanel x:Name="SettingsRoot" Margin="20" Spacing="10">
+                        <Border Padding="10" Classes="frame-without-shadow">
+                            <DockPanel>
+                                <Button x:Name="DefaultOptionsDeleteButton" DockPanel.Dock="Right" Classes="secondary"
+                                        Click="RunExtractMinecraftResources">
+                                    Run
+                                </Button>
+                                <StackPanel>
+                                    <TextBlock Classes="title">Extract Minecraft Resources</TextBlock>
+                                    <TextBlock x:Name="DefaultOptionsStatusText">Extract all Minecraft's resources to a folder (to help for resourcepacks for example)</TextBlock>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                        <Border Padding="10" Classes="frame-without-shadow">
+                            <DockPanel>
+                                <Button x:Name="RunButton" DockPanel.Dock="Right" Classes="secondary"
+                                        Click="OpenNBTEditorButtonClicked">
+                                    Open
+                                </Button>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <TextBlock VerticalAlignment="Center" Classes="title">NBT Editor</TextBlock>
+                                        <views:Badge VerticalAlignment="Center" Text="Experimental"></views:Badge>
+                                    </StackPanel>
+                                    <TextBlock>Open the built-in NBT editor window (currently work in progress)</TextBlock>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Panel>
+</UserControl>
