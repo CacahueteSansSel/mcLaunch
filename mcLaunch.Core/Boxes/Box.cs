@@ -767,23 +767,38 @@ public class Box : IEquatable<Box>
     {
         await File.WriteAllTextAsync(manifestPath, JsonSerializer.Serialize(Manifest));
     }
+    
+    public void SaveManifest()
+    {
+        File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
+    }
 
     // Launch Minecraft normally
     public Process Run()
     {
         Manifest.LastLaunchTime = DateTime.Now;
+        SaveManifest();
+        
         return Minecraft.Run();
     }
 
     // Launch Minecraft and directly connect to a server 
-    public Process Run(string serverAddress, string serverPort) =>
-        Minecraft
+    public Process Run(string serverAddress, string serverPort)
+    {
+        Manifest.LastLaunchTime = DateTime.Now;
+        SaveManifest();
+        
+        return Minecraft
             .WithServer(serverAddress, serverPort)
             .Run();
+    }
 
     // Launch a Minecraft world directly using QuickPlay
     public Process Run(MinecraftWorld world)
     {
+        Manifest.LastLaunchTime = DateTime.Now;
+        SaveManifest();
+        
         string profilePath = QuickPlay.Create(QuickPlayWorldType.Singleplayer,
             (QuickPlayGameMode) world.GameMode, world.FolderName);
 

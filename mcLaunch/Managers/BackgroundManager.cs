@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Platform;
 using ExCSS;
 using mcLaunch.Core.Boxes;
@@ -78,6 +79,11 @@ public static class BackgroundManager
         RunningBox = null;
 
         return true;
+    }
+
+    public static bool IsBoxRunning(Box box)
+    {
+        return RunningBox != null && RunningBox.Manifest.Id == box.Manifest.Id;
     }
 
     public static void KillMinecraftProcess()

@@ -21,6 +21,7 @@ public class BoxAddModFromModrinthTest : UnitTest
         PaginatedResponse<MinecraftContent> searchHits =
             await ModrinthMinecraftContentPlatform.Instance.GetContentsAsync(0, createdBox, "",
                 MinecraftContentType.Modification);
+        Assert(searchHits.Items.Count > 0, $"Mod search returned results");
         MinecraftContent secondModFromSearch = searchHits.Items[1];
         ContentVersion[] version =
             await ModrinthMinecraftContentPlatform.Instance.GetContentVersionsAsync(secondModFromSearch, createdBox.ModLoader.Id,

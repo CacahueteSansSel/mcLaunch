@@ -17,8 +17,8 @@ public partial class MainPage : UserControl, ITopLevelPageControl
     public MainPage()
     {
         Instance = this;
-
         InitializeComponent();
+
         anonSession = AnonymityManager.CreateSession();
 
         PopulateBoxListAsync();

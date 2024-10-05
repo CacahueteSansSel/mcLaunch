@@ -256,7 +256,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         Dispatcher.UIThread.Post(() =>
         {
             RunButton.IsEnabled = !BackgroundManager.IsMinecraftRunning;
-            StopButton.IsVisible = BackgroundManager.IsMinecraftRunning && BackgroundManager.RunningBox == Box;
+            StopButton.IsVisible = BackgroundManager.IsMinecraftRunning && BackgroundManager.IsBoxRunning(Box);
             RunButton.IsVisible = !StopButton.IsVisible;
         });
     }

@@ -98,7 +98,7 @@ public partial class BoxEntryCard : UserControl
             return;
         }
 
-        if (BackgroundManager.RunningBox == Box)
+        if (BackgroundManager.IsBoxRunning(Box))
         {
             StopButton.IsVisible = true;
             PlayButton.IsVisible = false;
