@@ -32,8 +32,10 @@ public partial class CrashPopup : UserControl
         BodyText.IsVisible = false;
         ButtonsRow.IsEnabled = false;
 
-        box = (await BoxManager.LoadLocalBoxesAsync(runChecks: false)).FirstOrDefault(b => b.Manifest.Id == boxId);
+        box = (await BoxManager.LoadLocalBoxesAsync(includeTemp: true, runChecks: false)).FirstOrDefault(b => b.Manifest.Id == boxId);
         if (box == null) return;
+
+        OpenBoxDetailsButton.IsEnabled = box.Manifest.Type != BoxType.Temporary;
 
         string bodyText;
         string latestLogsPath = $"{box.Folder.CompletePath}/logs/latest.log";

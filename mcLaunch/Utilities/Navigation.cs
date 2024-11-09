@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System.Threading.Tasks;
+using Avalonia.Controls;
 using mcLaunch.Models;
 using mcLaunch.Views;
 
@@ -34,5 +35,11 @@ public class Navigation
     public static void HidePopup()
     {
         MainWindowDataContext.Instance.HidePopup();
+    }
+
+    public static async Task WaitPopupClosingAsync()
+    {
+        while (MainWindowDataContext.Instance.IsPopup)
+            await Task.Delay(100);
     }
 }
