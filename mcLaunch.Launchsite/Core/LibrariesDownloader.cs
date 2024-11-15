@@ -1,4 +1,5 @@
-﻿using mcLaunch.Launchsite.Models;
+﻿using System.Diagnostics;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Launchsite.Utils;
 
 namespace mcLaunch.Launchsite.Core;
@@ -34,10 +35,54 @@ public class LibrariesDownloader
         return this;
     }
 
+    public void AddToClassPath(string path)
+    {
+        string filename = System.IO.Path.GetFileNameWithoutExtension(path);
+        if (!filename.Contains('-'))
+        {
+            Debug.WriteLine($"Adding {filename} anyway : cannot deduct name and version");
+            
+            ClassPath.Add(path);
+            return;
+        }
+        
+        string[] tokens = filename.Split('-');
+        string name = tokens[0];
+        string version = tokens[1];
+
+        if (!Version.TryParse(version, out Version toAddFileVersion))
+        {
+            Debug.WriteLine($"Adding {name} version {toAddFileVersion} anyway : cannot parse version \"{toAddFileVersion}\"");
+            ClassPath.Add(path);
+            
+            return;
+        }
+            
+        foreach (string cpFile in ClassPath)
+        {
+            string cpFilename = System.IO.Path.GetFileNameWithoutExtension(cpFile);
+            if (!cpFilename.Contains('-')) continue;
+                
+            string[] cpTokens = cpFilename.Split('-');
+            string cpName = cpTokens[0];
+            string cpVersion = cpTokens[1];
+                
+            if (!Version.TryParse(cpVersion, out Version cpFileVersion)) continue;
+
+            if (cpName == name && toAddFileVersion < cpFileVersion)
+            {
+                Debug.WriteLine($"Refused to add {name} version {toAddFileVersion} : existing version is newer ({cpFileVersion})");
+                return;
+            }
+        }
+        
+        ClassPath.Add(path);
+    }
+
     private async Task<string> DownloadAsync(MinecraftVersion.ModelLibrary library)
     {
         if (!library.NeedsToDeduceUrlFromName) return null;
-
+        
         LibraryName name = new LibraryName(library.Name);
 
         string filename = library.GetFinalJarFilename();
@@ -46,7 +91,7 @@ public class LibrariesDownloader
         string dir = path.Replace(filename, "").Trim('/').FixPath();
 
         if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path)))
-            ClassPath.Add(System.IO.Path.GetFullPath(path));
+            AddToClassPath(System.IO.Path.GetFullPath(path));
 
         if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
@@ -65,7 +110,7 @@ public class LibrariesDownloader
         string dir = path.Replace(filename, "").Trim('/').FixPath();
 
         if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path)))
-            ClassPath.Add(System.IO.Path.GetFullPath(path));
+            AddToClassPath(System.IO.Path.GetFullPath(path));
 
         if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 

@@ -66,8 +66,13 @@ public static class BackgroundManager
 
         if (javaProcess != null && javaProcess.ExitCode != 0)
         {
+            LeaveBackgroundState();
             Navigation.ShowPopup(new CrashPopup(javaProcess.ExitCode, box.Manifest.Id));
-            return false;
+
+            if (box.Manifest.Type != BoxType.Temporary) 
+                return false;
+            
+            await Navigation.WaitPopupClosingAsync();
         }
 
         if (box.Manifest.Type == BoxType.Temporary)
