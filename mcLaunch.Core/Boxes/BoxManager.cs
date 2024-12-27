@@ -112,7 +112,7 @@ public static class BoxManager
     {
         BoxManifest manifest = new BoxManifest(pack.Name, pack.Description ?? "no description",
             string.IsNullOrWhiteSpace(pack.Author) ? authorFallback : pack.Author,
-            pack.ModloaderId, pack.ModloaderVersion, null,
+            pack.ModloaderId ?? "vanilla", pack.ModloaderVersion ?? pack.MinecraftVersion, null,
             await MinecraftManager.GetManifestAsync(pack.MinecraftVersion));
 
         if (pack.Id != null) manifest.Id = pack.Id;
