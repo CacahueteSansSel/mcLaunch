@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Platform;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
@@ -36,6 +37,9 @@ public partial class MainWindow : Window
             // Hide the top header bar on Linux, because we can't have borderless windows on Linux with Avalonia
             // apparently
             TopHeaderBar.IsVisible = false;
+
+        if (OperatingSystem.IsMacOS())
+            ExtendClientAreaChromeHints |= ExtendClientAreaChromeHints.OSXThickTitleBar;
 
         UpdateBar.IsVisible = false;
         Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch", CurrentBuild.Version.ToString()));

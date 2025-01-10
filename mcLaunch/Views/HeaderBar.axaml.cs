@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
 using mcLaunch.Launchsite.Http;
 using mcLaunch.Utilities;
@@ -12,7 +13,11 @@ public partial class HeaderBar : UserControl
     {
         InitializeComponent();
 
-        MacosButtonsMargin.IsVisible = OperatingSystem.IsMacOS();
+        if (OperatingSystem.IsMacOS())
+        {
+            MacosButtonsMargin.IsVisible = true;
+            HeaderPanel.Margin = new Thickness(0, -5, 0, 0);
+        }
 
         Api.OnNetworkError += OnApiNetworkError;
         Api.OnNetworkSuccess += OnApiNetworkSuccess;
