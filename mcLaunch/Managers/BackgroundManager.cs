@@ -33,6 +33,7 @@ public static class BackgroundManager
         IsInBackground = true;
         LastMenuAdditionalItemsProvider = additionalItems;
         MainWindow.Instance.Hide();
+        DiscordManager.Shutdown();
 
         icon = new TrayIcon()
         {
@@ -49,6 +50,7 @@ public static class BackgroundManager
 
         IsInBackground = false;
         MainWindow.Instance.Show();
+        DiscordManager.Init();
 
         icon?.Dispose();
         icon = null;

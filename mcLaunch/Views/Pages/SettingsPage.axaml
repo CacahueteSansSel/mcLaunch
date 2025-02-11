@@ -32,7 +32,7 @@
                         <TextBlock x:Name="BranchNameText" Classes="light" Opacity="0.2" Margin="0 5 0 0">unknown</TextBlock>
                     </StackPanel>
                     <TextBlock x:Name="YearsText">mcLaunch is 0 years old</TextBlock>
-                    <TextBlock>mcLaunch, Copyright (c) Cacahuète Dev and Contributors, 2024</TextBlock>
+                    <TextBlock>mcLaunch, Copyright (c) Cacahuète Dev and Contributors, 2025</TextBlock>
                     <TextBlock>Licensed under the GNU General Public License v3.0</TextBlock>
                     <TextBlock>Minecraft is the property of Mojang Studios, and they are not affiliated with this project in any way</TextBlock>
                     <StackPanel Orientation="Horizontal" Spacing="5">

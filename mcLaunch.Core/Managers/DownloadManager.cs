@@ -114,7 +114,7 @@ public static class DownloadManager
             if (entry.Hash == null && File.Exists(entry.Target)) return;
 
             string folder = entry.Target.Replace(
-                Path.GetFileName(entry.Target), "").Trim('/');
+                Path.GetFileName(entry.Target), "").TrimEnd('/');
             if (!Directory.Exists(folder))
             {
                 try
@@ -149,7 +149,7 @@ public static class DownloadManager
                     sectionIndex + 1);
             };
 
-            await download.StartAsync();
+            var stream = await download.StartAsync();
 
             if (download.Package.Status == DownloadStatus.Failed || !File.Exists(entry.Target))
             {

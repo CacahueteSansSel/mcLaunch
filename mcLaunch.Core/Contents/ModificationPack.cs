@@ -19,8 +19,8 @@ public abstract class ModificationPack
     public abstract string? Description { get; init; }
 
     public abstract string MinecraftVersion { get; init; }
-    public abstract string ModloaderId { get; init; }
-    public abstract string ModloaderVersion { get; init; }
+    public abstract string? ModloaderId { get; init; }
+    public abstract string? ModloaderVersion { get; init; }
 
     public abstract SerializedMinecraftContent[] Modifications { get; set; }
 
