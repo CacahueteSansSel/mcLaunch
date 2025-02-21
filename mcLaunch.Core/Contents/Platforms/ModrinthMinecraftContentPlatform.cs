@@ -276,6 +276,15 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         }
     }
 
+    public override async Task<MinecraftContent?> GetContentByAppLaunchUriAsync(Uri uri)
+    {
+        if (uri.Scheme != "modrinth" || uri.Host != "mod") 
+            return null;
+
+        string modId = uri.AbsolutePath.TrimStart('/');
+        return await GetContentAsync(modId);
+    }
+
     public override async Task<ContentVersion[]> GetContentVersionsAsync(MinecraftContent content, string? modLoaderId,
         string? minecraftVersionId)
     {

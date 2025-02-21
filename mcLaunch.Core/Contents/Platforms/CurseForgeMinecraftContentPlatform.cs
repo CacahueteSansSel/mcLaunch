@@ -1,5 +1,7 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Web;
 using CurseForge.Models;
 using CurseForge.Models.Files;
 using CurseForge.Models.Fingerprints;
@@ -233,6 +235,19 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         {
             return null;
         }
+    }
+
+    public override async Task<MinecraftContent?> GetContentByAppLaunchUriAsync(Uri uri)
+    {
+        if (uri.Scheme != "curseforge" || uri.Host != "install") 
+            return null;
+
+        NameValueCollection queryParams = HttpUtility.ParseQueryString(uri.Query);
+        string? contentId = queryParams.Get("addonId");
+        if (contentId == null) 
+            return null;
+
+        return await GetContentAsync(contentId);
     }
 
     ModLoaderType ParseModLoaderType(string input)

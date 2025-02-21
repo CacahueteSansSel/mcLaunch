@@ -86,6 +86,17 @@ public class MultiplexerMinecraftContentPlatform : MinecraftContentPlatform
         return null;
     }
 
+    public override async Task<MinecraftContent?> GetContentByAppLaunchUriAsync(Uri uri)
+    {
+        foreach (MinecraftContentPlatform platform in _platforms)
+        {
+            MinecraftContent? content = await platform.GetContentByAppLaunchUriAsync(uri);
+            if (content != null) return content;
+        }
+
+        return null;
+    }
+
     public override Task<ContentVersion[]> GetContentVersionsAsync(MinecraftContent content, string? modLoaderId,
         string? minecraftVersionId) =>
         content.Platform!.GetContentVersionsAsync(content, modLoaderId, minecraftVersionId);

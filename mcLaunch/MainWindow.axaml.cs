@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Contents;
+using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.GitHub;
@@ -82,6 +84,8 @@ public partial class MainWindow : Window
 
     private async void Initialize()
     {
+        Environment.CurrentDirectory = Path.GetDirectoryName(Environment.ProcessPath)!;
+        
         await Task.Run(async () =>
         {
             while (!AuthenticationManager.IsInitialized)
@@ -157,8 +161,20 @@ public partial class MainWindow : Window
                 await AuthenticationManager.DisconnectAsync();
                 return;
             }
-
+            
             MainWindowDataContext.Instance.Push<MainPage>();
+
+            if (App.Args.Contains("cp-link"))
+            {
+                string? link = App.Args.Get("cp-link");
+                if (!string.IsNullOrWhiteSpace(link))
+                {
+                    Uri linkUri = new(link);
+                    MinecraftContent? content = await ModPlatformManager.Platform.GetContentByAppLaunchUriAsync(linkUri);
+                
+                    if (content != null) Navigation.Push(new ContentDetailsPage(content, null));
+                }
+            }
 
             if (!Settings.SeenVersionsList.Contains(CurrentBuild.Version.ToString()))
                 Navigation.ShowPopup(new LauncherUpdatedPopup());

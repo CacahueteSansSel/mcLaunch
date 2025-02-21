@@ -29,6 +29,8 @@ public abstract class MinecraftContentPlatform
 
     public abstract Task<MinecraftContent> GetContentAsync(string id);
 
+    public abstract Task<MinecraftContent?> GetContentByAppLaunchUriAsync(Uri uri);
+
     public abstract Task<ContentVersion[]> GetContentVersionsAsync(MinecraftContent content, string? modLoaderId,
         string? minecraftVersionId);
 
