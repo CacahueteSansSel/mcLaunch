@@ -249,7 +249,17 @@ public class BoxManifest : ReactiveObject
         if (modLoader != null && modLoader.Type == "modded")
         {
             ModLoaderVersion[]? versions = await modLoader.GetVersionsAsync(Version);
-            ModLoaderVersion version = versions.FirstOrDefault(v => v.Name == ModLoaderVersion);
+            
+            if (versions.Length == 0)
+            {
+                return Result<MinecraftVersion>.Error($"Cannot find a version of {modLoader.Name} for " +
+                                                   $"Minecraft {Version}: The servers of {modLoader.Name} " +
+                                                   $"didn't return any compatible version. " +
+                                                   $"Please check if you have an Internet connection and " +
+                                                   $"if {ModLoader.Name}'s servers are accessible.");
+            }
+            
+            ModLoaderVersion? version = versions.FirstOrDefault(v => v.Name == ModLoaderVersion);
             if (version == null) version = versions[0];
 
             Result<MinecraftVersion> versionResult = await version.GetMinecraftVersionAsync(Version);
