@@ -13,6 +13,7 @@ public static class Api
 
     public static event Action<string> OnNetworkError;
     public static event Action<string> OnNetworkSuccess;
+    public static bool AllowExtendedTimeout { get; set; }
 
     public static void SetUserAgent(ProductInfoHeaderValue ua)
     {
@@ -23,6 +24,7 @@ public static class Api
     {
         HttpClient client = new HttpClient();
         if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
 
         HttpResponseMessage resp = null;
         int t = 0;
@@ -63,6 +65,7 @@ public static class Api
     {
         HttpClient client = new HttpClient();
         if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
 
         HttpResponseMessage resp = null;
         int t = 0;
@@ -100,6 +103,8 @@ public static class Api
     public static async Task<T?> GetAsyncAuthBearer<T>(string url, string auth)
     {
         HttpClient client = new HttpClient();
+        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth);
 
         HttpResponseMessage resp = null;
@@ -136,6 +141,9 @@ public static class Api
     public static async Task<JsonNode?> GetNodeAsync(string url, bool patchDateTimes = false)
     {
         HttpClient client = new HttpClient();
+        client.Timeout = TimeSpan.FromSeconds(5);
+        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
 
         HttpResponseMessage resp = null;
         int t = 0;
@@ -173,6 +181,9 @@ public static class Api
     public static async Task<TResponse?> PostAsync<TRequest, TResponse>(string url, TRequest data)
     {
         HttpClient client = new HttpClient();
+        client.Timeout = TimeSpan.FromSeconds(5);
+        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
 
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 

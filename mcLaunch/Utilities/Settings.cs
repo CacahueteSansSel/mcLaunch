@@ -49,6 +49,9 @@ public class Settings
     [Setting(Name = "Show box infos on Discord's Rich Presence", Group = "Discord")]
     public bool ShowBoxInfosOnDiscordRpc { get; set; }
 
+    [Setting(Name = "Allow extended timeout for requests", Group = "Launcher")]
+    public bool AllowExtendedTimeout { get; set; }
+
     public Settings WithDefaults()
     {
         ExposeLauncherNameToMinecraft = true;
@@ -56,6 +59,7 @@ public class Settings
         UseDiscordRpc = true;
         CloseLauncherAtLaunch = true;
         EnableGameConsole = false;
+        AllowExtendedTimeout = false;
 
         return this;
     }

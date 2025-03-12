@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
+using mcLaunch.Launchsite.Http;
 
 namespace mcLaunch.Views.Pages.Settings;
 
@@ -31,6 +32,11 @@ public partial class SettingElement : UserControl
         Utilities.Settings.Save();
         
         MainWindow.Instance.TopBar.RefreshButtons();
+
+        if (Utilities.Settings.Instance != null)
+        {
+            Api.AllowExtendedTimeout = Utilities.Settings.Instance.AllowExtendedTimeout;
+        }
     }
 
     private void BooleanCheckboxUnchecked(object? sender, RoutedEventArgs e)
@@ -39,5 +45,10 @@ public partial class SettingElement : UserControl
         Utilities.Settings.Save();
         
         MainWindow.Instance.TopBar.RefreshButtons();
+
+        if (Utilities.Settings.Instance != null)
+        {
+            Api.AllowExtendedTimeout = Utilities.Settings.Instance.AllowExtendedTimeout;
+        }
     }
 }

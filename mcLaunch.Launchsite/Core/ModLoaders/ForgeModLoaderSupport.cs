@@ -31,6 +31,9 @@ public class ForgeModLoaderSupport : ModLoaderSupport
         XmlDocument? forgeVersionXml =
             await Api.GetAsyncXml("https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml");
 
+        if (forgeVersionXml == null) 
+            return [];
+
         XmlNode versionsNode = forgeVersionXml!.DocumentElement!.SelectNodes("versioning/versions")![0]!;
         List<ForgeModLoaderVersion> versions = [];
 
