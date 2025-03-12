@@ -77,7 +77,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         try
         {
             search = await Client.Project.SearchAsync(searchQuery, facets: collection,
-                limit: 10, offset: (ulong) (page * 10));
+                limit: 10, offset: (ulong)(page * 10));
         }
         catch (ModrinthApiException e)
         {
@@ -126,7 +126,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         try
         {
             search = await Client.Project.SearchAsync(searchQuery, facets: collection,
-                limit: 10, offset: (ulong) (page * 10));
+                limit: 10, offset: (ulong)(page * 10));
         }
         catch (ModrinthApiException e)
         {
@@ -430,8 +430,10 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             // Ignore any non-primary file(s)
             if (!file.Primary && version.Files.Length > 1) continue;
 
+            string filename = string.IsNullOrWhiteSpace(file.FileName) ? Path.GetFileName(file.Url) : file.FileName;
+
             string folder = MinecraftContentUtils.GetInstallFolderName(contentType);
-            string path = $"{targetBox.Folder.Path}/{folder}/{file.FileName}";
+            string path = $"{targetBox.Folder.Path}/{folder}/{filename}";
             string url = file.Url;
 
             DownloadManager.Add(url, path, file.Hashes.Sha1, EntryAction.Download);

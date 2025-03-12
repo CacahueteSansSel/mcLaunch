@@ -113,8 +113,8 @@ public static class DownloadManager
 
             if (entry.Hash == null && File.Exists(entry.Target)) return;
 
-            string folder = entry.Target.Replace(
-                Path.GetFileName(entry.Target), "").TrimEnd('/');
+            string file = Path.GetFileName(entry.Target);
+            string folder = entry.Target.Replace(file, "").TrimEnd('/');
             if (!Directory.Exists(folder))
             {
                 try
