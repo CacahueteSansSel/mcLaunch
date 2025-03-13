@@ -10,7 +10,7 @@ public static class Credentials
     {
         try
         {
-            using var stream = AssetLoader.Open(new Uri($"avares://mcLaunch/resources/credentials/{name}.txt"));
+            using Stream? stream = AssetLoader.Open(new Uri($"avares://mcLaunch/resources/credentials/{name}.txt"));
 
             return new StreamReader(stream).ReadToEnd();
         }

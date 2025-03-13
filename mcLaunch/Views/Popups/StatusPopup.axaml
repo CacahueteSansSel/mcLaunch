@@ -22,9 +22,7 @@
                     <views:DownloadBanner x:Name="DownloadBanner" />
                 </Panel>
             </StackPanel>
-            <Panel>
-                
-            </Panel>
+            <Panel />
         </DockPanel>
     </Border>
 </UserControl>

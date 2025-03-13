@@ -36,7 +36,7 @@ public partial class DataMigrationPopup : UserControl
     {
         Navigation.HidePopup();
 
-        StatusPopup statusPopup = new StatusPopup("Migrating data", "Please wait while we migrate your data...");
+        StatusPopup statusPopup = new("Migrating data", "Please wait while we migrate your data...");
         Navigation.ShowPopup(statusPopup);
 
         await AppdataFolderManager.MigrateToAppdataAsync((status, percent) =>

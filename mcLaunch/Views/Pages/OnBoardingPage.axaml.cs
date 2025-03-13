@@ -48,7 +48,7 @@ public partial class OnBoardingPage : UserControl, ITopLevelPageControl
                 }
 
                 StatusPopup.Instance.Status = name;
-                StatusPopup.Instance.StatusPercent = (float) stepIndex / stepCount;
+                StatusPopup.Instance.StatusPercent = (float)stepIndex / stepCount;
             });
 
         if (auth != null && auth.IsSuccess)

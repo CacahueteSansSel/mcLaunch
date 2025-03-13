@@ -44,7 +44,7 @@ public partial class PageSelector : UserControl
 
         for (int i = 0; i < ButtonsContainer.Children.Count; i++)
         {
-            PageButton button = (PageButton) ButtonsContainer.Children[i];
+            PageButton button = (PageButton)ButtonsContainer.Children[i];
             button.SetLight(i == index);
         }
     }

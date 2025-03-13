@@ -81,7 +81,7 @@ public static class ForgeInstaller
         await Context.Downloader.BeginSectionAsync($"Installing {slug} {installerFile.Name.Trim()}", true);
 
         // Extract any needed file in the temp folder
-        foreach (var kv in installerFile.DataVariables)
+        foreach (KeyValuePair<string, string> kv in installerFile.DataVariables)
         {
             string value = kv.Value.Replace("\\", "/").TrimStart('\\', '/');
             if (!installerFile.HasFile(value)) continue;
@@ -108,9 +108,8 @@ public static class ForgeInstaller
 
                 string libraryFilename = $"libraries/{library.ArtifactPath}";
 
-                using var zip =
-                    new ZipArchive(new FileStream($"{minecraftFolderPath}/{libraryFilename}", FileMode.Open));
-                var dict = MetaInfParser.Parse(zip);
+                using ZipArchive? zip = new(new FileStream($"{minecraftFolderPath}/{libraryFilename}", FileMode.Open));
+                Dictionary<string, string> dict = MetaInfParser.Parse(zip);
                 string mainClass = dict["Main-Class"];
                 string procClassPath = string.Join(Path.PathSeparator, processor.Classpath
                     .Select(cp =>
@@ -138,7 +137,7 @@ public static class ForgeInstaller
                 }
 
                 await Context.Downloader.SetSectionProgressAsync(processor.JarName.Name,
-                    (float) processorCount / installerFile.Processors.Count);
+                    (float)processorCount / installerFile.Processors.Count);
                 processorCount++;
             }
 
@@ -148,8 +147,10 @@ public static class ForgeInstaller
         }
 
         if (error)
+        {
             return Result<ForgeInstallResult>.Error("One or more installer processor failed to execute properly. " +
                                                     "This is a problem within mcLaunch, please report it to CacahueteDev");
+        }
 
         await Context.Downloader.EndSectionAsync(true);
 
@@ -164,7 +165,7 @@ public static class ForgeInstaller
 
         for (int i = 0; i < args.Length; i++)
         {
-            foreach (var kv in variables)
+            foreach (KeyValuePair<string, string> kv in variables)
             {
                 if (!args[i].Contains($"{{{kv.Key}}}")) continue;
 

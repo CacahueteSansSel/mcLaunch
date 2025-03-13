@@ -1,8 +1,5 @@
-﻿using System;
-using Avalonia.Controls.Shapes;
-using mcLaunch.Launchsite.Core;
+﻿using mcLaunch.Launchsite.Core;
 using mcLaunch.Views.Popups;
-using Path = System.IO.Path;
 
 namespace mcLaunch.Utilities;
 

@@ -11,9 +11,9 @@
     <Border Classes="frame">
         <DockPanel Margin="38">
             <Panel DockPanel.Dock="Left" VerticalAlignment="Top" Width="50" Margin="0 8 20 0">
-                <Image x:Name="StatusError" IsVisible="True" Source="{SvgImage /resources/status/error.svg}"></Image>
-                <Image x:Name="StatusWarning" IsVisible="False" Source="{SvgImage /resources/status/warning.svg}"></Image>
-                <Image x:Name="StatusSuccess" IsVisible="False" Source="{SvgImage /resources/status/success.svg}"></Image>
+                <Image x:Name="StatusError" IsVisible="True" Source="{SvgImage /resources/status/error.svg}" />
+                <Image x:Name="StatusWarning" IsVisible="False" Source="{SvgImage /resources/status/warning.svg}" />
+                <Image x:Name="StatusSuccess" IsVisible="False" Source="{SvgImage /resources/status/success.svg}" />
             </Panel>
             <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25" Text="{Binding Title}" />
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">

@@ -1,14 +1,9 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Core;
-using mcLaunch.Core.Managers;
-using mcLaunch.Launchsite.Core;
-using mcLaunch.Launchsite.Core.ModLoaders;
-using mcLaunch.Launchsite.Models;
 
 namespace mcLaunch.Tests.BuiltInTests;
 
@@ -23,19 +18,21 @@ public class BoxAddModFromCurseforgeTest : UnitTest
                 MinecraftContentType.Modification);
         MinecraftContent secondModFromSearch = searchHits.Items[1];
         ContentVersion[] version =
-            await CurseForgeMinecraftContentPlatform.Instance.GetContentVersionsAsync(secondModFromSearch, createdBox.ModLoader.Id,
+            await CurseForgeMinecraftContentPlatform.Instance.GetContentVersionsAsync(secondModFromSearch,
+                createdBox.ModLoader.Id,
                 createdBox.Manifest.Version);
         Assert(version.Length > 0, $"A version of {secondModFromSearch.Name} is available " +
                                    $"for {createdBox.Manifest.Version} {createdBox.Manifest.ModLoaderId}");
-        Assert(createdBox.Manifest.Version.StartsWith(version[0].MinecraftVersion), 
-            $"{secondModFromSearch.Name} matches the Box's Minecraft version ({createdBox.Manifest.Version})", $"Mod version is {version[0].MinecraftVersion}");
+        Assert(createdBox.Manifest.Version.StartsWith(version[0].MinecraftVersion),
+            $"{secondModFromSearch.Name} matches the Box's Minecraft version ({createdBox.Manifest.Version})",
+            $"Mod version is {version[0].MinecraftVersion}");
 
-        await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(createdBox, secondModFromSearch, 
+        await CurseForgeMinecraftContentPlatform.Instance.InstallContentAsync(createdBox, secondModFromSearch,
             version[0].Id, false, true);
-        
-        Assert(createdBox.Manifest.Contents.Any(c => c.Content.Name == secondModFromSearch.Name), 
+
+        Assert(createdBox.Manifest.Contents.Any(c => c.Content.Name == secondModFromSearch.Name),
             $"Box contains {secondModFromSearch.Name} as requested");
-        
+
         createdBox.Delete();
     }
 }

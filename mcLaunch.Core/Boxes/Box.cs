@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Formats.Tar;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text.Json;
 using Avalonia.Media.Imaging;
 using DynamicData;
@@ -26,8 +25,8 @@ public class Box : IEquatable<Box>
     private readonly string manifestPath;
     private bool exposeLauncher;
     private string launcherVersion = "0.0.0";
+    private bool redirectOutput;
     private FileSystemWatcher? watcher;
-    bool redirectOutput;
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
@@ -77,7 +76,7 @@ public class Box : IEquatable<Box>
     {
         get
         {
-            System.Version.TryParse(Manifest.Version, out System.Version? ver);
+            System.Version.TryParse(Manifest.Version, out Version? ver);
 
             return ver;
         }
@@ -100,7 +99,7 @@ public class Box : IEquatable<Box>
     public void CreateWatcher()
     {
         if (watcher != null) return;
-        
+
         if (!Directory.Exists(Folder.CompletePath))
             Directory.CreateDirectory(Folder.CompletePath);
 
@@ -113,7 +112,7 @@ public class Box : IEquatable<Box>
     public void DisposeWatcher()
     {
         if (watcher == null) return;
-        
+
         watcher.Dispose();
         watcher = null;
     }
@@ -165,7 +164,7 @@ public class Box : IEquatable<Box>
 
         try
         {
-            await using MemoryStream fs = new MemoryStream(await File.ReadAllBytesAsync(e.FullPath));
+            await using MemoryStream fs = new(await File.ReadAllBytesAsync(e.FullPath));
             ContentVersion? version = await ModPlatformManager.Platform.GetContentVersionFromData(fs);
             if (version == null || version.Content == null) return;
 
@@ -315,7 +314,7 @@ public class Box : IEquatable<Box>
     public void SetWatching(bool isWatching)
     {
         if (watcher == null) CreateWatcher();
-        
+
         watcher.EnableRaisingEvents = isWatching;
     }
 
@@ -394,8 +393,7 @@ public class Box : IEquatable<Box>
 
         foreach (string modFilename in unknownModsFilenames)
         {
-            await using MemoryStream fs =
-                new MemoryStream(await File.ReadAllBytesAsync($"{Folder.CompletePath}/{modFilename}"));
+            await using MemoryStream fs = new(await File.ReadAllBytesAsync($"{Folder.CompletePath}/{modFilename}"));
             ContentVersion? version = await ModPlatformManager.Platform.GetContentVersionFromData(fs);
             if (version == null || version.Content == null) continue;
 
@@ -485,6 +483,7 @@ public class Box : IEquatable<Box>
         List<MinecraftWorld> worlds = new();
 
         foreach (string folder in Directory.GetDirectories($"{Folder.Path}/saves"))
+        {
             try
             {
                 worlds.Add(new MinecraftWorld(System.IO.Path.GetFullPath(folder)));
@@ -493,6 +492,7 @@ public class Box : IEquatable<Box>
             {
                 // ignored
             }
+        }
 
         return worlds.ToArray();
     }
@@ -504,11 +504,11 @@ public class Box : IEquatable<Box>
 
         List<MinecraftServer> servers = new();
         CompoundTag tag = NbtFile.Read($"{Folder.Path}/servers.dat", FormatOptions.Java);
-        ListTag serversTag = (ListTag) tag["servers"];
+        ListTag serversTag = (ListTag)tag["servers"];
 
         foreach (Tag serverTag in serversTag)
         {
-            var server = (CompoundTag) serverTag;
+            CompoundTag server = (CompoundTag)serverTag;
             try
             {
                 servers.Add(new MinecraftServer(server));
@@ -700,7 +700,7 @@ public class Box : IEquatable<Box>
             {
                 string realFilename = $"{Folder.Path}/{filename}";
 
-                FileStream fs = new FileStream(realFilename, FileMode.Open);
+                FileStream fs = new(realFilename, FileMode.Open);
 
                 ContentVersion? modVersion =
                     await ModrinthMinecraftContentPlatform.Instance.GetContentVersionFromData(fs);
@@ -739,7 +739,7 @@ public class Box : IEquatable<Box>
             {
                 string realFilename = $"{Folder.Path}/{filename}";
 
-                await using FileStream fs = new FileStream(realFilename, FileMode.Open);
+                await using FileStream fs = new(realFilename, FileMode.Open);
 
                 ContentVersion? modVersion =
                     await CurseForgeMinecraftContentPlatform.Instance.GetContentVersionFromData(fs);
@@ -767,7 +767,7 @@ public class Box : IEquatable<Box>
     {
         await File.WriteAllTextAsync(manifestPath, JsonSerializer.Serialize(Manifest));
     }
-    
+
     public void SaveManifest()
     {
         File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
@@ -778,7 +778,7 @@ public class Box : IEquatable<Box>
     {
         Manifest.LastLaunchTime = DateTime.Now;
         SaveManifest();
-        
+
         return Minecraft.Run();
     }
 
@@ -787,7 +787,7 @@ public class Box : IEquatable<Box>
     {
         Manifest.LastLaunchTime = DateTime.Now;
         SaveManifest();
-        
+
         return Minecraft
             .WithServer(serverAddress, serverPort)
             .Run();
@@ -798,9 +798,9 @@ public class Box : IEquatable<Box>
     {
         Manifest.LastLaunchTime = DateTime.Now;
         SaveManifest();
-        
+
         string profilePath = QuickPlay.Create(QuickPlayWorldType.Singleplayer,
-            (QuickPlayGameMode) world.GameMode, world.FolderName);
+            (QuickPlayGameMode)world.GameMode, world.FolderName);
 
         return Minecraft
             .WithSingleplayerQuickPlay(profilePath, world.FolderName)

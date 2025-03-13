@@ -13,10 +13,10 @@ public class MinecraftServer
 
     public MinecraftServer(CompoundTag nbt)
     {
-        IsHidden = nbt["hidden"] == null ? false : ((ByteTag) nbt["hidden"]).Value == 1;
-        IconData = Convert.FromBase64String(((StringTag) nbt["icon"]).Value);
-        ip = ((StringTag) nbt["ip"]).Value;
-        Name = ((StringTag) nbt["name"]).Value;
+        IsHidden = nbt["hidden"] == null ? false : ((ByteTag)nbt["hidden"]).Value == 1;
+        IconData = Convert.FromBase64String(((StringTag)nbt["icon"]).Value);
+        ip = ((StringTag)nbt["ip"]).Value;
+        Name = ((StringTag)nbt["name"]).Value;
 
         string[] tokens = ip.Split(':');
         Address = tokens[0];

@@ -107,7 +107,7 @@ public partial class BrowseModpacksPage : UserControl, ITopLevelPageControl
             component.IsEnabled = true;
     }
 
-    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    private void UpButtonClicked(object? sender, RoutedEventArgs e)
     {
         ScrollArea.Offset = Vector.Zero;
     }

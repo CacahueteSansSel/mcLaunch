@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Interactivity;
 using mcLaunch.Core.Managers;
@@ -23,9 +24,9 @@ public partial class GameSettingsSubControl : SubControl
 
         if (Box.Options == null) return;
 
-        foreach (var kv in Box.Options.Where(opt => Box.Options.CanOptionBeChanged(opt.Key)))
+        foreach (KeyValuePair<string, object> kv in Box.Options.Where(opt => Box.Options.CanOptionBeChanged(opt.Key)))
         {
-            GameSettingElement element = new GameSettingElement(Box, kv.Key);
+            GameSettingElement element = new(Box, kv.Key);
 
             Container.Children.Add(element);
         }
@@ -36,6 +37,7 @@ public partial class GameSettingsSubControl : SubControl
         if (Box.Options == null) return;
         DefaultsManager.SetDefaultMinecraftOptions(Box.Options);
 
-        Navigation.ShowPopup(new MessageBoxPopup("Successful", "These options have been set to default", MessageStatus.Success));
+        Navigation.ShowPopup(new MessageBoxPopup("Successful", "These options have been set to default",
+            MessageStatus.Success));
     }
 }

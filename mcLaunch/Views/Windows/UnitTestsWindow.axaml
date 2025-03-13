@@ -2,7 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
         xmlns:views="clr-namespace:mcLaunch.Views"
         mc:Ignorable="d"
         Width="1280" Height="720" CanResize="True"
@@ -18,32 +17,37 @@
     </Window.Styles>
     <DockPanel>
         <DockPanel IsHitTestVisible="False" DockPanel.Dock="Top" Height="50" Background="{DynamicResource Background}">
-            <Image Source="/resources/logo_beta.png" DockPanel.Dock="Left" Height="30" Margin="20 0 0 0"></Image>
-            <TextBlock Text="Unit Tests" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0"></TextBlock>
+            <Image Source="/resources/logo_beta.png" DockPanel.Dock="Left" Height="30" Margin="20 0 0 0" />
+            <TextBlock Text="Unit Tests" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0" />
         </DockPanel>
         <DockPanel>
             <StackPanel DockPanel.Dock="Bottom" Margin="10">
-                <Button x:Name="RunTestsButton" Click="RunAllTestsButtonClicked" Classes="primary" HorizontalAlignment="Right">Run all tests</Button>
+                <Button x:Name="RunTestsButton" Click="RunAllTestsButtonClicked" Classes="primary"
+                        HorizontalAlignment="Right">
+                    Run all tests
+                </Button>
             </StackPanel>
             <DockPanel>
-                <ListBox SelectionChanged="ListItemSelectionChanged" DockPanel.Dock="Left" Width="300" ItemsSource="{Binding Entries}">
+                <ListBox SelectionChanged="ListItemSelectionChanged" DockPanel.Dock="Left" Width="300"
+                         ItemsSource="{Binding Entries}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <DockPanel>
                                 <Panel DockPanel.Dock="Right" MaxHeight="20">
-                                    <Image Source="{SvgImage /resources/status/error.svg}" IsVisible="{Binding IsFailed}" Height="20"></Image>
-                                    <Image Source="{SvgImage /resources/status/success.svg}" IsVisible="{Binding IsSucceeded}" Height="20"></Image>
-                                    <Image Source="{SvgImage /resources/icons/unit_test.svg}" IsVisible="{Binding IsNotTested}" Height="20"></Image>
-                                    <views:LoadingCircle IsVisible="{Binding IsLoading}" RenderTransform="scale(0.7)"></views:LoadingCircle>
+                                    <Image Source="{SvgImage /resources/status/error.svg}"
+                                           IsVisible="{Binding IsFailed}" Height="20" />
+                                    <Image Source="{SvgImage /resources/status/success.svg}"
+                                           IsVisible="{Binding IsSucceeded}" Height="20" />
+                                    <Image Source="{SvgImage /resources/icons/unit_test.svg}"
+                                           IsVisible="{Binding IsNotTested}" Height="20" />
+                                    <views:LoadingCircle IsVisible="{Binding IsLoading}" RenderTransform="scale(0.7)" />
                                 </Panel>
-                                <TextBlock Text="{Binding TestName}"/>
+                                <TextBlock Text="{Binding TestName}" />
                             </DockPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <TextBlock x:Name="Text" Margin="10" Classes="id">
-                    
-                </TextBlock>
+                <TextBlock x:Name="Text" Margin="10" Classes="id" />
             </DockPanel>
         </DockPanel>
     </DockPanel>

@@ -19,7 +19,7 @@
                 <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Opacity="0.5" Classes="light">Click to select, Ctrl+Click to unselect</TextBlock>
             </DockPanel>
             <ScrollViewer>
-                <views:MinecraftContentList x:Name="ModList" HidePageSelector="True" IsHitTestVisible="True"/>
+                <views:MinecraftContentList x:Name="ModList" HidePageSelector="True" IsHitTestVisible="True" />
             </ScrollViewer>
         </DockPanel>
     </Border>

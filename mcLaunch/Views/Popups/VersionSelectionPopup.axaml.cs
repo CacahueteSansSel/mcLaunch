@@ -18,6 +18,7 @@ public partial class VersionSelectionPopup : UserControl
         InitializeComponent();
 
         if (Design.IsDesignMode)
+        {
             DataContext = new PlatformModpack
             {
                 Name = "hello world",
@@ -37,6 +38,7 @@ public partial class VersionSelectionPopup : UserControl
                     }
                 }
             };
+        }
     }
 
     public VersionSelectionPopup(IVersionContent content, Action<IVersion> callback)
@@ -51,7 +53,7 @@ public partial class VersionSelectionPopup : UserControl
     {
         if (e.AddedItems.Count > 0)
         {
-            selectedVersion = (IVersion) e.AddedItems[0];
+            selectedVersion = (IVersion)e.AddedItems[0];
             InstallButton.IsVisible = true;
         }
     }

@@ -24,7 +24,7 @@ public static class Utilities
                 return "unknown";
         }
     }
-    
+
     public static string GetMcLaunchPlatformIdentifier()
     {
         switch (Environment.OSVersion.Platform)

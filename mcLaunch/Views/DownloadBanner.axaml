@@ -27,7 +27,8 @@
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
-            <TextBlock Text="{Binding ResourceCount}" x:Name="ResourceCountText" TextAlignment="Right" VerticalAlignment="Bottom" Classes="title"
+            <TextBlock Text="{Binding ResourceCount}" x:Name="ResourceCountText" TextAlignment="Right"
+                       VerticalAlignment="Bottom" Classes="title"
                        FontSize="20"
                        Margin="0 0 5 3" Opacity="0.2" />
         </Panel>

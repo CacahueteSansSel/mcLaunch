@@ -49,7 +49,7 @@
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/play.svg}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <Separator></Separator>
+                <Separator />
                 <MenuItem Header="Open box" Click="OpenMenuOptionClicked">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/open.svg}" />
@@ -60,7 +60,7 @@
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/folder.svg}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <Separator></Separator>
+                <Separator />
                 <MenuItem Header="Duplicate" Click="DuplicateOptionClicked">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
@@ -71,19 +71,17 @@
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <Separator></Separator>
+                <Separator />
                 <MenuItem Header="Copy Mod List Report">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
                     </MenuItem.Icon>
                     <MenuItem.Items>
-                        <MenuItem Header="Complete" Click="CompleteReportOptionClicked">
-                        </MenuItem>
-                        <MenuItem Header="Only mods added since launcher start" Click="RelativeReportOptionClicked">
-                        </MenuItem>
+                        <MenuItem Header="Complete" Click="CompleteReportOptionClicked" />
+                        <MenuItem Header="Only mods added since launcher start" Click="RelativeReportOptionClicked" />
                     </MenuItem.Items>
                 </MenuItem>
-                <Separator></Separator>
+                <Separator />
                 <MenuItem Header="Delete" Click="DeleteMenuOptionClicked">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/delete.svg}" />
@@ -111,8 +109,8 @@
                 <TextBlock x:Name="AuthorText" FontSize="12" Classes="title" Margin="5 0 0 0" Text="{Binding Author}" />
             </StackPanel>
             <StackPanel x:Name="Badges" Orientation="Horizontal" Spacing="5">
-                <views:Badge x:Name="VersionBadge"/>
-                <views:Badge x:Name="ModLoaderBadge"/>
+                <views:Badge x:Name="VersionBadge" />
+                <views:Badge x:Name="ModLoaderBadge" />
             </StackPanel>
             <TextBlock x:Name="DeletingText" IsVisible="False" Classes="title">Deleting...</TextBlock>
         </StackPanel>

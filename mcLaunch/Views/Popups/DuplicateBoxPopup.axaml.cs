@@ -1,8 +1,6 @@
 ﻿using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
@@ -12,8 +10,6 @@ namespace mcLaunch.Views.Popups;
 
 public partial class DuplicateBoxPopup : UserControl
 {
-    public Box SourceBox { get; private set; }
-    
     public DuplicateBoxPopup()
     {
         InitializeComponent();
@@ -30,7 +26,9 @@ public partial class DuplicateBoxPopup : UserControl
         BoxIconImage.Source = sourceBox.Manifest.Icon?.IconLarge;
     }
 
-    async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
+    public Box SourceBox { get; }
+
+    private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
     {
         Bitmap[]? files = await FilePickerUtilities.PickBitmaps(false, "Select a new icon image");
         if (files.Length == 0) return;
@@ -39,17 +37,17 @@ public partial class DuplicateBoxPopup : UserControl
         if (bmp != null) BoxIconImage.Source = bmp;
     }
 
-    void CancelButtonClicked(object? sender, RoutedEventArgs e)
+    private void CancelButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.HidePopup();
     }
 
-    async void ApplyButtonClicked(object? sender, RoutedEventArgs e)
+    private async void ApplyButtonClicked(object? sender, RoutedEventArgs e)
     {
         Box box = await BoxUtilities.DuplicateAsync(SourceBox, BoxNameTb.Text, BoxAuthorTb.Text);
-        
+
         if (BoxIconImage.Source != null)
-            box.SetAndSaveIcon((Bitmap) BoxIconImage.Source);
+            box.SetAndSaveIcon((Bitmap)BoxIconImage.Source);
 
         if (!CancelButton.IsVisible && box.Manifest.Type == BoxType.Temporary)
             box.Manifest.Type = BoxType.Default;

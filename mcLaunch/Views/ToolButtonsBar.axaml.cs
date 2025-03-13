@@ -36,7 +36,7 @@ public partial class ToolButtonsBar : UserControl
         RefreshButtons();
     }
 
-    public Data UIDataContext => (Data) DataContext;
+    public Data UIDataContext => (Data)DataContext;
 
     public void RefreshButtons()
     {
@@ -105,6 +105,21 @@ public partial class ToolButtonsBar : UserControl
         MainWindowDataContext.Instance.Push<MainPage>();
     }
 
+    private void ManageSkinsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        //Navigation.Push<SkinsPage>();
+    }
+
+    private void AdvancedFeaturesButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.Push<AdvancedFeaturesPage>();
+    }
+
+    private void UnitTestsButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        new UnitTestsWindow().Show();
+    }
+
     public class Data : ReactiveObject
     {
         private MinecraftAuthenticationResult? account;
@@ -129,7 +144,7 @@ public partial class ToolButtonsBar : UserControl
                     return;
                 }
 
-                using (var imageStream = await LoadIconStreamAsync(result))
+                using (Stream? imageStream = await LoadIconStreamAsync(result))
                 {
                     if (imageStream == null) return;
 
@@ -190,7 +205,7 @@ public partial class ToolButtonsBar : UserControl
         {
             if (account == null) return null;
 
-            HttpClient client = new HttpClient();
+            HttpClient client = new();
 
             try
             {
@@ -204,20 +219,5 @@ public partial class ToolButtonsBar : UserControl
                 return null;
             }
         }
-    }
-
-    void ManageSkinsButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        //Navigation.Push<SkinsPage>();
-    }
-
-    void AdvancedFeaturesButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        Navigation.Push<AdvancedFeaturesPage>();
-    }
-
-    void UnitTestsButtonClicked(object? sender, RoutedEventArgs e)
-    {
-        new UnitTestsWindow().Show();
     }
 }

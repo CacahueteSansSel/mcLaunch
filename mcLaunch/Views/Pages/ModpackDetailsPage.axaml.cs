@@ -45,9 +45,7 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
                 : $"{supportedMinecraftVersions[0]} - {supportedMinecraftVersions.Last()}";
         }
         else
-        {
             ModpackVersionsBadge.IsVisible = false;
-        }
 
         string[] supportedModloaders = this.modpack.FetchModLoaders();
         ModpackPlatformBadge.Text = string.Join(", ", supportedModloaders);
@@ -98,7 +96,7 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
         PlatformSpecific.OpenUrl(modpack.Url);
     }
 
-    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    private void UpButtonClicked(object? sender, RoutedEventArgs e)
     {
         ScrollArea.Offset = Vector.Zero;
     }

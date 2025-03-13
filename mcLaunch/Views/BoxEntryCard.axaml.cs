@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Avalonia;
@@ -7,7 +6,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
@@ -39,10 +37,10 @@ public partial class BoxEntryCard : UserControl
         }
     }
 
-    void UpdateDeletedStatus()
+    private void UpdateDeletedStatus()
     {
         if (box == null) return;
-        
+
         bool isBeingDeleted = !Directory.Exists(box.Path);
         DeletingText.IsVisible = isBeingDeleted;
         Badges.IsVisible = !isBeingDeleted;
@@ -51,7 +49,7 @@ public partial class BoxEntryCard : UserControl
     protected override async void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
-        
+
         UpdateDeletedStatus();
 
         if (Settings.Instance!.AnonymizeBoxIdentity)
@@ -74,7 +72,7 @@ public partial class BoxEntryCard : UserControl
 
         IsEnabled = true;
         DataContext = box.Manifest;
-        
+
         UpdateDeletedStatus();
 
         if (Settings.Instance != null && Settings.Instance.AnonymizeBoxIdentity)
@@ -83,7 +81,7 @@ public partial class BoxEntryCard : UserControl
         VersionBadge.Text = box.Manifest.Version;
         ModLoaderBadge.Text = box.ModLoader?.Name ?? "Unknown";
 
-        Regex snapshotVersionRegex = new Regex("\\d.w\\d.a");
+        Regex snapshotVersionRegex = new("\\d.w\\d.a");
 
         SnapshotStripe.IsVisible = snapshotVersionRegex.IsMatch(box.Manifest.Version);
     }
@@ -121,20 +119,20 @@ public partial class BoxEntryCard : UserControl
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
-        
+
         if (e.GetCurrentPoint(null).Properties.PointerUpdateKind != PointerUpdateKind.LeftButtonPressed)
             return;
-        
+
         if (!Directory.Exists(box.Path)) return;
-        
+
         Navigation.Push(new BoxDetailsPage(box));
     }
 
     private void PlayButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (!Directory.Exists(box.Path)) return;
-        
-        BoxDetailsPage page = new BoxDetailsPage(box);
+
+        BoxDetailsPage page = new(box);
         Navigation.Push(page);
 
         page.Run();
@@ -143,7 +141,7 @@ public partial class BoxEntryCard : UserControl
     private void OpenMenuOptionClicked(object? sender, RoutedEventArgs e)
     {
         if (!Directory.Exists(box.Path)) return;
-        
+
         Navigation.Push(new BoxDetailsPage(box));
     }
 
@@ -167,40 +165,40 @@ public partial class BoxEntryCard : UserControl
         PlatformSpecific.OpenFolder(Box.Path);
     }
 
-    void DuplicateOptionClicked(object? sender, RoutedEventArgs e)
+    private void DuplicateOptionClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.ShowPopup(new DuplicateBoxPopup(Box));
     }
 
-    async void CompleteReportOptionClicked(object? sender, RoutedEventArgs e)
+    private async void CompleteReportOptionClicked(object? sender, RoutedEventArgs e)
     {
         if (MainWindow.Instance.Clipboard == null)
         {
             Navigation.ShowPopup(new MessageBoxPopup("Error", "Unable to access clipboard", MessageStatus.Error));
             return;
         }
-        
+
         string report = await BoxUtilities.GenerateReportAsync(Box);
         MainWindow.Instance.Clipboard?.SetTextAsync(report);
-        
+
         Navigation.ShowPopup(new MessageBoxPopup("Success", "Report copied to clipboard", MessageStatus.Success));
     }
 
-    async void RelativeReportOptionClicked(object? sender, RoutedEventArgs e)
+    private async void RelativeReportOptionClicked(object? sender, RoutedEventArgs e)
     {
         if (MainWindow.Instance.Clipboard == null)
         {
             Navigation.ShowPopup(new MessageBoxPopup("Error", "Unable to access clipboard", MessageStatus.Error));
             return;
         }
-        
+
         string report = await BoxUtilities.GenerateReportAsync(Box, false);
         MainWindow.Instance.Clipboard?.SetTextAsync(report);
-        
+
         Navigation.ShowPopup(new MessageBoxPopup("Success", "Report copied to clipboard", MessageStatus.Success));
     }
 
-    void StopButtonClicked(object? sender, RoutedEventArgs e)
+    private void StopButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (BackgroundManager.IsMinecraftRunning)
             BackgroundManager.KillMinecraftProcess();

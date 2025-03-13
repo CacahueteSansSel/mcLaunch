@@ -24,11 +24,13 @@ public partial class GameSettingElement : UserControl
         BooleanCheckbox.IsVisible = box.Options[settingKey] is bool;
         IntFloatSlider.IsVisible = box.Options[settingKey] is int or float;
 
-        if (BooleanCheckbox.IsVisible) BooleanCheckbox.IsChecked = (bool) box.Options[settingKey];
+        if (BooleanCheckbox.IsVisible) BooleanCheckbox.IsChecked = (bool)box.Options[settingKey];
         if (IntFloatSlider.IsVisible)
+        {
             IntFloatSlider.Value = box.Options[settingKey] is int
-                ? (int) box.Options[settingKey]
-                : (float) box.Options[settingKey];
+                ? (int)box.Options[settingKey]
+                : (float)box.Options[settingKey];
+        }
     }
 
     public Box Box { get; }
@@ -51,7 +53,7 @@ public partial class GameSettingElement : UserControl
         if (e.Property.Name == "Value")
         {
             Box.Options[SettingKey] =
-                Box.Options[SettingKey] is int ? (int) IntFloatSlider.Value : IntFloatSlider.Value;
+                Box.Options[SettingKey] is int ? (int)IntFloatSlider.Value : IntFloatSlider.Value;
             Box.Options.Save();
         }
     }

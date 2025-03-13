@@ -41,49 +41,51 @@ public class LibrariesDownloader
         if (!filename.Contains('-'))
         {
             Debug.WriteLine($"Adding {filename} anyway : cannot deduct name and version");
-            
+
             ClassPath.Add(path);
             return;
         }
-        
+
         string[] tokens = filename.Split('-');
         string name = tokens[0];
         string version = tokens[1];
 
         if (!Version.TryParse(version, out Version toAddFileVersion))
         {
-            Debug.WriteLine($"Adding {name} version {toAddFileVersion} anyway : cannot parse version \"{toAddFileVersion}\"");
+            Debug.WriteLine(
+                $"Adding {name} version {toAddFileVersion} anyway : cannot parse version \"{toAddFileVersion}\"");
             ClassPath.Add(path);
-            
+
             return;
         }
-            
+
         foreach (string cpFile in ClassPath)
         {
             string cpFilename = System.IO.Path.GetFileNameWithoutExtension(cpFile);
             if (!cpFilename.Contains('-')) continue;
-                
+
             string[] cpTokens = cpFilename.Split('-');
             string cpName = cpTokens[0];
             string cpVersion = cpTokens[1];
-                
+
             if (!Version.TryParse(cpVersion, out Version cpFileVersion)) continue;
 
             if (cpName == name && toAddFileVersion < cpFileVersion)
             {
-                Debug.WriteLine($"Refused to add {name} version {toAddFileVersion} : existing version is newer ({cpFileVersion})");
+                Debug.WriteLine(
+                    $"Refused to add {name} version {toAddFileVersion} : existing version is newer ({cpFileVersion})");
                 return;
             }
         }
-        
+
         ClassPath.Add(path);
     }
 
     private async Task<string> DownloadAsync(MinecraftVersion.ModelLibrary library)
     {
         if (!library.NeedsToDeduceUrlFromName) return null;
-        
-        LibraryName name = new LibraryName(library.Name);
+
+        LibraryName name = new(library.Name);
 
         string filename = library.GetFinalJarFilename();
         string path = $"{Path}/{name.Package.Replace('.', '/')}/{filename}".FixPath();
@@ -124,13 +126,13 @@ public class LibrariesDownloader
         string? versionString = null;
         ulong versionInt = 0;
 
-        foreach (var lib in version.Libraries)
+        foreach (MinecraftVersion.ModelLibrary? lib in version.Libraries)
         {
-            LibraryName name = new LibraryName(lib.Name);
+            LibraryName name = new(lib.Name);
 
             if (name.Name != "lwjgl") continue;
 
-            string versionNumbers = new string(name.Version.Where(char.IsNumber).ToArray());
+            string versionNumbers = new(name.Version.Where(char.IsNumber).ToArray());
             ulong curVersionInt = ulong.Parse(versionNumbers);
 
             if (curVersionInt > versionInt)
@@ -157,25 +159,27 @@ public class LibrariesDownloader
                 WithLibrary("lwjgl", latestLwjglVersion);
         }
 
-        foreach (var lib in version.Libraries)
+        foreach (MinecraftVersion.ModelLibrary? lib in version.Libraries)
         {
             List<string> nativeJars = new();
-            LibraryName name = new LibraryName(lib.Name);
+            LibraryName name = new(lib.Name);
 
             bool skip = false;
-            foreach (var kv in libVersions)
+            foreach (KeyValuePair<string, string> kv in libVersions)
+            {
                 if (name.Name.StartsWith(kv.Key) && name.Version != null && name.Version != kv.Value)
                 {
                     skip = true;
                     break;
                 }
+            }
 
             if (skip) continue;
 
             if (lib.Rules != null)
             {
                 bool abort = false;
-                foreach (var rule in lib.Rules)
+                foreach (MinecraftVersion.ModelLibrary.ModelRule rule in lib.Rules)
                 {
                     bool satisfied = rule.Os == null || rule.Os.CheckIfSatisfied();
 
@@ -229,7 +233,7 @@ public class LibrariesDownloader
             }
 
             cur++;
-            percentCallback?.Invoke(cur / (float) version.Libraries.Length);
+            percentCallback?.Invoke(cur / (float)version.Libraries.Length);
         }
 
         libVersions.Clear();

@@ -28,7 +28,7 @@ public partial class BrowseModsPage : UserControl, ITopLevelPageControl
         ModList.Search(null, SearchTextboxInput.Text);
     }
 
-    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    private void UpButtonClicked(object? sender, RoutedEventArgs e)
     {
         ScrollArea.Offset = Vector.Zero;
     }

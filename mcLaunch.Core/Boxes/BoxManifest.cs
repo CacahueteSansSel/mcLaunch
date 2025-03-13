@@ -51,9 +51,8 @@ public class BoxManifest : ReactiveObject
 
     [JsonPropertyName("Modifications")] // For compatibility reasons
     public List<BoxStoredContent> Contents { get; set; } = [];
-    
-    [JsonIgnore]
-    public List<BoxStoredContent> RecentlyAddedContents { get; set; } = [];
+
+    [JsonIgnore] public List<BoxStoredContent> RecentlyAddedContents { get; set; } = [];
 
     public List<string> AdditionalModloaderFiles { get; set; } = [];
 
@@ -154,13 +153,13 @@ public class BoxManifest : ReactiveObject
 
         lock (Contents)
         {
-            BoxStoredContent bsc = new BoxStoredContent
+            BoxStoredContent bsc = new()
             {
                 Content = content,
                 VersionId = versionId,
                 Filenames = filenames
             };
-            
+
             Contents.Add(bsc);
             RecentlyAddedContents.Add(bsc);
         }
@@ -183,7 +182,7 @@ public class BoxManifest : ReactiveObject
         lock (Contents)
         {
             Contents.Remove(content);
-            if (RecentlyAddedContents.Contains(content)) 
+            if (RecentlyAddedContents.Contains(content))
                 RecentlyAddedContents.Remove(content);
         }
 
@@ -235,11 +234,12 @@ public class BoxManifest : ReactiveObject
         if (setUpVersion != null) return new Result<MinecraftVersion>(setUpVersion);
 
         ManifestMinecraftVersion mcManifestVersion = MinecraftManager.Manifest.Get(Version);
-        MinecraftVersion? mcVersion = mcManifestVersion != null 
-            ? (await mcManifestVersion.DownloadOrGetLocally(BoxManager.SystemFolder))
+        MinecraftVersion? mcVersion = mcManifestVersion != null
+            ? await mcManifestVersion.DownloadOrGetLocally(BoxManager.SystemFolder)
             : BoxManager.SystemFolder.GetVersion(Version);
-        
-        if (mcVersion == null) return Result<MinecraftVersion>.Error($"Failed to find/fetch Minecraft version {Version}");
+
+        if (mcVersion == null)
+            return Result<MinecraftVersion>.Error($"Failed to find/fetch Minecraft version {Version}");
 
         if (ModLoader != null) mcVersion = await ModLoader.PostProcessMinecraftVersionAsync(mcVersion);
 
@@ -249,16 +249,16 @@ public class BoxManifest : ReactiveObject
         if (modLoader != null && modLoader.Type == "modded")
         {
             ModLoaderVersion[]? versions = await modLoader.GetVersionsAsync(Version);
-            
+
             if (versions.Length == 0)
             {
                 return Result<MinecraftVersion>.Error($"Cannot find a version of {modLoader.Name} for " +
-                                                   $"Minecraft {Version}: The servers of {modLoader.Name} " +
-                                                   $"didn't return any compatible version. " +
-                                                   $"Please check if you have an Internet connection and " +
-                                                   $"if {ModLoader.Name}'s servers are accessible.");
+                                                      $"Minecraft {Version}: The servers of {modLoader.Name} " +
+                                                      $"didn't return any compatible version. " +
+                                                      $"Please check if you have an Internet connection and " +
+                                                      $"if {ModLoader.Name}'s servers are accessible.");
             }
-            
+
             ModLoaderVersion? version = versions.FirstOrDefault(v => v.Name == ModLoaderVersion);
             if (version == null) version = versions[0];
 

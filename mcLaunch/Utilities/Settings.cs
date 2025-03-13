@@ -123,12 +123,16 @@ public class Settings
     public static void Load()
     {
         if (File.Exists(AppdataFolderManager.GetPath("seen_versions.json")))
+        {
             SeenVersionsList = JsonSerializer.Deserialize<List<string>>(
                 File.ReadAllText(AppdataFolderManager.GetPath("seen_versions.json")))!;
+        }
 
         if (File.Exists(AppdataFolderManager.GetPath("settings.json")))
+        {
             Instance = JsonSerializer.Deserialize<Settings>(
                 File.ReadAllText(AppdataFolderManager.GetPath("settings.json")))!;
+        }
         else Instance = new Settings().WithDefaults();
     }
 }

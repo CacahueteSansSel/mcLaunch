@@ -26,22 +26,26 @@
                     <DataTemplate>
                         <DockPanel>
                             <Image Source="{Binding World.Icon}" DockPanel.Dock="Left" Width="40" Height="40" />
-                            <StackPanel IsVisible="{Binding ShowAdvancedFeatures}" Orientation="Horizontal" DockPanel.Dock="Right">
-                                <Button Classes="transparent square" ToolTip.Tip="Open level.dat in NBT Editor" Command="{Binding OpenLevelDatCommand}">
+                            <StackPanel IsVisible="{Binding ShowAdvancedFeatures}" Orientation="Horizontal"
+                                        DockPanel.Dock="Right">
+                                <Button Classes="transparent square" ToolTip.Tip="Open level.dat in NBT Editor"
+                                        Command="{Binding OpenLevelDatCommand}">
                                     <Image Source="{SvgImage /resources/icons/nbt.svg}" Width="13" Height="13" />
                                 </Button>
                             </StackPanel>
                             <StackPanel Margin="10 0 10 0" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="title" Text="{Binding World.Name}" />
-                                    <views:Badge IsVisible="{Binding World.IsCheats}" 
-                                                 Margin="10 0 0 0" Text="Commands"/>
+                                    <views:Badge IsVisible="{Binding World.IsCheats}"
+                                                 Margin="10 0 0 0" Text="Commands" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Classes="title" FontSize="12" Margin="0 0 0 0" Text="{Binding World.GameMode}" />
+                                    <TextBlock Classes="title" FontSize="12" Margin="0 0 0 0"
+                                               Text="{Binding World.GameMode}" />
                                     <TextBlock Classes="title" FontSize="12" Margin="4 0 0 0">mode</TextBlock>
                                     <TextBlock Classes="light" FontSize="12" Margin="0 0 0 0">, Minecraft</TextBlock>
-                                    <TextBlock Classes="light" FontSize="12" Margin="4 0 0 0" Text="{Binding World.Version}" />
+                                    <TextBlock Classes="light" FontSize="12" Margin="4 0 0 0"
+                                               Text="{Binding World.Version}" />
                                     <TextBlock Classes="light" FontSize="12" Margin="0 0 0 0">, last opened </TextBlock>
                                     <TextBlock Classes="title" FontSize="12" Margin="4 0 0 0"
                                                Text="{Binding World.LastPlayed}" />

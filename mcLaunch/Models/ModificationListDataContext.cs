@@ -9,9 +9,9 @@ public class ModificationListDataContext
     {
         Modifications = new List<MinecraftContent>
         {
-            new() {Author = "me", IconUrl = "todo", Name = "fungus mod"},
-            new() {Author = "not me", IconUrl = "todo", Name = "dzd mod"},
-            new() {Author = "your", IconUrl = "todo", Name = "dzdahahaHAHAHA mod"}
+            new() { Author = "me", IconUrl = "todo", Name = "fungus mod" },
+            new() { Author = "not me", IconUrl = "todo", Name = "dzd mod" },
+            new() { Author = "your", IconUrl = "todo", Name = "dzdahahaHAHAHA mod" }
         };
     }
 

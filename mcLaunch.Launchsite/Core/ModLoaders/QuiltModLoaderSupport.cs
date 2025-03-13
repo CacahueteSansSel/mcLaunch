@@ -21,7 +21,7 @@ public class QuiltModLoaderSupport : ModLoaderSupport
 
         if (versions == null) return null;
 
-        return versions.Select(ver => (ModLoaderVersion) new QuiltModLoaderVersion
+        return versions.Select(ver => (ModLoaderVersion)new QuiltModLoaderVersion
         {
             Name = ver.Loader.Version,
             MinecraftVersion = minecraftVersion

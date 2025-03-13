@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d"
              Width="450" Height="500"
              x:Class="mcLaunch.Views.Popups.SelectBoxPopup">
@@ -13,12 +12,16 @@
         <DockPanel Margin="38">
             <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25">Select a box</TextBlock>
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
-                <Button DockPanel.Dock="Right" x:Name="SelectButton" Classes="primary" Margin="5 0 0 0" Click="SelectButtonClicked">Select</Button>
+                <Button DockPanel.Dock="Right" x:Name="SelectButton" Classes="primary" Margin="5 0 0 0"
+                        Click="SelectButtonClicked">
+                    Select
+                </Button>
                 <Button DockPanel.Dock="Right" Classes="secondary" Click="ClosePopupButtonClicked">Close</Button>
                 <Panel />
             </DockPanel>
             <DockPanel DockPanel.Dock="Top" Margin="0 5 0 5">
-                <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" Watermark="Search a box" TextChanged="SearchTextBoxTextChanged"/>
+                <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" Watermark="Search a box"
+                         TextChanged="SearchTextBoxTextChanged" />
             </DockPanel>
             <ListBox x:Name="ContentList" SelectionMode="Single" ItemsSource="{Binding .}"
                      SelectionChanged="ContentSelectionChanged">
@@ -31,16 +34,16 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Image Source="{Binding Manifest.Icon.IconSmall}" Width="50" Height="50"></Image>
+                            <Image Source="{Binding Manifest.Icon.IconSmall}" Width="50" Height="50" />
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Classes="title" Text="{Binding Manifest.Name}"></TextBlock>
+                                <TextBlock Classes="title" Text="{Binding Manifest.Name}" />
                                 <StackPanel Orientation="Horizontal" Spacing="3">
                                     <TextBlock FontSize="12">by</TextBlock>
-                                    <TextBlock FontSize="12" Classes="title" Text="{Binding Manifest.Author}"></TextBlock>
+                                    <TextBlock FontSize="12" Classes="title" Text="{Binding Manifest.Author}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Spacing="5">
-                                    <TextBlock Classes="title" Text="{Binding Manifest.Version}"></TextBlock>
-                                    <TextBlock Classes="light" Text="{Binding Manifest.ModLoader.Name}"></TextBlock>
+                                    <TextBlock Classes="title" Text="{Binding Manifest.Version}" />
+                                    <TextBlock Classes="light" Text="{Binding Manifest.ModLoader.Name}" />
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>

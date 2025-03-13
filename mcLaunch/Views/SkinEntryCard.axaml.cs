@@ -1,14 +1,10 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 using mcLaunch.Launchsite.Models;
 
 namespace mcLaunch.Views;
 
 public partial class SkinEntryCard : UserControl
 {
-    public MinecraftProfile.ModelSkin Skin { get; private set; }
-    
     public SkinEntryCard()
     {
         InitializeComponent();
@@ -21,4 +17,6 @@ public partial class SkinEntryCard : UserControl
         Skin = skin;
         DataContext = skin;
     }
+
+    public MinecraftProfile.ModelSkin Skin { get; private set; }
 }

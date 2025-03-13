@@ -6,18 +6,18 @@ namespace mcLaunch.Launchsite.Core;
 
 public class Minecraft
 {
-    readonly Dictionary<string, string> args = new();
-    bool disableChat;
-    bool disableMultiplayer;
-    string? jvmPath;
-    QuickPlayWorldType? quickPlayMode;
-    string? quickPlayPath;
-    string? quickPlaySingleplayerWorldName;
-    string? serverAddress;
-    uint serverPort;
-    MinecraftFolder sysFolder;
-    bool useDedicatedGraphics;
-    bool redirectOutput;
+    private readonly Dictionary<string, string> args = new();
+    private bool disableChat;
+    private bool disableMultiplayer;
+    private string? jvmPath;
+    private QuickPlayWorldType? quickPlayMode;
+    private string? quickPlayPath;
+    private string? quickPlaySingleplayerWorldName;
+    private bool redirectOutput;
+    private string? serverAddress;
+    private uint serverPort;
+    private MinecraftFolder sysFolder;
+    private bool useDedicatedGraphics;
 
     public Minecraft(MinecraftVersion version, MinecraftFolder folder)
     {
@@ -144,17 +144,17 @@ public class Minecraft
         return this;
     }
 
-    void ReadOutput(Process process)
+    private void ReadOutput(Process process)
     {
         while (!process.HasExited)
         {
             string? line = process.StandardOutput.ReadLine();
             if (line == null) break;
-            
+
             StandardOutput.Add(line);
             OnStandardOutputLineReceived?.Invoke(line);
         }
-        
+
         StandardOutput.Add($"Minecraft exited with code {process.ExitCode}");
     }
 
@@ -210,14 +210,16 @@ public class Minecraft
             RedirectStandardError = true,
             RedirectStandardOutput = redirectOutput
         };
-        
+
 
         if (useDedicatedGraphics)
+        {
             if (OperatingSystem.IsLinux() && File.Exists("/usr/bin/prime-run"))
             {
                 info.Arguments = $"{info.FileName} {info.Arguments}";
                 info.FileName = "/usr/bin/prime-run";
             }
+        }
 
         // An attempt to fix the "java opens in TextEdit" bug
         if (OperatingSystem.IsMacOS()) File.SetUnixFileMode(info.FileName, UnixFileMode.UserExecute);

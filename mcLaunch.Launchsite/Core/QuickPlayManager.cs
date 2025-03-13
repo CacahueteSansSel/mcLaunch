@@ -24,7 +24,7 @@ public class QuickPlayManager
 
     public string Create(QuickPlayWorldType worldType, QuickPlayGameMode gamemode, string worldName)
     {
-        QuickPlayProfile profile = new QuickPlayProfile
+        QuickPlayProfile profile = new()
         {
             Type = worldType.ToString().ToLower(),
             Id = worldName,
@@ -35,7 +35,7 @@ public class QuickPlayManager
 
         string path = $"{this.path}/{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.json".FixPath();
 
-        File.WriteAllText(path, JsonSerializer.Serialize(new[] {profile}));
+        File.WriteAllText(path, JsonSerializer.Serialize(new[] { profile }));
 
         return path;
     }

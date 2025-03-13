@@ -23,9 +23,10 @@
         </Style>
     </UserControl.Styles>
     <DockPanel Margin="20 20 20 20">
-        <TextBlock x:Name="SkinNameText" DockPanel.Dock="Bottom" FontSize="15" HorizontalAlignment="Center" Classes="light" Margin="0 5 0 0" Text="{Binding TextureKey}" />
+        <TextBlock x:Name="SkinNameText" DockPanel.Dock="Bottom" FontSize="15" HorizontalAlignment="Center"
+                   Classes="light" Margin="0 5 0 0" Text="{Binding TextureKey}" />
         <Border ClipToBounds="True" CornerRadius="4">
-            <Image asyncImageLoader:ImageLoader.Source="{Binding Url}"></Image>
+            <Image asyncImageLoader:ImageLoader.Source="{Binding Url}" />
         </Border>
     </DockPanel>
 </UserControl>

@@ -9,7 +9,7 @@ namespace mcLaunch.Launchsite.Auth;
 
 public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
 {
-    private static readonly string[] scopes = {"XboxLive.signin"};
+    private static readonly string[] scopes = { "XboxLive.signin" };
     private readonly IPublicClientApplication app;
     private readonly CredentialsCache? cache;
     private readonly StorageCreationProperties storage;
@@ -47,13 +47,13 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
 
     private async void RegisterCache()
     {
-        var cacheHelper = await MsalCacheHelper.CreateAsync(storage);
+        MsalCacheHelper? cacheHelper = await MsalCacheHelper.CreateAsync(storage);
         cacheHelper.RegisterCache(app.UserTokenCache);
     }
 
     public override async Task<MinecraftAuthenticationResult?> TryLoginAsync()
     {
-        var accounts = await app.GetAccountsAsync();
+        IEnumerable<IAccount>? accounts = await app.GetAccountsAsync();
 
         try
         {
@@ -98,8 +98,10 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
             return new MinecraftAuthenticationResult("Failed to login to Xbox Live (step 2: failed to get XSTS token)");
 
         if (xstsResp.IsError)
+        {
             return new MinecraftAuthenticationResult(
                 $"Failed to login to Xbox Live (step 2: failed to get XSTS token) error code {xstsResp.XErr} {xstsResp.Message}");
+        }
 
         callback?.Invoke("Logging in to Minecraft... (step 1)", 3, 4);
 
@@ -118,10 +120,12 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
             mcToken);
 
         if (profile == null || string.IsNullOrEmpty(profile.Uuid))
+        {
             return new MinecraftAuthenticationResult(
                 "Failed to login to Minecraft (step 2: fetching Minecraft profile) : Do you really own Minecraft ?");
+        }
 
-        MinecraftAuthenticationResult authResult = new MinecraftAuthenticationResult(mcToken, profile);
+        MinecraftAuthenticationResult authResult = new(mcToken, profile);
 
         cache?.Set("mcAuth", authResult);
 

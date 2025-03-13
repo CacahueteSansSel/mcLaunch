@@ -21,7 +21,7 @@ public class DirectJarMergingModLoaderSupport : ModLoaderSupport
 
     public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion) =>
     [
-        new DirectJarMergingModLoaderVersion {Name = minecraftVersion, MinecraftVersion = minecraftVersion}
+        new DirectJarMergingModLoaderVersion { Name = minecraftVersion, MinecraftVersion = minecraftVersion }
     ];
 
     public override async Task<Result> FinalizeMinecraftInstallationAsync(string jarFilename, string[] additionalFiles)
@@ -34,8 +34,9 @@ public class DirectJarMergingModLoaderSupport : ModLoaderSupport
         using ZipArchive minecraftJar = new(new FileStream(jarFilename, FileMode.Open, FileAccess.ReadWrite),
             ZipArchiveMode.Update);
 
-        ZipArchiveEntry[] entries = minecraftJar.Entries.Where(entry => entry.FullName.StartsWith("META-INF")).ToArray();
-        foreach (var entry in entries)
+        ZipArchiveEntry[] entries =
+            minecraftJar.Entries.Where(entry => entry.FullName.StartsWith("META-INF")).ToArray();
+        foreach (ZipArchiveEntry? entry in entries)
             entry.Delete();
         minecraftJar.GetEntry("META-INF")?.Delete();
 

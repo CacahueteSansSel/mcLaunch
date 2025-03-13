@@ -23,7 +23,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
     {
         Instance = this;
 
-        UserAgent ua = new UserAgent
+        UserAgent ua = new()
         {
             ProjectName = "mcLaunch Minecraft Launcher",
             ProjectVersion = "1.0.0",
@@ -155,7 +155,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 LatestMinecraftVersion = hit.Versions.LastOrDefault(),
                 DownloadCount = hit.Downloads,
                 LastUpdated = hit.DateModified,
-                Color = !hit.Color.HasValue ? 0xFF000000 : (uint) hit.Color.Value.ToArgb(),
+                Color = !hit.Color.HasValue ? 0xFF000000 : (uint)hit.Color.Value.ToArgb(),
                 Platform = this
             }).ToArray();
 
@@ -171,7 +171,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         {
             Version[] versions = await Client.Version.GetProjectVersionListAsync(id,
                 modLoaderId == null ? null : [modLoaderId],
-                new[] {minecraftVersionId});
+                new[] { minecraftVersionId });
             Version? version = versions.FirstOrDefault(v => v.Id == versionId);
 
             return new PaginatedResponse<ContentDependency>(0, 1, await Task.Run(() =>
@@ -180,7 +180,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 {
                     Content = GetContentAsync(dep.ProjectId).GetAwaiter().GetResult(),
                     VersionId = dep.VersionId,
-                    Type = (DependencyRelationType) dep.DependencyType
+                    Type = (DependencyRelationType)dep.DependencyType
                 }).ToArray();
             }));
         }
@@ -212,7 +212,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
     public override async Task<MinecraftContent> GetContentAsync(string id)
     {
-        if (contentCache.TryGetValue(id, out var cachedMod))
+        if (contentCache.TryGetValue(id, out MinecraftContent? cachedMod))
             return cachedMod;
 
         string cacheName = $"content-modrinth-{id}";
@@ -233,7 +233,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             Project project = await Client.Project.GetAsync(id);
             TeamMember[] team = await Client.Team.GetAsync(project.Team);
 
-            MinecraftContent content = new MinecraftContent
+            MinecraftContent content = new()
             {
                 Id = project.Id,
                 Slug = project.Slug,
@@ -278,7 +278,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
     public override async Task<MinecraftContent?> GetContentByAppLaunchUriAsync(Uri uri)
     {
-        if (uri.Scheme != "modrinth" || uri.Host != "mod") 
+        if (uri.Scheme != "modrinth" || uri.Host != "mod")
             return null;
 
         string modId = uri.AbsolutePath.TrimStart('/');
@@ -331,7 +331,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 ModpackFileHash = pv.Files[0].Hashes.Sha1
             }).ToArray();
 
-            PlatformModpack pack = new PlatformModpack
+            PlatformModpack pack = new()
             {
                 Id = project.Id,
                 Name = project.Title,
@@ -349,7 +349,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 LongDescriptionBody = project.Body,
                 DownloadCount = project.Downloads,
                 LastUpdated = project.Updated,
-                Color = !project.Color.HasValue ? 0xFF000000 : (uint) project.Color.Value.ToArgb(),
+                Color = !project.Color.HasValue ? 0xFF000000 : (uint)project.Color.Value.ToArgb(),
                 Platform = this
             };
 
@@ -382,10 +382,10 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 {
                     // For some reason, some mods references themselves in dependencies (see Thermal Integration on modrinth)
                     // We absolutely want to avoid that, because this will cause an infinite loop !
-                    
+
                     continue;
                 }
-                
+
                 if (installOptional)
                 {
                     if (dependency.DependencyType != DependencyType.Required &&
@@ -406,17 +406,15 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
                 {
                     // Grab the latest available version for this dependency
                     Version[] depVersions = await Client.Version.GetProjectVersionListAsync(dependency.ProjectId,
-                        new[] {targetBox.Manifest.ModLoaderId.ToLower()},
-                        new[] {targetBox.Manifest.Version});
+                        new[] { targetBox.Manifest.ModLoaderId.ToLower() },
+                        new[] { targetBox.Manifest.Version });
 
                     if (depVersions.Length == 0) continue;
 
                     dependencyVersion = depVersions[0];
                 }
                 else
-                {
                     dependencyVersion = await Client.Version.GetAsync(depVersionId);
-                }
 
                 await InstallVersionAsync(targetBox, dependencyVersion, false, contentType);
             }
@@ -477,8 +475,8 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             paths = await InstallVersionAsync(targetBox, version, installOptional, content.Type);
 
         bool isDatapackToInstall = content.Type == MinecraftContentType.DataPack && paths.Length > 0;
-        
-        if (processDownload || isDatapackToInstall) 
+
+        if (processDownload || isDatapackToInstall)
             await DownloadManager.ProcessAll();
         if (isDatapackToInstall)
             targetBox.InstallDatapack(versionId, $"{targetBox.Folder.CompletePath}/{paths[0]}");

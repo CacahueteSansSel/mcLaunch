@@ -67,7 +67,7 @@ public class ColdMinecraftVersionInstallTest : TestBase
 
         await DownloadManager.ProcessAll();
 
-        foreach (var library in version!.Libraries)
+        foreach (MinecraftVersion.ModelLibrary? library in version!.Libraries)
         {
             string path = $"{_librariesDownloader.Path}/{library.Downloads.Artifact.Path}";
 

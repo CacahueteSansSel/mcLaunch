@@ -78,7 +78,7 @@ public class CurseForgeModificationPack : ModificationPack
         using FileStream fs = new(filename, FileMode.Create);
         using ZipArchive zip = new(fs, ZipArchiveMode.Create);
 
-        ModelManifest manifest = new ModelManifest
+        ModelManifest manifest = new()
         {
             Name = box.Manifest.Name,
             Author = box.Manifest.Author,
@@ -107,15 +107,14 @@ public class CurseForgeModificationPack : ModificationPack
                 // Include any non-CurseForge mod to the overrides
                 ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{mod.Filenames[0]}");
                 await using Stream entryStream = overrideEntry.Open();
-                using FileStream modFileStream =
-                    new FileStream(box.Folder.CompletePath + $"/{mod.Filenames[0]}", FileMode.Open);
+                using FileStream modFileStream = new(box.Folder.CompletePath + $"/{mod.Filenames[0]}", FileMode.Open);
 
                 await modFileStream.CopyToAsync(entryStream);
 
                 continue;
             }
 
-            ModelManifest.ModelFile file = new ModelManifest.ModelFile
+            ModelManifest.ModelFile file = new()
             {
                 ProjectId = uint.Parse(mod.Id),
                 FileId = uint.Parse(mod.VersionId),
@@ -136,12 +135,12 @@ public class CurseForgeModificationPack : ModificationPack
                 {
                     ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
                     await using Stream entryStream = overrideEntry.Open();
-                    using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
+                    using FileStream modFileStream = new(completePath, FileMode.Open);
 
                     await modFileStream.CopyToAsync(entryStream);
                 }
-                
-                if (System.IO.Directory.Exists(completePath))
+
+                if (Directory.Exists(completePath))
                 {
                     foreach (string dirFile in Directory.GetFiles(completePath, "*", SearchOption.AllDirectories))
                     {
@@ -149,7 +148,7 @@ public class CurseForgeModificationPack : ModificationPack
                             .TrimStart(Path.DirectorySeparatorChar);
                         ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}/{relativePath}");
                         await using Stream entryStream = overrideEntry.Open();
-                        using FileStream modFileStream = new FileStream(dirFile, FileMode.Open);
+                        using FileStream modFileStream = new(dirFile, FileMode.Open);
 
                         await modFileStream.CopyToAsync(entryStream);
                     }
@@ -164,7 +163,7 @@ public class CurseForgeModificationPack : ModificationPack
 
             ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{modFile}");
             await using Stream entryStream = overrideEntry.Open();
-            using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
+            using FileStream modFileStream = new(completePath, FileMode.Open);
 
             await modFileStream.CopyToAsync(entryStream);
         }

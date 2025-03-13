@@ -42,7 +42,7 @@ public class AnonymitySession
             availableNames = new List<string>(initialNames);
 
         int index = Random.Shared.Next(0, availableNames.Count);
-        string word = availableNames[(int) MathF.Min(index, availableNames.Count - 1)];
+        string word = availableNames[(int)MathF.Min(index, availableNames.Count - 1)];
         availableNames.Remove(word);
 
         return word;

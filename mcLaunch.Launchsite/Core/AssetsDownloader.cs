@@ -27,7 +27,7 @@ public class AssetsDownloader
         int cur = 0;
         foreach (Asset asset in assets)
         {
-            float percent = cur / (float) assets.Length;
+            float percent = cur / (float)assets.Length;
 
             string[] assetPathParts = asset.Name.Split('/');
             string directoriesPath = string.Join('/', assetPathParts.Take(assetPathParts.Length - 1));
@@ -72,7 +72,7 @@ public class AssetsDownloader
         int cur = 0;
         foreach (Asset asset in assets)
         {
-            float percent = cur / (float) assets.Length;
+            float percent = cur / (float)assets.Length;
 
             string prefixFolder = $"{objectsFolder}/{asset.Prefix}".FixPath();
             if (!Directory.Exists(prefixFolder)) Directory.CreateDirectory(prefixFolder);

@@ -17,15 +17,13 @@
             </StackPanel>
             <DockPanel Margin="0 20 0 20" Width="888">
                 <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
-                    <Image Source="/resources/default_skin.png" Width="150"></Image>
+                    <Image Source="/resources/default_skin.png" Width="150" />
                     <TextBlock HorizontalAlignment="Center" Classes="title">Current</TextBlock>
                 </StackPanel>
                 <ScrollViewer DockPanel.Dock="Right">
-                    <WrapPanel x:Name="SkinCardsContainer">
-                        
-                    </WrapPanel>
+                    <WrapPanel x:Name="SkinCardsContainer" />
                 </ScrollViewer>
-                <Panel></Panel>
+                <Panel />
             </DockPanel>
         </StackPanel>
     </Panel>

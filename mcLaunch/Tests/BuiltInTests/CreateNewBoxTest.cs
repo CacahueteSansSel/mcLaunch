@@ -1,9 +1,6 @@
-﻿using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.VisualTree;
 using mcLaunch.Core.Managers;
 using mcLaunch.Launchsite.Core.ModLoaders;
 using mcLaunch.Launchsite.Models;
@@ -20,9 +17,9 @@ public class CreateNewBoxTest : UnitTest
     public override async Task RunAsync()
     {
         string boxName = GetType().Name;
-        
+
         ButtonClick(FindControlMain<Button>("NewBoxButton")!);
-        
+
         Assert(IsPopupShown<NewBoxPopup>(), "New box popup shown");
 
         await Task.Delay(100);
@@ -34,8 +31,9 @@ public class CreateNewBoxTest : UnitTest
         MinecraftVersionSelector versionSelector = FindControlMain<MinecraftVersionSelector>("VersionSelector")!;
         versionSelector.SetVersion(mcVersion);
 
-        Assert(versionSelector.Version.Id == mcVersion.Id, $"Selected Minecraft version is {mcVersion.Id} as requested");
-        
+        Assert(versionSelector.Version.Id == mcVersion.Id,
+            $"Selected Minecraft version is {mcVersion.Id} as requested");
+
         boxNameTbox.Text = boxName;
         createButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
@@ -50,7 +48,7 @@ public class CreateNewBoxTest : UnitTest
         Assert(page.Box.Manifest.Version == mcVersion.Id, "Box's version is as requested");
         Assert(page.Box.ModLoader is VanillaModLoaderSupport, "Box is in vanilla as intended");
         Assert(page.Box.Manifest.Contents.Count == 0, "Box doesn't contains any content");
-        
+
         Navigation.Pop();
         DeleteBoxAndCheck(page.Box);
     }

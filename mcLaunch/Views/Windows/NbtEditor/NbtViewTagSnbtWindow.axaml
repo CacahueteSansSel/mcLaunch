@@ -10,7 +10,6 @@
     <Window.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>
-    <avaloniaEdit:TextEditor x:Name="SnbtTextEditor" Classes="id" ShowLineNumbers="True" IsReadOnly="True" FontFamily="JetBrains Mono,Cascadia Code,Consolas,Menlo,Monospace">
-        
-    </avaloniaEdit:TextEditor>
+    <avaloniaEdit:TextEditor x:Name="SnbtTextEditor" Classes="id" ShowLineNumbers="True" IsReadOnly="True"
+                             FontFamily="JetBrains Mono,Cascadia Code,Consolas,Menlo,Monospace" />
 </Window>

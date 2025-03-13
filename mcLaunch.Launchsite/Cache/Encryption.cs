@@ -15,9 +15,9 @@ public static class Encryption
 
         ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
 
-        using MemoryStream stream = new MemoryStream();
-        using CryptoStream cryptoStream = new CryptoStream(stream, encryptor, CryptoStreamMode.Write);
-        using BinaryWriter writer = new BinaryWriter(cryptoStream);
+        using MemoryStream stream = new();
+        using CryptoStream cryptoStream = new(stream, encryptor, CryptoStreamMode.Write);
+        using BinaryWriter writer = new(cryptoStream);
 
         writer.Write(data);
 
@@ -34,8 +34,8 @@ public static class Encryption
 
         ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
-        using MemoryStream stream = new MemoryStream(data);
-        using CryptoStream cryptoStream = new CryptoStream(stream, decryptor, CryptoStreamMode.Read);
+        using MemoryStream stream = new(data);
+        using CryptoStream cryptoStream = new(stream, decryptor, CryptoStreamMode.Read);
 
         List<byte> buffer = new();
         while (true)
@@ -43,7 +43,7 @@ public static class Encryption
             int b = cryptoStream.ReadByte();
             if (b == -1) break;
 
-            buffer.Add((byte) b);
+            buffer.Add((byte)b);
         }
 
         return buffer.ToArray();

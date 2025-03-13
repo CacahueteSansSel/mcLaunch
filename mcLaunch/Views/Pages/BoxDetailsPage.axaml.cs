@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
@@ -49,10 +48,10 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         }
 
         ContentsBox.IsVisible = true;
-        
+
         TimeSpan lastPlayedSpan = DateTime.Now - box.Manifest.LastLaunchTime;
-        LastPlayedTimeText.Text = lastPlayedSpan.TotalMinutes <= 1 
-            ? "Last played just now" 
+        LastPlayedTimeText.Text = lastPlayedSpan.TotalMinutes <= 1
+            ? "Last played just now"
             : $"Last played {lastPlayedSpan.ToDisplay()}";
 
         MinecraftButtonText.Text = box.Manifest.Version;
@@ -63,7 +62,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         DefaultBackground.IsVisible = box.Manifest.Background == null;
 
         RunBoxChecks();
-        
+
         UpdateButtons();
     }
 
@@ -78,7 +77,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     private async void RunBoxChecks()
     {
         await Box.LoadIconAsync();
-        
+
         SubControlButtons.IsEnabled = false;
         LoadingIcon.IsVisible = true;
 
@@ -96,9 +95,11 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         if (Box.HasReadmeFile) SetSubControl(new ReadmeSubControl(Box.ReadReadmeFile()));
         else
+        {
             SetSubControl(Box.ModLoader is DirectJarMergingModLoaderSupport
                 ? new DirectJarModsSubControl()
                 : new ContentsSubControl(MinecraftContentType.Modification));
+        }
 
         ReadmeButton.IsVisible = Box.HasReadmeFile;
         CrashReportButton.IsVisible = Box.HasCrashReports;
@@ -175,7 +176,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
     public async Task RunAsync(string? serverAddress = null, string? serverPort = null, MinecraftWorld? world = null)
     {
         if (BackgroundManager.IsMinecraftRunning) return;
-        
+
         if (Box.Manifest.ModLoader == null)
         {
             Navigation.ShowPopup(new MessageBoxPopup("Can't run Minecraft",
@@ -219,14 +220,14 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
         // TODO: crash report parser
         // RegExp for mod dependencies error (Forge) : /(Failure message): .+/g
-        
+
         /*
         if (PlatformSpecific.ProcessExists("mcLaunch.MinecraftGuard"))
             PlatformSpecific.LaunchProcess("mcLaunch.MinecraftGuard",
                 $"{java.Id.ToString()} {Box.Manifest.Id} {Box.Manifest.Type.ToString().ToLower()}",
                 hidden: true);
         */
-        
+
         Box.DisposeWatcher();
 
         if (Utilities.Settings.Instance.CloseLauncherAtLaunch)
@@ -235,7 +236,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
             if (await BackgroundManager.RunMinecraftMonitoring(java, Box))
                 Navigation.HidePopup();
-        
+
             BackgroundManager.LeaveBackgroundState();
             UpdateButtons();
         }
@@ -246,7 +247,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
             await BackgroundManager.RunMinecraftMonitoring(java, Box);
         }
-        
+
         Box.CreateWatcher();
         UpdateButtons();
     }
@@ -261,18 +262,12 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         });
     }
 
-    NativeMenuItemBase[] CreateBackgroundMenu(Process javaProcess)
+    private NativeMenuItemBase[] CreateBackgroundMenu(Process javaProcess)
     {
-        NativeMenuItem killItem = new NativeMenuItem("Force close Minecraft (immediate)");
-        NativeMenuItem showConsoleItem = new NativeMenuItem("Show game console");
-        killItem.Click += (_, _) =>
-        {
-            BackgroundManager.KillMinecraftProcess();
-        };
-        showConsoleItem.Click += (_, _) =>
-        {
-            new ConsoleWindow(javaProcess, Box).Show();
-        };
+        NativeMenuItem killItem = new("Force close Minecraft (immediate)");
+        NativeMenuItem showConsoleItem = new("Show game console");
+        killItem.Click += (_, _) => { BackgroundManager.KillMinecraftProcess(); };
+        showConsoleItem.Click += (_, _) => { new ConsoleWindow(javaProcess, Box).Show(); };
 
         return
         [
@@ -288,7 +283,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
     private async void EditBackgroundButtonClicked(object? sender, RoutedEventArgs e)
     {
-        OpenFileDialog ofd = new OpenFileDialog();
+        OpenFileDialog ofd = new();
         ofd.Title = "Select the background image...";
         ofd.Filters = new List<FileDialogFilter>
         {
@@ -305,7 +300,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         string[]? files = await ofd.ShowAsync(MainWindow.Instance);
         if (files == null || files.Length == 0) return;
 
-        Bitmap backgroundBitmap = new Bitmap(files[0]);
+        Bitmap backgroundBitmap = new(files[0]);
         Box.SetAndSaveBackground(backgroundBitmap);
     }
 
@@ -354,7 +349,7 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
                 try
                 {
                     Box.Delete();
-                    
+
                     MainPage.Instance.PopulateBoxListAsync();
                     Navigation.Pop();
                 }
@@ -501,78 +496,78 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         ModloaderButtonLoaderIcon.IsVisible = true;
     }
 
-    void DuplicateButtonClicked(object? sender, RoutedEventArgs e)
+    private void DuplicateButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.ShowPopup(new DuplicateBoxPopup(Box));
     }
 
-    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    private void UpButtonClicked(object? sender, RoutedEventArgs e)
     {
         ContentsBox.Offset = Vector.Zero;
     }
 
-    void BoxNameTextBlockClicked(object? sender, PointerPressedEventArgs e)
+    private void BoxNameTextBlockClicked(object? sender, PointerPressedEventArgs e)
     {
         BoxNameTextbox.Text = Box.Manifest.Name;
         BoxNameTextbox.IsVisible = true;
     }
 
-    void BoxNameTextBoxKeyPressed(object? sender, KeyEventArgs e)
+    private void BoxNameTextBoxKeyPressed(object? sender, KeyEventArgs e)
     {
         if (e.Key != Key.Enter) return;
 
         SaveEditedName();
     }
 
-    void BoxNameTextLostFocus(object? sender, RoutedEventArgs e)
+    private void BoxNameTextLostFocus(object? sender, RoutedEventArgs e)
     {
         SaveEditedName();
     }
 
-    async void SaveEditedName()
+    private async void SaveEditedName()
     {
         Box.Manifest.Name = BoxNameTextbox.Text;
         BoxNameText.Text = Box.Manifest.Name;
         BoxNameTextbox.IsVisible = false;
-        
+
         await Box.SaveManifestAsync();
-        
+
         await MainPage.Instance.PopulateBoxListAsync();
     }
 
-    async void SaveEditedAuthor()
+    private async void SaveEditedAuthor()
     {
         Box.Manifest.Author = BoxAuthorTextbox.Text;
         BoxAuthorText.Text = Box.Manifest.Author;
         BoxAuthorTextbox.IsVisible = false;
-        
+
         await Box.SaveManifestAsync();
-        
+
         await MainPage.Instance.PopulateBoxListAsync();
     }
 
-    void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         BoxAuthorTextbox.Text = Box.Manifest.Author;
         BoxAuthorTextbox.IsVisible = true;
     }
 
-    void BoxAuthorTextBoxKeyPressed(object? sender, KeyEventArgs e)
+    private void BoxAuthorTextBoxKeyPressed(object? sender, KeyEventArgs e)
     {
         if (e.Key != Key.Enter) return;
 
         SaveEditedAuthor();
     }
 
-    void BoxAuthorTextLostFocus(object? sender, RoutedEventArgs e)
+    private void BoxAuthorTextLostFocus(object? sender, RoutedEventArgs e)
     {
         SaveEditedAuthor();
     }
 
-    void StopButtonClicked(object? sender, RoutedEventArgs e)
+    private void StopButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (!BackgroundManager.IsMinecraftRunning) return;
-        
+
         BackgroundManager.KillMinecraftProcess();
         UpdateButtons();
     }

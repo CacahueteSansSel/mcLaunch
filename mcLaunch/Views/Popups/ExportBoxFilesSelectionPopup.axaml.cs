@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
 
@@ -14,10 +11,10 @@ namespace mcLaunch.Views.Popups;
 
 public partial class ExportBoxFilesSelectionPopup : UserControl
 {
-    Box box;
-    Entry[] entries;
-    Action<Entry[]> entriesSelectedCallback;
-    
+    private readonly Entry[] entries;
+    private readonly Action<Entry[]> entriesSelectedCallback;
+    private Box box;
+
     public ExportBoxFilesSelectionPopup()
     {
         InitializeComponent();
@@ -34,7 +31,7 @@ public partial class ExportBoxFilesSelectionPopup : UserControl
         FilesList.ItemsSource = entries;
     }
 
-    bool IsPathMandatory(string path, bool isDirectory)
+    private bool IsPathMandatory(string path, bool isDirectory)
     {
         if (isDirectory && path == "mods") return true;
         if (isDirectory && path == "resourcepacks") return true;
@@ -43,7 +40,7 @@ public partial class ExportBoxFilesSelectionPopup : UserControl
         return false;
     }
 
-    string? GetEntryComment(string path, bool isDirectory)
+    private string? GetEntryComment(string path, bool isDirectory)
     {
         if (isDirectory)
         {
@@ -73,11 +70,11 @@ public partial class ExportBoxFilesSelectionPopup : UserControl
             case "options.txt":
                 return "Contains your Minecraft options";
         }
-        
+
         return null;
     }
 
-    Entry[] GetDirectoryEntries(string path)
+    private Entry[] GetDirectoryEntries(string path)
     {
         List<Entry> entries = new();
         DirectoryInfo dir = new(path);
@@ -103,16 +100,16 @@ public partial class ExportBoxFilesSelectionPopup : UserControl
         return entries.ToArray();
     }
 
-    void CancelButtonClicked(object? sender, RoutedEventArgs e)
+    private void CancelButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.HidePopup();
     }
 
-    void ExportButtonClicked(object? sender, RoutedEventArgs e)
+    private void ExportButtonClicked(object? sender, RoutedEventArgs e)
     {
         Entry[] selectedEntries = entries.Where(entry => entry.IsChecked).ToArray();
         Navigation.HidePopup();
-        
+
         entriesSelectedCallback?.Invoke(selectedEntries);
     }
 

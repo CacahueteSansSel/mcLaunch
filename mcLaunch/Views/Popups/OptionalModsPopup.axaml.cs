@@ -13,7 +13,7 @@ public partial class OptionalModsPopup : UserControl
 {
     private readonly Action cancelCallback;
     private readonly Action<MinecraftContentPlatform.ContentDependency[]> confirmCallback;
-    private Dictionary<MinecraftContent, MinecraftContentPlatform.ContentDependency> dependenciesDict = new();
+    private readonly Dictionary<MinecraftContent, MinecraftContentPlatform.ContentDependency> dependenciesDict = new();
 
     public OptionalModsPopup()
     {

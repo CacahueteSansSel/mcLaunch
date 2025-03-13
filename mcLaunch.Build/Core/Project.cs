@@ -31,7 +31,7 @@ public class Project
         });
 
         string stdout = await process!.StandardOutput.ReadToEndAsync();
-        string stderr = await process!.StandardOutput.ReadToEndAsync();
+        string stderr = await process.StandardOutput.ReadToEndAsync();
         await process.WaitForExitAsync();
 
         return process.ExitCode != 0

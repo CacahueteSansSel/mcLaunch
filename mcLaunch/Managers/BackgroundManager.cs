@@ -4,11 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Controls.Documents;
 using Avalonia.Platform;
-using ExCSS;
 using mcLaunch.Core.Boxes;
-using mcLaunch.Launchsite.Core;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
@@ -18,8 +15,8 @@ namespace mcLaunch.Managers;
 
 public static class BackgroundManager
 {
-    static TrayIcon? icon;
-    static Process? javaProcess;
+    private static TrayIcon? icon;
+    private static Process? javaProcess;
 
     public static bool IsInBackground { get; private set; }
     public static Box? RunningBox { get; private set; }
@@ -35,7 +32,7 @@ public static class BackgroundManager
         MainWindow.Instance.Hide();
         DiscordManager.Shutdown();
 
-        icon = new TrayIcon()
+        icon = new TrayIcon
         {
             Icon = new WindowIcon(AssetLoader.Open(new Uri("avares://mcLaunch/resources/icon.ico"))),
             IsVisible = true,
@@ -71,9 +68,9 @@ public static class BackgroundManager
             LeaveBackgroundState();
             Navigation.ShowPopup(new CrashPopup(javaProcess.ExitCode, box.Manifest.Id));
 
-            if (box.Manifest.Type != BoxType.Temporary) 
+            if (box.Manifest.Type != BoxType.Temporary)
                 return false;
-            
+
             await Navigation.WaitPopupClosingAsync();
         }
 
@@ -88,20 +85,17 @@ public static class BackgroundManager
         return true;
     }
 
-    public static bool IsBoxRunning(Box box)
-    {
-        return RunningBox != null && RunningBox.Manifest.Id == box.Manifest.Id;
-    }
+    public static bool IsBoxRunning(Box box) => RunningBox != null && RunningBox.Manifest.Id == box.Manifest.Id;
 
     public static void KillMinecraftProcess()
     {
         javaProcess?.Kill();
-        
+
         javaProcess = null;
         RunningBox = null;
     }
 
-    static async Task ProcessFastLaunchBoxAsync(Box box)
+    private static async Task ProcessFastLaunchBoxAsync(Box box)
     {
         Navigation.ShowPopup(new ConfirmMessageBoxPopup("Keep this FastLaunch instance ?",
             "Do you want to keep this FastLaunch instance ? If you delete it, it will be lost forever !",
@@ -130,7 +124,7 @@ public static class BackgroundManager
 
                 if (Directory.Exists(box.Path))
                 {
-                    Navigation.ShowPopup(new MessageBoxPopup("Box folder deletion", 
+                    Navigation.ShowPopup(new MessageBoxPopup("Box folder deletion",
                         "Failed to delete the box's folder, is the game still running ?", MessageStatus.Warning));
                 }
 
@@ -146,10 +140,10 @@ public static class BackgroundManager
         });
     }
 
-    static NativeMenu GetIconNativeMenu(NativeMenuItemBase[]? additionalItems = null)
+    private static NativeMenu GetIconNativeMenu(NativeMenuItemBase[]? additionalItems = null)
     {
-        NativeMenuItem showLauncherMenu = new NativeMenuItem("Show mcLaunch");
-        NativeMenuItem closeLauncherMenu = new NativeMenuItem("Close mcLaunch");
+        NativeMenuItem showLauncherMenu = new("Show mcLaunch");
+        NativeMenuItem closeLauncherMenu = new("Close mcLaunch");
         List<NativeMenuItemBase> additionalMenu = [];
         List<NativeMenuItemBase> systemMenu =
         [
@@ -162,15 +156,9 @@ public static class BackgroundManager
             Navigation.HidePopup();
             LeaveBackgroundState();
         };
-        closeLauncherMenu.Click += (_, _) =>
-        {
-            Environment.Exit(0);
-        };
+        closeLauncherMenu.Click += (_, _) => { Environment.Exit(0); };
 
-        if (additionalItems != null)
-        {
-            additionalMenu.AddRange(additionalItems);
-        }
+        if (additionalItems != null) additionalMenu.AddRange(additionalItems);
 
         return
         [

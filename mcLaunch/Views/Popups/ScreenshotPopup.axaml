@@ -23,10 +23,12 @@
                     <Button Classes="transparent" Margin="0" Click="OpenButtonClicked" ToolTip.Tip="Open Screenshot">
                         <Image Source="{SvgImage /resources/icons/open.svg}" Width="15" Height="15" />
                     </Button>
-                    <Button Classes="transparent" Margin="0" Click="OpenFolderButtonClicked" ToolTip.Tip="Open Screenshot Folder">
+                    <Button Classes="transparent" Margin="0" Click="OpenFolderButtonClicked"
+                            ToolTip.Tip="Open Screenshot Folder">
                         <Image Source="{SvgImage /resources/icons/folder.svg}" Width="15" Height="15" />
                     </Button>
-                    <Button Classes="transparent" Margin="0" Click="SetAsBoxBackgroundButtonClicked" ToolTip.Tip="Set Screenshot as Box Background">
+                    <Button Classes="transparent" Margin="0" Click="SetAsBoxBackgroundButtonClicked"
+                            ToolTip.Tip="Set Screenshot as Box Background">
                         <Image Source="{SvgImage /resources/icons/screenshot.svg}" Width="15" Height="15" />
                     </Button>
                 </StackPanel>

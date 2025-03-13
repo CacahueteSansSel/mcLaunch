@@ -9,10 +9,10 @@ namespace mcLaunch.Models;
 
 public abstract class PageNavigator : ReactiveObject
 {
-    readonly Stack<ITopLevelPageControl> stack = new();
-    ITopLevelPageControl? curPage;
-    Control? curPopup;
-    bool isPopupShown;
+    private readonly Stack<ITopLevelPageControl> stack = new();
+    private ITopLevelPageControl? curPage;
+    private Control? curPopup;
+    private bool isPopupShown;
 
     public PageNavigator(ITopLevelPageControl? mainPage)
     {

@@ -7,7 +7,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.Platform;
 using Avalonia.Threading;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Managers;
@@ -33,10 +32,10 @@ public class App : Application
     {
         Args = new ArgumentsParser(Environment.GetCommandLineArgs().Skip(1).ToArray());
 
-        #if DEBUG
+#if DEBUG
         TestsManager.Load();
-        #endif
-        
+#endif
+
         CurrentBuild.Load();
         Settings.Load();
         DownloadManager.Init(CurrentBuild.Version.ToString());

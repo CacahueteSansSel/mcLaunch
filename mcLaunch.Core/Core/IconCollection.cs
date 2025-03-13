@@ -23,7 +23,7 @@ public class IconCollection
     {
     }
 
-    public static IconCollection? Default { get; set; } = new() {IsDefaultIcon = true};
+    public static IconCollection? Default { get; set; } = new() { IsDefaultIcon = true };
 
     public Uri? ResourceUri { get; }
     public string? Filename { get; }

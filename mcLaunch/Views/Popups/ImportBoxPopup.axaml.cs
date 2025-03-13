@@ -1,15 +1,7 @@
-﻿using System;
-using System.IO;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-using mcLaunch.Core.Boxes;
-using mcLaunch.Core.Contents.Packs;
-using mcLaunch.Launchsite.Core;
 using mcLaunch.Utilities;
-using mcLaunch.Views.Pages;
 
 namespace mcLaunch.Views.Popups;
 

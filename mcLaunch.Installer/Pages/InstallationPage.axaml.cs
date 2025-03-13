@@ -36,7 +36,7 @@ public partial class InstallationPage : InstallerPage
     {
         Dispatcher.UIThread.Post(() =>
         {
-            StatusBar.Value = (int) MathF.Round(percent * 100);
+            StatusBar.Value = (int)MathF.Round(percent * 100);
             StatusText.Text = $"Downloading {Path.GetFileName(file)}...";
         });
     }
@@ -54,7 +54,7 @@ public partial class InstallationPage : InstallerPage
         catch (Exception e)
         {
             await File.WriteAllTextAsync("error.log", e.ToString());
-            
+
             MainWindow.Instance.SetPages(new FailedPage($"Internal Error\n{e}"));
         }
     }

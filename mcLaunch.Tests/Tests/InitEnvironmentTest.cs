@@ -36,7 +36,7 @@ public class InitEnvironmentTest : TestBase
             .LogToTrace()
             .SetupWithoutStarting();
 
-        App mcl = (App) app.Instance!;
+        App mcl = (App)app.Instance!;
         mcl.InitManagers();
 
         return TestResult.Ok;

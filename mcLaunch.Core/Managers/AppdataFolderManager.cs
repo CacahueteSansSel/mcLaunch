@@ -35,7 +35,10 @@ public static class AppdataFolderManager
 #endif
 
         if (OperatingSystem.IsWindows() || OperatingSystem.IsMacOS())
-            Path = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/.mclaunch{suffix}".FixPath();
+        {
+            Path = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/.mclaunch{suffix}"
+                .FixPath();
+        }
         else if (OperatingSystem.IsLinux())
             Path = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.mclaunch{suffix}".FixPath();
 
@@ -73,7 +76,7 @@ public static class AppdataFolderManager
 
             c++;
             statusCallback?.Invoke($"Moving {folder} ({c}/{FoldersToMigrate.Length + FilesToMigrate.Length})",
-                c / (float) FoldersToMigrate.Length / 2);
+                c / (float)FoldersToMigrate.Length / 2);
         }
 
         foreach (string file in FilesToMigrate)
@@ -82,7 +85,7 @@ public static class AppdataFolderManager
 
             c++;
             statusCallback?.Invoke($"Moving {file} ({c}/{FoldersToMigrate.Length + FilesToMigrate.Length})",
-                0.5f + c / (float) FilesToMigrate.Length / 2);
+                0.5f + c / (float)FilesToMigrate.Length / 2);
         }
     }
 

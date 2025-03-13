@@ -53,7 +53,7 @@ public partial class ContentSearchPage : UserControl, ITopLevelPageControl
         ModList.Search(Box, SearchBoxInput.Text);
     }
 
-    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    private void UpButtonClicked(object? sender, RoutedEventArgs e)
     {
         ScrollArea.Offset = Vector.Zero;
     }

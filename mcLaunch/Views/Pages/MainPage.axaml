@@ -17,7 +17,7 @@
                          TextChanged="SearchBoxTextChanged" VerticalContentAlignment="Center" />
                 <views:SeparatorLine />
                 <Button Classes="secondary square" ToolTip.Tip="Open boxes folder" Click="OpenFolderButtonClicked">
-                    <Image Source="{SvgImage /resources/icons/folder.svg}" Width="16" Height="16"></Image>
+                    <Image Source="{SvgImage /resources/icons/folder.svg}" Width="16" Height="16" />
                 </Button>
             </StackPanel>
             <ScrollViewer>

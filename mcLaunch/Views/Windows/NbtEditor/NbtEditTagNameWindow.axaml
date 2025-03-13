@@ -14,48 +14,36 @@
         <DockPanel DockPanel.Dock="Bottom">
             <Button DockPanel.Dock="Right" Classes="primary" Margin="10 0 0 0" Click="ConfirmButtonClicked">Confirm</Button>
             <Button DockPanel.Dock="Right" Classes="secondary" Click="CancelButtonClicked">Cancel</Button>
-            <Panel></Panel>
+            <Panel />
         </DockPanel>
         <DockPanel Height="20">
             <Panel>
                 <Image x:Name="IconTagByte" Source="{SvgImage /resources/nbt/byte.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
                 <Image x:Name="IconTagByteArray" Source="{SvgImage /resources/nbt/byte_array.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
                 <Image x:Name="IconTagCompound" Source="{SvgImage /resources/nbt/compound.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
                 <Image x:Name="IconTagDouble" Source="{SvgImage /resources/nbt/double.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
                 <Image x:Name="IconTagFloat" Source="{SvgImage /resources/nbt/float.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
                 <Image x:Name="IconTagInt" Source="{SvgImage /resources/nbt/int.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
                 <Image x:Name="IconTagIntArray" Source="{SvgImage /resources/nbt/int_array.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
                 <Image x:Name="IconTagList" Source="{SvgImage /resources/nbt/list.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
                 <Image x:Name="IconTagLong" Source="{SvgImage /resources/nbt/long.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
                 <Image x:Name="IconTagLongArray" Source="{SvgImage /resources/nbt/long_array.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
                 <Image x:Name="IconTagShort" Source="{SvgImage /resources/nbt/short.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
                 <Image x:Name="IconTagString" Source="{SvgImage /resources/nbt/string.svg}" IsVisible="False"
-                       Height="30">
-                </Image>
+                       Height="30" />
             </Panel>
-            <TextBox x:Name="NameTextBox" Margin="10 0 0 0"></TextBox>
+            <TextBox x:Name="NameTextBox" Margin="10 0 0 0" />
         </DockPanel>
     </DockPanel>
 </Window>

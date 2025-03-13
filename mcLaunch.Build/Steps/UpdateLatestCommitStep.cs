@@ -41,7 +41,7 @@ public class UpdateLatestCommitStep : BuildStepBase
 
         foreach (Commit commit in repository.Commits)
         {
-            if (commit.Id == ((Commit) latestTag.Target).Id) break;
+            if (commit.Id == ((Commit)latestTag.Target).Id) break;
             if (!commitFormat.IsMatch(commit.MessageShort)) continue;
             if (log.Contains(commit.MessageShort.Trim())) continue;
 

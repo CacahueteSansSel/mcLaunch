@@ -30,7 +30,7 @@ public partial class ExportBoxPopup : UserControl
         Navigation.HidePopup();
         Navigation.ShowPopup(new ExportBoxFilesSelectionPopup(box, async entries =>
         {
-            SaveFileDialog sfd = new SaveFileDialog();
+            SaveFileDialog sfd = new();
             sfd.Title = $"Export {box.Manifest.Name}";
             sfd.Filters = new List<FileDialogFilter>
             {

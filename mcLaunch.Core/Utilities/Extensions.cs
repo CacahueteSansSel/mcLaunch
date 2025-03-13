@@ -19,22 +19,16 @@ public static class Extensions
             counter++;
 
             if (counter == 0)
-            {
                 str += char.ToUpper(c);
-            }
             else if (c == '_')
             {
                 counter = -1;
                 str += " ";
             }
             else if (char.IsUpper(c))
-            {
                 str += $" {c}";
-            }
             else
-            {
                 str += c;
-            }
         }
 
         return str;
@@ -88,17 +82,17 @@ public static class Extensions
     public static string ToDisplay(this int i)
     {
         if (i < 1000) return i.ToString();
-        if (i < 1000000) return $"{(int) MathF.Round(i / 1000f)}k";
+        if (i < 1000000) return $"{(int)MathF.Round(i / 1000f)}k";
 
-        return $"{(int) MathF.Round(i / 1000000f)}M";
+        return $"{(int)MathF.Round(i / 1000000f)}M";
     }
 
     public static string ToDisplay(this TimeSpan span)
     {
-        int days = (int) Math.Round(span.TotalDays);
-        int weeks = (int) Math.Round(span.TotalDays / 7);
-        int months = (int) Math.Round(span.TotalDays / 30);
-        int years = (int) Math.Round(span.TotalDays / 365);
+        int days = (int)Math.Round(span.TotalDays);
+        int weeks = (int)Math.Round(span.TotalDays / 7);
+        int months = (int)Math.Round(span.TotalDays / 30);
+        int years = (int)Math.Round(span.TotalDays / 365);
 
         if (days == 1) return "a day ago";
         if (weeks == 1) return "a week ago";

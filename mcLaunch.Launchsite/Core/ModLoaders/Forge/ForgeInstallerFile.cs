@@ -63,8 +63,10 @@ public class ForgeInstallerFile : IDisposable
     public LibraryEntry? GetProcessorLibrary(PostProcessor processor)
     {
         foreach (LibraryEntry lib in Libraries)
+        {
             if (lib.Name == processor.JarName)
                 return lib;
+        }
 
         return null;
     }
@@ -78,8 +80,10 @@ public class ForgeInstallerFile : IDisposable
         Version = profile.VersionInfo;
 
         foreach (MinecraftVersion.ModelLibrary library in Version.Libraries)
+        {
             if (string.IsNullOrEmpty(library.Url))
                 library.Url = DefaultMavenRepositoryUrl;
+        }
 
         EmbeddedForgeJarPath = profile.Install.FilePath;
         EmbeddedForgeJarLibraryName = new LibraryName(profile.Install.Path);
@@ -94,7 +98,7 @@ public class ForgeInstallerFile : IDisposable
         Version = JsonSerializer.Deserialize<MinecraftVersion>(_archive
             .ReadAllText(profile.Json!.TrimStart('/')))!;
 
-        foreach (var processor in profile.Processors)
+        foreach (ForgeInstallProfile.ModelProcessor? processor in profile.Processors)
         {
             if (processor.Sides != null && !processor.Sides.Contains("client")) continue;
 
@@ -102,9 +106,9 @@ public class ForgeInstallerFile : IDisposable
             Processors.Add(new PostProcessor(jarName, processor.Classpath, processor.Args));
         }
 
-        foreach (var library in profile.Libraries)
+        foreach (MinecraftVersion.ModelLibrary library in profile.Libraries)
         {
-            LibraryName name = new LibraryName(library.Name);
+            LibraryName name = new(library.Name);
             bool isLocalLib = string.IsNullOrEmpty(library.Downloads.Artifact.Url);
 
             Libraries.Add(new LibraryEntry(name,
@@ -113,7 +117,7 @@ public class ForgeInstallerFile : IDisposable
                 isLocalLib));
         }
 
-        foreach (var kv in profile.Data!.AsObject())
+        foreach (KeyValuePair<string, JsonNode?> kv in profile.Data!.AsObject())
         {
             JsonNode values = kv.Value!;
             string clientValue = values["client"]!.AsValue().GetValue<string>();

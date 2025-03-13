@@ -1,14 +1,11 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform;
-using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
-using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.GitHub;
@@ -17,7 +14,6 @@ using mcLaunch.Launchsite.Http;
 using mcLaunch.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
-using mcLaunch.Views;
 using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
 using mcLaunch.Views.Windows;
@@ -26,8 +22,6 @@ namespace mcLaunch;
 
 public partial class MainWindow : Window
 {
-    public static MainWindow Instance { get; private set; }
-    
     public MainWindow()
     {
         Instance = this;
@@ -54,6 +48,8 @@ public partial class MainWindow : Window
         MainWindowDataContext.Instance.ShowStartingPage();
         Initialize();
     }
+
+    public static MainWindow Instance { get; private set; }
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
@@ -85,7 +81,7 @@ public partial class MainWindow : Window
     private async void Initialize()
     {
         Environment.CurrentDirectory = Path.GetDirectoryName(Environment.ProcessPath)!;
-        
+
         await Task.Run(async () =>
         {
             while (!AuthenticationManager.IsInitialized)
@@ -130,6 +126,7 @@ public partial class MainWindow : Window
         if (authResult != null && authResult.IsSuccess)
         {
             if (!authResult.Validate())
+            {
                 try
                 {
                     // Try to re-login with the Microsoft token
@@ -148,6 +145,7 @@ public partial class MainWindow : Window
                     MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
                     return;
                 }
+            }
 
             AuthenticationManager.SetAccount(authResult);
 
@@ -161,7 +159,7 @@ public partial class MainWindow : Window
                 await AuthenticationManager.DisconnectAsync();
                 return;
             }
-            
+
             MainWindowDataContext.Instance.Push<MainPage>();
 
             if (App.Args.Contains("cp-link"))
@@ -170,8 +168,9 @@ public partial class MainWindow : Window
                 if (!string.IsNullOrWhiteSpace(link))
                 {
                     Uri linkUri = new(link);
-                    MinecraftContent? content = await ModPlatformManager.Platform.GetContentByAppLaunchUriAsync(linkUri);
-                
+                    MinecraftContent? content =
+                        await ModPlatformManager.Platform.GetContentByAppLaunchUriAsync(linkUri);
+
                     if (content != null) Navigation.Push(new ContentDetailsPage(content, null));
                 }
             }
@@ -180,9 +179,7 @@ public partial class MainWindow : Window
                 Navigation.ShowPopup(new LauncherUpdatedPopup());
         }
         else
-        {
             MainWindowDataContext.Instance.Push<OnBoardingPage>(false);
-        }
 
         // Check for updates
         if (await UpdateManager.IsUpdateAvailableAsync())

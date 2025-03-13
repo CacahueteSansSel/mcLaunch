@@ -1,6 +1,5 @@
 ﻿using System.Xml;
 using mcLaunch.Launchsite.Http;
-using mcLaunch.Launchsite.Models.Forge;
 
 namespace mcLaunch.Launchsite.Core.ModLoaders;
 
@@ -31,7 +30,7 @@ public class ForgeModLoaderSupport : ModLoaderSupport
         XmlDocument? forgeVersionXml =
             await Api.GetAsyncXml("https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml");
 
-        if (forgeVersionXml == null) 
+        if (forgeVersionXml == null)
             return [];
 
         XmlNode versionsNode = forgeVersionXml!.DocumentElement!.SelectNodes("versioning/versions")![0]!;
@@ -41,8 +40,8 @@ public class ForgeModLoaderSupport : ModLoaderSupport
         {
             string currentVersion = childVersionNode.InnerText;
             if (!currentVersion.StartsWith(minecraftVersion)) continue;
-            
-            versions.Add(new ForgeModLoaderVersion()
+
+            versions.Add(new ForgeModLoaderVersion
             {
                 Name = currentVersion.Replace($"{minecraftVersion}-", "").Trim(),
                 MinecraftVersion = minecraftVersion,

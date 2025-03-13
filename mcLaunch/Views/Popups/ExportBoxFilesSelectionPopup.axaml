@@ -22,19 +22,25 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <Panel>
-                                    <StackPanel IsVisible="{Binding !IsMandatory}" Orientation="Horizontal" Spacing="10">
-                                        <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"></CheckBox>
-                                        <Image VerticalAlignment="Center" IsVisible="{Binding IsDirectory}" Height="16" Width="16" Source="{SvgImage /resources/icons/folder.svg}"></Image>
-                                        <Image VerticalAlignment="Center" IsVisible="{Binding !IsDirectory}" Height="16" Width="16" Source="{SvgImage /resources/icons/readme.svg}"></Image>
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}"></TextBlock>
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Comment}" Opacity="0.2"></TextBlock>
+                                    <StackPanel IsVisible="{Binding !IsMandatory}" Orientation="Horizontal"
+                                                Spacing="10">
+                                        <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+                                        <Image VerticalAlignment="Center" IsVisible="{Binding IsDirectory}" Height="16"
+                                               Width="16" Source="{SvgImage /resources/icons/folder.svg}" />
+                                        <Image VerticalAlignment="Center" IsVisible="{Binding !IsDirectory}"
+                                               Height="16" Width="16" Source="{SvgImage /resources/icons/readme.svg}" />
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Comment}" Opacity="0.2" />
                                     </StackPanel>
-                                    <StackPanel IsVisible="{Binding IsMandatory}" Orientation="Horizontal" Spacing="10" Opacity="0.5">
-                                        <CheckBox IsEnabled="False" IsChecked="True"></CheckBox>
-                                        <Image VerticalAlignment="Center" IsVisible="{Binding IsDirectory}" Height="16" Width="16" Source="{SvgImage /resources/icons/folder.svg}"></Image>
-                                        <Image VerticalAlignment="Center" IsVisible="{Binding !IsDirectory}" Height="16" Width="16" Source="{SvgImage /resources/icons/readme.svg}"></Image>
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}"></TextBlock>
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Comment}" Opacity="0.4"></TextBlock>
+                                    <StackPanel IsVisible="{Binding IsMandatory}" Orientation="Horizontal" Spacing="10"
+                                                Opacity="0.5">
+                                        <CheckBox IsEnabled="False" IsChecked="True" />
+                                        <Image VerticalAlignment="Center" IsVisible="{Binding IsDirectory}" Height="16"
+                                               Width="16" Source="{SvgImage /resources/icons/folder.svg}" />
+                                        <Image VerticalAlignment="Center" IsVisible="{Binding !IsDirectory}"
+                                               Height="16" Width="16" Source="{SvgImage /resources/icons/readme.svg}" />
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Comment}" Opacity="0.4" />
                                     </StackPanel>
                                 </Panel>
                             </StackPanel>

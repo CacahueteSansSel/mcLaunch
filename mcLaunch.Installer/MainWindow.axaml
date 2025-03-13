@@ -19,7 +19,7 @@
         <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
             <Image DockPanel.Dock="Left" Source="resources/sidebar.png" IsHitTestVisible="False" />
             <DockPanel IsHitTestVisible="False" DockPanel.Dock="Top" Height="50">
-                <TextBlock Text="mcLaunch Installer" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0"></TextBlock>
+                <TextBlock Text="mcLaunch Installer" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0" />
             </DockPanel>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="10" Margin="20"
                         VerticalAlignment="Center" HorizontalAlignment="Right">
@@ -28,7 +28,8 @@
             </StackPanel>
             <TransitioningContentControl Margin="20" Width="580" x:Name="SetupPageContainer">
                 <TransitioningContentControl.PageTransition>
-                    <PageSlide Orientation="Horizontal" Duration="0:00:00.200" SlideOutEasing="QuarticEaseOut" SlideInEasing="QuarticEaseOut" />
+                    <PageSlide Orientation="Horizontal" Duration="0:00:00.200" SlideOutEasing="QuarticEaseOut"
+                               SlideInEasing="QuarticEaseOut" />
                 </TransitioningContentControl.PageTransition>
             </TransitioningContentControl>
         </DockPanel>

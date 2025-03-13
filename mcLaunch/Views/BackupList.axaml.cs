@@ -44,7 +44,7 @@ public partial class BackupList : UserControl
 
     public async Task SetBackupsAsync(BoxBackup[] backups)
     {
-        Data ctx = (Data) DataContext;
+        Data ctx = (Data)DataContext;
         ctx.Backups = backups;
 
         NtsBanner.IsVisible = backups.Length == 0;
@@ -52,7 +52,7 @@ public partial class BackupList : UserControl
 
     private async Task LoadServerIconsAsync(MinecraftServer[] servers)
     {
-        Data ctx = (Data) DataContext;
+        Data ctx = (Data)DataContext;
 
         SetLoadingCircle(true);
 
@@ -71,7 +71,7 @@ public partial class BackupList : UserControl
     {
         if (e.AddedItems.Count > 0)
         {
-            BoxBackup backup = (BoxBackup) e.AddedItems[0];
+            BoxBackup backup = (BoxBackup)e.AddedItems[0];
 
             Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Restore backup {backup.Name} ?",
                 $"Do you want to restore the backup {backup.Name} created at {backup.CreationTime} ? This will replace all changes you made since, and you can't undo this operation !",
@@ -84,7 +84,8 @@ public partial class BackupList : UserControl
                     if (!success)
                     {
                         Navigation.ShowPopup(new MessageBoxPopup("Failed to restore backup",
-                            $"Failed to restore backup {backup.Name} onto {lastBox.Manifest.Name}", MessageStatus.Error));
+                            $"Failed to restore backup {backup.Name} onto {lastBox.Manifest.Name}",
+                            MessageStatus.Error));
 
                         return;
                     }

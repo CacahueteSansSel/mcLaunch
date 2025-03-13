@@ -33,7 +33,7 @@ public class MinecraftFolder
         {
             string jsonPath = $"{versionDirectory}/{System.IO.Path.GetFileName(versionDirectory)}.json";
             if (!File.Exists(jsonPath)) continue;
-            
+
             versions.Add(JsonSerializer.Deserialize<MinecraftVersion>(
                 File.ReadAllText(jsonPath))!);
         }
@@ -46,7 +46,7 @@ public class MinecraftFolder
         string platform = $"{Utilities.GetPlatformIdentifier()}-{Utilities.GetArchitecture()}";
 
         return ($"{Path}/runtime/{jvmName}/{platform}/{jvmName}/bin/javaw" +
-               (platform.StartsWith("windows") ? ".exe" : "")).FixPath();
+                (platform.StartsWith("windows") ? ".exe" : "")).FixPath();
     }
 
     public async Task InstallVersionAsync(MinecraftVersion version, bool force = false)

@@ -37,7 +37,8 @@ public partial class MainWindow : Window
         GitHubRelease? release = await GitHubRepository.GetLatestReleaseAsync();
         if (release == null)
         {
-            SetPages(new FailedPage("Failed to get the latest version from GitHub. Check if you are connected to the Internet and that you can access GitHub."));
+            SetPages(new FailedPage(
+                "Failed to get the latest version from GitHub. Check if you are connected to the Internet and that you can access GitHub."));
             return;
         }
 
@@ -99,7 +100,7 @@ public partial class MainWindow : Window
         SetupPageContainer.Content = pages[0];
         pages[0].OnShow();
     }
-    
+
     public void HideBottomButtons()
     {
         PreviousButton.IsVisible = false;

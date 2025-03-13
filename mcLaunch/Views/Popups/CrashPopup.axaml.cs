@@ -11,8 +11,8 @@ namespace mcLaunch.Views.Popups;
 public partial class CrashPopup : UserControl
 {
     private Box? box;
+    private string? customLog;
     private string? fileToOpen;
-    string? customLog;
 
     public CrashPopup(int exitCode, string boxId)
     {
@@ -32,7 +32,7 @@ public partial class CrashPopup : UserControl
         BodyText.IsVisible = false;
         ButtonsRow.IsEnabled = false;
 
-        box = (await BoxManager.LoadLocalBoxesAsync(includeTemp: true, runChecks: false)).FirstOrDefault(b => b.Manifest.Id == boxId);
+        box = (await BoxManager.LoadLocalBoxesAsync(true, false)).FirstOrDefault(b => b.Manifest.Id == boxId);
         if (box == null) return;
 
         OpenBoxDetailsButton.IsEnabled = box.Manifest.Type != BoxType.Temporary;
@@ -50,8 +50,8 @@ public partial class CrashPopup : UserControl
         else
         {
             bodyText = customLog ??
-                $"Minecraft has exited with code {exitCode}.\nThis indicates that Minecraft has encountered an error " +
-                $"and shut down.\nVerify that every mod is up to date, not duplicate, and compatible with each other";
+                       $"Minecraft has exited with code {exitCode}.\nThis indicates that Minecraft has encountered an error " +
+                       $"and shut down.\nVerify that every mod is up to date, not duplicate, and compatible with each other";
 
             BodyText.Text = bodyText;
             BodyText.IsVisible = true;
@@ -87,7 +87,7 @@ public partial class CrashPopup : UserControl
     {
         Navigation.HidePopup();
 
-        BoxDetailsPage page = new BoxDetailsPage(box!);
+        BoxDetailsPage page = new(box!);
         Navigation.Push(page);
 
         page.Run();

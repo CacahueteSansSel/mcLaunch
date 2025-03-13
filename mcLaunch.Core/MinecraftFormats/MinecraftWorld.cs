@@ -11,16 +11,16 @@ public class MinecraftWorld
 
     public MinecraftWorld(string path)
     {
-        CompoundTag levelDat = (CompoundTag) NbtFile.Read($"{path}/level.dat", FormatOptions.Java)["Data"];
+        CompoundTag levelDat = (CompoundTag)NbtFile.Read($"{path}/level.dat", FormatOptions.Java)["Data"];
 
         WorldPath = path;
         FolderName = Path.GetFileNameWithoutExtension(path);
-        Name = ((StringTag) levelDat["LevelName"]).Value;
-        GameMode = (MinecraftGameMode) ((IntTag) levelDat["GameType"]).Value;
-        long unix = ((LongTag) levelDat["LastPlayed"]).Value;
+        Name = ((StringTag)levelDat["LevelName"]).Value;
+        GameMode = (MinecraftGameMode)((IntTag)levelDat["GameType"]).Value;
+        long unix = ((LongTag)levelDat["LastPlayed"]).Value;
         LastPlayed = DateTimeOffset.FromUnixTimeMilliseconds(unix).LocalDateTime;
-        IsCheats = ((ByteTag) levelDat["allowCommands"]).Value == 1;
-        Version = ((StringTag) ((CompoundTag) levelDat["Version"])["Name"]).Value;
+        IsCheats = ((ByteTag)levelDat["allowCommands"]).Value == 1;
+        Version = ((StringTag)((CompoundTag)levelDat["Version"])["Name"]).Value;
 
         if (!File.Exists($"{path}/icon.png")) return;
 

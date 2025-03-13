@@ -16,12 +16,14 @@
         <Button Margin="0 10 15 0" ZIndex="10" IsHitTestVisible="True" VerticalAlignment="Top"
                 HorizontalAlignment="Right" Classes="transparent" Click="EditBackgroundButtonClicked"
                 ToolTip.Tip="Select background image">
-            <Image Source="{SvgImage /resources/icons/edit.svg}" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
+            <Image Source="{SvgImage /resources/icons/edit.svg}" RenderOptions.BitmapInterpolationMode="HighQuality"
+                   Width="13"
                    Height="13" />
         </Button>
         <Button Margin="0 0 15 20" ZIndex="10" IsHitTestVisible="True" VerticalAlignment="Bottom"
                 HorizontalAlignment="Right" Classes="transparent" Click="UpButtonClicked">
-            <Image Source="{SvgImage /resources/icons/arrow_up.svg}" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
+            <Image Source="{SvgImage /resources/icons/arrow_up.svg}"
+                   RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
                    Height="13" />
         </Button>
         <ScrollViewer x:Name="ContentsBox" ClipToBounds="True">
@@ -30,22 +32,26 @@
                     <views:BackButton />
                     <Button Margin="10 0 0 0" Classes="transparent" Click="EditButtonClicked"
                             ToolTip.Tip="Edit box informations">
-                        <Image Source="{SvgImage /resources/icons/edit.svg}" RenderOptions.BitmapInterpolationMode="HighQuality"
+                        <Image Source="{SvgImage /resources/icons/edit.svg}"
+                               RenderOptions.BitmapInterpolationMode="HighQuality"
                                Width="13" Height="13" />
                     </Button>
                     <Button Margin="5 0 0 0" Classes="transparent" Click="DuplicateButtonClicked"
                             ToolTip.Tip="Duplicate box">
-                        <Image Source="{SvgImage /resources/icons/copy.svg}" RenderOptions.BitmapInterpolationMode="HighQuality"
+                        <Image Source="{SvgImage /resources/icons/copy.svg}"
+                               RenderOptions.BitmapInterpolationMode="HighQuality"
                                Width="13" Height="13" />
                     </Button>
                     <Button Margin="5 0 0 0" Classes="transparent" Click="DeleteBoxButtonClicked"
                             ToolTip.Tip="Delete box">
-                        <Image Source="{SvgImage /resources/icons/delete.svg}" RenderOptions.BitmapInterpolationMode="HighQuality"
+                        <Image Source="{SvgImage /resources/icons/delete.svg}"
+                               RenderOptions.BitmapInterpolationMode="HighQuality"
                                Width="13" Height="13" />
                     </Button>
                     <Button Margin="5 0 0 0" Classes="transparent" Click="OpenFolderButtonClicked"
                             ToolTip.Tip="Open box folder">
-                        <Image Source="{SvgImage /resources/icons/folder.svg}" RenderOptions.BitmapInterpolationMode="HighQuality"
+                        <Image Source="{SvgImage /resources/icons/folder.svg}"
+                               RenderOptions.BitmapInterpolationMode="HighQuality"
                                Width="13" Height="13" />
                     </Button>
                 </StackPanel>
@@ -64,11 +70,13 @@
                                 </Button>
                             </Panel>
                             <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
-                                <Button x:Name="RunButton" Classes="primary" Width="124" HorizontalContentAlignment="Center"
+                                <Button x:Name="RunButton" Classes="primary" Width="124"
+                                        HorizontalContentAlignment="Center"
                                         Click="RunButtonClicked">
                                     Run
                                 </Button>
-                                <Button x:Name="StopButton" IsVisible="False" Classes="red" Width="124" HorizontalContentAlignment="Center"
+                                <Button x:Name="StopButton" IsVisible="False" Classes="red" Width="124"
+                                        HorizontalContentAlignment="Center"
                                         Click="StopButtonClicked">
                                     Stop
                                 </Button>
@@ -79,21 +87,26 @@
                             </StackPanel>
                             <StackPanel Classes="smoothShowLeft" Margin="29 0 0 0" Orientation="Vertical">
                                 <Panel>
-                                    <TextBlock x:Name="BoxNameText" Classes="title" Cursor="IBeam" FontSize="32" Text="{Binding Manifest.Name, FallbackValue='Box Name'}" PointerPressed="BoxNameTextBlockClicked" />
-                                    <TextBox x:Name="BoxNameTextbox" Classes="title" IsVisible="False" Margin="0 0 20 0" FontSize="32" Padding="0" KeyDown="BoxNameTextBoxKeyPressed" LostFocus="BoxNameTextLostFocus"></TextBox>
+                                    <TextBlock x:Name="BoxNameText" Classes="title" Cursor="IBeam" FontSize="32"
+                                               Text="{Binding Manifest.Name, FallbackValue='Box Name'}"
+                                               PointerPressed="BoxNameTextBlockClicked" />
+                                    <TextBox x:Name="BoxNameTextbox" Classes="title" IsVisible="False"
+                                             Margin="0 0 20 0" FontSize="32" Padding="0"
+                                             KeyDown="BoxNameTextBoxKeyPressed" LostFocus="BoxNameTextLostFocus" />
                                 </Panel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                                     <TextBlock Classes="light" FontSize="16">by</TextBlock>
                                     <Panel Width="200">
-                                        <TextBlock x:Name="BoxAuthorText" Classes="title" Margin="5 0 0 0" 
-                                                   FontSize="16" Text="{Binding Manifest.Author, 
+                                        <TextBlock x:Name="BoxAuthorText" Classes="title" Margin="5 0 0 0"
+                                                   FontSize="16"
+                                                   Text="{Binding Manifest.Author, 
                                                         FallbackValue='Box Author'}"
-                                                   PointerPressed="InputElement_OnPointerPressed" Cursor="IBeam"/>
-                                        <TextBox HorizontalAlignment="Stretch" x:Name="BoxAuthorTextbox" 
-                                                 Classes="title" IsVisible="False" Padding="0" 
-                                                 Margin="5 0 0 0" FontSize="16" 
-                                                 VerticalAlignment="Center" KeyDown="BoxAuthorTextBoxKeyPressed" 
-                                                 LostFocus="BoxAuthorTextLostFocus"></TextBox>
+                                                   PointerPressed="InputElement_OnPointerPressed" Cursor="IBeam" />
+                                        <TextBox HorizontalAlignment="Stretch" x:Name="BoxAuthorTextbox"
+                                                 Classes="title" IsVisible="False" Padding="0"
+                                                 Margin="5 0 0 0" FontSize="16"
+                                                 VerticalAlignment="Center" KeyDown="BoxAuthorTextBoxKeyPressed"
+                                                 LostFocus="BoxAuthorTextLostFocus" />
                                     </Panel>
                                 </StackPanel>
                                 <Border Margin="0 10 0 0" HorizontalAlignment="Left">

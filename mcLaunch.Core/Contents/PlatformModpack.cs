@@ -74,7 +74,7 @@ public class PlatformModpack : ReactiveObject, IVersionContent
     {
         if (IconPath == null) return null;
 
-        HttpClient client = new HttpClient();
+        HttpClient client = new();
 
         try
         {
@@ -93,7 +93,7 @@ public class PlatformModpack : ReactiveObject, IVersionContent
     {
         if (BackgroundPath == null) return null;
 
-        HttpClient client = new HttpClient();
+        HttpClient client = new();
 
         try
         {

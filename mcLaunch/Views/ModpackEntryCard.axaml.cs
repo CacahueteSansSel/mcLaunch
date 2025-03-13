@@ -1,9 +1,6 @@
-﻿using System;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Utilities;
@@ -45,10 +42,10 @@ public partial class ModpackEntryCard : UserControl
     {
         // Download additional infos for the modpack
         modpack = await ModPlatformManager.Platform.GetModpackAsync(modpack.Id);
-        
+
         Color accent = Color.FromUInt32(modpack.Color);
         Header.Background = new SolidColorBrush(new Color(255, accent.R, accent.G, accent.B));
-        
+
         if (modpack == null)
         {
             IsEnabled = false;
@@ -67,8 +64,6 @@ public partial class ModpackEntryCard : UserControl
             //ModLoaderBadge.SetIcon(modpack.LatestVersion.ModLoader.ToLower());
         }
         else
-        {
             ModLoaderBadge.IsVisible = false;
-        }
     }
 }

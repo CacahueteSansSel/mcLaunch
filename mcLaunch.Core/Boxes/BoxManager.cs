@@ -41,7 +41,7 @@ public static class BoxManager
             // Don't load invalid boxes
             if (!File.Exists($"{boxPath}/box.json")) return;
 
-            Box box = new Box(boxPath, false);
+            Box box = new(boxPath, false);
             await box.ReloadManifestAsync(true, runChecks);
 
             if (box.Manifest.Type == BoxType.Temporary && !includeTemp) return;
@@ -94,7 +94,7 @@ public static class BoxManager
             manifest.Icon = await IconCollection.FromFileAsync($"{path}/icon.png");
         }
 
-        var result = await manifest.Setup();
+        Result<MinecraftVersion>? result = await manifest.Setup();
         if (result.IsError) return new Result<string>(result);
 
         Directory.CreateDirectory($"{path}/minecraft");
@@ -110,7 +110,7 @@ public static class BoxManager
     public static async Task<Result<Box>> CreateFromModificationPack(ModificationPack pack, string authorFallback,
         Action<string, float> progressCallback)
     {
-        BoxManifest manifest = new BoxManifest(pack.Name, pack.Description ?? "no description",
+        BoxManifest manifest = new(pack.Name, pack.Description ?? "no description",
             string.IsNullOrWhiteSpace(pack.Author) ? authorFallback : pack.Author,
             pack.ModloaderId ?? "vanilla", pack.ModloaderVersion ?? pack.MinecraftVersion, null,
             await MinecraftManager.GetManifestAsync(pack.MinecraftVersion));
@@ -120,7 +120,7 @@ public static class BoxManager
         Result<string> path = await Create(manifest);
         if (path.IsError) return new Result<Box>(path);
 
-        Box box = new Box(manifest, path.Data!, false);
+        Box box = new(manifest, path.Data!, false);
 
         progressCallback?.Invoke($"Preparing Minecraft {pack.MinecraftVersion} ({pack.ModloaderId.Capitalize()})", 0f);
 
@@ -128,34 +128,34 @@ public static class BoxManager
 
         int index = 0;
 
-        foreach (var mod in pack.Modifications)
+        foreach (ModificationPack.SerializedMinecraftContent mod in pack.Modifications)
         {
             progressCallback?.Invoke($"Looking up modification {index}/{pack.Modifications.Length}",
-                MathUtilities.Clamp((float) index / pack.Modifications.Length, 0f, 1f) * (1f/3f));
+                MathUtilities.Clamp((float)index / pack.Modifications.Length, 0f, 1f) * (1f / 3f));
 
             await pack.InstallModificationAsync(box, mod);
 
             index++;
         }
-        
+
         progressCallback?.Invoke("Downloading modifications",
             1f / 3f);
 
         await DownloadManager.ProcessAll();
-        
+
         progressCallback?.Invoke("Extracting files",
             2f / 3f);
 
-        Regex driveLetterRegex = new Regex("[A-Z]:[\\/\\\\]");
+        Regex driveLetterRegex = new("[A-Z]:[\\/\\\\]");
 
         index = 0;
-        foreach (var additionalFile in pack.AdditionalFiles)
+        foreach (ModificationPack.AdditionalFile additionalFile in pack.AdditionalFiles)
         {
             if (additionalFile.Path.EndsWith('/') || additionalFile.Path.Contains("..")
                                                   || driveLetterRegex.IsMatch(additionalFile.Path)) continue;
 
             progressCallback?.Invoke("Extracting files",
-                (2f/3f) + MathUtilities.Clamp((float) index / pack.AdditionalFiles.Length, 0f, 1f) * (1f/3f));
+                2f / 3f + MathUtilities.Clamp((float)index / pack.AdditionalFiles.Length, 0f, 1f) * (1f / 3f));
 
             string filename = $"{box.Folder.Path}/{additionalFile.Path}";
             string folderPath = filename.Replace(Path.GetFileName(filename), "");
@@ -195,7 +195,7 @@ public static class BoxManager
         DownloadManager.OnDownloadProgressUpdate -= ProgressUpdate;
 
         progressCallback?.Invoke("Initializing Minecraft", 0.5f);
-            
+
         ModificationPack? modpack;
 
         try

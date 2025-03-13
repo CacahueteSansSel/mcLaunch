@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using mcLaunch.Launchsite.Http;
-using mcLaunch.Utilities;
 
 namespace mcLaunch.Views;
 
@@ -23,11 +21,11 @@ public partial class HeaderBar : UserControl
         Api.OnNetworkSuccess += OnApiNetworkSuccess;
 
         bool isLanuchEasterEgg = Random.Shared.Next(1, 1000) == 1;
-        
+
 #if DEBUG
         LogoDevelopment.IsVisible = !isLanuchEasterEgg;
         LogoDevelopmentLanuch.IsVisible = isLanuchEasterEgg;
-        
+
         LogoBeta.IsVisible = false;
         LogoBetaLanuch.IsVisible = false;
 #else

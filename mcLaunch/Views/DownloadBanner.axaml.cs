@@ -5,16 +5,14 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using mcLaunch.Core.Managers;
-using mcLaunch.Utilities;
-using mcLaunch.Views.Popups;
 using ReactiveUI;
 
 namespace mcLaunch.Views;
 
 public partial class DownloadBanner : UserControl
 {
-    private float lastProgress = 0f;
-    
+    private float lastProgress;
+
     public DownloadBanner()
     {
         InitializeComponent();
@@ -22,7 +20,7 @@ public partial class DownloadBanner : UserControl
         DataContext = new Data();
     }
 
-    private Data UIDataContext => (Data) DataContext;
+    private Data UIDataContext => (Data)DataContext;
     public bool IsForcedToBeShown { get; set; }
 
     public void ForceToShow()
@@ -79,7 +77,6 @@ public partial class DownloadBanner : UserControl
 
     private void OnDownloadError(string sectionName, string file)
     {
-        
     }
 
     private void OnDownloadSectionStarting(string sectionName, int index)
@@ -110,7 +107,7 @@ public partial class DownloadBanner : UserControl
         UIDataContext.ResourceCount = string.Empty;
         UIDataContext.ResourceDetailsText = string.Empty;
         UIDataContext.ResourceFileText = string.Empty;
-        
+
         ResourceCountText.IsVisible = false;
 
         if (!IsForcedToBeShown) IsVisible = false;
@@ -120,12 +117,12 @@ public partial class DownloadBanner : UserControl
     {
         //if (lastProgress >= percent) return;
         lastProgress = percent;
-        
+
         Dispatcher.UIThread.Post(() =>
         {
-            UIDataContext.Progress = (int) MathF.Round(percent * 100);
+            UIDataContext.Progress = (int)MathF.Round(percent * 100);
             UIDataContext.ResourceName = DownloadManager.DescriptionLine;
-            UIDataContext.ResourceDetailsText = $"{(int) MathF.Round(percent * 100)}%";
+            UIDataContext.ResourceDetailsText = $"{(int)MathF.Round(percent * 100)}%";
             UIDataContext.ResourceCount = $"{currentSectionIndex}/{DownloadManager.PendingSectionCount}";
             FileNameText.Text = Path.GetFileName(file);
 

@@ -53,14 +53,14 @@ public class JvmDownloader
         JsonNode? root = await Api.GetNodeAsync(ManifestUrl);
 
         JsonNode platformNode = root[platform];
-        JsonArray jvmNode = (JsonArray) platformNode[name];
+        JsonArray jvmNode = (JsonArray)platformNode[name];
 
         JvmEntry jvm = jvmNode[0].Deserialize<JvmEntry>()!;
 
         JsonNode jvmManifest = await Api.GetNodeAsync(jvm.Manifest.Url);
         GotJvmManifest?.Invoke(jvm.Manifest.Url, jvmManifest, platform, name);
 
-        foreach (var (relPath, value) in jvmManifest["files"].AsObject())
+        foreach ((string? relPath, JsonNode? value) in jvmManifest["files"].AsObject())
         {
             string fullPath = $"{targetPath}/{relPath}";
             JvmFileEntry? file = value.Deserialize<JvmFileEntry>();

@@ -2,9 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
         xmlns:views="clr-namespace:mcLaunch.Views"
-        xmlns:nbtEditor="clr-namespace:mcLaunch.Views.Windows.NbtEditor"
         mc:Ignorable="d"
         Width="800" Height="600" CanResize="True"
         x:Class="mcLaunch.Views.Windows.NbtEditor.NbtEditorWindow"
@@ -21,8 +19,8 @@
         <DockPanel>
             <DockPanel IsHitTestVisible="False" DockPanel.Dock="Top" Height="50"
                        Background="{DynamicResource Background}">
-                <Image Source="/resources/logo_beta.png" DockPanel.Dock="Left" Height="35" Margin="20 0 0 0"></Image>
-                <TextBlock Text="NBT Editor" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0"></TextBlock>
+                <Image Source="/resources/logo_beta.png" DockPanel.Dock="Left" Height="35" Margin="20 0 0 0" />
+                <TextBlock Text="NBT Editor" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0" />
             </DockPanel>
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top" Height="60" Background="{DynamicResource Background}"
@@ -31,21 +29,33 @@
                             Margin="20 0 0 0" Click="NewTagButtonClicked">
                         <Button.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="New NBT Tag" IsEnabled="False"></MenuItem>
-                                <MenuItem x:Name="ItemTagCompound" Header="Compound" Icon="{SvgImage /resources/nbt/compound.svg}" Click="TagMenuItemClicked" />
-                                <MenuItem x:Name="ItemTagList" Header="List" Icon="{SvgImage /resources/nbt/list.svg}" Click="TagMenuItemClicked" />
-                                <Separator></Separator>
-                                <MenuItem x:Name="ItemTagByte" Header="Byte" Icon="{SvgImage /resources/nbt/byte.svg}" Click="TagMenuItemClicked" />
-                                <MenuItem x:Name="ItemTagShort" Header="Short" Icon="{SvgImage /resources/nbt/short.svg}" Click="TagMenuItemClicked" />
-                                <MenuItem x:Name="ItemTagInt" Header="Int" Icon="{SvgImage /resources/nbt/int.svg}" Click="TagMenuItemClicked" />
-                                <MenuItem x:Name="ItemTagLong" Header="Long" Icon="{SvgImage /resources/nbt/long.svg}" Click="TagMenuItemClicked" />
-                                <MenuItem x:Name="ItemTagDouble" Header="Double" Icon="{SvgImage /resources/nbt/double.svg}" Click="TagMenuItemClicked" />
-                                <MenuItem x:Name="ItemTagFloat" Header="Float" Icon="{SvgImage /resources/nbt/float.svg}" Click="TagMenuItemClicked" />
-                                <MenuItem x:Name="ItemTagString" Header="String" Icon="{SvgImage /resources/nbt/string.svg}" Click="TagMenuItemClicked" />
-                                <Separator></Separator>
-                                <MenuItem x:Name="ItemTagByteArray" Header="Byte Array" Icon="{SvgImage /resources/nbt/byte_array.svg}" Click="TagMenuItemClicked" />
-                                <MenuItem x:Name="ItemTagIntArray" Header="Int Array" Icon="{SvgImage /resources/nbt/int_array.svg}" Click="TagMenuItemClicked" />
-                                <MenuItem x:Name="ItemTagLongArray" Header="Long Array" Icon="{SvgImage /resources/nbt/long_array.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem Header="New NBT Tag" IsEnabled="False" />
+                                <MenuItem x:Name="ItemTagCompound" Header="Compound"
+                                          Icon="{SvgImage /resources/nbt/compound.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagList" Header="List" Icon="{SvgImage /resources/nbt/list.svg}"
+                                          Click="TagMenuItemClicked" />
+                                <Separator />
+                                <MenuItem x:Name="ItemTagByte" Header="Byte" Icon="{SvgImage /resources/nbt/byte.svg}"
+                                          Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagShort" Header="Short"
+                                          Icon="{SvgImage /resources/nbt/short.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagInt" Header="Int" Icon="{SvgImage /resources/nbt/int.svg}"
+                                          Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagLong" Header="Long" Icon="{SvgImage /resources/nbt/long.svg}"
+                                          Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagDouble" Header="Double"
+                                          Icon="{SvgImage /resources/nbt/double.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagFloat" Header="Float"
+                                          Icon="{SvgImage /resources/nbt/float.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagString" Header="String"
+                                          Icon="{SvgImage /resources/nbt/string.svg}" Click="TagMenuItemClicked" />
+                                <Separator />
+                                <MenuItem x:Name="ItemTagByteArray" Header="Byte Array"
+                                          Icon="{SvgImage /resources/nbt/byte_array.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagIntArray" Header="Int Array"
+                                          Icon="{SvgImage /resources/nbt/int_array.svg}" Click="TagMenuItemClicked" />
+                                <MenuItem x:Name="ItemTagLongArray" Header="Long Array"
+                                          Icon="{SvgImage /resources/nbt/long_array.svg}" Click="TagMenuItemClicked" />
                             </ContextMenu>
                         </Button.ContextMenu>
                         <Image Source="{SvgImage /resources/icons/plus.svg}" Width="13" Height="13" />
@@ -84,41 +94,29 @@
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <Panel>
                                     <Image Source="{SvgImage /resources/nbt/byte.svg}" IsVisible="{Binding IsByte}"
-                                           Height="20">
-                                    </Image>
+                                           Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/byte_array.svg}"
-                                           IsVisible="{Binding IsByteArray}" Height="20">
-                                    </Image>
+                                           IsVisible="{Binding IsByteArray}" Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/compound.svg}"
-                                           IsVisible="{Binding IsCompound}" Height="20">
-                                    </Image>
+                                           IsVisible="{Binding IsCompound}" Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/double.svg}" IsVisible="{Binding IsDouble}"
-                                           Height="20">
-                                    </Image>
+                                           Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/float.svg}" IsVisible="{Binding IsFloat}"
-                                           Height="20">
-                                    </Image>
+                                           Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/int.svg}" IsVisible="{Binding IsInt}"
-                                           Height="20">
-                                    </Image>
+                                           Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/int_array.svg}"
-                                           IsVisible="{Binding IsIntArray}" Height="20">
-                                    </Image>
+                                           IsVisible="{Binding IsIntArray}" Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/list.svg}" IsVisible="{Binding IsList}"
-                                           Height="20">
-                                    </Image>
+                                           Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/long.svg}" IsVisible="{Binding IsLong}"
-                                           Height="20">
-                                    </Image>
+                                           Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/long_array.svg}"
-                                           IsVisible="{Binding IsLongArray}" Height="20">
-                                    </Image>
+                                           IsVisible="{Binding IsLongArray}" Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/short.svg}" IsVisible="{Binding IsShort}"
-                                           Height="20">
-                                    </Image>
+                                           Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/string.svg}" IsVisible="{Binding IsString}"
-                                           Height="20">
-                                    </Image>
+                                           Height="20" />
                                 </Panel>
                                 <Panel>
                                     <TextBlock VerticalAlignment="Center" MinWidth="250"
@@ -127,12 +125,12 @@
                                     <TextBlock VerticalAlignment="Center" MinWidth="250"
                                                IsVisible="{Binding !IsNameEmpty}" Text="{Binding Name}" />
                                 </Panel>
-                                <TextBox Width="200" IsVisible="{Binding HasValue}" Text="{Binding Value, Mode=TwoWay}"></TextBox>
+                                <TextBox Width="200" IsVisible="{Binding HasValue}" Text="{Binding Value, Mode=TwoWay}" />
                             </StackPanel>
                         </TreeDataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>
             </DockPanel>
-        </DockPanel> 
+        </DockPanel>
     </Panel>
 </Window>

@@ -18,7 +18,7 @@ public partial class SettingsSection : UserControl
 
         foreach (Setting setting in group.Settings)
         {
-            SettingElement element = new SettingElement(setting);
+            SettingElement element = new(setting);
             SettingsRoot.Children.Add(element);
         }
     }

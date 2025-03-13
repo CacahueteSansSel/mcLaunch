@@ -21,7 +21,7 @@ public class BabricModLoaderSupport : ModLoaderSupport
 
         if (versions == null) return null;
 
-        return versions.Select(ver => (ModLoaderVersion) new BabricModLoaderVersion
+        return versions.Select(ver => (ModLoaderVersion)new BabricModLoaderVersion
         {
             Name = ver.Loader.Version,
             MinecraftVersion = minecraftVersion

@@ -52,7 +52,7 @@ public partial class StatusPopup : UserControl
     public float StatusPercent
     {
         get => dctx.StatusPercent / 100f;
-        set => dctx.StatusPercent = (int) (value * 100);
+        set => dctx.StatusPercent = (int)(value * 100);
     }
 
     public bool ShowDownloadBanner

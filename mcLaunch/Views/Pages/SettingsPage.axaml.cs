@@ -7,7 +7,6 @@ using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.Settings;
 using mcLaunch.Views.Windows;
 using mcLaunch.Views.Windows.NbtEditor;
-using SharpNBT;
 
 namespace mcLaunch.Views.Pages;
 
@@ -30,7 +29,7 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
         NbtButton.IsVisible = false;
 #endif
 
-        int years = (int) MathF.Floor((float) (DateTime.Now - Constants.McLaunchBirthDate).TotalDays / 365);
+        int years = (int)MathF.Floor((float)(DateTime.Now - Constants.McLaunchBirthDate).TotalDays / 365);
         YearsText.Text = $"{years} year{(years > 1 ? "s" : "")} old";
     }
 
@@ -42,7 +41,7 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
 
         foreach (SettingsGroup group in groups)
         {
-            SettingsSection section = new SettingsSection(group);
+            SettingsSection section = new(group);
             SettingsRoot.Children.Add(section);
         }
     }
@@ -67,17 +66,17 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
         await UpdateManager.UpdateInstallerAsync();
     }
 
-    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    private void UpButtonClicked(object? sender, RoutedEventArgs e)
     {
         ScrollArea.Offset = Vector.Zero;
     }
 
-    void ConsoleButtonClicked(object? sender, RoutedEventArgs e)
+    private void ConsoleButtonClicked(object? sender, RoutedEventArgs e)
     {
         new ConsoleWindow().Show();
     }
 
-    void NbtEditorButtonClicked(object? sender, RoutedEventArgs e)
+    private void NbtEditorButtonClicked(object? sender, RoutedEventArgs e)
     {
         new NbtEditorWindow("level.dat").Show();
     }

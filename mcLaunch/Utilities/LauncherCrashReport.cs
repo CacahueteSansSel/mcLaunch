@@ -11,7 +11,8 @@ public static class LauncherCrashReport
     {
         StringWriter wr = new();
 
-        wr.WriteLine($"[!] mcLaunch v{CurrentBuild.Version} commit {CurrentBuild.Commit} on branch {CurrentBuild.Branch}");
+        wr.WriteLine(
+            $"[!] mcLaunch v{CurrentBuild.Version} commit {CurrentBuild.Commit} on branch {CurrentBuild.Branch}");
         wr.WriteLine("If you are reporting this, please include this crash report");
         wr.WriteLine($"Platform: {Environment.OSVersion}");
         wr.WriteLine($"Platform ID: {Launchsite.Core.Utilities.GetPlatformIdentifier()}");

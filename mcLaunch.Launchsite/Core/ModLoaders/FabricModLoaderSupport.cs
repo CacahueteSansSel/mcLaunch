@@ -21,7 +21,7 @@ public class FabricModLoaderSupport : ModLoaderSupport
 
         if (versions == null) return null;
 
-        return versions.Select(ver => (ModLoaderVersion) new FabricModLoaderVersion
+        return versions.Select(ver => (ModLoaderVersion)new FabricModLoaderVersion
         {
             Name = ver.Loader.Version,
             MinecraftVersion = minecraftVersion

@@ -36,7 +36,7 @@
             </Panel>
         </StackPanel>
         <views:LoadingCircle x:Name="LoadCircle" IsVisible="False" IsHitTestVisible="False" />
-        <views:NothingToShowBanner x:Name="NtsBanner" IsVisible="False" IsHitTestVisible="False" 
+        <views:NothingToShowBanner x:Name="NtsBanner" IsVisible="False" IsHitTestVisible="False"
                                    Footer="Installed content will show here" />
     </Panel>
 </UserControl>
