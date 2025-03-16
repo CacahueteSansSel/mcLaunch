@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Jdenticon;
@@ -17,7 +18,7 @@ public static class AnonymityManager
             AssetLoader.Open(new Uri("avares://mcLaunch/resources/settings/anonymized_names.txt"));
         StreamReader reader = new(fileStream);
 
-        anonNames = reader.ReadToEnd().Split("\r\n");
+        anonNames = reader.ReadToEnd().Split("\n").Select(s => s.Trim('\r')).ToArray();
     }
 
     public static AnonymitySession CreateSession() => new(anonNames);
