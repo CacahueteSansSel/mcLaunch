@@ -1,4 +1,5 @@
-﻿using mcLaunch.Launchsite.Http;
+﻿using System.Text.Json;
+using mcLaunch.Launchsite.Http;
 using mcLaunch.Launchsite.Models.NeoForge;
 
 namespace mcLaunch.Launchsite.Core.ModLoaders;
@@ -27,43 +28,50 @@ public class NeoForgeModLoaderSupport : ModLoaderSupport
 
     public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion)
     {
-        NeoForgeMavenQuery? query = await Api.GetAsync<NeoForgeMavenQuery>
-            (string.Format(OlderMavenQueryUrl, minecraftVersion));
-
-        string versionName;
-        bool newer = false;
-
-        if (query == null)
+        try
         {
-            // Recent NeoForge version omits the "1." on the version name. Not sure if it's related to the
-            // Minecraft version or not, but we will try that for now
+            NeoForgeMavenQuery? query = await Api.GetAsync<NeoForgeMavenQuery>
+                (string.Format(OlderMavenQueryUrl, minecraftVersion));
 
-            query = await Api.GetAsync<NeoForgeMavenQuery>
-                (string.Format(NewerMavenQueryUrl, minecraftVersion[2..]));
+            string versionName;
+            bool newer = false;
 
-            if (query == null) return null;
-            if (!query.Version.StartsWith(minecraftVersion[2..])) return null;
-
-            versionName = query.Version;
-            newer = true;
-        }
-        else
-        {
-            if (!query.Version.StartsWith($"{minecraftVersion}-")) return null;
-
-            versionName = query.Version.Split('-')[1];
-        }
-
-        return new[]
-        {
-            new NeoForgeModLoaderVersion
+            if (query == null)
             {
-                MinecraftVersion = minecraftVersion,
-                Name = versionName,
-                JvmExecutablePath = JvmExecutablePath,
-                SystemFolderPath = SystemFolderPath,
-                IsNewerFormat = newer
+                // Recent NeoForge version omits the "1." on the version name. Not sure if it's related to the
+                // Minecraft version or not, but we will try that for now
+
+                query = await Api.GetAsync<NeoForgeMavenQuery>
+                    (string.Format(NewerMavenQueryUrl, minecraftVersion[2..]));
+
+                if (query == null) return null;
+                if (!query.Version.StartsWith(minecraftVersion[2..])) return null;
+
+                versionName = query.Version;
+                newer = true;
             }
-        };
+            else
+            {
+                if (!query.Version.StartsWith($"{minecraftVersion}-")) return null;
+
+                versionName = query.Version.Split('-')[1];
+            }
+
+            return
+            [
+                new NeoForgeModLoaderVersion
+                {
+                    MinecraftVersion = minecraftVersion,
+                    Name = versionName,
+                    JvmExecutablePath = JvmExecutablePath,
+                    SystemFolderPath = SystemFolderPath,
+                    IsNewerFormat = newer
+                }
+            ];
+        }
+        catch (JsonException e)
+        {
+            return [];
+        }
     }
 }

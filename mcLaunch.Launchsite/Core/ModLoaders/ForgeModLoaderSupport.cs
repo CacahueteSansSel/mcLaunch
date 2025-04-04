@@ -27,29 +27,36 @@ public class ForgeModLoaderSupport : ModLoaderSupport
         if (Version.TryParse(minecraftVersion, out Version? version) && version < new Version("1.12.2"))
             return [];
 
-        XmlDocument? forgeVersionXml =
-            await Api.GetAsyncXml("https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml");
-
-        if (forgeVersionXml == null)
-            return [];
-
-        XmlNode versionsNode = forgeVersionXml!.DocumentElement!.SelectNodes("versioning/versions")![0]!;
-        List<ForgeModLoaderVersion> versions = [];
-
-        foreach (XmlNode childVersionNode in versionsNode.ChildNodes)
+        try
         {
-            string currentVersion = childVersionNode.InnerText;
-            if (!currentVersion.StartsWith(minecraftVersion)) continue;
+            XmlDocument? forgeVersionXml =
+                await Api.GetAsyncXml("https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml");
 
-            versions.Add(new ForgeModLoaderVersion
+            if (forgeVersionXml == null)
+                return [];
+
+            XmlNode versionsNode = forgeVersionXml!.DocumentElement!.SelectNodes("versioning/versions")![0]!;
+            List<ForgeModLoaderVersion> versions = [];
+
+            foreach (XmlNode childVersionNode in versionsNode.ChildNodes)
             {
-                Name = currentVersion.Replace($"{minecraftVersion}-", "").Trim(),
-                MinecraftVersion = minecraftVersion,
-                JvmExecutablePath = JvmExecutablePath,
-                SystemFolderPath = SystemFolderPath
-            });
-        }
+                string currentVersion = childVersionNode.InnerText;
+                if (!currentVersion.StartsWith(minecraftVersion)) continue;
 
-        return versions.ToArray();
+                versions.Add(new ForgeModLoaderVersion
+                {
+                    Name = currentVersion.Replace($"{minecraftVersion}-", "").Trim(),
+                    MinecraftVersion = minecraftVersion,
+                    JvmExecutablePath = JvmExecutablePath,
+                    SystemFolderPath = SystemFolderPath
+                });
+            }
+
+            return versions.ToArray();
+        }
+        catch (XmlException e)
+        {
+            return [];
+        }
     }
 }

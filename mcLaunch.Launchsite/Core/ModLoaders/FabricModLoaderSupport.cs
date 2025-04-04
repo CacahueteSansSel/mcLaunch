@@ -1,4 +1,5 @@
-﻿using mcLaunch.Launchsite.Http;
+﻿using System.Text.Json;
+using mcLaunch.Launchsite.Http;
 using mcLaunch.Launchsite.Models.Fabric;
 
 namespace mcLaunch.Launchsite.Core.ModLoaders;
@@ -15,16 +16,24 @@ public class FabricModLoaderSupport : ModLoaderSupport
 
     public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion)
     {
-        FabricLoaderManifest[]? versions = await Api.GetAsync<FabricLoaderManifest[]>(
-            $"{Url}/v2/versions/loader/{minecraftVersion}",
-            true);
-
-        if (versions == null) return null;
-
-        return versions.Select(ver => (ModLoaderVersion)new FabricModLoaderVersion
+        try
         {
-            Name = ver.Loader.Version,
-            MinecraftVersion = minecraftVersion
-        }).ToArray();
+            FabricLoaderManifest[]? versions = await Api.GetAsync<FabricLoaderManifest[]>(
+                $"{Url}/v2/versions/loader/{minecraftVersion}",
+                true);
+
+            if (versions == null) return null;
+
+            return versions.Select(ver => (ModLoaderVersion)new FabricModLoaderVersion
+            {
+                Name = ver.Loader.Version,
+                MinecraftVersion = minecraftVersion
+            }).ToArray();
+        }
+        catch (JsonException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

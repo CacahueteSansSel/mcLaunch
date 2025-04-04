@@ -9,13 +9,13 @@ public class VanillaModLoaderSupport : ModLoaderSupport
 
     public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion)
     {
-        return new ModLoaderVersion[]
-        {
-            new()
+        return
+        [
+            new ModLoaderVersion
             {
                 MinecraftVersion = minecraftVersion,
                 Name = minecraftVersion
             }
-        };
+        ];
     }
 }
