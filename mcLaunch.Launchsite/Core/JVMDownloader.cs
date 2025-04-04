@@ -48,14 +48,31 @@ public class JvmDownloader
     public async Task DownloadAsync(string platform, string name)
     {
         string targetPath = GetJvmPath(platform, name);
-        if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
 
         JsonNode? root = await Api.GetNodeAsync(ManifestUrl);
 
-        JsonNode platformNode = root[platform];
-        JsonArray jvmNode = (JsonArray)platformNode[name];
+        List<string> platforms = [platform];
+        JvmEntry jvm = null;
 
-        JvmEntry jvm = jvmNode[0].Deserialize<JvmEntry>()!;
+        if (platform == "mac-os-arm64")
+        {
+            // Adding macos intel platform if the java version we want is too old to even exist on apple silicon platforms
+            platforms.Add("mac-os");
+        }
+
+        foreach (string curPlatform in platforms)
+        {
+            JsonNode platformNode = root[curPlatform];
+            JsonArray jvmNode = (JsonArray)platformNode[name];
+            if (jvmNode.Count == 0) continue;
+
+            jvm = jvmNode[0].Deserialize<JvmEntry>()!;
+            break;
+        }
+
+        if (jvm == null) throw new Exception($"Failed to download {name} for {platform}");
+        
+        if (!Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
 
         JsonNode jvmManifest = await Api.GetNodeAsync(jvm.Manifest.Url);
         GotJvmManifest?.Invoke(jvm.Manifest.Url, jvmManifest, platform, name);
