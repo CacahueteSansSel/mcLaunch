@@ -1,10 +1,12 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
+using mcLaunch.Views.Windows;
 
 namespace mcLaunch.Views.Popups;
 
@@ -13,11 +15,15 @@ public partial class CrashPopup : UserControl
     private Box? box;
     private string? customLog;
     private string? fileToOpen;
+    private Process? javaProcess;
 
-    public CrashPopup(int exitCode, string boxId)
+    public CrashPopup(int exitCode, string boxId, Process? javaProcess)
     {
         InitializeComponent();
 
+        this.javaProcess = javaProcess;
+        DebugButton.IsEnabled = javaProcess != null;
+        
         PopulateAsync(boxId, exitCode);
     }
 
@@ -96,5 +102,13 @@ public partial class CrashPopup : UserControl
     private void OpenCrashReportButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (fileToOpen != null) PlatformSpecific.OpenFile(fileToOpen);
+    }
+
+    private void DebugButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        if (javaProcess == null) 
+            return;
+        
+        new DebugBoxCrashPopup(box!, javaProcess).ShowDialog(MainWindow.Instance);
     }
 }

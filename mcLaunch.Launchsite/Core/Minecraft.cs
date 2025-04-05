@@ -32,6 +32,9 @@ public class Minecraft
     public MinecraftVersion Version { get; }
     public MinecraftFolder Folder { get; }
     public List<string> StandardOutput { get; } = [];
+    public string? JvmPath => jvmPath;
+    public string LibrariesFolderPath => args["library_directory"];
+    public string NativesFolderPath => args["natives_directory"];
     public event Action<string> OnStandardOutputLineReceived;
 
     public Minecraft WithSystemFolder(MinecraftFolder systemFolder)

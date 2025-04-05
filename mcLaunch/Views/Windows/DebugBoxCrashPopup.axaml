@@ -1,0 +1,126 @@
+<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:windows="clr-namespace:mcLaunch.Views.Windows"
+    xmlns:views="clr-namespace:mcLaunch.Views"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="mcLaunch.Views.Windows.DebugBoxCrashPopup"
+    WindowStartupLocation="CenterScreen"
+    Icon="/resources/icon.ico"
+    Width="800" Height="450"
+    Background="{DynamicResource BackgroundDarker}"
+    Title="Debug box crash"
+    x:DataType="windows:DebugBoxCrashWindowData">
+    <Window.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+    </Window.Styles>
+    <Border Classes="frame">
+        <DockPanel>
+            <StackPanel Margin="10" Orientation="Vertical" DockPanel.Dock="Left">
+                <TextBlock TextAlignment="Center" FontSize="25" Classes="title">DEBUG</TextBlock>
+                <Image Source="{Binding Box.Manifest.Icon.IconLarge}" Width="150" Height="150" Stretch="Uniform"></Image>
+            </StackPanel>
+            <TabControl>
+                <TabItem Header="Box overview" FontSize="15">
+                    <DockPanel>
+                        <DockPanel Margin="10 0 0 5">
+                            <TextBlock Classes="title" FontSize="20" DockPanel.Dock="Top">Box settings</TextBlock>
+                            <ListBox ItemsSource="{Binding BoxSettings}">
+                                <ListBox.Styles>
+                                    <Style Selector="ListBoxItem">
+                                        <Setter Property="CornerRadius" Value="4" />
+                                        <Setter Property="Margin" Value="4" />
+                                    </Style>
+                                </ListBox.Styles>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel>
+                                            <TextBlock Text="{Binding Title}" Classes="title"></TextBlock>
+                                            <TextBlock Text="{Binding Contents}" Margin="10 0 0 0" Opacity="0.5"></TextBlock>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+                    </DockPanel>
+                </TabItem>
+                <TabItem Header="Minecraft" FontSize="15">
+                    <ListBox ItemsSource="{Binding MinecraftSettings}">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="CornerRadius" Value="4" />
+                                <Setter Property="Margin" Value="4" />
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <TextBlock Text="{Binding Title}" Classes="title"></TextBlock>
+                                    <TextBlock Text="{Binding Contents}" Margin="10 0 0 0" Opacity="0.5"></TextBlock>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </TabItem>
+                <TabItem Header="Arguments" FontSize="15">
+                    <ListBox ItemsSource="{Binding ProcessArguments}">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="Padding" Value="2" />
+                                <Setter Property="FontFamily" Value="/resources/fonts/JetBrainsMono-Regular.ttf#JetBrains Mono" />
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <TextBlock Text="{Binding Title}" Classes="title"></TextBlock>
+                                    <TextBlock Text="{Binding Contents}" Margin="10 0 0 0" Opacity="0.5"></TextBlock>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </TabItem>
+                <TabItem Header="Class path" FontSize="15">
+                    <ListBox ItemsSource="{Binding ProcessClassPath}">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="Padding" Value="2" />
+                                <Setter Property="FontFamily" Value="/resources/fonts/JetBrainsMono-Regular.ttf#JetBrains Mono" />
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <TextBlock IsVisible="{Binding !Exists}" Foreground="LightCoral" Text="{Binding Filename}" Margin="10 0 0 0"></TextBlock>
+                                    <TextBlock IsVisible="{Binding Exists}" Text="{Binding Filename}" Margin="10 0 0 0"></TextBlock>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </TabItem>
+                <TabItem Header="Libraries" FontSize="15">
+                    <ListBox ItemsSource="{Binding Libraries}">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="Padding" Value="2" />
+                                <Setter Property="FontFamily" Value="/resources/fonts/JetBrainsMono-Regular.ttf#JetBrains Mono" />
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel>
+                                    <TextBlock IsVisible="{Binding !Present}" Foreground="LightCoral" Text="{Binding Description}" Margin="10 0 0 0"></TextBlock>
+                                    <TextBlock IsVisible="{Binding Present}" Text="{Binding Description}" Margin="10 0 0 0"></TextBlock>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+    </Border>
+</Window>

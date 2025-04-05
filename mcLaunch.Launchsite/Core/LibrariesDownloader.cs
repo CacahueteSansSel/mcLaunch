@@ -109,7 +109,7 @@ public class LibrariesDownloader
         string path = $"{Path}/{artifact.Path}".FixPath();
         string url = artifact.Url;
         string filename = System.IO.Path.GetFileName(path);
-        string dir = path.Replace(filename, "").Trim('/').FixPath();
+        string dir = path.Replace(filename, "").TrimEnd('/').FixPath();
 
         if (path.EndsWith(".jar") && !ClassPath.Contains(System.IO.Path.GetFullPath(path)))
             AddToClassPath(System.IO.Path.GetFullPath(path));
@@ -176,25 +176,7 @@ public class LibrariesDownloader
 
             if (skip) continue;
 
-            if (lib.Rules != null)
-            {
-                bool abort = false;
-                foreach (MinecraftVersion.ModelLibrary.ModelRule rule in lib.Rules)
-                {
-                    bool satisfied = rule.Os == null || rule.Os.CheckIfSatisfied();
-
-                    // Invert the boolean value if it's a "disallow" rule
-                    if (rule.Action == "disallow") satisfied = !satisfied;
-
-                    if (!satisfied)
-                    {
-                        abort = true;
-                        break;
-                    }
-                }
-
-                if (abort) continue;
-            }
+            if (lib.Rules != null && !lib.AreRulesSatisfied()) continue;
 
             if (lib.Downloads == null)
             {

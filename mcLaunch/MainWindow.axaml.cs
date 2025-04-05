@@ -104,7 +104,7 @@ public partial class MainWindow : Window
             if (!int.TryParse(App.Args.Get("exit-code"), out int exitCode))
                 return;
 
-            Navigation.ShowPopup(new CrashPopup(exitCode, App.Args.Get("box-id")));
+            Navigation.ShowPopup(new CrashPopup(exitCode, App.Args.Get("box-id"), null));
         }
 
         bool macOSFileExists = File.Exists(AppdataFolderManager.GetPath("crash_report"))

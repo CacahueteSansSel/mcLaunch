@@ -19,6 +19,7 @@
                     Open details
                 </Button>
                 <Button DockPanel.Dock="Right" Classes="secondary" Margin="0 0 10 0" Click="RestartBoxButtonClicked">Restart</Button>
+                <Button x:Name="DebugButton" DockPanel.Dock="Right" Classes="secondary" Margin="0 0 10 0" Click="DebugButtonClicked">Advanced Debugging</Button>
                 <Panel />
             </DockPanel>
             <DockPanel>

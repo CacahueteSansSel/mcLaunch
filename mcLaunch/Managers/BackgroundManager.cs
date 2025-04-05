@@ -66,7 +66,7 @@ public static class BackgroundManager
         if (javaProcess != null && javaProcess.ExitCode != 0)
         {
             LeaveBackgroundState();
-            Navigation.ShowPopup(new CrashPopup(javaProcess.ExitCode, box.Manifest.Id));
+            Navigation.ShowPopup(new CrashPopup(javaProcess.ExitCode, box.Manifest.Id, javaProcess));
 
             if (box.Manifest.Type != BoxType.Temporary)
                 return false;

@@ -164,6 +164,35 @@ public class MinecraftVersion
 
         public string GetFinalJarFilename() => new LibraryName(Name).JarFilename;
 
+        public bool AreRulesSatisfied(out ModelRule? failingRule)
+        {
+            if (Rules == null || Rules.Length == 0)
+            {
+                failingRule = null;
+                return true;
+            }
+            
+            foreach (ModelRule rule in Rules)
+            {
+                bool satisfied = rule.Os == null || rule.Os.CheckIfSatisfied();
+
+                // Invert the boolean value if it's a "disallow" rule
+                if (rule.Action == "disallow") satisfied = !satisfied;
+
+                if (!satisfied)
+                {
+                    failingRule = rule;
+                    return false;
+                }
+            }
+
+            failingRule = null;
+            return true;
+        }
+
+        public bool AreRulesSatisfied()
+            => AreRulesSatisfied(out _);
+
         public string? DeduceUrl()
         {
             if (!NeedsToDeduceUrlFromName) return null;
