@@ -41,7 +41,7 @@ public class MicrosoftAuthenticationPlatform : AuthenticationPlatform
         RegisterCache();
     }
 
-    public override string UserType { get; }
+    public override string UserType { get; } = "msa";
     public override string ClientId { get; }
     public override bool IsLoggedIn { get; }
 
