@@ -366,7 +366,7 @@ public class Box : IEquatable<Box>
             foreach (string filename in mod.Filenames)
             {
                 string path = $"{Folder.CompletePath}/{filename}";
-                if (!File.Exists(path)) continue;
+                if (!File.Exists(path) && !Directory.Exists(path)) continue;
                 exists = true;
 
                 break;
