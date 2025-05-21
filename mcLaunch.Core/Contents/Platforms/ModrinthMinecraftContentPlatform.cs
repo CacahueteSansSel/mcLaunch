@@ -77,7 +77,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         try
         {
             search = await Client.Project.SearchAsync(searchQuery, facets: collection,
-                limit: 10, offset: (ulong)(page * 10));
+                limit: 10, offset: (int)(page * 10));
         }
         catch (ModrinthApiException e)
         {
@@ -126,7 +126,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         try
         {
             search = await Client.Project.SearchAsync(searchQuery, facets: collection,
-                limit: 10, offset: (ulong)(page * 10));
+                limit: 10, offset: (int)(page * 10));
         }
         catch (ModrinthApiException e)
         {
