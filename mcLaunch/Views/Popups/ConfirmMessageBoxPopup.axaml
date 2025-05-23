@@ -10,13 +10,13 @@
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">
-            <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25" Text="{Binding Title}" />
+            <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25" TextTrimming="CharacterEllipsis" Text="{Binding Title, FallbackValue='Message Box Title'}" />
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" Margin="10 0 0 0" Classes="secondary" Click="NoButtonClicked">No</Button>
                 <Button DockPanel.Dock="Right" Classes="primary" Click="YesButtonClicked">Yes</Button>
                 <Panel />
             </DockPanel>
-            <TextBlock DockPanel.Dock="Top" Margin="0 20 0 0" TextWrapping="WrapWithOverflow" Text="{Binding Text}" />
+            <TextBlock DockPanel.Dock="Top" Margin="0 20 0 0" TextWrapping="WrapWithOverflow" Text="{Binding Text, FallbackValue='Message Box Body Text'}" />
         </DockPanel>
     </Border>
 </UserControl>

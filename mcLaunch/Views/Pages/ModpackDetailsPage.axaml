@@ -47,10 +47,10 @@
                                 </Border>
                             </StackPanel>
                             <StackPanel Classes="smoothShowLeft" Margin="29 0 0 0" Orientation="Vertical">
-                                <TextBlock Classes="title" FontSize="32" Text="{Binding Name}" />
+                                <TextBlock Classes="title" FontSize="32" TextTrimming="CharacterEllipsis" Text="{Binding Name, FallbackValue='Awesome Modpack that has a really long name'}" />
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="light" FontSize="16">by</TextBlock>
-                                    <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16" Text="{Binding Author}" />
+                                    <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16" Text="{Binding Author}" TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0" Spacing="5">
                                     <views:Badge x:Name="ModpackVersionsBadge"

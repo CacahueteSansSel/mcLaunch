@@ -1,12 +1,18 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Animation;
+using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Avalonia.Styling;
 using mcLaunch.Core.Boxes;
+using mcLaunch.Core.Core;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
@@ -25,6 +31,12 @@ public partial class BoxEntryCard : UserControl
     public BoxEntryCard()
     {
         InitializeComponent();
+
+        if (Design.IsDesignMode)
+        {
+            DataContext = new BoxManifest("TestBox", "1.0.0", "TestModLoader", "TestModLoaderId", "0.0.0",
+                IconCollection.Default, new ManifestMinecraftVersion() { }, BoxType.Default);
+        }
     }
 
     public Box Box
@@ -202,5 +214,41 @@ public partial class BoxEntryCard : UserControl
     {
         if (BackgroundManager.IsMinecraftRunning)
             BackgroundManager.KillMinecraftProcess();
+    }
+
+    private async void InputElement_OnPointerEntered(object? sender, PointerEventArgs e)
+    {
+        Animation textAnimation = new Animation
+        {
+            Duration = TimeSpan.FromMilliseconds(200),
+            Easing = new CubicEaseInOut(),
+            FillMode = FillMode.Forward,
+            PlaybackDirection = PlaybackDirection.Alternate,
+            Children =
+            {
+                new KeyFrame
+                {
+                    Cue = new Cue(0d),
+                    Setters =
+                    {
+                        new Setter(Canvas.LeftProperty, 0)
+                    }
+                },
+                new KeyFrame
+                {
+                    Cue = new Cue(1d),
+                    Setters =
+                    {
+                        new Setter(Canvas.LeftProperty, -20)
+                    }
+                }
+            }
+        };
+        
+        await textAnimation.RunAsync(BoxNameText);
+    }
+
+    private void InputElement_OnPointerExited(object? sender, PointerEventArgs e)
+    {
     }
 }

@@ -15,7 +15,7 @@
                 <Image x:Name="StatusWarning" IsVisible="False" Source="{SvgImage /resources/status/warning.svg}" />
                 <Image x:Name="StatusSuccess" IsVisible="False" Source="{SvgImage /resources/status/success.svg}" />
             </Panel>
-            <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25" Text="{Binding Title}" />
+            <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" Classes="primary" Click="OKButtonClicked">OK</Button>
                 <Panel />

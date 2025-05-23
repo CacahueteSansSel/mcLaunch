@@ -89,7 +89,7 @@
                                 <Panel>
                                     <TextBlock x:Name="BoxNameText" Classes="title" Cursor="IBeam" FontSize="32"
                                                Text="{Binding Manifest.Name, FallbackValue='Box Name'}"
-                                               PointerPressed="BoxNameTextBlockClicked" />
+                                               PointerPressed="BoxNameTextBlockClicked" TextTrimming="CharacterEllipsis" />
                                     <TextBox x:Name="BoxNameTextbox" Classes="title" IsVisible="False"
                                              Margin="0 0 20 0" FontSize="32" Padding="0"
                                              KeyDown="BoxNameTextBoxKeyPressed" LostFocus="BoxNameTextLostFocus" />
@@ -100,7 +100,7 @@
                                         <TextBlock x:Name="BoxAuthorText" Classes="title" Margin="5 0 0 0"
                                                    FontSize="16"
                                                    Text="{Binding Manifest.Author, 
-                                                        FallbackValue='Box Author'}"
+                                                        FallbackValue='Box Author'}" TextTrimming="CharacterEllipsis"
                                                    PointerPressed="InputElement_OnPointerPressed" Cursor="IBeam" />
                                         <TextBox HorizontalAlignment="Stretch" x:Name="BoxAuthorTextbox"
                                                  Classes="title" IsVisible="False" Padding="0"
