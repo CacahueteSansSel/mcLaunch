@@ -411,12 +411,12 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
 
                     if (depVersions.Length == 0) continue;
 
-                    dependencyVersion = depVersions[0];
+                    dependencyVersion = depVersions.FirstOrDefault(v => v.GameVersions.Contains(targetBox.Manifest.Version));
                 }
-                else
-                    dependencyVersion = await Client.Version.GetAsync(depVersionId);
+                else dependencyVersion = await Client.Version.GetAsync(depVersionId);
 
-                await InstallVersionAsync(targetBox, dependencyVersion, false, contentType);
+                if (dependencyVersion != null)
+                    await InstallVersionAsync(targetBox, dependencyVersion, false, contentType);
             }
         }
 

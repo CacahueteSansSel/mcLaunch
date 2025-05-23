@@ -428,7 +428,10 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
                 }
 
                 Mod cfMod = (await client.GetMod(dep.ModId)).Data;
-                await InstallFileAsync(targetBox, cfMod.LatestFiles[0], false, MinecraftContentType.Modification);
+                File? correctFile =
+                    cfMod.LatestFiles.FirstOrDefault(f => f.GameVersions.Contains(targetBox.Manifest.Version));
+                if (correctFile != null)
+                    await InstallFileAsync(targetBox, correctFile, false, MinecraftContentType.Modification);
             }
         }
 

@@ -14,14 +14,19 @@ public partial class PageButton : UserControl
         InitializeComponent();
 
         Parent = parent;
-        PageIndex = pageIndex;
-        PageIndexText.Text = (pageIndex + 1).ToString();
-
+        
+        SetPage(pageIndex);
         SetLight(false);
     }
 
     public int PageIndex { get; set; }
     public PageSelector Parent { get; set; }
+
+    public void SetPage(int index)
+    {
+        PageIndex = index;
+        PageIndexText.Text = (index + 1).ToString();
+    }
 
     public void SetLight(bool on)
     {
