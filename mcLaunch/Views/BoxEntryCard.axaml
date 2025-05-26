@@ -64,32 +64,43 @@
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/folder.svg}" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Export" Click="ExportOptionClicked">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/open.svg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator />
                 <MenuItem Header="Duplicate" Click="DuplicateOptionClicked">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Copy Box ID" Click="CopyMenuOptionClicked">
-                    <MenuItem.Icon>
-                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <Separator />
-                <MenuItem Header="Copy Mod List Report">
-                    <MenuItem.Icon>
-                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
-                    </MenuItem.Icon>
-                    <MenuItem.Items>
-                        <MenuItem Header="Complete" Click="CompleteReportOptionClicked" />
-                        <MenuItem Header="Only mods added since launcher start" Click="RelativeReportOptionClicked" />
-                    </MenuItem.Items>
-                </MenuItem>
-                <Separator />
                 <MenuItem Header="Delete" Click="DeleteMenuOptionClicked">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/delete.svg}" />
                     </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Copy">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
+                    </MenuItem.Icon>
+                    <MenuItem.Items>
+                        <MenuItem Header="Box ID" Click="CopyMenuOptionClicked">
+                            <MenuItem.Icon>
+                                <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Mod List Report">
+                            <MenuItem.Icon>
+                                <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
+                            </MenuItem.Icon>
+                            <MenuItem.Items>
+                                <MenuItem Header="Complete" Click="CompleteReportOptionClicked" />
+                                <MenuItem Header="Only mods added since launcher start" Click="RelativeReportOptionClicked" />
+                            </MenuItem.Items>
+                        </MenuItem>
+                    </MenuItem.Items>
                 </MenuItem>
             </ContextMenu>
         </Panel.ContextMenu>

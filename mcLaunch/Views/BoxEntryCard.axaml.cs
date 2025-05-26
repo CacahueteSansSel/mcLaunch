@@ -251,4 +251,9 @@ public partial class BoxEntryCard : UserControl
     private void InputElement_OnPointerExited(object? sender, PointerEventArgs e)
     {
     }
+
+    private void ExportOptionClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.ShowPopup(new ExportBoxPopup(Box));
+    }
 }
