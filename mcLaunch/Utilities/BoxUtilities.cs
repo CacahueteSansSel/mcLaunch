@@ -44,7 +44,8 @@ public static class BoxUtilities
             if (!popup) return;
 
             StatusPopup.Instance.Status = msg;
-            StatusPopup.Instance.StatusPercent = percent;
+            StatusPopup.Instance.StatusPercent = percent < 0 ? 0 : percent;
+            StatusPopup.Instance.StatusIndeterminate = percent < 0;
         });
         if (boxResult.IsError)
         {
@@ -101,7 +102,8 @@ public static class BoxUtilities
             if (!popup) return;
 
             StatusPopup.Instance.Status = msg;
-            StatusPopup.Instance.StatusPercent = percent;
+            StatusPopup.Instance.StatusPercent = percent < 0 ? 0 : percent;
+            StatusPopup.Instance.StatusIndeterminate = percent < 0;
         });
         if (boxResult.IsError)
         {
@@ -163,7 +165,8 @@ public static class BoxUtilities
             if (!popup) return;
 
             StatusPopup.Instance.Status = $"{msg}";
-            StatusPopup.Instance.StatusPercent = percent;
+            StatusPopup.Instance.StatusPercent = percent < 0 ? 0 : percent;
+            StatusPopup.Instance.StatusIndeterminate = percent < 0;
         });
         if (boxResult.IsError)
         {

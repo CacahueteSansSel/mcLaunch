@@ -122,7 +122,7 @@ public static class BoxManager
 
         Box box = new(manifest, path.Data!, false);
 
-        progressCallback?.Invoke($"Preparing Minecraft {pack.MinecraftVersion} ({pack.ModloaderId.Capitalize()})", 0f);
+        progressCallback?.Invoke($"Preparing Minecraft {pack.MinecraftVersion} ({pack.ModloaderId.Capitalize()})", -1f);
 
         await box.CreateMinecraftAsync();
 
@@ -139,7 +139,7 @@ public static class BoxManager
         }
 
         progressCallback?.Invoke("Downloading modifications",
-            1f / 3f);
+            -1f);
 
         await DownloadManager.ProcessAll();
 
@@ -194,7 +194,7 @@ public static class BoxManager
 
         DownloadManager.OnDownloadProgressUpdate -= ProgressUpdate;
 
-        progressCallback?.Invoke("Initializing Minecraft", 0.5f);
+        progressCallback?.Invoke("Initializing Minecraft", -1f);
 
         ModificationPack? modpack;
 

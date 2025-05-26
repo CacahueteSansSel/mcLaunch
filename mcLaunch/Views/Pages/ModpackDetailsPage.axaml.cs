@@ -74,7 +74,8 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
         Result<Box> boxResult = await BoxManager.CreateFromPlatformModpack(modpack, modpackVersion, (msg, percent) =>
         {
             StatusPopup.Instance.Status = $"{msg}";
-            StatusPopup.Instance.StatusPercent = percent;
+            StatusPopup.Instance.StatusPercent = percent < 0f ? 0 : percent;
+            StatusPopup.Instance.StatusIndeterminate = percent < 0f;
         });
         if (boxResult.IsError)
         {
