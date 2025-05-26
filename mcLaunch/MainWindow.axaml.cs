@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Platform;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Core;
@@ -50,6 +51,16 @@ public partial class MainWindow : Window
     }
 
     public static MainWindow Instance { get; private set; }
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+
+        if (e.GetCurrentPoint(this).Properties.IsXButton1Pressed)
+        {
+            MainWindowDataContext.Instance.Pop();
+        }
+    }
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
