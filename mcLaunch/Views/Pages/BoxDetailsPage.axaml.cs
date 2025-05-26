@@ -200,11 +200,27 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
             return;
         }
 
-        Process java;
+        Process java = null;
 
-        if (world != null) java = Box.Run(world);
-        else if (serverAddress != null) java = Box.Run(serverAddress, serverPort ?? "25565");
-        else java = Box.Run();
+        void RunMinecraft()
+        {
+            if (world != null) java = Box.Run(world);
+            else if (serverAddress != null) java = Box.Run(serverAddress, serverPort ?? "25565");
+            else java = Box.Run();
+        }
+
+        try
+        {
+            RunMinecraft();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+            Navigation.ShowPopup(new MessageBoxPopup("Internal Error", 
+                e.Message, MessageStatus.Error));
+
+            return;
+        }
 
         await Task.Delay(1000);
 

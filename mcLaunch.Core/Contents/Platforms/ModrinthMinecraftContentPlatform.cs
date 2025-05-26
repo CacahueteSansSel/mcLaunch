@@ -435,7 +435,7 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             string url = file.Url;
 
             DownloadManager.Add(url, path, file.Hashes.Sha1, EntryAction.Download);
-            filenames.Add($"{folder}/{file.FileName}");
+            filenames.Add($"{folder}/{filename}");
         }
 
         targetBox.Manifest.AddContent(await GetContentAsync(version.ProjectId), version.Id,

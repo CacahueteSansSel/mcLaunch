@@ -446,7 +446,8 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         List<string> filenames = new();
 
         string folder = MinecraftContentUtils.GetInstallFolderName(contentType);
-        string path = $"{targetBox.Folder.Path}/{folder}/{file.FileName}";
+        string filename = string.IsNullOrWhiteSpace(file.FileName) ? Path.GetFileName(file.DownloadUrl) : file.FileName;
+        string path = $"{targetBox.Folder.Path}/{folder}/{filename}";
         string url = file.DownloadUrl;
 
         if (url == null)
@@ -460,7 +461,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         // TODO: This may break things
         if (!System.IO.File.Exists(path)) DownloadManager.Add(url, path, null, EntryAction.Download);
 
-        filenames.Add($"{folder}/{file.FileName}");
+        filenames.Add($"{folder}/{filename}");
 
         targetBox.Manifest.AddContent(await GetContentAsync(file.ModId.ToString()), file.Id.ToString(),
             filenames.ToArray());

@@ -161,14 +161,8 @@ public class Minecraft
         StandardOutput.Add($"Minecraft exited with code {process.ExitCode}");
     }
 
-    public Process Run()
+    string BuildArgs()
     {
-        string jvm = jvmPath ?? sysFolder.GetJvm(Version.JavaVersion!.Component);
-
-        if (Version.Arguments == null) Version.Arguments = MinecraftVersion.ModelArguments.Default;
-
-        if (Version.Arguments.Jvm == null) Version.Arguments.Jvm = MinecraftVersion.ModelArguments.Default.Jvm;
-
         string builtArgs = Version.Arguments.Build(args, Version.MainClass);
 
         if (disableMultiplayer) builtArgs += " --disableMultiplayer";
@@ -204,6 +198,33 @@ public class Minecraft
             }
         }
 
+        return builtArgs;
+    }
+
+    public Process Run()
+    {
+        string jvm = jvmPath ?? sysFolder.GetJvm(Version.JavaVersion!.Component);
+
+        if (Version.Arguments == null) Version.Arguments = MinecraftVersion.ModelArguments.Default;
+
+        if (Version.Arguments.Jvm == null) Version.Arguments.Jvm = MinecraftVersion.ModelArguments.Default.Jvm;
+
+        string builtArgs = BuildArgs();
+        bool addClassPathToEnv = false;
+
+        int commandLineLength = builtArgs.Length + jvm.Length + 1;
+        if (commandLineLength > 32768)
+        {
+            string cp = args["classpath"];
+            args["classpath"] = "--";
+            
+            // Rebuild the arguments line with the new classpath
+            builtArgs = BuildArgs().Replace("-cp -- ", "");
+            
+            args["classpath"] = cp;
+            addClassPathToEnv = true;
+        }
+
         ProcessStartInfo info = new()
         {
             Arguments = builtArgs,
@@ -213,7 +234,7 @@ public class Minecraft
             RedirectStandardError = true,
             RedirectStandardOutput = redirectOutput
         };
-
+        if (addClassPathToEnv) info.EnvironmentVariables.Add("CLASSPATH", args["classpath"]);
 
         if (useDedicatedGraphics)
         {

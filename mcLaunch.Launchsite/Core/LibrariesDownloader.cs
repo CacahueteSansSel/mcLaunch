@@ -27,6 +27,18 @@ public class LibrariesDownloader
     public string NativesPath { get; }
 
     public List<string> ClassPath { get; } = new();
+    
+    public List<string> GetClassPathRelativeTo(string relativeTo)
+    {
+        List<string> relativeClassPath = new();
+        
+        foreach (string path in ClassPath)
+        {
+            relativeClassPath.Add(System.IO.Path.GetRelativePath(relativeTo, path));
+        }
+
+        return relativeClassPath;
+    }
 
     public LibrariesDownloader WithLibrary(string name, string version)
     {

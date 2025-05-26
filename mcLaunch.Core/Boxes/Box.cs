@@ -360,13 +360,17 @@ public class Box : IEquatable<Box>
 
         ReloadManifest();
 
+        if (await AddMissingModsToList()) 
+            await SaveManifestAsync();
+
         foreach (BoxStoredContent mod in Manifest.Contents)
         {
             bool exists = false;
             foreach (string filename in mod.Filenames)
             {
                 string path = $"{Folder.CompletePath}/{filename}";
-                if (!File.Exists(path) && !Directory.Exists(path)) continue;
+                if (path == "mods/") continue;
+                if (!File.Exists(path)) continue;
                 exists = true;
 
                 break;
@@ -378,9 +382,9 @@ public class Box : IEquatable<Box>
             changes.Add($"Mod {mod.Name} has been removed because it is not present on disk anymore");
         }
 
-        if (await AddMissingModsToList()) await SaveManifestAsync();
-
         Manifest.Contents.RemoveMany(modsToRemove);
+        if (modsToRemove.Count > 0)
+            await SaveManifestAsync();
 
         return changes.ToArray();
     }
