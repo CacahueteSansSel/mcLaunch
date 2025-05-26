@@ -397,6 +397,11 @@ public class Box : IEquatable<Box>
 
         foreach (string modFilename in unknownModsFilenames)
         {
+            if (!Directory.Exists(Folder.CompletePath))
+                return false;
+            if (!File.Exists($"{Folder.CompletePath}/{modFilename}"))
+                continue;
+            
             await using MemoryStream fs = new(await File.ReadAllBytesAsync($"{Folder.CompletePath}/{modFilename}"));
             ContentVersion? version = await ModPlatformManager.Platform.GetContentVersionFromData(fs);
             if (version == null || version.Content == null) continue;
