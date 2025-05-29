@@ -35,7 +35,7 @@ public partial class BoxEntryCard : UserControl
         if (Design.IsDesignMode)
         {
             DataContext = new BoxManifest("TestBox", "1.0.0", "TestModLoader", "TestModLoaderId", "0.0.0",
-                IconCollection.Default, new ManifestMinecraftVersion() { }, BoxType.Default);
+                IconCollection.FromResources("box_icons/0.png"), new ManifestMinecraftVersion() { }, BoxType.Default);
         }
     }
 

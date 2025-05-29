@@ -105,9 +105,11 @@
             </ContextMenu>
         </Panel.ContextMenu>
         <StackPanel Margin="20 20 20 20">
-            <Border ClipToBounds="True" CornerRadius="4">
+            <Border ClipToBounds="True">
                 <Panel Width="155" Height="155">
-                    <Image x:Name="BoxIcon" Stretch="Uniform" Source="{Binding Icon.IconLarge}" />
+                    <Border Background="#66151515" CornerRadius="2" ClipToBounds="True">
+                        <Image x:Name="BoxIcon" Stretch="Uniform" Source="{Binding Icon.IconLarge}" />
+                    </Border>
                     <Button x:Name="PlayButton" IsVisible="False" ToolTip.Tip="Launch box" Classes="transparent-green"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="PlayButtonClicked">
                         <Image Source="{SvgImage /resources/icons/play.svg}" Width="14" Height="14" />
