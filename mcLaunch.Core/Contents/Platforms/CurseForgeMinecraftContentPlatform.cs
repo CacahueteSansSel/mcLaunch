@@ -25,6 +25,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
     public const int ShaderPacksClassId = 6552;
     public const int DataPacksClassId = 6945;
     public const int WorldsClassId = 17;
+    public const ModLoaderType NeoforgeModLoaderType = (ModLoaderType)6;
 
     private readonly CurseForgeClient client;
     private readonly ConcurrentDictionary<string, MinecraftContent> contentCache = new();
@@ -64,6 +65,20 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
             _ => 0
         };
     }
+    
+    private bool TryParseModLoaderType(string text, out ModLoaderType type)
+    {
+        if (text.ToLower() == "neoforge")
+        {
+            type = NeoforgeModLoaderType;
+            return true;
+        }
+
+        if (Enum.TryParse(text, true, out type))
+            return true;
+
+        return false;
+    }
 
     public override async Task<PaginatedResponse<MinecraftContent>> GetContentsAsync(int page, Box box,
         string searchQuery, MinecraftContentType contentType)
@@ -72,11 +87,10 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
 
         if (contentType == MinecraftContentType.Modification)
         {
-            if (box != null && !Enum.TryParse(box.Manifest.ModLoaderId, true, out type))
+            if (box != null && !TryParseModLoaderType(box.Manifest.ModLoaderId, out type))
                 return PaginatedResponse<MinecraftContent>.Empty;
         }
-        else
-            type = ModLoaderType.Any;
+        else type = ModLoaderType.Any;
 
         CursePaginatedResponse<List<Mod>> resp;
 
@@ -356,7 +370,7 @@ public class CurseForgeMinecraftContentPlatform : MinecraftContentPlatform
         try
         {
             List<File> files = (await client.GetModFiles(intId, minecraftVersionId,
-                modLoaderId == null ? null : Enum.Parse<ModLoaderType>(modLoaderId, true), pageSize: 100)).Data;
+                modLoaderId == null ? null : TryParseModLoaderType(modLoaderId, out ModLoaderType type) ? type : null, pageSize: 100)).Data;
             File? file = files.FirstOrDefault(f => f.Id == uint.Parse(versionId));
 
             return await Task.Run(() =>

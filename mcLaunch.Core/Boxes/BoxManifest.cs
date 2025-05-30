@@ -250,7 +250,7 @@ public class BoxManifest : ReactiveObject
         {
             ModLoaderVersion[]? versions = await modLoader.GetVersionsAsync(Version);
 
-            if (versions.Length == 0)
+            if (versions == null || versions.Length == 0)
             {
                 return Result<MinecraftVersion>.Error($"Cannot find a version of {modLoader.Name} for " +
                                                       $"Minecraft {Version}: The servers of {modLoader.Name} " +
