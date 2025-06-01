@@ -18,6 +18,7 @@ public class Minecraft
     private uint serverPort;
     private MinecraftFolder sysFolder;
     private bool useDedicatedGraphics;
+    private CommandLineSettings cmdLineSettings = CommandLineSettings.Default;
 
     public Minecraft(MinecraftVersion version, MinecraftFolder folder)
     {
@@ -62,6 +63,13 @@ public class Minecraft
     public Minecraft WithRedirectOutput(bool redirectOutput)
     {
         this.redirectOutput = redirectOutput;
+
+        return this;
+    }
+    
+    public Minecraft WithCommandLineSettings(CommandLineSettings settings)
+    {
+        cmdLineSettings = settings;
 
         return this;
     }
@@ -197,6 +205,8 @@ public class Minecraft
                     break;
             }
         }
+
+        builtArgs = cmdLineSettings.BuildArguments(builtArgs);
 
         return builtArgs;
     }

@@ -386,6 +386,8 @@
         <AvaloniaResource Include="resources\icons\nbt.svg"/>
         <None Remove="resources\icons\snbt.svg"/>
         <AvaloniaResource Include="resources\icons\snbt.svg"/>
+        <None Remove="resources\icons\java.svg" />
+        <AvaloniaResource Include="resources\icons\java.svg" />
     </ItemGroup>
 
     <ItemGroup>

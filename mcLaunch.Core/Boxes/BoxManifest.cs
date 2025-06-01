@@ -107,6 +107,7 @@ public class BoxManifest : ReactiveObject
 
     [JsonIgnore] public ModLoaderSupport? ModLoader => ModLoaderManager.Get(ModLoaderId);
     public List<BoxBackup> Backups { get; set; } = [];
+    public CommandLineSettings CommandLineSettings { get; set; } = new();
 
     public bool HasContentStrict(string id, string versionId, string platformId)
     {
@@ -287,95 +288,6 @@ public class BoxManifest : ReactiveObject
     }
 
     public override string ToString() => $"Manifest {Id} {Name}";
-}
-
-public class BoxStoredContent
-{
-    private string? id, platformId, name, author;
-    private MinecraftContentType? type;
-
-    public MinecraftContent? Content { get; set; }
-
-    [Obsolete("Use Content instead")]
-    public string Id
-    {
-        get => id ?? Content.Id;
-        set => id = value;
-    }
-
-    public string VersionId { get; init; }
-
-    [Obsolete("Use Content instead")]
-    public string PlatformId
-    {
-        get => platformId ?? Content.ModPlatformId;
-        set => platformId = value;
-    }
-
-    public string[] Filenames { get; set; }
-
-    [Obsolete("Use Content instead")]
-    public string Name
-    {
-        get => name ?? Content.Name;
-        set => name = value;
-    }
-
-    [Obsolete("Use Content instead")]
-    public string Author
-    {
-        get => author ?? Content.Author;
-        set => author = value;
-    }
-
-    [Obsolete("Use Content instead")]
-    public MinecraftContentType Type
-    {
-        get => type ?? Content.Type;
-        set => type = value;
-    }
-
-    public void Delete(string boxRootPath)
-    {
-        foreach (string file in Filenames)
-        {
-            if (Path.IsPathFullyQualified(file))
-                throw new Exception("Mod filename is absolute : was the manifest updated to Manifest Version 2 ?");
-
-            string path = $"{boxRootPath}/{file.TrimStart('/')}";
-
-            if (File.Exists(path)) File.Delete(path);
-        }
-    }
-}
-
-public class BoxBackup
-{
-    public BoxBackup()
-    {
-    }
-
-    public BoxBackup(string name, BoxBackupType type, DateTime creationTime, string filename)
-    {
-        Name = name;
-        Type = type;
-        CreationTime = creationTime;
-        Filename = filename;
-    }
-
-    public string Name { get; set; }
-    public BoxBackupType Type { get; set; }
-    public DateTime CreationTime { get; set; }
-    public string Filename { get; set; }
-
-    [JsonIgnore] public bool IsCompleteBackup => Type == BoxBackupType.Complete;
-    [JsonIgnore] public bool IsPartialBackup => Type == BoxBackupType.Partial;
-}
-
-public enum BoxBackupType
-{
-    Complete,
-    Partial
 }
 
 public enum BoxType

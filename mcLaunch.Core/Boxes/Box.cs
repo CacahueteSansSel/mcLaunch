@@ -560,7 +560,8 @@ public class Box : IEquatable<Box>
             .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher
                                                                     && (ModLoader?.SupportsLauncherExposure ?? true))
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
-            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JvmDownloader);
+            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JvmDownloader)
+            .WithCommandLineSettings(Manifest.CommandLineSettings);
 
         return new Result();
     }
