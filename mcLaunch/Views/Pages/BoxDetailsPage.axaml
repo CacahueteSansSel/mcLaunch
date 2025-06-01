@@ -194,13 +194,13 @@
                                                RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
                                                Height="13" />
                                     </Button>
-                                    <Button Classes="transparent" Click="SubControlWorldButtonClicked"
+                                    <Button x:Name="WorldsButton" Classes="transparent" Click="SubControlWorldButtonClicked"
                                             ToolTip.Tip="Worlds">
                                         <Image Source="{SvgImage /resources/icons/world.svg}"
                                                RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
                                                Height="13" />
                                     </Button>
-                                    <Button Classes="transparent" Click="SubControlScreenshotClicked"
+                                    <Button x:Name="ScreenshotsButton" Classes="transparent" Click="SubControlScreenshotClicked"
                                             ToolTip.Tip="Screenshots">
                                         <Image Source="{SvgImage /resources/icons/screenshot.svg}"
                                                RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"

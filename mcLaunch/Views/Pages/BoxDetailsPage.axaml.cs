@@ -105,6 +105,8 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         CrashReportButton.IsVisible = Box.HasCrashReports;
         ModsButton.IsVisible = Box.ModLoader is not DirectJarMergingModLoaderSupport;
         DirectJarModsButton.IsVisible = Box.ModLoader is DirectJarMergingModLoaderSupport;
+        WorldsButton.IsVisible = Box.HasWorlds;
+        ScreenshotsButton.IsVisible = Box.HasScreenshots;
 
         BoxCover.Source = Box.Manifest.Icon?.IconLarge;
     }

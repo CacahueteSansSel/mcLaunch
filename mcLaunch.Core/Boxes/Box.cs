@@ -93,6 +93,8 @@ public class Box : IEquatable<Box>
 
     public bool HasWorlds => Directory.Exists($"{Folder.Path}/saves") &&
                              Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
+    public bool HasScreenshots => Directory.Exists($"{Folder.Path}/screenshots") &&
+                             Directory.GetDirectories($"{Folder.Path}/screenshots").Length > 0;
 
     public bool Equals(Box? other) => other?.Manifest.Id == Manifest.Id;
 
