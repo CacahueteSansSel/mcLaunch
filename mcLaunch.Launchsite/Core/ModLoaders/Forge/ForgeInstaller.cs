@@ -13,6 +13,16 @@ public static class ForgeInstaller
     public static async Task<Result<ForgeInstallResult>> InstallAsync(ForgeInstallerFile installerFile,
         string minecraftFolderPath, string jvmExecutablePath, string tempPath, string slug = "Forge")
     {
+        string forgeVersionPath = $"{minecraftFolderPath}/versions/{installerFile.Version.Id}";
+        string vanillaVersionPath = $"{minecraftFolderPath}/versions/{installerFile.MinecraftVersionId}";
+        
+        // The jar already exists, we can skip the installation
+        if (File.Exists($"{forgeVersionPath}/{installerFile.Version.Id}.jar"))
+        {
+            await Context.Downloader.EndSectionAsync(false);
+            return new Result<ForgeInstallResult>(new ForgeInstallResult(installerFile.Version));
+        }
+        
         // Install the vanilla minecraft version files (jar & json)
         await Context.Downloader.BeginSectionAsync($"{slug} {installerFile.Name.Trim()}", false);
 
@@ -37,9 +47,6 @@ public static class ForgeInstaller
                 return new Result<ForgeInstallResult>(new ForgeInstallResult(installerFile.Version));
             }
         }
-
-        string forgeVersionPath = $"{minecraftFolderPath}/versions/{installerFile.Version.Id}";
-        string vanillaVersionPath = $"{minecraftFolderPath}/versions/{installerFile.MinecraftVersionId}";
 
         if (File.Exists($"{vanillaVersionPath}/{installerFile.MinecraftVersionId}.jar"))
         {
