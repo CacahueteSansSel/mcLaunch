@@ -217,6 +217,13 @@ public class ModrinthModificationPack : ModificationPack
             {
                 Forge = box.Manifest.ModLoaderVersion
             };
+        } 
+        else if (box.ModLoader is NeoForgeModLoaderSupport)
+        {
+            index.Dependencies = new ModelModrinthIndex.ModelDependencies
+            {
+                NeoForge = box.Manifest.ModLoaderVersion
+            };
         }
         else if (box.ModLoader is FabricModLoaderSupport)
         {
@@ -345,6 +352,7 @@ public class ModrinthModificationPack : ModificationPack
         {
             [JsonPropertyName("minecraft")] public string Minecraft { get; set; }
             [JsonPropertyName("forge")] public string Forge { get; set; }
+            [JsonPropertyName("neoforge")] public string NeoForge { get; set; }
             [JsonPropertyName("fabric-loader")] public string FabricLoader { get; set; }
             [JsonPropertyName("quilt-loader")] public string QuiltLoader { get; set; }
         }

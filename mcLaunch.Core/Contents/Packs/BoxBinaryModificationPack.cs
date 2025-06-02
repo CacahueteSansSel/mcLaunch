@@ -166,7 +166,8 @@ public class BoxBinaryModificationPack : ModificationPack
                     foreach (string dirFile in Directory.GetFiles(completePath, "*", SearchOption.AllDirectories))
                     {
                         string relativePath = dirFile.Replace(completePath, "")
-                            .TrimStart(Path.DirectorySeparatorChar);
+                            .TrimStart(Path.DirectorySeparatorChar)
+                            .Replace("\\", "/");
 
                         byte[] data = await File.ReadAllBytesAsync(dirFile);
 
@@ -189,7 +190,7 @@ public class BoxBinaryModificationPack : ModificationPack
 
             files.Add(new FSFile
             {
-                AbsFilename = modFile,
+                AbsFilename = modFile.Replace("\\", "/").TrimStart('/'),
                 Data = data
             });
         }
