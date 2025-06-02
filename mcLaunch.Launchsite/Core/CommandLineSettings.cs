@@ -19,7 +19,8 @@ public class CommandLineSettings
 
         args += $"-Xms{MinimumAllocatedRam}m ";
         args += $"-Xmw{MaximumAllocatedRam}m ";
-        args += $"{CustomJavaArguments.Trim()} ";
+        if (!string.IsNullOrWhiteSpace(CustomJavaArguments))
+            args += $"{CustomJavaArguments.Trim()} ";
         
         return args;
     }
