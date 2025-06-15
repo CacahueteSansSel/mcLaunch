@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Formats.Tar;
+using System.IO.Compression;
 using System.Net;
 using System.Text.Json;
 using Avalonia.Media.Imaging;
@@ -118,6 +119,9 @@ public class Box : IEquatable<Box>
         watcher.Dispose();
         watcher = null;
     }
+
+    public void ExportToZip(string targetFilename)
+        => ZipFile.CreateFromDirectory(Path, targetFilename);
 
     private void OnFileDeleted(object sender, FileSystemEventArgs e)
     {

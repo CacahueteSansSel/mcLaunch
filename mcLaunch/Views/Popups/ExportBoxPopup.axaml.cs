@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Packs;
+using mcLaunch.Core.Utilities;
 using mcLaunch.Utilities;
+using Microsoft.Identity.Client.Extensions.Msal;
 
 namespace mcLaunch.Views.Popups;
 
@@ -30,28 +35,21 @@ public partial class ExportBoxPopup : UserControl
         Navigation.HidePopup();
         Navigation.ShowPopup(new ExportBoxFilesSelectionPopup(box, async entries =>
         {
-            SaveFileDialog sfd = new();
-            sfd.Title = $"Export {box.Manifest.Name}";
-            sfd.Filters = new List<FileDialogFilter>
-            {
-                new()
-                {
-                    Extensions = new List<string>
-                    {
-                        extension
-                    },
-                    Name = extensionDesc
-                }
-            };
+            IStorageProvider storage = MainWindow.Instance.StorageProvider;
 
-            string? filename = await sfd.ShowAsync(MainWindow.Instance);
-            if (filename == null) return;
+            IStorageFile? file = await storage.SaveFilePickerAsync(new FilePickerSaveOptions()
+            {
+                DefaultExtension = extension, FileTypeChoices = [new FilePickerFileType(extensionDesc) { Patterns = [$"*.{extension}"] }],
+                Title = $"Export {extensionDesc}"
+            });
+        
+            if (file == null) return;
 
             Navigation.ShowPopup(new StatusPopup($"Exporting {box.Manifest.Name}",
                 $"Exporting {box.Manifest.Name} to {extensionDesc}"));
 
             T bb = new();
-            await bb.ExportAsync(box, filename, entries.Select(entry => entry.Name).ToArray());
+            await bb.ExportAsync(box, file.Path.AbsolutePath, entries.Select(entry => entry.Name).ToArray());
 
             Navigation.HidePopup();
             Navigation.ShowPopup(new MessageBoxPopup("Success !",
@@ -77,5 +75,29 @@ public partial class ExportBoxPopup : UserControl
     private void ExportModrinthModpackButtonClicked(object? sender, RoutedEventArgs e)
     {
         ExportAsync<ModrinthModificationPack>("mrpack", "Modrinth modpack");
+    }
+
+    private async void ExportZIPButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        IStorageProvider storage = MainWindow.Instance.StorageProvider;
+
+        IStorageFile? file = await storage.SaveFilePickerAsync(new FilePickerSaveOptions()
+        {
+            DefaultExtension = "zip", FileTypeChoices = [new FilePickerFileType("ZIP Archive") { Patterns = ["*.zip"] }],
+            Title = "Export Instance ZIP Archive"
+        });
+        
+        if (file == null) return;
+        
+        try
+        {
+            box.ExportToZip(file.Path.AbsolutePath);
+            
+            Navigation.ShowPopup(new MessageBoxPopup("Success", $"The box was exported successfully as a ZIP archive", MessageStatus.Success));
+        }
+        catch (IOException ex)
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Error", $"An error occurred while exporting the box as a ZIP archive: {ex.Message}", MessageStatus.Error));
+        }
     }
 }

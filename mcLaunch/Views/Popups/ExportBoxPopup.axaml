@@ -35,6 +35,12 @@
                         <TextBlock Classes="light">A modpack for Modrinth</TextBlock>
                     </StackPanel>
                 </Button>
+                <Button Classes="secondary" Width="370" Click="ExportZIPButtonClicked">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Classes="title">ZIP archive</TextBlock>
+                        <TextBlock Classes="light">A zip archive containing the instance</TextBlock>
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </DockPanel>
     </Border>

@@ -154,24 +154,10 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
 
     private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
     {
-        OpenFileDialog ofd = new();
-        ofd.Title = "Select the icon image...";
-        ofd.Filters = new List<FileDialogFilter>
-        {
-            new()
-            {
-                Extensions = new List<string>
-                {
-                    "png"
-                },
-                Name = "PNG Image"
-            }
-        };
+        Bitmap[]? files = await FilePickerUtilities.PickBitmaps(false, "Select a icon");
+        if (files.Length == 0) return;
 
-        string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null || files.Length == 0) return;
-
-        BoxIconImage.Source = new Bitmap(files[0]);
+        BoxIconImage.Source = files.FirstOrDefault();
     }
 
     private void BoxNameTextChanged(object? sender, KeyEventArgs e)

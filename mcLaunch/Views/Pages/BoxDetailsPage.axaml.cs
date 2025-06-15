@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Contents;
@@ -301,24 +302,12 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
 
     private async void EditBackgroundButtonClicked(object? sender, RoutedEventArgs e)
     {
-        OpenFileDialog ofd = new();
-        ofd.Title = "Select the background image...";
-        ofd.Filters = new List<FileDialogFilter>
-        {
-            new()
-            {
-                Extensions = new List<string>
-                {
-                    "png"
-                },
-                Name = "PNG Image"
-            }
-        };
+        Bitmap[]? files = await FilePickerUtilities.PickBitmaps(false, "Select a new background image");
+        if (files.Length == 0) return;
 
-        string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null || files.Length == 0) return;
-
-        Bitmap backgroundBitmap = new(files[0]);
+        Bitmap? backgroundBitmap = files.FirstOrDefault();
+        if (backgroundBitmap == null) return;
+        
         Box.SetAndSaveBackground(backgroundBitmap);
     }
 
