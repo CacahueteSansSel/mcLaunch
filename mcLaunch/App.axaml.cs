@@ -50,6 +50,7 @@ public class App : Application
         DefaultsManager.Init();
         AnonymityManager.Init();
         if (!Design.IsDesignMode) DiscordManager.Init();
+        SkinsManager.Init();
         MinecraftVersion.ModelArguments.Default =
             JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(InternalSettings.Get("default_args.json"))!;
 

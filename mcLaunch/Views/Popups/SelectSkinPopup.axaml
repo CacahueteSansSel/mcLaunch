@@ -1,0 +1,25 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:mcLaunch.Controls"
+             mc:Ignorable="d"
+             Width="600" Height="410"
+             x:Class="mcLaunch.Views.Popups.SelectSkinPopup">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/AppStyles.axaml" />
+    </UserControl.Styles>
+    <Border Classes="frame">
+        <DockPanel Margin="38">
+            <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
+                <Button DockPanel.Dock="Right" Classes="primary" Click="OKButtonClicked">OK</Button>
+                <Panel />
+            </DockPanel>
+            <StackPanel DockPanel.Dock="Top">
+                <TextBlock Classes="title" FontSize="25" Text="Select a skin" TextTrimming="CharacterEllipsis" />
+                <controls:SkinPreview x:Name="SkinPreview" Width="200" Height="200" Texture="/resources/skins/steve.png" />
+                <Button HorizontalAlignment="Center" Margin="0 10 0 0" Classes="secondary" Click="SelectFileButtonClicked">Select a file</Button>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:controls="clr-namespace:mcLaunch.Controls"
              mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.SkinsPage">
     <UserControl.Styles>
@@ -17,11 +18,16 @@
             </StackPanel>
             <DockPanel Margin="0 20 0 20" Width="888">
                 <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
-                    <Image Source="/resources/default_skin.png" Width="150" />
+                    <controls:SkinPreview x:Name="CurrentSkinPreview" Width="200" Height="200" Texture="/resources/skins/steve.png" />
                     <TextBlock HorizontalAlignment="Center" Classes="title">Current</TextBlock>
                 </StackPanel>
                 <ScrollViewer DockPanel.Dock="Right">
-                    <WrapPanel x:Name="SkinCardsContainer" />
+                    <WrapPanel x:Name="SkinCardsContainer">
+                        <Button
+                            Width="200" Height="261" Classes="secondary" Click="AddSkinButtonClicked">
+                            
+                        </Button>
+                    </WrapPanel>
                 </ScrollViewer>
                 <Panel />
             </DockPanel>

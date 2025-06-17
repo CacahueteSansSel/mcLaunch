@@ -37,6 +37,8 @@ public class BoxManifest : ReactiveObject
 
         this.version = version;
         Version = version.Id;
+        
+        if (CommandLineSettings == null) CommandLineSettings = CommandLineSettings.Default;
     }
 
     public int? ManifestVersion { get; set; }
@@ -107,7 +109,7 @@ public class BoxManifest : ReactiveObject
 
     [JsonIgnore] public ModLoaderSupport? ModLoader => ModLoaderManager.Get(ModLoaderId);
     public List<BoxBackup> Backups { get; set; } = [];
-    public CommandLineSettings CommandLineSettings { get; set; } = new();
+    public CommandLineSettings CommandLineSettings { get; set; }
 
     public bool HasContentStrict(string id, string versionId, string platformId)
     {
@@ -193,6 +195,14 @@ public class BoxManifest : ReactiveObject
     public async Task<bool> RunPostDeserializationChecksAsync()
     {
         bool hadChange = false;
+        
+        if (CommandLineSettings == null 
+            || CommandLineSettings.MinimumAllocatedRam == 0 
+            || CommandLineSettings.MaximumAllocatedRam == 0)
+        {
+            CommandLineSettings = CommandLineSettings.Default;
+            hadChange = true;
+        }
 
         if (string.IsNullOrWhiteSpace(Author))
         {

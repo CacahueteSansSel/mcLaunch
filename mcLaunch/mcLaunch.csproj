@@ -388,6 +388,8 @@
         <AvaloniaResource Include="resources\icons\snbt.svg"/>
         <None Remove="resources\icons\java.svg" />
         <AvaloniaResource Include="resources\icons\java.svg" />
+        <None Remove="resources\skins\steve.png" />
+        <AvaloniaResource Include="resources\skins\steve.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -476,6 +478,10 @@
         <Compile Update="Views\Windows\NbtEditor\NbtEditorWindow.axaml.cs">
             <DependentUpon>NbtEditorWindow.axaml</DependentUpon>
             <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Popups\SelectSkinPopup.axaml.cs">
+          <DependentUpon>SelectSkinPopup.axaml</DependentUpon>
+          <SubType>Code</SubType>
         </Compile>
     </ItemGroup>
 

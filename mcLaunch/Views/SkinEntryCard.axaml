@@ -4,9 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
              xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             xmlns:controls="clr-namespace:mcLaunch.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              Margin="5"
              Width="200" Height="261"
+             RenderOptions.BitmapInterpolationMode="None"
              Background="{DynamicResource Background}"
              x:Class="mcLaunch.Views.SkinEntryCard">
     <UserControl.Styles>
@@ -25,8 +27,8 @@
     <DockPanel Margin="20 20 20 20">
         <TextBlock x:Name="SkinNameText" DockPanel.Dock="Bottom" FontSize="15" HorizontalAlignment="Center"
                    Classes="light" Margin="0 5 0 0" Text="{Binding TextureKey}" />
-        <Border ClipToBounds="True" CornerRadius="4">
-            <Image asyncImageLoader:ImageLoader.Source="{Binding Url}" />
+        <Border ClipToBounds="True" CornerRadius="4" RenderOptions.BitmapInterpolationMode="None">
+            <controls:SkinPreview x:Name="SkinPreview" RenderOptions.BitmapInterpolationMode="None" Width="190" Height="190" Texture="/resources/skins/steve.png" />
         </Border>
     </DockPanel>
 </UserControl>
