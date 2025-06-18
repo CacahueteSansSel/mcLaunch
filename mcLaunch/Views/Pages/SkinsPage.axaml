@@ -25,7 +25,10 @@
                     <WrapPanel x:Name="SkinCardsContainer">
                         <Button
                             Width="200" Height="261" Classes="secondary" Click="AddSkinButtonClicked">
-                            
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+                                <Image Source="/resources/plus_large.png" Width="60" Height="60"></Image>
+                                <TextBlock HorizontalAlignment="Center" Classes="title">Add skin</TextBlock>
+                            </StackPanel>
                         </Button>
                     </WrapPanel>
                 </ScrollViewer>

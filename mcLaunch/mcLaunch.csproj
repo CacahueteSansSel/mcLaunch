@@ -390,6 +390,10 @@
         <AvaloniaResource Include="resources\icons\java.svg" />
         <None Remove="resources\skins\steve.png" />
         <AvaloniaResource Include="resources\skins\steve.png" />
+        <None Remove="resources\plus_large.png" />
+        <AvaloniaResource Include="resources\plus_large.png" />
+        <None Remove="resources\icons\upload.svg" />
+        <AvaloniaResource Include="resources\icons\upload.svg" />
     </ItemGroup>
 
     <ItemGroup>

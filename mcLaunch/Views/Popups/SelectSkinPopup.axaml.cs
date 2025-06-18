@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -9,14 +10,23 @@ namespace mcLaunch.Views.Popups;
 
 public partial class SelectSkinPopup : UserControl
 {
-    public SelectSkinPopup()
+    Action<string, string> _skinSelectedCallback;
+    private string _skinFilename;
+    
+    public SelectSkinPopup(Action<string, string> skinSelectedCallback)
     {
         InitializeComponent();
+        
+        _skinSelectedCallback = skinSelectedCallback;
     }
 
     private void OKButtonClicked(object? sender, RoutedEventArgs e)
     {
+        if (string.IsNullOrWhiteSpace(SkinNameInputText.Text))
+            return;
+        
         Navigation.HidePopup();
+        _skinSelectedCallback?.Invoke(_skinFilename, SkinNameInputText.Text);
     }
 
     private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
@@ -36,7 +46,14 @@ public partial class SelectSkinPopup : UserControl
         if (list.Count == 0) return;
         
         IStorageFile file = list[0];
+        _skinFilename = file.Path.AbsolutePath;
+        
         SkinPreview.Texture = new Bitmap(file.Path.AbsolutePath);
         SkinPreview.InvalidateVisual();
+    }
+
+    private void CancelButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        Navigation.HidePopup();
     }
 }

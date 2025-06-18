@@ -1,5 +1,7 @@
-﻿using Avalonia.Controls;
+﻿using System.Linq;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
+using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Launchsite.Models;
@@ -10,19 +12,32 @@ namespace mcLaunch.Views.Pages;
 
 public partial class SkinsPage : UserControl, ITopLevelPageControl
 {
+    public static SkinsPage Current { get; private set; } = null!;
+    
     public SkinsPage()
     {
         InitializeComponent();
 
         LoadLocalSkins();
-        FetchSkins();
+        FetchCurrentSkin();
     }
 
     public string Title => "Manage skins";
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        
+        Current = this;
+    }
+
     private async void LoadLocalSkins()
     {
+        if (Design.IsDesignMode) return;
+        
         SkinsManager.LoadAllSkins();
+        
+        SkinCardsContainer.Children.RemoveAll(SkinCardsContainer.Children.Where(card => card is SkinEntryCard));
         
         foreach (ManifestSkin skin in SkinsManager.Skins)
         {
@@ -31,7 +46,7 @@ public partial class SkinsPage : UserControl, ITopLevelPageControl
         }
     }
 
-    private async void FetchSkins()
+    public async void FetchCurrentSkin()
     {
         MinecraftProfile? profile = await AuthenticationManager.FetchProfileAsync();
         if (profile == null) return;
@@ -44,6 +59,18 @@ public partial class SkinsPage : UserControl, ITopLevelPageControl
 
     private void AddSkinButtonClicked(object? sender, RoutedEventArgs e)
     {
-        Navigation.ShowPopup(new SelectSkinPopup());
+        Navigation.ShowPopup(new SelectSkinPopup(async (filename, name) =>
+        {
+            Navigation.ShowPopup(new StatusPopup("Uploading skin...", "Uploading the skin to Minecraft..."));
+            StatusPopup.Instance.StatusIndeterminate = true;
+            StatusPopup.Instance.Status = "Uploading...";
+            
+            await SkinsManager.AddSkin(filename, name, SkinType.Classic);
+            
+            StatusPopup.Instance.Status = "Loading local skins...";
+            LoadLocalSkins();
+            
+            Navigation.HidePopup();
+        }));
     }
 }
