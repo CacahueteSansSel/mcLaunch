@@ -6,7 +6,9 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using mcLaunch.Core.Managers;
+using mcLaunch.Core.Utilities;
 using mcLaunch.Launchsite.Auth;
+using mcLaunch.Launchsite.Models;
 using mcLaunch.Managers;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
@@ -23,7 +25,7 @@ public partial class ToolButtonsBar : UserControl
     {
         InitializeComponent();
 
-        DataContext = new Data();
+        DataContext = new Data(this);
 
         if (Design.IsDesignMode)
         {
@@ -120,6 +122,13 @@ public partial class ToolButtonsBar : UserControl
         new UnitTestsWindow().Show();
     }
 
+    public async void UpdateSkin(MinecraftProfile profile)
+    {
+        SkinHeadPreview.Texture =
+            await BitmapUtilities.LoadBitmapAsync(profile.Skins[0].Url, 512, BitmapInterpolationMode.None);
+        SkinHeadPreview.InvalidateVisual();
+    }
+
     public class Data : ReactiveObject
     {
         private MinecraftAuthenticationResult? account;
@@ -130,38 +139,12 @@ public partial class ToolButtonsBar : UserControl
         private string resourceDetailsText = "-";
         private string resourceName = "No pending download";
 
-        public Data()
+        public Data(ToolButtonsBar bar)
         {
             AuthenticationManager.OnLogin += async result =>
             {
                 Account = result;
-                string headIconCacheName = $"user-{account.Uuid}";
-
-                if (CacheManager.HasBitmap(headIconCacheName))
-                {
-                    await Task.Run(() => { HeadIcon = CacheManager.LoadBitmap(headIconCacheName); });
-
-                    return;
-                }
-
-                using (Stream? imageStream = await LoadIconStreamAsync(result))
-                {
-                    if (imageStream == null) return;
-
-                    HeadIcon = await Task.Run(() =>
-                    {
-                        try
-                        {
-                            return Bitmap.DecodeToWidth(imageStream, 400);
-                        }
-                        catch (Exception e)
-                        {
-                            return null;
-                        }
-                    });
-
-                    CacheManager.Store(HeadIcon, headIconCacheName);
-                }
+                bar.UpdateSkin(result.Profile);
             };
         }
 

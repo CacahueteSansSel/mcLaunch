@@ -52,6 +52,7 @@ public partial class SkinEntryCard : UserControl
         {
             Navigation.ShowPopup(new MessageBoxPopup("Skin applied", "The skin was applied", MessageStatus.Success));
             SkinsPage.Current.FetchCurrentSkin();
+            MainWindow.Instance.TopBar.UpdateSkin(profile);
         }
         else
         {
