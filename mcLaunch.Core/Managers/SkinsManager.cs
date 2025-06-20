@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using Avalonia;
 using Avalonia.Media.Imaging;
 using mcLaunch.Core.Core;
 using mcLaunch.Launchsite.Http;
@@ -64,7 +65,8 @@ public class ManifestSkin
     public async void LoadBitmap()
     {
         if (Bitmap != null) return;
-        
-        Bitmap = new Bitmap(Filename);
+
+        await using FileStream fs = new FileStream(Filename, FileMode.Open);
+        Bitmap = Bitmap.DecodeToWidth(fs, 512, BitmapInterpolationMode.None);
     }
 }

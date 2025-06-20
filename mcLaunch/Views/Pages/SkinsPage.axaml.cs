@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.Utilities;
@@ -53,7 +54,7 @@ public partial class SkinsPage : UserControl, ITopLevelPageControl
         if (profile.Skins.Length == 0) return;
 
         MinecraftProfile.ModelSkin skin = profile.Skins[0];
-        CurrentSkinPreview.Texture = (await BitmapUtilities.LoadBitmapAsync(skin.Url, 64))!;
+        CurrentSkinPreview.Texture = (await BitmapUtilities.LoadBitmapAsync(skin.Url, 512, BitmapInterpolationMode.None))!;
         CurrentSkinPreview.InvalidateVisual();
     }
 

@@ -4,7 +4,7 @@ namespace mcLaunch.Core.Utilities;
 
 public static class BitmapUtilities
 {
-    public static async Task<Bitmap?> LoadBitmapAsync(string url, int expectedWidth)
+    public static async Task<Bitmap?> LoadBitmapAsync(string url, int expectedWidth, BitmapInterpolationMode interpolationMode = BitmapInterpolationMode.HighQuality)
     {
         HttpClient client = new();
         Stream stream;
@@ -21,6 +21,6 @@ public static class BitmapUtilities
             return null;
         }
         
-        return await Task.Run(() => Bitmap.DecodeToWidth(stream, expectedWidth));
+        return await Task.Run(() => Bitmap.DecodeToWidth(stream, expectedWidth, interpolationMode));
     }
 }
