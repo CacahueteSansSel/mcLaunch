@@ -17,14 +17,13 @@
                 <TextBlock Classes="title" Margin="15 0 0 0" FontSize="30">Your Skins</TextBlock>
             </StackPanel>
             <DockPanel Margin="0 20 0 20" Width="888">
-                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Left" Spacing="10" Margin="0 0 20 0">
                     <controls:SkinPreview x:Name="CurrentSkinPreview" Width="200" Height="200" Texture="/resources/skins/steve.png" />
-                    <TextBlock HorizontalAlignment="Center" Classes="title">Current</TextBlock>
+                    <TextBlock HorizontalAlignment="Center" Classes="title">Current skin</TextBlock>
                 </StackPanel>
-                <ScrollViewer DockPanel.Dock="Right">
-                    <WrapPanel x:Name="SkinCardsContainer">
-                        <Button  Margin="20 20 20 20"
-                                 Width="200" Height="261" Classes="secondary" Click="AddSkinButtonClicked">
+                <ScrollViewer>
+                    <WrapPanel x:Name="SkinCardsContainer" ItemSpacing="5" LineSpacing="5">
+                        <Button Width="200" Height="261" Classes="secondary" Click="AddSkinButtonClicked">
                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
                                 <Image Source="/resources/plus_large.png" Width="60" Height="60"></Image>
                                 <TextBlock HorizontalAlignment="Center" Classes="title">Add skin</TextBlock>
@@ -32,7 +31,6 @@
                         </Button>
                     </WrapPanel>
                 </ScrollViewer>
-                <Panel />
             </DockPanel>
         </StackPanel>
     </Panel>

@@ -394,6 +394,10 @@
         <AvaloniaResource Include="resources\plus_large.png" />
         <None Remove="resources\icons\upload.svg" />
         <AvaloniaResource Include="resources\icons\upload.svg" />
+        <None Remove="resources\icons\minigame.svg" />
+        <AvaloniaResource Include="resources\icons\minigame.svg" />
+        <None Remove="resources\icons\minigame.png" />
+        <AvaloniaResource Include="resources\icons\minigame.png" />
     </ItemGroup>
 
     <ItemGroup>

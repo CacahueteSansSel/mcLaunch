@@ -69,6 +69,7 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
                      .Where(m => Settings.Instance.EnableAdvancedModLoaders || !m.IsAdvanced))
         {
             if (listener != null && !listener.ShouldShowModLoader(ml)) continue;
+            if (ml is MinigameModLoaderSupport && BoxNameTb.Text != "minigame") continue;
 
             ModLoaderVersion? version = await ml.FetchLatestVersion(versionId);
             if (version != null) all.Add(ml);

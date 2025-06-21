@@ -16,7 +16,7 @@
                 <Button DockPanel.Dock="Right" Classes="secondary" Click="ClosePopupButtonClicked">Close</Button>
                 <Panel />
             </DockPanel>
-            <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Spacing="10" Margin="0 20 0 0">
+            <StackPanel x:Name="ButtonList" DockPanel.Dock="Top" Orientation="Vertical" Spacing="10" Margin="0 20 0 0">
                 <Button Classes="secondary" Width="370" Click="ExportBoxButtonClicked">
                     <StackPanel Orientation="Vertical">
                         <TextBlock Classes="title">mcLaunch's Box</TextBlock>

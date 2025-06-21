@@ -65,6 +65,9 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         RunBoxChecks();
 
         UpdateButtons();
+
+        MinigameSelection.IsVisible = box.Manifest.ModLoaderId == "minigame";
+        MinecraftVersionSelection.IsVisible = !MinigameSelection.IsVisible;
     }
 
     public static BoxDetailsPage? LastOpened { get; private set; }

@@ -28,6 +28,8 @@ public partial class ExportBoxPopup : UserControl
         InitializeComponent();
 
         this.box = box;
+
+        ButtonList.IsVisible = box.Manifest.ModLoaderId != "minigame";
     }
 
     private async void ExportAsync<T>(string extension, string extensionDesc) where T : ModificationPack, new()

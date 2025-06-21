@@ -41,6 +41,7 @@ public class App : Application
         DownloadManager.Init(CurrentBuild.Version.ToString());
         await MinecraftManager.InitAsync();
         ModLoaderManager.Init();
+        ModLoaderManager.All.Add(new MinigameModLoaderSupport());
         ModPlatformManager.Init(new MultiplexerMinecraftContentPlatform(
             new ModrinthMinecraftContentPlatform().WithIcon("modrinth"),
             new CurseForgeMinecraftContentPlatform(Credentials.Get("curseforge")).WithIcon("curseforge")

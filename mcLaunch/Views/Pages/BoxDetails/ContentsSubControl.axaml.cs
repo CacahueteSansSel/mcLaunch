@@ -43,9 +43,11 @@ public partial class ContentsSubControl : SubControl
 
     public override async Task PopulateAsync()
     {
-        if (Box.Manifest.ModLoader is VanillaModLoaderSupport
-            && (ContentType == MinecraftContentType.Modification
-                || ContentType == MinecraftContentType.ShaderPack))
+        if ((Box.Manifest.ModLoader is MinigameModLoaderSupport) || (Box.Manifest.ModLoader is VanillaModLoaderSupport
+                                                                     && (ContentType ==
+                                                                         MinecraftContentType.Modification
+                                                                         || ContentType ==
+                                                                         MinecraftContentType.ShaderPack)))
         {
             ModsList.HidePageSelectors();
             VanillaDisclaimer.IsVisible = true;

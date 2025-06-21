@@ -6,7 +6,6 @@
              xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              xmlns:controls="clr-namespace:mcLaunch.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             Margin="5"
              Width="200" Height="261"
              RenderOptions.BitmapInterpolationMode="None"
              Background="{DynamicResource Background}"
