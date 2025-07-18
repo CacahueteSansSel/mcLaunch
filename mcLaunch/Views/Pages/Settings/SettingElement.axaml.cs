@@ -28,18 +28,7 @@ public partial class SettingElement : UserControl
 
     private void BooleanCheckboxChecked(object? sender, RoutedEventArgs e)
     {
-        Setting.Property.SetValue(Utilities.Settings.Instance, true);
-        Utilities.Settings.Save();
-
-        MainWindow.Instance.TopBar.RefreshButtons();
-
-        if (Utilities.Settings.Instance != null)
-            Api.AllowExtendedTimeout = Utilities.Settings.Instance.AllowExtendedTimeout;
-    }
-
-    private void BooleanCheckboxUnchecked(object? sender, RoutedEventArgs e)
-    {
-        Setting.Property.SetValue(Utilities.Settings.Instance, false);
+        Setting.Property.SetValue(Utilities.Settings.Instance, !BooleanCheckbox.IsChecked!.Value);
         Utilities.Settings.Save();
 
         MainWindow.Instance.TopBar.RefreshButtons();
