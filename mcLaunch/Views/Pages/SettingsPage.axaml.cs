@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using mcLaunch.Managers;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages.Settings;
+using mcLaunch.Views.Popups;
 using mcLaunch.Views.Windows;
 using mcLaunch.Views.Windows.NbtEditor;
 
@@ -79,5 +80,14 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
     private void NbtEditorButtonClicked(object? sender, RoutedEventArgs e)
     {
         new NbtEditorWindow("level.dat").Show();
+    }
+
+    private async void ReinstallButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        if (!await UpdateManager.UpdateAsync())
+        {
+            Navigation.ShowPopup(new MessageBoxPopup("Error",
+                "Reinstall failed. Download the build on the GitHub repository manually.", MessageStatus.Error));
+        }
     }
 }

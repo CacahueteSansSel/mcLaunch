@@ -40,6 +40,7 @@
                         <Button Classes="secondary" Click="AboutButtonClicked" Margin="0 0 5 0">About</Button>
                         <Button Classes="secondary" Click="OpenGithubRepoButtonClicked">GitHub</Button>
                         <Button Classes="secondary" Click="UpdateInstallerButtonClicked">Update installer</Button>
+                        <Button Classes="secondary" Click="ReinstallButtonClicked">Reinstall mcLaunch</Button>
                         <Button x:Name="CrashButton" Classes="secondary" Click="CrashLauncherButtonClicked">Crash</Button>
                         <Button x:Name="ConsoleButton" Classes="secondary" Click="ConsoleButtonClicked">Console</Button>
                         <Button x:Name="NbtButton" Classes="secondary" Click="NbtEditorButtonClicked">NBT Editor</Button>
