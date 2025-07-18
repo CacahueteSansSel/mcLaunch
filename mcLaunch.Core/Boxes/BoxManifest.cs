@@ -37,6 +37,8 @@ public class BoxManifest : ReactiveObject
 
         this.version = version;
         Version = version.Id;
+        
+        if (CommandLineSettings == null) CommandLineSettings = CommandLineSettings.Default;
     }
 
     public int? ManifestVersion { get; set; }
@@ -51,9 +53,8 @@ public class BoxManifest : ReactiveObject
 
     [JsonPropertyName("Modifications")] // For compatibility reasons
     public List<BoxStoredContent> Contents { get; set; } = [];
-    
-    [JsonIgnore]
-    public List<BoxStoredContent> RecentlyAddedContents { get; set; } = [];
+
+    [JsonIgnore] public List<BoxStoredContent> RecentlyAddedContents { get; set; } = [];
 
     public List<string> AdditionalModloaderFiles { get; set; } = [];
 
@@ -108,6 +109,7 @@ public class BoxManifest : ReactiveObject
 
     [JsonIgnore] public ModLoaderSupport? ModLoader => ModLoaderManager.Get(ModLoaderId);
     public List<BoxBackup> Backups { get; set; } = [];
+    public CommandLineSettings CommandLineSettings { get; set; }
 
     public bool HasContentStrict(string id, string versionId, string platformId)
     {
@@ -154,13 +156,13 @@ public class BoxManifest : ReactiveObject
 
         lock (Contents)
         {
-            BoxStoredContent bsc = new BoxStoredContent
+            BoxStoredContent bsc = new()
             {
                 Content = content,
                 VersionId = versionId,
                 Filenames = filenames
             };
-            
+
             Contents.Add(bsc);
             RecentlyAddedContents.Add(bsc);
         }
@@ -183,7 +185,7 @@ public class BoxManifest : ReactiveObject
         lock (Contents)
         {
             Contents.Remove(content);
-            if (RecentlyAddedContents.Contains(content)) 
+            if (RecentlyAddedContents.Contains(content))
                 RecentlyAddedContents.Remove(content);
         }
 
@@ -193,6 +195,14 @@ public class BoxManifest : ReactiveObject
     public async Task<bool> RunPostDeserializationChecksAsync()
     {
         bool hadChange = false;
+        
+        if (CommandLineSettings == null 
+            || CommandLineSettings.MinimumAllocatedRam == 0 
+            || CommandLineSettings.MaximumAllocatedRam == 0)
+        {
+            CommandLineSettings = CommandLineSettings.Default;
+            hadChange = true;
+        }
 
         if (string.IsNullOrWhiteSpace(Author))
         {
@@ -235,11 +245,12 @@ public class BoxManifest : ReactiveObject
         if (setUpVersion != null) return new Result<MinecraftVersion>(setUpVersion);
 
         ManifestMinecraftVersion mcManifestVersion = MinecraftManager.Manifest.Get(Version);
-        MinecraftVersion? mcVersion = mcManifestVersion != null 
-            ? (await mcManifestVersion.DownloadOrGetLocally(BoxManager.SystemFolder))
+        MinecraftVersion? mcVersion = mcManifestVersion != null
+            ? await mcManifestVersion.DownloadOrGetLocally(BoxManager.SystemFolder)
             : BoxManager.SystemFolder.GetVersion(Version);
-        
-        if (mcVersion == null) return Result<MinecraftVersion>.Error($"Failed to find/fetch Minecraft version {Version}");
+
+        if (mcVersion == null)
+            return Result<MinecraftVersion>.Error($"Failed to find/fetch Minecraft version {Version}");
 
         if (ModLoader != null) mcVersion = await ModLoader.PostProcessMinecraftVersionAsync(mcVersion);
 
@@ -249,7 +260,17 @@ public class BoxManifest : ReactiveObject
         if (modLoader != null && modLoader.Type == "modded")
         {
             ModLoaderVersion[]? versions = await modLoader.GetVersionsAsync(Version);
-            ModLoaderVersion version = versions.FirstOrDefault(v => v.Name == ModLoaderVersion);
+
+            if (versions == null || versions.Length == 0)
+            {
+                return Result<MinecraftVersion>.Error($"Cannot find a version of {modLoader.Name} for " +
+                                                      $"Minecraft {Version}: The servers of {modLoader.Name} " +
+                                                      $"didn't return any compatible version. " +
+                                                      $"Please check if you have an Internet connection and " +
+                                                      $"if {ModLoader.Name}'s servers are accessible.");
+            }
+
+            ModLoaderVersion? version = versions.FirstOrDefault(v => v.Name == ModLoaderVersion);
             if (version == null) version = versions[0];
 
             Result<MinecraftVersion> versionResult = await version.GetMinecraftVersionAsync(Version);
@@ -277,95 +298,6 @@ public class BoxManifest : ReactiveObject
     }
 
     public override string ToString() => $"Manifest {Id} {Name}";
-}
-
-public class BoxStoredContent
-{
-    private string? id, platformId, name, author;
-    private MinecraftContentType? type;
-
-    public MinecraftContent? Content { get; set; }
-
-    [Obsolete("Use Content instead")]
-    public string Id
-    {
-        get => id ?? Content.Id;
-        set => id = value;
-    }
-
-    public string VersionId { get; init; }
-
-    [Obsolete("Use Content instead")]
-    public string PlatformId
-    {
-        get => platformId ?? Content.ModPlatformId;
-        set => platformId = value;
-    }
-
-    public string[] Filenames { get; set; }
-
-    [Obsolete("Use Content instead")]
-    public string Name
-    {
-        get => name ?? Content.Name;
-        set => name = value;
-    }
-
-    [Obsolete("Use Content instead")]
-    public string Author
-    {
-        get => author ?? Content.Author;
-        set => author = value;
-    }
-
-    [Obsolete("Use Content instead")]
-    public MinecraftContentType Type
-    {
-        get => type ?? Content.Type;
-        set => type = value;
-    }
-
-    public void Delete(string boxRootPath)
-    {
-        foreach (string file in Filenames)
-        {
-            if (Path.IsPathFullyQualified(file))
-                throw new Exception("Mod filename is absolute : was the manifest updated to Manifest Version 2 ?");
-
-            string path = $"{boxRootPath}/{file.TrimStart('/')}";
-
-            if (File.Exists(path)) File.Delete(path);
-        }
-    }
-}
-
-public class BoxBackup
-{
-    public BoxBackup()
-    {
-    }
-
-    public BoxBackup(string name, BoxBackupType type, DateTime creationTime, string filename)
-    {
-        Name = name;
-        Type = type;
-        CreationTime = creationTime;
-        Filename = filename;
-    }
-
-    public string Name { get; set; }
-    public BoxBackupType Type { get; set; }
-    public DateTime CreationTime { get; set; }
-    public string Filename { get; set; }
-
-    [JsonIgnore] public bool IsCompleteBackup => Type == BoxBackupType.Complete;
-    [JsonIgnore] public bool IsPartialBackup => Type == BoxBackupType.Partial;
-}
-
-public enum BoxBackupType
-{
-    Complete,
-    Partial
 }
 
 public enum BoxType

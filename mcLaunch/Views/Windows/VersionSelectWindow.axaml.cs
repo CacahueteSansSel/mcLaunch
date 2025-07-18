@@ -10,9 +10,9 @@ namespace mcLaunch.Views.Windows;
 
 public partial class VersionSelectWindow : Window
 {
+    private readonly IMinecraftVersionSelectionListener? listener;
     private readonly ManifestMinecraftVersion[] versions;
     private ManifestMinecraftVersion? selectedVersion;
-    IMinecraftVersionSelectionListener? listener;
 
     public VersionSelectWindow(IMinecraftVersionSelectionListener? listener = null)
     {
@@ -24,9 +24,7 @@ public partial class VersionSelectWindow : Window
             : MinecraftManager.ManifestVersions;
 
         if (this.listener != null)
-        {
             versions = versions.Where(version => this.listener.ShouldShowMinecraftVersion(version)).ToArray();
-        }
 
         DataContext = versions;
     }
@@ -52,7 +50,7 @@ public partial class VersionSelectWindow : Window
     {
         if (e.AddedItems.Count > 0)
         {
-            selectedVersion = (ManifestMinecraftVersion) e.AddedItems[0];
+            selectedVersion = (ManifestMinecraftVersion)e.AddedItems[0];
             SelectButton.IsVisible = true;
         }
     }

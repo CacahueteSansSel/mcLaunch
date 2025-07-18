@@ -62,7 +62,7 @@ public static class AuthenticationManager
     public static async Task<MinecraftProfile> FetchProfileAsync()
     {
         if (Account == null) return null;
-        
+
         Account.Profile = await Platform.FetchProfileAsync(Account.AccessToken);
         return Account.Profile;
     }

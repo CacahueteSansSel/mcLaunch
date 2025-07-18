@@ -7,18 +7,18 @@
              x:Class="mcLaunch.Views.Popups.GameLaunchPopup">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
-        
+
         <Style Selector="Border.loading">
             <Style.Animations>
-                <Animation Duration="0:0:2" IterationCount="INFINITE"> 
+                <Animation Duration="0:0:2" IterationCount="INFINITE">
                     <KeyFrame Cue="0%">
-                        <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"/>
+                        <Setter Property="Background" Value="{DynamicResource BackgroundLighter}" />
                     </KeyFrame>
                     <KeyFrame Cue="50%">
-                        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}"/>
+                        <Setter Property="Background" Value="{DynamicResource BackgroundDarker}" />
                     </KeyFrame>
                     <KeyFrame Cue="100%">
-                        <Setter Property="Background" Value="{DynamicResource BackgroundLighter}"/>
+                        <Setter Property="Background" Value="{DynamicResource BackgroundLighter}" />
                     </KeyFrame>
                 </Animation>
             </Style.Animations>

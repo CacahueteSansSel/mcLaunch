@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Threading;
 using ReactiveUI;
 
 namespace mcLaunch.Views.Popups;
@@ -52,7 +53,26 @@ public partial class StatusPopup : UserControl
     public float StatusPercent
     {
         get => dctx.StatusPercent / 100f;
-        set => dctx.StatusPercent = (int) (value * 100);
+        set
+        {
+            dctx.StatusPercent = (int)(value * 100);
+            Dispatcher.UIThread.Post(() =>
+            {
+                Bar.IsIndeterminate = false;
+            });
+        }
+    }
+    
+    public bool StatusIndeterminate
+    {
+        get => Bar.IsIndeterminate;
+        set
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                Bar.IsIndeterminate = value;
+            });
+        }
     }
 
     public bool ShowDownloadBanner

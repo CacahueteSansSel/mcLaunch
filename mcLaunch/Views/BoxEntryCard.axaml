@@ -3,11 +3,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:boxes="clr-namespace:mcLaunch.Core.Boxes;assembly=mcLaunch.Core"
              mc:Ignorable="d"
              Margin="5"
              Width="200" Height="261"
              Background="{DynamicResource Background}"
              Classes="smoothShow"
+             PointerEntered="InputElement_OnPointerEntered"
+             PointerExited="InputElement_OnPointerExited"
+             x:DataType="boxes:BoxManifest"
              x:Class="mcLaunch.Views.BoxEntryCard">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
@@ -49,7 +53,7 @@
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/play.svg}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <Separator></Separator>
+                <Separator />
                 <MenuItem Header="Open box" Click="OpenMenuOptionClicked">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/open.svg}" />
@@ -60,41 +64,52 @@
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/folder.svg}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <Separator></Separator>
+                <MenuItem Header="Export" Click="ExportOptionClicked">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/open.svg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
                 <MenuItem Header="Duplicate" Click="DuplicateOptionClicked">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Copy Box ID" Click="CopyMenuOptionClicked">
-                    <MenuItem.Icon>
-                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <Separator></Separator>
-                <MenuItem Header="Copy Mod List Report">
-                    <MenuItem.Icon>
-                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
-                    </MenuItem.Icon>
-                    <MenuItem.Items>
-                        <MenuItem Header="Complete" Click="CompleteReportOptionClicked">
-                        </MenuItem>
-                        <MenuItem Header="Only mods added since launcher start" Click="RelativeReportOptionClicked">
-                        </MenuItem>
-                    </MenuItem.Items>
-                </MenuItem>
-                <Separator></Separator>
                 <MenuItem Header="Delete" Click="DeleteMenuOptionClicked">
                     <MenuItem.Icon>
                         <Image Width="16" Height="16" Source="{SvgImage /resources/icons/delete.svg}" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <Separator />
+                <MenuItem Header="Copy">
+                    <MenuItem.Icon>
+                        <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
+                    </MenuItem.Icon>
+                    <MenuItem.Items>
+                        <MenuItem Header="Box ID" Click="CopyMenuOptionClicked">
+                            <MenuItem.Icon>
+                                <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Mod List Report">
+                            <MenuItem.Icon>
+                                <Image Width="16" Height="16" Source="{SvgImage /resources/icons/copy.svg}" />
+                            </MenuItem.Icon>
+                            <MenuItem.Items>
+                                <MenuItem Header="Complete" Click="CompleteReportOptionClicked" />
+                                <MenuItem Header="Only mods added since launcher start" Click="RelativeReportOptionClicked" />
+                            </MenuItem.Items>
+                        </MenuItem>
+                    </MenuItem.Items>
+                </MenuItem>
             </ContextMenu>
         </Panel.ContextMenu>
         <StackPanel Margin="20 20 20 20">
-            <Border ClipToBounds="True" CornerRadius="4">
+            <Border ClipToBounds="True">
                 <Panel Width="155" Height="155">
-                    <Image x:Name="BoxIcon" Stretch="Uniform" Source="{Binding Icon.IconLarge}" />
+                    <Border Background="#66151515" CornerRadius="2" ClipToBounds="True">
+                        <Image x:Name="BoxIcon" Stretch="Uniform" Source="{Binding Icon.IconLarge}" />
+                    </Border>
                     <Button x:Name="PlayButton" IsVisible="False" ToolTip.Tip="Launch box" Classes="transparent-green"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="PlayButtonClicked">
                         <Image Source="{SvgImage /resources/icons/play.svg}" Width="14" Height="14" />
@@ -105,14 +120,14 @@
                     </Button>
                 </Panel>
             </Border>
-            <TextBlock x:Name="BoxNameText" FontSize="20" Classes="title" Margin="0 5 0 0" Text="{Binding Name}" />
+            <TextBlock x:Name="BoxNameText" TextTrimming="CharacterEllipsis" FontSize="20" Classes="title" Margin="0 5 0 0" Text="{Binding Name}" />
             <StackPanel Orientation="Horizontal" Margin="0 0 0 3">
                 <TextBlock FontSize="12" Classes="light" Margin="0 0 0 0">by</TextBlock>
                 <TextBlock x:Name="AuthorText" FontSize="12" Classes="title" Margin="5 0 0 0" Text="{Binding Author}" />
             </StackPanel>
             <StackPanel x:Name="Badges" Orientation="Horizontal" Spacing="5">
-                <views:Badge x:Name="VersionBadge"/>
-                <views:Badge x:Name="ModLoaderBadge"/>
+                <views:Badge x:Name="VersionBadge" />
+                <views:Badge x:Name="ModLoaderBadge" />
             </StackPanel>
             <TextBlock x:Name="DeletingText" IsVisible="False" Classes="title">Deleting...</TextBlock>
         </StackPanel>

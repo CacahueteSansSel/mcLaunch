@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Formats.Tar;
+using System.IO.Compression;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text.Json;
 using Avalonia.Media.Imaging;
 using DynamicData;
@@ -26,8 +26,8 @@ public class Box : IEquatable<Box>
     private readonly string manifestPath;
     private bool exposeLauncher;
     private string launcherVersion = "0.0.0";
+    private bool redirectOutput;
     private FileSystemWatcher? watcher;
-    bool redirectOutput;
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
@@ -77,7 +77,7 @@ public class Box : IEquatable<Box>
     {
         get
         {
-            System.Version.TryParse(Manifest.Version, out System.Version? ver);
+            System.Version.TryParse(Manifest.Version, out Version? ver);
 
             return ver;
         }
@@ -94,13 +94,15 @@ public class Box : IEquatable<Box>
 
     public bool HasWorlds => Directory.Exists($"{Folder.Path}/saves") &&
                              Directory.GetDirectories($"{Folder.Path}/saves").Length > 0;
+    public bool HasScreenshots => Directory.Exists($"{Folder.Path}/screenshots") &&
+                             Directory.GetDirectories($"{Folder.Path}/screenshots").Length > 0;
 
     public bool Equals(Box? other) => other?.Manifest.Id == Manifest.Id;
 
     public void CreateWatcher()
     {
         if (watcher != null) return;
-        
+
         if (!Directory.Exists(Folder.CompletePath))
             Directory.CreateDirectory(Folder.CompletePath);
 
@@ -113,10 +115,13 @@ public class Box : IEquatable<Box>
     public void DisposeWatcher()
     {
         if (watcher == null) return;
-        
+
         watcher.Dispose();
         watcher = null;
     }
+
+    public void ExportToZip(string targetFilename)
+        => ZipFile.CreateFromDirectory(Path, targetFilename);
 
     private void OnFileDeleted(object sender, FileSystemEventArgs e)
     {
@@ -165,7 +170,7 @@ public class Box : IEquatable<Box>
 
         try
         {
-            await using MemoryStream fs = new MemoryStream(await File.ReadAllBytesAsync(e.FullPath));
+            await using MemoryStream fs = new(await File.ReadAllBytesAsync(e.FullPath));
             ContentVersion? version = await ModPlatformManager.Platform.GetContentVersionFromData(fs);
             if (version == null || version.Content == null) return;
 
@@ -315,7 +320,7 @@ public class Box : IEquatable<Box>
     public void SetWatching(bool isWatching)
     {
         if (watcher == null) CreateWatcher();
-        
+
         watcher.EnableRaisingEvents = isWatching;
     }
 
@@ -361,12 +366,16 @@ public class Box : IEquatable<Box>
 
         ReloadManifest();
 
+        if (await AddMissingModsToList()) 
+            await SaveManifestAsync();
+
         foreach (BoxStoredContent mod in Manifest.Contents)
         {
             bool exists = false;
             foreach (string filename in mod.Filenames)
             {
                 string path = $"{Folder.CompletePath}/{filename}";
+                if (path == "mods/") continue;
                 if (!File.Exists(path)) continue;
                 exists = true;
 
@@ -379,9 +388,9 @@ public class Box : IEquatable<Box>
             changes.Add($"Mod {mod.Name} has been removed because it is not present on disk anymore");
         }
 
-        if (await AddMissingModsToList()) await SaveManifestAsync();
-
         Manifest.Contents.RemoveMany(modsToRemove);
+        if (modsToRemove.Count > 0)
+            await SaveManifestAsync();
 
         return changes.ToArray();
     }
@@ -394,8 +403,12 @@ public class Box : IEquatable<Box>
 
         foreach (string modFilename in unknownModsFilenames)
         {
-            await using MemoryStream fs =
-                new MemoryStream(await File.ReadAllBytesAsync($"{Folder.CompletePath}/{modFilename}"));
+            if (!Directory.Exists(Folder.CompletePath))
+                return false;
+            if (!File.Exists($"{Folder.CompletePath}/{modFilename}"))
+                continue;
+            
+            await using MemoryStream fs = new(await File.ReadAllBytesAsync($"{Folder.CompletePath}/{modFilename}"));
             ContentVersion? version = await ModPlatformManager.Platform.GetContentVersionFromData(fs);
             if (version == null || version.Content == null) continue;
 
@@ -485,6 +498,7 @@ public class Box : IEquatable<Box>
         List<MinecraftWorld> worlds = new();
 
         foreach (string folder in Directory.GetDirectories($"{Folder.Path}/saves"))
+        {
             try
             {
                 worlds.Add(new MinecraftWorld(System.IO.Path.GetFullPath(folder)));
@@ -493,6 +507,7 @@ public class Box : IEquatable<Box>
             {
                 // ignored
             }
+        }
 
         return worlds.ToArray();
     }
@@ -504,11 +519,11 @@ public class Box : IEquatable<Box>
 
         List<MinecraftServer> servers = new();
         CompoundTag tag = NbtFile.Read($"{Folder.Path}/servers.dat", FormatOptions.Java);
-        ListTag serversTag = (ListTag) tag["servers"];
+        ListTag serversTag = (ListTag)tag["servers"];
 
         foreach (Tag serverTag in serversTag)
         {
-            var server = (CompoundTag) serverTag;
+            CompoundTag server = (CompoundTag)serverTag;
             try
             {
                 servers.Add(new MinecraftServer(server));
@@ -551,7 +566,8 @@ public class Box : IEquatable<Box>
             .WithCustomLauncherDetails("mcLaunch", launcherVersion, exposeLauncher
                                                                     && (ModLoader?.SupportsLauncherExposure ?? true))
             .WithUser(AuthenticationManager.Account!, AuthenticationManager.Platform!)
-            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JvmDownloader);
+            .WithDownloaders(BoxManager.AssetsDownloader, BoxManager.LibrariesDownloader, BoxManager.JvmDownloader)
+            .WithCommandLineSettings(Manifest.CommandLineSettings);
 
         return new Result();
     }
@@ -700,7 +716,7 @@ public class Box : IEquatable<Box>
             {
                 string realFilename = $"{Folder.Path}/{filename}";
 
-                FileStream fs = new FileStream(realFilename, FileMode.Open);
+                FileStream fs = new(realFilename, FileMode.Open);
 
                 ContentVersion? modVersion =
                     await ModrinthMinecraftContentPlatform.Instance.GetContentVersionFromData(fs);
@@ -739,7 +755,7 @@ public class Box : IEquatable<Box>
             {
                 string realFilename = $"{Folder.Path}/{filename}";
 
-                await using FileStream fs = new FileStream(realFilename, FileMode.Open);
+                await using FileStream fs = new(realFilename, FileMode.Open);
 
                 ContentVersion? modVersion =
                     await CurseForgeMinecraftContentPlatform.Instance.GetContentVersionFromData(fs);
@@ -767,7 +783,7 @@ public class Box : IEquatable<Box>
     {
         await File.WriteAllTextAsync(manifestPath, JsonSerializer.Serialize(Manifest));
     }
-    
+
     public void SaveManifest()
     {
         File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
@@ -778,7 +794,7 @@ public class Box : IEquatable<Box>
     {
         Manifest.LastLaunchTime = DateTime.Now;
         SaveManifest();
-        
+
         return Minecraft.Run();
     }
 
@@ -787,7 +803,7 @@ public class Box : IEquatable<Box>
     {
         Manifest.LastLaunchTime = DateTime.Now;
         SaveManifest();
-        
+
         return Minecraft
             .WithServer(serverAddress, serverPort)
             .Run();
@@ -798,9 +814,9 @@ public class Box : IEquatable<Box>
     {
         Manifest.LastLaunchTime = DateTime.Now;
         SaveManifest();
-        
+
         string profilePath = QuickPlay.Create(QuickPlayWorldType.Singleplayer,
-            (QuickPlayGameMode) world.GameMode, world.FolderName);
+            (QuickPlayGameMode)world.GameMode, world.FolderName);
 
         return Minecraft
             .WithSingleplayerQuickPlay(profilePath, world.FolderName)

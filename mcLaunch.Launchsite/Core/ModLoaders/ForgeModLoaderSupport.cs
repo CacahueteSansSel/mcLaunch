@@ -1,6 +1,5 @@
 ﻿using System.Xml;
 using mcLaunch.Launchsite.Http;
-using mcLaunch.Launchsite.Models.Forge;
 
 namespace mcLaunch.Launchsite.Core.ModLoaders;
 
@@ -28,26 +27,36 @@ public class ForgeModLoaderSupport : ModLoaderSupport
         if (Version.TryParse(minecraftVersion, out Version? version) && version < new Version("1.12.2"))
             return [];
 
-        XmlDocument? forgeVersionXml =
-            await Api.GetAsyncXml("https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml");
-
-        XmlNode versionsNode = forgeVersionXml!.DocumentElement!.SelectNodes("versioning/versions")![0]!;
-        List<ForgeModLoaderVersion> versions = [];
-
-        foreach (XmlNode childVersionNode in versionsNode.ChildNodes)
+        try
         {
-            string currentVersion = childVersionNode.InnerText;
-            if (!currentVersion.StartsWith(minecraftVersion)) continue;
-            
-            versions.Add(new ForgeModLoaderVersion()
-            {
-                Name = currentVersion.Replace($"{minecraftVersion}-", "").Trim(),
-                MinecraftVersion = minecraftVersion,
-                JvmExecutablePath = JvmExecutablePath,
-                SystemFolderPath = SystemFolderPath
-            });
-        }
+            XmlDocument? forgeVersionXml =
+                await Api.GetAsyncXml("https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml");
 
-        return versions.ToArray();
+            if (forgeVersionXml == null)
+                return [];
+
+            XmlNode versionsNode = forgeVersionXml!.DocumentElement!.SelectNodes("versioning/versions")![0]!;
+            List<ForgeModLoaderVersion> versions = [];
+
+            foreach (XmlNode childVersionNode in versionsNode.ChildNodes)
+            {
+                string currentVersion = childVersionNode.InnerText;
+                if (!currentVersion.StartsWith(minecraftVersion)) continue;
+
+                versions.Add(new ForgeModLoaderVersion
+                {
+                    Name = currentVersion.Replace($"{minecraftVersion}-", "").Trim(),
+                    MinecraftVersion = minecraftVersion,
+                    JvmExecutablePath = JvmExecutablePath,
+                    SystemFolderPath = SystemFolderPath
+                });
+            }
+
+            return versions.ToArray();
+        }
+        catch (XmlException e)
+        {
+            return [];
+        }
     }
 }

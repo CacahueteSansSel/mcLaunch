@@ -13,7 +13,8 @@
         <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}" />
         <Button Margin="0 0 15 20" ZIndex="10" IsHitTestVisible="True" VerticalAlignment="Bottom"
                 HorizontalAlignment="Right" Classes="transparent" Click="UpButtonClicked">
-            <Image Source="{SvgImage /resources/icons/arrow_up.svg}" RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
+            <Image Source="{SvgImage /resources/icons/arrow_up.svg}"
+                   RenderOptions.BitmapInterpolationMode="HighQuality" Width="13"
                    Height="13" />
         </Button>
         <ScrollViewer x:Name="ScrollArea">

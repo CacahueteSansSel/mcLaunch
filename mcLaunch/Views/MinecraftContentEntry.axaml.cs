@@ -38,11 +38,11 @@ public partial class MinecraftContentEntry : UserControl
 
     public MinecraftContent Mod
     {
-        get => (MinecraftContent) DataContext;
+        get => (MinecraftContent)DataContext;
         set
         {
             DataContext = value;
-            
+
             UpdateBadges();
         }
     }

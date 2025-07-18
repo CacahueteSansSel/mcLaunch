@@ -32,7 +32,7 @@ public partial class CrashReportList : UserControl
 
     public void SetCrashReports(MinecraftCrashReport[] reports)
     {
-        Data ctx = (Data) DataContext;
+        Data ctx = (Data)DataContext;
 
         ctx.Reports = reports;
 
@@ -48,7 +48,7 @@ public partial class CrashReportList : UserControl
     {
         if (e.AddedItems.Count > 0)
         {
-            MinecraftCrashReport world = (MinecraftCrashReport) e.AddedItems[0];
+            MinecraftCrashReport world = (MinecraftCrashReport)e.AddedItems[0];
             PlatformSpecific.OpenFile(world.CompletePath);
         }
 

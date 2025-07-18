@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -9,7 +8,6 @@ using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.Managers;
-using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Models;
 using mcLaunch.Utilities;
@@ -28,40 +26,42 @@ public partial class AdvancedFeaturesPage : UserControl, ITopLevelPageControl
 
     public string Title => "Advanced Features";
 
-    async void RunExtractMinecraftResources(object? sender, RoutedEventArgs e)
+    private async void RunExtractMinecraftResources(object? sender, RoutedEventArgs e)
     {
         VersionSelectWindow versionSelectWindow = new();
 
-        ManifestMinecraftVersion? version 
+        ManifestMinecraftVersion? version
             = await versionSelectWindow.ShowDialog<ManifestMinecraftVersion?>(MainWindow.Instance);
         MinecraftFolder systemFolder = BoxManager.SystemFolder;
-        AssetsDownloader assetsDownloader = new AssetsDownloader(systemFolder);
+        AssetsDownloader assetsDownloader = new(systemFolder);
 
-        var folders = await MainWindow.Instance.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
-        {
-            Title = "Select target folder"
-        });
+        IReadOnlyList<IStorageFolder> folders = await MainWindow.Instance.StorageProvider.OpenFolderPickerAsync(
+            new FolderPickerOpenOptions
+            {
+                Title = "Select target folder"
+            });
         string folder = folders.First().Path.LocalPath;
-        
+
         MinecraftVersion? mcVersion = await version.GetAsync();
         AssetIndex index = await mcVersion.GetAssetIndexAsync();
         string jarFilename = $"{systemFolder.GetVersionPath(mcVersion)}/{mcVersion.Id}.jar";
-        
-        Navigation.ShowPopup(new StatusPopup($"Extracting Minecraft {mcVersion.Id}", "Please wait for the resources to be extracted"));
+
+        Navigation.ShowPopup(new StatusPopup($"Extracting Minecraft {mcVersion.Id}",
+            "Please wait for the resources to be extracted"));
         StatusPopup.Instance.ShowDownloadBanner = true;
         StatusPopup.Instance.Status = $"Downloading Minecraft {mcVersion.Id} (1/3)...";
-        
+
         DownloadManager.Begin($"Minecraft {mcVersion.Id}");
         await systemFolder.InstallVersionAsync(mcVersion);
         DownloadManager.End();
-        
+
         await DownloadManager.ProcessAll();
-        
+
         using ZipArchive jar = ZipFile.Open(jarFilename, ZipArchiveMode.Read);
 
         StatusPopup.Instance.ShowDownloadBanner = false;
-        StatusPopup.Instance.Status = $"Copying external assets (2/3)...";
-        
+        StatusPopup.Instance.Status = "Copying external assets (2/3)...";
+
         await Task.Run(() =>
         {
             Asset[] assets = index.ParseAll();
@@ -81,15 +81,15 @@ public partial class AdvancedFeaturesPage : UserControl, ITopLevelPageControl
             }
         });
 
-        StatusPopup.Instance.Status = $"Copying internal jar assets (3/3)...";
+        StatusPopup.Instance.Status = "Copying internal jar assets (3/3)...";
         ZipArchiveEntry[] jarEntries = jar.Entries.Where(entry => entry.FullName.StartsWith("assets")).ToArray();
         int count = 0;
-        
-        foreach (var entry in jarEntries)
+
+        foreach (ZipArchiveEntry entry in jarEntries)
         {
             string entryPath = entry.FullName.Replace("assets/", "").Trim();
             string assetFolderPath = Path.GetDirectoryName(entryPath)!;
-            
+
             Directory.CreateDirectory($"{folder}/{assetFolderPath}");
 
             await using Stream stream = entry.Open();
@@ -100,13 +100,13 @@ public partial class AdvancedFeaturesPage : UserControl, ITopLevelPageControl
             count++;
             StatusPopup.Instance.StatusPercent = 0.5f + (float)count / jarEntries.Length / 2f;
         }
-        
+
         Navigation.HidePopup();
-        
+
         PlatformSpecific.OpenFolder(folder);
     }
 
-    void OpenNBTEditorButtonClicked(object? sender, RoutedEventArgs e)
+    private void OpenNBTEditorButtonClicked(object? sender, RoutedEventArgs e)
     {
         new NbtEditorWindow().Show();
     }

@@ -1,25 +1,20 @@
-﻿using System.Collections.Generic;
-using Avalonia.Controls;
-using mcLaunch.Views;
-using mcLaunch.Views.Pages;
-using mcLaunch.Views.Popups;
-using ReactiveUI;
+﻿using mcLaunch.Views;
 
 namespace mcLaunch.Models;
 
 public class MainWindowDataContext : PageNavigator
 {
+    public MainWindowDataContext(ITopLevelPageControl? mainPage, bool decorations) : base(mainPage)
+    {
+        Instance = this;
+        ShowDecorations = decorations;
+    }
+
     public static MainWindowDataContext Instance { get; private set; }
 
     public bool ShowDecorations
     {
         set => MainWindow.Instance.SetDecorations(value);
-    }
-    
-    public MainWindowDataContext(ITopLevelPageControl? mainPage, bool decorations) : base(mainPage)
-    {
-        Instance = this;
-        ShowDecorations = decorations;
     }
 
     public override void ShowLoadingPage()

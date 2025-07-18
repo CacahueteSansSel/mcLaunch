@@ -10,7 +10,7 @@ public static class InternalSettings
     {
         try
         {
-            using var stream = AssetLoader.Open(new Uri($"avares://mcLaunch/resources/settings/{filename}"));
+            using Stream? stream = AssetLoader.Open(new Uri($"avares://mcLaunch/resources/settings/{filename}"));
 
             return new StreamReader(stream).ReadToEnd();
         }

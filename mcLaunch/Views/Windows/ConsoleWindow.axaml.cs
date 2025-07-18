@@ -1,21 +1,19 @@
 using System;
 using System.Diagnostics;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Threading;
 using mcLaunch.Core.Boxes;
-using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Windows;
 
 public partial class ConsoleWindow : Window
 {
-    Process? process;
-    Box? box;
-    int lineCountForCurrentSecond = 0;
-    int lastSecond = 0;
-    string pendingTextBuffer = "";
-    
+    private readonly Box? box;
+    private readonly Process? process;
+    private int lastSecond;
+    private int lineCountForCurrentSecond;
+    private string pendingTextBuffer = "";
+
     public ConsoleWindow()
     {
         InitializeComponent();
@@ -39,12 +37,12 @@ public partial class ConsoleWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         base.OnClosed(e);
-        
+
         if (box != null)
             box.Minecraft.OnStandardOutputLineReceived -= MinecraftStdOutLineReceived;
     }
 
-    void MinecraftStdOutLineReceived(string line)
+    private void MinecraftStdOutLineReceived(string line)
     {
         if (lastSecond != DateTime.Now.Second)
         {
@@ -60,7 +58,7 @@ public partial class ConsoleWindow : Window
                 return;
             }
         }
-        
+
         Dispatcher.UIThread.Post(() =>
         {
             if (!IsVisible) return;
@@ -70,16 +68,16 @@ public partial class ConsoleWindow : Window
                 ConsoleText.Text += pendingTextBuffer;
                 pendingTextBuffer = "";
             }
-            
+
             ConsoleText.Text += $"{line}\n";
             ConsoleText.ScrollToEnd();
         });
     }
 
-    async void ReadProcessOutput()
+    private async void ReadProcessOutput()
     {
         if (process == null) return;
-        
+
         while (!process.HasExited)
         {
             string line = await process.StandardOutput.ReadLineAsync();

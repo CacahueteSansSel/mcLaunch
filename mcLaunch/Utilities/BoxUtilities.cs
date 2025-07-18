@@ -44,7 +44,8 @@ public static class BoxUtilities
             if (!popup) return;
 
             StatusPopup.Instance.Status = msg;
-            StatusPopup.Instance.StatusPercent = percent;
+            StatusPopup.Instance.StatusPercent = percent < 0 ? 0 : percent;
+            StatusPopup.Instance.StatusIndeterminate = percent < 0;
         });
         if (boxResult.IsError)
         {
@@ -101,7 +102,8 @@ public static class BoxUtilities
             if (!popup) return;
 
             StatusPopup.Instance.Status = msg;
-            StatusPopup.Instance.StatusPercent = percent;
+            StatusPopup.Instance.StatusPercent = percent < 0 ? 0 : percent;
+            StatusPopup.Instance.StatusIndeterminate = percent < 0;
         });
         if (boxResult.IsError)
         {
@@ -115,8 +117,7 @@ public static class BoxUtilities
 
         try
         {
-            Bitmap bmp =
-                new Bitmap(AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_cf_modpack_logo.png")));
+            Bitmap bmp = new(AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_cf_modpack_logo.png")));
             box.SetAndSaveIcon(bmp);
         }
         catch (Exception)
@@ -164,7 +165,8 @@ public static class BoxUtilities
             if (!popup) return;
 
             StatusPopup.Instance.Status = $"{msg}";
-            StatusPopup.Instance.StatusPercent = percent;
+            StatusPopup.Instance.StatusPercent = percent < 0 ? 0 : percent;
+            StatusPopup.Instance.StatusIndeterminate = percent < 0;
         });
         if (boxResult.IsError)
         {
@@ -180,12 +182,12 @@ public static class BoxUtilities
         {
             if (File.Exists($"{box.Path}/minecraft/icon.png"))
             {
-                Bitmap modpackIcon = new Bitmap($"{box.Path}/minecraft/icon.png");
+                Bitmap modpackIcon = new($"{box.Path}/minecraft/icon.png");
                 box.SetAndSaveIcon(modpackIcon);
             }
             else
             {
-                Bitmap bmp = new Bitmap(AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_box_logo.png")));
+                Bitmap bmp = new(AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_box_logo.png")));
                 box.SetAndSaveIcon(bmp);
             }
         }
@@ -230,7 +232,7 @@ public static class BoxUtilities
         Directory.CreateDirectory(newBoxPath);
         FileSystemUtilities.CopyDirectory(sourceBox.Path, newBoxPath);
 
-        Box box = new Box(newBoxPath, false);
+        Box box = new(newBoxPath, false);
         await box.ReloadManifestAsync(true);
 
         box.Manifest.Id = boxId;
@@ -271,10 +273,12 @@ public static class BoxUtilities
                 url = $"{content.Url}/version/{mod.VersionId}";
             else if (content.Platform is CurseForgeMinecraftContentPlatform)
                 url = $"{content.Url}/files/{mod.VersionId}";
-            
+
             string urlPart = string.IsNullOrWhiteSpace(url) ? string.Empty : $": [link here]({url})";
 
-            await writer.WriteLineAsync($"+ **{mod.Content.Name}** with version id **{mod.VersionId} on {content.Platform.Name}** {urlPart}".Trim());
+            await writer.WriteLineAsync(
+                $"+ **{mod.Content.Name}** with version id **{mod.VersionId} on {content.Platform.Name}** {urlPart}"
+                    .Trim());
         }
 
         return writer.ToString();

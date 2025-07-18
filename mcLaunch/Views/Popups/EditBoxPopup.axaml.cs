@@ -48,7 +48,7 @@ public partial class EditBoxPopup : UserControl
         box.Manifest.Name = BoxNameTb.Text;
         box.Manifest.Author = AuthorNameTb.Text;
         if (BoxIconImage.Source != null)
-            box.SetAndSaveIcon((Bitmap) BoxIconImage.Source);
+            box.SetAndSaveIcon((Bitmap)BoxIconImage.Source);
 
         if (!CancelButton.IsVisible && box.Manifest.Type == BoxType.Temporary)
             box.Manifest.Type = BoxType.Default;

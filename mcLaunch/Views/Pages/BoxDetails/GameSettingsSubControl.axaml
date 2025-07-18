@@ -8,7 +8,27 @@
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <ScrollViewer>
-        <StackPanel>
+        <StackPanel Spacing="5">
+            <TextBlock Classes="title">Java Settings</TextBlock>
+            <DockPanel Height="36">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <TextBox x:Name="MinAllocatedRamInput" TextChanged="MinAllocatedRamInput_OnTextChanged" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Watermark="512"></TextBox>
+                    <TextBlock VerticalAlignment="Center" Padding="5 0" Classes="title">MB</TextBlock>
+                </StackPanel>
+                <TextBlock VerticalAlignment="Center" Classes="light">Minimum Allocated RAM (-Xms)</TextBlock>
+            </DockPanel>
+            <DockPanel Height="36">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <TextBox x:Name="MaxAllocatedRamInput" TextChanged="MaxAllocatedRamInput_OnTextChanged" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Watermark="4096"></TextBox>
+                    <TextBlock VerticalAlignment="Center" Padding="5 0" Classes="title">MB</TextBlock>
+                </StackPanel>
+                <TextBlock VerticalAlignment="Center" Classes="light">Maximum Allocated RAM (-Xmx)</TextBlock>
+            </DockPanel>
+            <DockPanel Height="100">
+                <TextBox x:Name="CustomJavaArgsInput" DockPanel.Dock="Right" Width="500" TextChanged="CustomJavaArgsInput_OnTextChanged"></TextBox>
+                <TextBlock VerticalAlignment="Top" Margin="0 10 0 0" Classes="light">Custom Java Arguments</TextBlock>
+            </DockPanel>
+            <TextBlock Classes="title">Game Settings</TextBlock>
             <Border Padding="15" Classes="frame-without-shadow">
                 <DockPanel>
                     <Button Classes="primary" DockPanel.Dock="Right" Click="SetAsDefaultButtonClicked">Set as default</Button>

@@ -103,6 +103,7 @@
         <entry key="mcLaunch/Views/Windows/AboutWindow.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Windows/ConsoleWindow.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Windows/CrashWindow.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Windows/DebugBoxCrashPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Windows/NbtEditor/NbtArrayTagEditWindow.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Windows/NbtEditor/NbtEditTagNameWindow.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Windows/NbtEditor/NbtEditorWindow.axaml" value="mcLaunch/mcLaunch.csproj" />

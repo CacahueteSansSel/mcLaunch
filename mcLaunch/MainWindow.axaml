@@ -27,7 +27,10 @@
         </DockPanel>
 
         <Panel IsHitTestVisible="{Binding IsPopup}">
-            <Panel IsEnabled="{Binding IsPopup}" IsVisible="{Binding IsPopup}" Background="black" Opacity="0.5" />
+            <DockPanel>
+                <Panel DockPanel.Dock="Top" IsEnabled="{Binding IsPopup}" IsVisible="{Binding IsPopup}" IsHitTestVisible="False" Background="black" Height="50" Opacity="0.5" />
+                <Panel IsEnabled="{Binding IsPopup}" IsVisible="{Binding IsPopup}" Background="black" Opacity="0.5" />
+            </DockPanel>
             <TransitioningContentControl Content="{Binding CurrentPopup}" />
         </Panel>
     </Panel>

@@ -38,7 +38,7 @@ public class MinecraftContent : ReactiveObject
 
         try
         {
-            Type = (MinecraftContentType) rd.ReadByte();
+            Type = (MinecraftContentType)rd.ReadByte();
         }
         catch (Exception e)
         {
@@ -119,7 +119,7 @@ public class MinecraftContent : ReactiveObject
 
     [JsonIgnore] public bool IsComplete { get; set; }
 
-    public static MinecraftContent CreateIdOnly(string id) => new() {Id = id};
+    public static MinecraftContent CreateIdOnly(string id) => new() { Id = id };
 
     public void WriteToStream(Stream stream)
     {
@@ -138,7 +138,7 @@ public class MinecraftContent : ReactiveObject
         wr.Write(LastUpdated?.ToBinary() ?? 0);
         wr.WriteNullableString(License);
         wr.WriteNullableString(Platform?.Name);
-        wr.Write((byte) Type);
+        wr.Write((byte)Type);
     }
 
     public void TransformLongDescriptionToHtml()
@@ -179,7 +179,7 @@ public class MinecraftContent : ReactiveObject
     {
         if (BackgroundPath == null) return null;
 
-        HttpClient client = new HttpClient();
+        HttpClient client = new();
 
         try
         {
@@ -206,7 +206,7 @@ public class MinecraftContent : ReactiveObject
 
         if (BackgroundPath == null) return;
 
-        await using (var imageStream = await LoadBackgroundStreamAsync())
+        await using (Stream? imageStream = await LoadBackgroundStreamAsync())
         {
             if (imageStream == null) return;
 

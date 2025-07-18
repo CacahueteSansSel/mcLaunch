@@ -28,8 +28,10 @@ public partial class UpdateChangelogPopup : UserControl
         Navigation.HidePopup();
 
         if (!await UpdateManager.UpdateAsync())
+        {
             Navigation.ShowPopup(new MessageBoxPopup("Error",
                 "Update failed. Download the update on the GitHub repository manually.", MessageStatus.Error));
+        }
     }
 
     private void CancelButtonClicked(object? sender, RoutedEventArgs e)

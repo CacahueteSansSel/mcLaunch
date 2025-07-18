@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
-using Avalonia.VisualTree;
-using DynamicData;
 using mcLaunch.Models;
 using mcLaunch.Utilities;
 using ReactiveUI;
@@ -21,15 +16,13 @@ namespace mcLaunch.Views.Windows.NbtEditor;
 
 public partial class NbtEditorWindow : Window
 {
-    ObservableCollection<TagNode> nodes = [];
-    string path;
-    
-    public CompoundTag? Root { get; private set; }
-    
+    private readonly ObservableCollection<TagNode> nodes = [];
+    private string path;
+
     public NbtEditorWindow()
     {
         InitializeComponent();
-        
+
         if (Design.IsDesignMode) Load("level.dat");
 
         DataContext = new NbtEditorWindowDataContext(null);
@@ -40,6 +33,8 @@ public partial class NbtEditorWindow : Window
     {
         Load(filename);
     }
+
+    public CompoundTag? Root { get; private set; }
 
     public void Load(string filename)
     {
@@ -65,7 +60,7 @@ public partial class NbtEditorWindow : Window
         DataContext = nodes;
     }
 
-    TagNode GetNodeForTag(Tag tag)
+    private TagNode GetNodeForTag(Tag tag)
     {
         if (tag is CompoundTag compoundTag)
         {
@@ -73,17 +68,17 @@ public partial class NbtEditorWindow : Window
 
             foreach (Tag childrenTag in compoundTag)
                 childrenNodes.Add(GetNodeForTag(childrenTag).WithParent(tag));
-            
+
             return new TagNode(tag, childrenNodes.ToArray());
         }
-        
+
         if (tag is ListTag listTag)
         {
             List<TagNode> childrenNodes = [];
 
             foreach (Tag childrenTag in listTag)
                 childrenNodes.Add(GetNodeForTag(childrenTag).WithParent(tag));
-            
+
             return new TagNode(tag, childrenNodes.ToArray());
         }
 
@@ -93,7 +88,7 @@ public partial class NbtEditorWindow : Window
 
             for (int i = 0; i < intArrayTag.Count; i++)
                 childrenNodes.Add(new TagNode(intArrayTag, i));
-            
+
             return new TagNode(tag, childrenNodes.ToArray());
         }
 
@@ -103,7 +98,7 @@ public partial class NbtEditorWindow : Window
 
             for (int i = 0; i < longArrayTag.Count; i++)
                 childrenNodes.Add(new TagNode(longArrayTag, i));
-            
+
             return new TagNode(tag, childrenNodes.ToArray());
         }
 
@@ -113,209 +108,52 @@ public partial class NbtEditorWindow : Window
 
             for (int i = 0; i < byteArrayTag.Count; i++)
                 childrenNodes.Add(new TagNode(byteArrayTag, i));
-            
+
             return new TagNode(tag, childrenNodes.ToArray());
         }
-        
+
         return new TagNode(tag);
     }
 
-    public class TagNode : ReactiveObject
-    {
-        Tag? parent;
-        Tag? tag;
-        string? name;
-        TagType type;
-
-        public Tag? Parent
-        {
-            get => parent;
-            set => this.RaiseAndSetIfChanged(ref parent, value);
-        }
-
-        public Tag? Tag
-        {
-            get => tag;
-            set => this.RaiseAndSetIfChanged(ref tag, value);
-        }
-
-        public string? Name
-        {
-            get => name;
-            set => this.RaiseAndSetIfChanged(ref name, value);
-        }
-
-        public TagType Type
-        {
-            get => type;
-            set => this.RaiseAndSetIfChanged(ref type, value);
-        }
-        
-        public ObservableCollection<TagNode> Children { get; set; }
-        public bool IsArrayChildren { get; set; }
-        public int ArrayChildrenIndex { get; set; }
-
-        public string? Value
-        {
-            get
-            {
-                if (Parent is IntArrayTag intArrayTag && IsArrayChildren)
-                    return intArrayTag[ArrayChildrenIndex].ToString();
-                if (Parent is LongArrayTag longArrayTag && IsArrayChildren)
-                    return longArrayTag[ArrayChildrenIndex].ToString();
-                if (Parent is ByteArrayTag byteArrayTag && IsArrayChildren)
-                    return byteArrayTag[ArrayChildrenIndex].ToString();
-                
-                switch (Tag.Type)
-                {
-                    case TagType.Byte:
-                        return ((ByteTag) Tag).Value.ToString();
-                    case TagType.Short:
-                        return ((ShortTag) Tag).Value.ToString();
-                    case TagType.Int:
-                        return ((IntTag) Tag).Value.ToString();
-                    case TagType.Long:
-                        return ((LongTag) Tag).Value.ToString();
-                    case TagType.Float:
-                        return ((FloatTag) Tag).Value.ToString(CultureInfo.InvariantCulture);
-                    case TagType.Double:
-                        return ((DoubleTag) Tag).Value.ToString(CultureInfo.InvariantCulture);
-                    case TagType.String:
-                        return ((StringTag) Tag).Value;
-                }
-                
-                return null;
-            }
-            set
-            {
-                if (Parent is IntArrayTag intArrayTag && IsArrayChildren)
-                    intArrayTag[ArrayChildrenIndex] = int.TryParse(value, out int parsedValue) ? parsedValue : 0;
-                if (Parent is LongArrayTag longArrayTag && IsArrayChildren)
-                    longArrayTag[ArrayChildrenIndex] = long.TryParse(value, out long parsedValue) ? parsedValue : 0;
-                if (Parent is ByteArrayTag byteArrayTag && IsArrayChildren)
-                    byteArrayTag[ArrayChildrenIndex] = byte.TryParse(value, out byte parsedValue) ? parsedValue : (byte)0;
-                
-                if (IsArrayChildren) return;
-                
-                switch (Tag.Type)
-                {
-                    case TagType.Byte:
-                        ((ByteTag) Tag).Value = string.IsNullOrWhiteSpace(value) ? (byte)0 : byte.Parse(value);
-                        break;
-                    case TagType.Short:
-                        ((ShortTag) Tag).Value = string.IsNullOrWhiteSpace(value) ? (short)0 : short.Parse(value);
-                        break;
-                    case TagType.Int:
-                        ((IntTag) Tag).Value = string.IsNullOrWhiteSpace(value) ? 0 : int.Parse(value);
-                        break;
-                    case TagType.Long:
-                        ((LongTag) Tag).Value = string.IsNullOrWhiteSpace(value) ? 0 : long.Parse(value);
-                        break;
-                    case TagType.Float:
-                        ((FloatTag) Tag).Value = string.IsNullOrWhiteSpace(value) ? 0 : float.Parse(value);
-                        break;
-                    case TagType.Double:
-                        ((DoubleTag) Tag).Value = string.IsNullOrWhiteSpace(value) ? 0 : double.Parse(value);
-                        break;
-                    case TagType.String:
-                        ((StringTag) Tag).Value = value;
-                        break;
-                }
-            }
-        }
-
-        public bool HasValue => Value != null;
-        
-        // For XAML
-        public bool IsNameEmpty => string.IsNullOrWhiteSpace(Name);
-        public string TypeLine => $"{Type} tag";
-        public bool IsByte => Type == TagType.Byte;
-        public bool IsShort => Type == TagType.Short;
-        public bool IsInt => Type == TagType.Int;
-        public bool IsLong => Type == TagType.Long;
-        public bool IsFloat => Type == TagType.Float;
-        public bool IsDouble => Type == TagType.Double;
-        public bool IsByteArray => Type == TagType.ByteArray;
-        public bool IsString => Type == TagType.String;
-        public bool IsList => Type == TagType.List;
-        public bool IsCompound => Type == TagType.Compound;
-        public bool IsIntArray => Type == TagType.IntArray;
-        public bool IsLongArray => Type == TagType.LongArray;
-
-        public TagNode(Tag tag, params TagNode[] children)
-        {
-            Tag = tag;
-            Name = tag.Name;
-            Type = tag.Type;
-            Children = new ObservableCollection<TagNode>(children);
-        }
-
-        public TagNode(IntArrayTag parent, int index)
-        {
-            Type = TagType.Int;
-            Parent = parent;
-            IsArrayChildren = true;
-            ArrayChildrenIndex = index;
-        }
-
-        public TagNode(LongArrayTag parent, int index)
-        {
-            Type = TagType.Long;
-            Parent = parent;
-            IsArrayChildren = true;
-            ArrayChildrenIndex = index;
-        }
-
-        public TagNode(ByteArrayTag parent, int index)
-        {
-            Type = TagType.Byte;
-            Parent = parent;
-            IsArrayChildren = true;
-            ArrayChildrenIndex = index;
-        }
-
-        public TagNode WithParent(Tag parent)
-        {
-            Parent = parent;
-            return this;
-        }
-    }
-
-    void SaveButtonClicked(object? sender, RoutedEventArgs e)
+    private void SaveButtonClicked(object? sender, RoutedEventArgs e)
     {
         Save();
     }
 
-    async void OpenButtonClicked(object? sender, RoutedEventArgs e)
+    private async void OpenButtonClicked(object? sender, RoutedEventArgs e)
     {
         string[] files = await FilePickerUtilities.PickFiles(false, "Open NBT File", ["dat", "nbt"]);
-        
+
         if (files.Length != 1) return;
-        
+
         Load(files[0]);
     }
 
-    async void SaveAsButtonClicked(object? sender, RoutedEventArgs e)
+    private async void SaveAsButtonClicked(object? sender, RoutedEventArgs e)
     {
-        IStorageFile? file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
+        IStorageFile? file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             DefaultExtension = "dat",
-            FileTypeChoices = [new FilePickerFileType("nbt") {Patterns = ["*.nbt"]}, new FilePickerFileType("dat") {Patterns = ["*.dat"]}],
+            FileTypeChoices =
+            [
+                new FilePickerFileType("nbt") { Patterns = ["*.nbt"] },
+                new FilePickerFileType("dat") { Patterns = ["*.dat"] }
+            ],
             Title = "Save NBT File"
         });
-        
+
         if (file == null) return;
-        
+
         path = file.TryGetLocalPath()!;
         Save();
     }
 
-    async void NewTagButtonClicked(object? sender, RoutedEventArgs e)
+    private async void NewTagButtonClicked(object? sender, RoutedEventArgs e)
     {
         TagNode? selectedTag = (TagNode?)TagTree.SelectedItem;
         if (selectedTag == null) return;
-        Tag parentTag = selectedTag.Tag.Type != TagType.Compound 
-            ? selectedTag.Parent 
+        Tag parentTag = selectedTag.Tag.Type != TagType.Compound
+            ? selectedTag.Parent
             : selectedTag.Tag;
 
         if (parentTag is ListTag listTag)
@@ -323,35 +161,38 @@ public partial class NbtEditorWindow : Window
             await CreateTagAsync(listTag.ChildType);
             return;
         }
+
         if (parentTag is IntArrayTag)
         {
             await CreateTagAsync(TagType.Int);
             return;
         }
+
         if (parentTag is LongArrayTag)
         {
             await CreateTagAsync(TagType.Long);
             return;
         }
+
         if (parentTag is ByteArrayTag)
         {
             await CreateTagAsync(TagType.Byte);
             return;
         }
-        
+
         NewBoxButton.ContextMenu!.Open(NewBoxButton);
     }
 
-    async void RenameButtonClicked(object? sender, RoutedEventArgs e)
+    private async void RenameButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (TagTree.SelectedItem == null) return;
 
-        TagNode node = (TagNode) TagTree.SelectedItem;
+        TagNode node = (TagNode)TagTree.SelectedItem;
         if (node.Parent is not CompoundTag compoundTag) return;
-        
+
         string newName = await new NbtEditTagNameWindow(node.Type, node.Name ?? "").ShowDialog<string>(this);
         if (string.IsNullOrWhiteSpace(newName)) return;
-        
+
         compoundTag.Remove(node.Tag);
 
         Tag? newTag = null;
@@ -367,6 +208,7 @@ public partial class NbtEditorWindow : Window
             newTag = new ListTag(newName, listTag.Type);
             ((ListTag)newTag).AddRange(listTag);
         }
+
         if (node.Tag is LongTag longTag) newTag = new LongTag(newName, longTag.Value);
         if (node.Tag is LongArrayTag longArrayTag) newTag = new LongArrayTag(newName, longArrayTag);
         if (node.Tag is ShortTag shortTag) newTag = new ShortTag(newName, shortTag.Value);
@@ -378,18 +220,19 @@ public partial class NbtEditorWindow : Window
         SetRoot(Root!);
     }
 
-    void UpdateButtons()
+    private void UpdateButtons()
     {
-        RenameButton.IsEnabled = TagTree.SelectedItem != null && ((TagNode)TagTree.SelectedItem).Parent != null && ((TagNode)TagTree.SelectedItem).Parent is CompoundTag;
+        RenameButton.IsEnabled = TagTree.SelectedItem != null && ((TagNode)TagTree.SelectedItem).Parent != null &&
+                                 ((TagNode)TagTree.SelectedItem).Parent is CompoundTag;
         SnbtButton.IsEnabled = TagTree.SelectedItem != null;
     }
 
-    void TagTreeSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void TagTreeSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         UpdateButtons();
     }
 
-    void SnbtButtonClicked(object? sender, RoutedEventArgs e)
+    private void SnbtButtonClicked(object? sender, RoutedEventArgs e)
     {
         TagNode? tag = (TagNode?)TagTree.SelectedItem;
         if (tag == null) return;
@@ -397,13 +240,13 @@ public partial class NbtEditorWindow : Window
         new NbtViewTagSnbtWindow(tag.Tag).ShowDialog(this);
     }
 
-    async Task CreateTagAsync(TagType type)
+    private async Task CreateTagAsync(TagType type)
     {
         TagNode? selectedTag = (TagNode?)TagTree.SelectedItem;
         if (selectedTag == null) return;
 
-        Tag parentTag = selectedTag.Tag.Type != TagType.Compound 
-            ? selectedTag.Parent 
+        Tag parentTag = selectedTag.Tag.Type != TagType.Compound
+            ? selectedTag.Parent
             : selectedTag.Tag;
 
         string name = null;
@@ -462,11 +305,11 @@ public partial class NbtEditorWindow : Window
             if (parentTag is ListTag listTag)
                 listTag.Add(toAddTag);
         }
-        
+
         SetRoot(Root);
     }
 
-    async void TagMenuItemClicked(object? sender, RoutedEventArgs e)
+    private async void TagMenuItemClicked(object? sender, RoutedEventArgs e)
     {
         if (e.Source is not MenuItem menu) return;
         if (!Enum.TryParse(menu.Name!.Replace("ItemTag", ""), out TagType type)) return;
@@ -474,12 +317,176 @@ public partial class NbtEditorWindow : Window
         await CreateTagAsync(type);
     }
 
-    void DeleteButtonClicked(object? sender, RoutedEventArgs e)
+    private void DeleteButtonClicked(object? sender, RoutedEventArgs e)
     {
         TagNode? selectedTag = (TagNode?)TagTree.SelectedItem;
         if (selectedTag == null || selectedTag.Parent is not CompoundTag parent) return;
 
         parent.Remove(selectedTag.Tag);
         SetRoot(Root);
+    }
+
+    public class TagNode : ReactiveObject
+    {
+        private string? name;
+        private Tag? parent;
+        private Tag? tag;
+        private TagType type;
+
+        public TagNode(Tag tag, params TagNode[] children)
+        {
+            Tag = tag;
+            Name = tag.Name;
+            Type = tag.Type;
+            Children = new ObservableCollection<TagNode>(children);
+        }
+
+        public TagNode(IntArrayTag parent, int index)
+        {
+            Type = TagType.Int;
+            Parent = parent;
+            IsArrayChildren = true;
+            ArrayChildrenIndex = index;
+        }
+
+        public TagNode(LongArrayTag parent, int index)
+        {
+            Type = TagType.Long;
+            Parent = parent;
+            IsArrayChildren = true;
+            ArrayChildrenIndex = index;
+        }
+
+        public TagNode(ByteArrayTag parent, int index)
+        {
+            Type = TagType.Byte;
+            Parent = parent;
+            IsArrayChildren = true;
+            ArrayChildrenIndex = index;
+        }
+
+        public Tag? Parent
+        {
+            get => parent;
+            set => this.RaiseAndSetIfChanged(ref parent, value);
+        }
+
+        public Tag? Tag
+        {
+            get => tag;
+            set => this.RaiseAndSetIfChanged(ref tag, value);
+        }
+
+        public string? Name
+        {
+            get => name;
+            set => this.RaiseAndSetIfChanged(ref name, value);
+        }
+
+        public TagType Type
+        {
+            get => type;
+            set => this.RaiseAndSetIfChanged(ref type, value);
+        }
+
+        public ObservableCollection<TagNode> Children { get; set; }
+        public bool IsArrayChildren { get; set; }
+        public int ArrayChildrenIndex { get; set; }
+
+        public string? Value
+        {
+            get
+            {
+                if (Parent is IntArrayTag intArrayTag && IsArrayChildren)
+                    return intArrayTag[ArrayChildrenIndex].ToString();
+                if (Parent is LongArrayTag longArrayTag && IsArrayChildren)
+                    return longArrayTag[ArrayChildrenIndex].ToString();
+                if (Parent is ByteArrayTag byteArrayTag && IsArrayChildren)
+                    return byteArrayTag[ArrayChildrenIndex].ToString();
+
+                switch (Tag.Type)
+                {
+                    case TagType.Byte:
+                        return ((ByteTag)Tag).Value.ToString();
+                    case TagType.Short:
+                        return ((ShortTag)Tag).Value.ToString();
+                    case TagType.Int:
+                        return ((IntTag)Tag).Value.ToString();
+                    case TagType.Long:
+                        return ((LongTag)Tag).Value.ToString();
+                    case TagType.Float:
+                        return ((FloatTag)Tag).Value.ToString(CultureInfo.InvariantCulture);
+                    case TagType.Double:
+                        return ((DoubleTag)Tag).Value.ToString(CultureInfo.InvariantCulture);
+                    case TagType.String:
+                        return ((StringTag)Tag).Value;
+                }
+
+                return null;
+            }
+            set
+            {
+                if (Parent is IntArrayTag intArrayTag && IsArrayChildren)
+                    intArrayTag[ArrayChildrenIndex] = int.TryParse(value, out int parsedValue) ? parsedValue : 0;
+                if (Parent is LongArrayTag longArrayTag && IsArrayChildren)
+                    longArrayTag[ArrayChildrenIndex] = long.TryParse(value, out long parsedValue) ? parsedValue : 0;
+                if (Parent is ByteArrayTag byteArrayTag && IsArrayChildren)
+                {
+                    byteArrayTag[ArrayChildrenIndex] =
+                        byte.TryParse(value, out byte parsedValue) ? parsedValue : (byte)0;
+                }
+
+                if (IsArrayChildren) return;
+
+                switch (Tag.Type)
+                {
+                    case TagType.Byte:
+                        ((ByteTag)Tag).Value = string.IsNullOrWhiteSpace(value) ? (byte)0 : byte.Parse(value);
+                        break;
+                    case TagType.Short:
+                        ((ShortTag)Tag).Value = string.IsNullOrWhiteSpace(value) ? (short)0 : short.Parse(value);
+                        break;
+                    case TagType.Int:
+                        ((IntTag)Tag).Value = string.IsNullOrWhiteSpace(value) ? 0 : int.Parse(value);
+                        break;
+                    case TagType.Long:
+                        ((LongTag)Tag).Value = string.IsNullOrWhiteSpace(value) ? 0 : long.Parse(value);
+                        break;
+                    case TagType.Float:
+                        ((FloatTag)Tag).Value = string.IsNullOrWhiteSpace(value) ? 0 : float.Parse(value);
+                        break;
+                    case TagType.Double:
+                        ((DoubleTag)Tag).Value = string.IsNullOrWhiteSpace(value) ? 0 : double.Parse(value);
+                        break;
+                    case TagType.String:
+                        ((StringTag)Tag).Value = value;
+                        break;
+                }
+            }
+        }
+
+        public bool HasValue => Value != null;
+
+        // For XAML
+        public bool IsNameEmpty => string.IsNullOrWhiteSpace(Name);
+        public string TypeLine => $"{Type} tag";
+        public bool IsByte => Type == TagType.Byte;
+        public bool IsShort => Type == TagType.Short;
+        public bool IsInt => Type == TagType.Int;
+        public bool IsLong => Type == TagType.Long;
+        public bool IsFloat => Type == TagType.Float;
+        public bool IsDouble => Type == TagType.Double;
+        public bool IsByteArray => Type == TagType.ByteArray;
+        public bool IsString => Type == TagType.String;
+        public bool IsList => Type == TagType.List;
+        public bool IsCompound => Type == TagType.Compound;
+        public bool IsIntArray => Type == TagType.IntArray;
+        public bool IsLongArray => Type == TagType.LongArray;
+
+        public TagNode WithParent(Tag parent)
+        {
+            Parent = parent;
+            return this;
+        }
     }
 }

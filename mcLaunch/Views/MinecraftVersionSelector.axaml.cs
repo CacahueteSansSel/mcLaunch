@@ -21,7 +21,7 @@ public partial class MinecraftVersionSelector : UserControl
 
     public event Action<ManifestMinecraftVersion>? OnVersionChanged;
 
-    async void ChangeMinecraftVersionButtonClicked(object? sender, RoutedEventArgs e)
+    private async void ChangeMinecraftVersionButtonClicked(object? sender, RoutedEventArgs e)
     {
         VersionSelectWindow selectWindow = new(Listener);
 

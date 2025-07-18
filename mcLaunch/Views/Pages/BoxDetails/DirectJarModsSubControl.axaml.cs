@@ -14,10 +14,12 @@ public partial class DirectJarModsSubControl : SubControl
         InitializeComponent();
 
         if (Design.IsDesignMode)
+        {
             DirectJarList.ItemsSource = new[]
             {
                 new DirectJarModEntry("minecraft.zip", "directjar/minecraft.zip")
             };
+        }
     }
 
     public override string Title => "DIRECT JAR MODS";

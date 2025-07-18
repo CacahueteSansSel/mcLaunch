@@ -22,8 +22,8 @@ namespace mcLaunch.Views.Popups;
 
 public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListener
 {
-    INewBoxPopupListener? listener;
-    
+    private readonly INewBoxPopupListener? listener;
+
     public NewBoxPopup(INewBoxPopupListener? listener = null)
     {
         InitializeComponent();
@@ -32,14 +32,13 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
         this.listener = listener;
         if (this.listener != null && this.listener.CustomShownText != null)
         {
-            ((MinecraftVersionSelectionDataContext) DataContext!).CustomText = this.listener.CustomShownText;
+            ((MinecraftVersionSelectionDataContext)DataContext!).CustomText = this.listener.CustomShownText;
             CustomText.IsVisible = true;
         }
 
-        Random rng = new Random();
+        Random rng = new();
 
-        Bitmap bmp =
-            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 5)}.png")));
+        Bitmap bmp = new(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 5)}.png")));
         BoxIconImage.Source = bmp;
 
         if (AuthenticationManager.Account != null) AuthorNameTb.Text = AuthenticationManager.Account.Username;
@@ -50,19 +49,28 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
         FetchModLoadersLatestVersions(VersionSelector.Version.Id);
     }
 
+    public bool ShouldShowMinecraftVersion(ManifestMinecraftVersion version)
+    {
+        if (listener != null)
+            return listener.ShouldShowMinecraftVersion(version);
+
+        return true;
+    }
+
     private async void FetchModLoadersLatestVersions(string versionId)
     {
         if (listener != null) await listener.InitializeAsync();
-        
+
         CreateButton.IsEnabled = false;
-        MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext!;
+        MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext)DataContext!;
         List<ModLoaderSupport> all = [];
 
         foreach (ModLoaderSupport ml in ModLoaderManager.All
                      .Where(m => Settings.Instance.EnableAdvancedModLoaders || !m.IsAdvanced))
         {
             if (listener != null && !listener.ShouldShowModLoader(ml)) continue;
-            
+            if (ml is MinigameModLoaderSupport && BoxNameTb.Text != "minigame") continue;
+
             ModLoaderVersion? version = await ml.FetchLatestVersion(versionId);
             if (version != null) all.Add(ml);
         }
@@ -74,9 +82,9 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
 
     private async void CloseButtonClicked(object? sender, RoutedEventArgs e)
     {
-        if (listener != null) 
+        if (listener != null)
             await listener.WhenCancelledAsync();
-        
+
         Navigation.HidePopup();
     }
 
@@ -88,7 +96,7 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
         string boxName = BoxNameTb.Text;
         string boxAuthor = AuthorNameTb.Text;
         ManifestMinecraftVersion minecraftVersion = VersionSelector.Version;
-        ModLoaderSupport modloader = ((MinecraftVersionSelectionDataContext) DataContext).SelectedModLoader.ModLoader;
+        ModLoaderSupport modloader = ((MinecraftVersionSelectionDataContext)DataContext).SelectedModLoader.ModLoader;
 
         if (string.IsNullOrWhiteSpace(boxName)
             || string.IsNullOrWhiteSpace(boxAuthor)
@@ -100,12 +108,10 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
 
         IconCollection icon;
         if (BoxIconImage.Source is Bitmap bitmap)
-        {
             icon = await IconCollection.FromBitmapAsync(bitmap);
-        }
         else
         {
-            Random rng = new Random(BoxNameTb.Text.GetHashCode());
+            Random rng = new(BoxNameTb.Text.GetHashCode());
             icon = IconCollection.FromResources($"box_icons/{rng.Next(0, 5)}.png");
         }
 
@@ -117,11 +123,12 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
         {
             Navigation.HidePopup();
             Navigation.ShowPopup(new MessageBoxPopup("Failed to initialize the mod loader",
-                $"Failed to get any version of {modloader.Name} for Minecraft {minecraftVersion.Id}", MessageStatus.Error));
+                $"Failed to get any version of {modloader.Name} for Minecraft {minecraftVersion.Id}",
+                MessageStatus.Error));
             return;
         }
 
-        BoxManifest newBoxManifest = new BoxManifest(boxName, null, boxAuthor, modloader.Id, modloaderVersions[0].Name,
+        BoxManifest newBoxManifest = new(boxName, null, boxAuthor, modloader.Id, modloaderVersions[0].Name,
             icon, minecraftVersion);
 
         StatusPopup.Instance.ShowDownloadBanner = true;
@@ -130,16 +137,16 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
         if (result.IsError)
         {
             Navigation.HidePopup();
-            Navigation.ShowPopup(new MessageBoxPopup("Failed to create the box", 
+            Navigation.ShowPopup(new MessageBoxPopup("Failed to create the box",
                 result.ErrorMessage ?? "No details specified", MessageStatus.Error));
             return;
         }
 
         await MainPage.Instance?.PopulateBoxListAsync();
 
-        Box box = new Box(newBoxManifest, result.Data!);
-        
-        if (listener == null || await listener.WhenBoxCreatedAsync(box)) 
+        Box box = new(newBoxManifest, result.Data!);
+
+        if (listener == null || await listener.WhenBoxCreatedAsync(box))
             Navigation.Push(new BoxDetailsPage(box));
 
         StatusPopup.Instance.ShowDownloadBanner = false;
@@ -148,42 +155,19 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
 
     private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
     {
-        OpenFileDialog ofd = new OpenFileDialog();
-        ofd.Title = "Select the icon image...";
-        ofd.Filters = new List<FileDialogFilter>
-        {
-            new()
-            {
-                Extensions = new List<string>
-                {
-                    "png"
-                },
-                Name = "PNG Image"
-            }
-        };
+        Bitmap[]? files = await FilePickerUtilities.PickBitmaps(false, "Select a icon");
+        if (files.Length == 0) return;
 
-        string[]? files = await ofd.ShowAsync(MainWindow.Instance);
-        if (files == null || files.Length == 0) return;
-
-        BoxIconImage.Source = new Bitmap(files[0]);
+        BoxIconImage.Source = files.FirstOrDefault();
     }
 
     private void BoxNameTextChanged(object? sender, KeyEventArgs e)
     {
-        Random rng = new Random((BoxNameTb.Text ?? string.Empty).GetHashCode());
+        Random rng = new((BoxNameTb.Text ?? string.Empty).GetHashCode());
 
-        Bitmap bmp =
-            new Bitmap(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 5)}.png")));
+        Bitmap bmp = new(AssetLoader.Open(new Uri($"avares://mcLaunch/resources/box_icons/{rng.Next(0, 5)}.png")));
 
         BoxIconImage.Source = bmp;
-    }
-
-    public bool ShouldShowMinecraftVersion(ManifestMinecraftVersion version)
-    {
-        if (listener != null)
-            return listener.ShouldShowMinecraftVersion(version);
-
-        return true;
     }
 }
 

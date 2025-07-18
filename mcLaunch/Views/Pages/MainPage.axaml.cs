@@ -61,7 +61,7 @@ public partial class MainPage : UserControl, ITopLevelPageControl
         await PopulateBoxListAsync(SearchBox.Text, false);
     }
 
-    void OpenFolderButtonClicked(object? sender, RoutedEventArgs e)
+    private void OpenFolderButtonClicked(object? sender, RoutedEventArgs e)
     {
         PlatformSpecific.OpenFolder(BoxManager.BoxesPath);
     }

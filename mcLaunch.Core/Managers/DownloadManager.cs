@@ -1,10 +1,7 @@
 ﻿using System.IO.Compression;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Security;
 using System.Security.Cryptography;
-using System.Web;
-using Avalonia.Threading;
 using Downloader;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Utilities;
@@ -80,10 +77,11 @@ public static class DownloadManager
 
     public static void Add(string source, string target, string? hash, EntryAction action)
     {
-        currentSectionEntries.Add(new DownloadEntry {Source = source, Target = target, Hash = hash, Action = action});
+        currentSectionEntries.Add(new DownloadEntry { Source = source, Target = target, Hash = hash, Action = action });
     }
 
-    private static async Task<bool> UseFallbackDownloader(string sourceUrl, string targetFilename, Action<float> progressUpdated, Action<bool, Exception> finished)
+    private static async Task<bool> UseFallbackDownloader(string sourceUrl, string targetFilename,
+        Action<float> progressUpdated, Action<bool, Exception> finished)
     {
         Console.WriteLine($"Using Fallback Downloader for {sourceUrl}");
 
@@ -113,21 +111,23 @@ public static class DownloadManager
 
             if (entry.Hash == null && File.Exists(entry.Target)) return;
 
-            string folder = entry.Target.Replace(
-                Path.GetFileName(entry.Target), "").TrimEnd('/');
+            string file = Path.GetFileName(entry.Target);
+            string folder = entry.Target.Replace(file, "").TrimEnd('/');
             if (!Directory.Exists(folder))
             {
                 try
                 {
                     Directory.CreateDirectory(folder);
                 }
-                catch (Exception e) {}
+                catch (Exception e)
+                {
+                }
             }
 
-            var download = DownloadBuilder.New()
-                .WithConfiguration(new DownloadConfiguration()
+            IDownload? download = DownloadBuilder.New()
+                .WithConfiguration(new DownloadConfiguration
                 {
-                    RequestConfiguration = new RequestConfiguration()
+                    RequestConfiguration = new RequestConfiguration
                     {
                         UserAgent = userAgent,
                         Accept = "*/*",
@@ -145,23 +145,24 @@ public static class DownloadManager
             download.DownloadProgressChanged += (sender, args) =>
             {
                 OnDownloadProgressUpdate?.Invoke(entry.Source,
-                    progress / (float)section.Entries.Count + (float) (args.ProgressPercentage / 100) * (1/(float)section.Entries.Count),
+                    progress / (float)section.Entries.Count +
+                    (float)(args.ProgressPercentage / 100) * (1 / (float)section.Entries.Count),
                     sectionIndex + 1);
             };
 
-            var stream = await download.StartAsync();
+            Stream? stream = await download.StartAsync();
 
             if (download.Package.Status == DownloadStatus.Failed || !File.Exists(entry.Target))
             {
                 await UseFallbackDownloader(entry.Source, entry.Target, pp =>
                 {
                     OnDownloadProgressUpdate?.Invoke(entry.Source,
-                        (float) progress / section.Entries.Count + pp,
+                        (float)progress / section.Entries.Count + pp,
                         sectionIndex + 1);
                 }, (success, error) =>
                 {
                     if (!success) Console.WriteLine($"Fallback Downloader error : {error}");
-                    
+
                     OnDownloadError?.Invoke(section.Name, entry.Source);
                 });
             }
@@ -205,7 +206,7 @@ public static class DownloadManager
                 await DownloadEntryAsync(entry, section, sectionIndex, progress);
 
                 progress++;
-                float percent = (float) progress / section.Entries.Count;
+                float percent = (float)progress / section.Entries.Count;
 
                 if (progressPercent < percent)
                 {
@@ -213,7 +214,7 @@ public static class DownloadManager
                     OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
                 }
             }
-            
+
             /*
              *await Parallel.ForEachAsync(section.Entries.Where(entry => entry.Action == EntryAction.Download),
                async (entry, token) =>
@@ -245,7 +246,7 @@ public static class DownloadManager
                 }
 
                 progress++;
-                float percent = (float) progress / section.Entries.Count;
+                float percent = (float)progress / section.Entries.Count;
 
                 if (progressPercent < percent)
                 {
@@ -300,7 +301,7 @@ public static class DownloadManager
         {
             if (immediate)
             {
-                CurrentSection = new DownloadSection {Entries = [], Name = sectionName};
+                CurrentSection = new DownloadSection { Entries = [], Name = sectionName };
                 OnDownloadSectionStarting?.Invoke(sectionName, 0);
                 return;
             }

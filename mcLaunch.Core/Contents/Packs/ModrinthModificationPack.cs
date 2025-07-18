@@ -70,7 +70,7 @@ public class ModrinthModificationPack : ModificationPack
     public async Task<ModrinthModificationPack> SetupAsync()
     {
         List<SerializedMinecraftContent> mods = new();
-        foreach (var file in manifest.Files)
+        foreach (ModelModrinthIndex.ModelFile file in manifest.Files)
         {
             string firstDownload = file.Downloads[0];
             bool canDeduceModInfos = firstDownload.StartsWith("https://cdn.modrinth.com");
@@ -85,7 +85,7 @@ public class ModrinthModificationPack : ModificationPack
                 {
                     string id = HttpUtility.UrlDecode(urlTokens[2]);
                     string version = HttpUtility.UrlDecode(urlTokens[4]);
-                    Regex versionNumberRegex = new Regex("\\.|-");
+                    Regex versionNumberRegex = new("\\.|-");
                     Version? ver = null;
 
                     if (versionNumberRegex.IsMatch(version))
@@ -100,7 +100,7 @@ public class ModrinthModificationPack : ModificationPack
                             Version[] versions =
                                 await ModrinthMinecraftContentPlatform.Instance.Client.Version
                                     .GetProjectVersionListAsync(id,
-                                        gameVersions: new[] {MinecraftVersion}, loaders: new[] {ModloaderId});
+                                        gameVersions: new[] { MinecraftVersion }, loaders: new[] { ModloaderId });
 
                             ver = versions.FirstOrDefault(v => v.GameVersions.Contains(MinecraftVersion));
 
@@ -116,6 +116,7 @@ public class ModrinthModificationPack : ModificationPack
                     }
 
                     if (ver == null)
+                    {
                         try
                         {
                             ver = await ModrinthMinecraftContentPlatform.Instance.Client.Version.GetAsync(version);
@@ -137,15 +138,16 @@ public class ModrinthModificationPack : ModificationPack
                                 continue;
                             }
                         }
+                    }
 
-                    Regex rootMcVerRegex = new Regex("\\d+\\.\\d+");
+                    Regex rootMcVerRegex = new("\\d+\\.\\d+");
                     string rootMcVer = rootMcVerRegex.Match(MinecraftVersion).Value;
 
                     if (!ver.GameVersions.Contains(MinecraftVersion) && !ver.GameVersions.Contains(rootMcVer))
                     {
                         Version[] versions = await ModrinthMinecraftContentPlatform.Instance.Client.Version
                             .GetProjectVersionListAsync(id,
-                                gameVersions: new[] {MinecraftVersion}, loaders: new[] {ModloaderId});
+                                gameVersions: new[] { MinecraftVersion }, loaders: new[] { ModloaderId });
 
                         ver = versions.FirstOrDefault(v => v.GameVersions.Contains(MinecraftVersion));
 
@@ -210,20 +212,33 @@ public class ModrinthModificationPack : ModificationPack
         };
 
         if (box.ModLoader is ForgeModLoaderSupport)
+        {
             index.Dependencies = new ModelModrinthIndex.ModelDependencies
             {
                 Forge = box.Manifest.ModLoaderVersion
             };
+        } 
+        else if (box.ModLoader is NeoForgeModLoaderSupport)
+        {
+            index.Dependencies = new ModelModrinthIndex.ModelDependencies
+            {
+                NeoForge = box.Manifest.ModLoaderVersion
+            };
+        }
         else if (box.ModLoader is FabricModLoaderSupport)
+        {
             index.Dependencies = new ModelModrinthIndex.ModelDependencies
             {
                 FabricLoader = box.Manifest.ModLoaderVersion
             };
+        }
         else if (box.ModLoader is QuiltModLoaderSupport)
+        {
             index.Dependencies = new ModelModrinthIndex.ModelDependencies
             {
                 QuiltLoader = box.Manifest.ModLoaderVersion
             };
+        }
         else
             index.Dependencies = new ModelModrinthIndex.ModelDependencies();
 
@@ -237,8 +252,7 @@ public class ModrinthModificationPack : ModificationPack
                 // Include any non-Modrinth mod to the overrides
                 ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{mod.Filenames[0]}");
                 await using Stream entryStream = overrideEntry.Open();
-                using FileStream modFileStream =
-                    new FileStream(box.Folder.CompletePath + $"/{mod.Filenames[0]}", FileMode.Open);
+                using FileStream modFileStream = new(box.Folder.CompletePath + $"/{mod.Filenames[0]}", FileMode.Open);
 
                 await modFileStream.CopyToAsync(entryStream);
 
@@ -263,7 +277,7 @@ public class ModrinthModificationPack : ModificationPack
                     Sha1 = primaryVersionFile.Hashes.Sha1,
                     Sha512 = primaryVersionFile.Hashes.Sha512
                 },
-                FileSize = (uint) primaryVersionFile.Size
+                FileSize = (uint)primaryVersionFile.Size
             };
 
             files.Add(fileModel);
@@ -280,12 +294,12 @@ public class ModrinthModificationPack : ModificationPack
                 {
                     ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}");
                     await using Stream entryStream = overrideEntry.Open();
-                    using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
+                    using FileStream modFileStream = new(completePath, FileMode.Open);
 
                     await modFileStream.CopyToAsync(entryStream);
                 }
-                
-                if (System.IO.Directory.Exists(completePath))
+
+                if (Directory.Exists(completePath))
                 {
                     foreach (string dirFile in Directory.GetFiles(completePath, "*", SearchOption.AllDirectories))
                     {
@@ -293,7 +307,7 @@ public class ModrinthModificationPack : ModificationPack
                             .TrimStart(Path.DirectorySeparatorChar);
                         ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{file}/{relativePath}");
                         await using Stream entryStream = overrideEntry.Open();
-                        using FileStream modFileStream = new FileStream(dirFile, FileMode.Open);
+                        using FileStream modFileStream = new(dirFile, FileMode.Open);
 
                         await modFileStream.CopyToAsync(entryStream);
                     }
@@ -308,7 +322,7 @@ public class ModrinthModificationPack : ModificationPack
 
             ZipArchiveEntry overrideEntry = zip.CreateEntry($"overrides/{modFile}");
             await using Stream entryStream = overrideEntry.Open();
-            using FileStream modFileStream = new FileStream(completePath, FileMode.Open);
+            using FileStream modFileStream = new(completePath, FileMode.Open);
 
             await modFileStream.CopyToAsync(entryStream);
         }
@@ -338,6 +352,7 @@ public class ModrinthModificationPack : ModificationPack
         {
             [JsonPropertyName("minecraft")] public string Minecraft { get; set; }
             [JsonPropertyName("forge")] public string Forge { get; set; }
+            [JsonPropertyName("neoforge")] public string NeoForge { get; set; }
             [JsonPropertyName("fabric-loader")] public string FabricLoader { get; set; }
             [JsonPropertyName("quilt-loader")] public string QuiltLoader { get; set; }
         }

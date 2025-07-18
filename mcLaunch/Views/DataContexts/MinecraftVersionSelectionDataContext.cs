@@ -30,10 +30,10 @@ public class DataContextModLoader
 
 public class MinecraftVersionSelectionDataContext : ReactiveObject
 {
+    private string? customText;
     private ModLoaderVersion latestVersion;
     private DataContextModLoader[] modLoaders;
     private DataContextModLoader selectedModLoader;
-    private string? customText;
 
     public MinecraftVersionSelectionDataContext()
     {
@@ -48,7 +48,7 @@ public class MinecraftVersionSelectionDataContext : ReactiveObject
     }
 
     public ManifestMinecraftVersion[] Versions { get; }
-    
+
     public string CustomText
     {
         get => customText;

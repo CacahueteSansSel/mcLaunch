@@ -31,7 +31,7 @@ public partial class FastLaunchPopup : UserControl
     private async void FetchModLoadersLatestVersions(string versionId)
     {
         LaunchButton.IsEnabled = false;
-        MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext) DataContext;
+        MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext)DataContext;
         List<ModLoaderSupport> all = new();
 
         foreach (ModLoaderSupport ml in ModLoaderManager.All)
@@ -53,7 +53,7 @@ public partial class FastLaunchPopup : UserControl
     private async void LaunchButtonClicked(object? sender, RoutedEventArgs e)
     {
         ManifestMinecraftVersion minecraftVersion = VersionSelector.Version;
-        ModLoaderSupport modloader = ((MinecraftVersionSelectionDataContext) DataContext).SelectedModLoader.ModLoader;
+        ModLoaderSupport modloader = ((MinecraftVersionSelectionDataContext)DataContext).SelectedModLoader.ModLoader;
         string name = $"Minecraft {minecraftVersion.Id}";
 
         Navigation.HidePopup();
@@ -69,11 +69,12 @@ public partial class FastLaunchPopup : UserControl
         {
             Navigation.HidePopup();
             Navigation.ShowPopup(new MessageBoxPopup("Failed to initialize the mod loader",
-                $"Failed to get any version of {modloader.Name} for Minecraft {minecraftVersion.Id}", MessageStatus.Error));
+                $"Failed to get any version of {modloader.Name} for Minecraft {minecraftVersion.Id}",
+                MessageStatus.Error));
             return;
         }
 
-        BoxManifest newBoxManifest = new BoxManifest(name, null, "FastLaunch", modloader.Id, modloaderVersions[0].Name,
+        BoxManifest newBoxManifest = new(name, null, "FastLaunch", modloader.Id, modloaderVersions[0].Name,
             null, minecraftVersion, BoxType.Temporary);
 
         Result<string> pathResult = await BoxManager.Create(newBoxManifest);
@@ -85,13 +86,13 @@ public partial class FastLaunchPopup : UserControl
         }
 
         string path = pathResult.Data!;
-        Box box = new Box(path, false);
+        Box box = new(path, false);
 
         await box.ReloadManifestAsync();
         box.SetAndSaveIcon(new Bitmap(AssetLoader.Open(
             new Uri("avares://mcLaunch/resources/fastlaunch_box_logo.png"))));
 
-        BoxDetailsPage detailsPage = new BoxDetailsPage(box);
+        BoxDetailsPage detailsPage = new(box);
         await detailsPage.RunAsync();
     }
 }

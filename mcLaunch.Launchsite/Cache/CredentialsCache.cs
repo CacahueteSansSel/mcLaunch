@@ -51,7 +51,8 @@ public class CredentialsCache
             .ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes(filename)))
             .ToLower();
 
-        var result = Encryption.Encrypt(key, Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data)));
+        (byte[] data, byte[] iv) result =
+            Encryption.Encrypt(key, Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data)));
 
         File.WriteAllBytes($"{RootPath}/{filename}", result.data);
         File.WriteAllBytes($"{RootPath}/{ivFilename}", result.iv);
@@ -60,6 +61,7 @@ public class CredentialsCache
     public void ClearAll()
     {
         foreach (string filename in Directory.GetFiles(RootPath))
+        {
             try
             {
                 File.Delete(filename);
@@ -67,6 +69,7 @@ public class CredentialsCache
             catch (Exception e)
             {
             }
+        }
     }
 
     public bool Clear(string name)

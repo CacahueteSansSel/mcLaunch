@@ -32,7 +32,8 @@ public class MinecraftOptions : Dictionary<string, object>
     {
         string finalStr = "";
 
-        foreach (var kv in this) finalStr += $"{kv.Key}:{ObjectToString(kv.Value)}{Environment.NewLine}";
+        foreach (KeyValuePair<string, object> kv in this)
+            finalStr += $"{kv.Key}:{ObjectToString(kv.Value)}{Environment.NewLine}";
 
         return finalStr;
     }

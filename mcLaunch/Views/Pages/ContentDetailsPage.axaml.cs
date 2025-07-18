@@ -66,16 +66,14 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
         ModPlatformBadge.Text = shownContent.Platform.Name;
         //ModPlatformBadge.SetIcon(shownContent.Platform.Name.ToLower());
-        
+
         if (!string.IsNullOrWhiteSpace(shownContent.License))
         {
             ModLicenseBadge.Text = shownContent.GetLicenseDisplayName();
             ModLicenseBadge.IsVisible = true;
         }
         else
-        {
             ModLicenseBadge.IsVisible = false;
-        }
 
         ModOpenSource.IsVisible = shownContent.License != null && shownContent.IsOpenSource;
         ModClosedSource.IsVisible = shownContent.License != null && !shownContent.IsOpenSource;
@@ -95,9 +93,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             TestButton.IsVisible = true;
         }
         else
-        {
             TestButton.IsVisible = false;
-        }
 
         DefaultBackground.IsVisible = shownContent.BackgroundPath == null;
     }
@@ -133,7 +129,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
     private async void InstallContentFromVersion(IVersion incomingVersion)
     {
-        ContentVersion version = (ContentVersion) incomingVersion;
+        ContentVersion version = (ContentVersion)incomingVersion;
 
         LoadingButtonFrame.IsVisible = true;
 
@@ -153,10 +149,10 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
         if (optionalDeps.Length > 0)
         {
-            Navigation.ShowPopup(new OptionalModsPopup(TargetBox, ShownContent, optionalDeps, async (mods) =>
+            Navigation.ShowPopup(new OptionalModsPopup(TargetBox, ShownContent, optionalDeps, async mods =>
             {
                 await DownloadManager.WaitForPendingProcesses();
-                
+
                 foreach (MinecraftContentPlatform.ContentDependency dependency in mods)
                 {
                     string? versionId = dependency.VersionId;
@@ -165,28 +161,30 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
                     {
                         // If no version is provided, take the latest one
 
-                        ContentVersion[] versions = await ModPlatformManager.Platform.GetContentVersionsAsync(dependency.Content,
+                        ContentVersion[] versions = await ModPlatformManager.Platform.GetContentVersionsAsync(
+                            dependency.Content,
                             ShownContent.Type == MinecraftContentType.Modification
                                 ? TargetBox.Manifest.ModLoaderId
                                 : null, TargetBox.Manifest.Version);
-                        
+
                         // No version is available, so we continue
                         if (versions.Length == 0) continue;
 
                         versionId = versions[0].Id;
                     }
-                    
-                    await ModPlatformManager.Platform.InstallContentAsync(TargetBox, 
-                        dependency.Content, 
-                        versionId, 
-                        true, 
+
+                    await ModPlatformManager.Platform.InstallContentAsync(TargetBox,
+                        dependency.Content,
+                        versionId,
+                        true,
                         false);
                 }
-                
-                await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, version.Id, false, false);
+
+                await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, version.Id, false,
+                    false);
 
                 await DownloadManager.ProcessAll();
-                
+
                 LoadingButtonFrame.IsVisible = false;
                 SetInstalled(true);
 
@@ -196,7 +194,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             }, async () =>
             {
                 await DownloadManager.WaitForPendingProcesses();
-                
+
                 await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent, version.Id, false, true);
 
                 LoadingButtonFrame.IsVisible = false;
@@ -209,14 +207,15 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
             return;
         }
-        
+
         await DownloadManager.WaitForPendingProcesses();
 
         if (!await ModPlatformManager.Platform.InstallContentAsync(TargetBox, ShownContent,
                 version.Id, false, true))
         {
             Navigation.ShowPopup(new MessageBoxPopup("Error",
-                $"{ShownContent.Name} failed to download : the content may lack any download url", MessageStatus.Error));
+                $"{ShownContent.Name} failed to download : the content may lack any download url",
+                MessageStatus.Error));
 
             LoadingButtonFrame.IsVisible = false;
             SetInstalled(false);
@@ -236,7 +235,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         if (TargetBox == null)
         {
             Navigation.ShowPopup(new InstallContentOnPopup(ShownContent));
-            
+
             return;
         }
 
@@ -272,7 +271,8 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         {
             Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
                 $"Unable to install {ShownContent.Name} : no compatible version found " +
-                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}", MessageStatus.Error));
+                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}",
+                MessageStatus.Error));
 
             LoadingButtonFrame.IsVisible = false;
             SetInstalled(false);
@@ -300,7 +300,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         {
             result.ShowErrorPopup();
             SetInstalled(true);
-            
+
             return;
         }
 
@@ -321,7 +321,8 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         {
             Navigation.ShowPopup(new MessageBoxPopup("Installation failed",
                 $"Unable to install {ShownContent.Name} : no compatible version found " +
-                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}", MessageStatus.Error));
+                $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}",
+                MessageStatus.Error));
 
             LoadingButtonFrame.IsVisible = false;
             SetInstalled(false);
@@ -380,12 +381,12 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
             $"Preparing launching Fast Launch box for {ShownContent.Name}..."));
         StatusPopup.Instance.ShowDownloadBanner = true;
 
-        ContentVersion version = (ContentVersion) incomingVersion;
+        ContentVersion version = (ContentVersion)incomingVersion;
         ModLoaderSupport? modLoader = ModLoaderManager.Get(version.ModLoader);
         ModLoaderVersion? modLoaderVersion = await modLoader!.FetchLatestVersion(version.MinecraftVersion);
         ManifestMinecraftVersion minecraftVersion = await MinecraftManager.GetManifestAsync(version.MinecraftVersion);
 
-        BoxManifest manifest = new BoxManifest(ShownContent.Name ?? "Unnamed", string.Empty, string.Empty,
+        BoxManifest manifest = new(ShownContent.Name ?? "Unnamed", string.Empty, string.Empty,
             version.ModLoader, modLoaderVersion!.Name, null, minecraftVersion, BoxType.Temporary);
         Result<string> pathResult = await BoxManager.Create(manifest);
         if (pathResult.IsError)
@@ -396,7 +397,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
         string path = pathResult.Data!;
 
-        Box box = new Box(path);
+        Box box = new(path);
         box.SetAndSaveIcon(new Bitmap(AssetLoader.Open(
             new Uri("avares://mcLaunch/resources/fastlaunch_box_logo.png"))));
 
@@ -405,7 +406,7 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
         StatusPopup.Instance.ShowDownloadBanner = false;
         Navigation.HidePopup();
 
-        BoxDetailsPage detailsPage = new BoxDetailsPage(box);
+        BoxDetailsPage detailsPage = new(box);
         await detailsPage.RunAsync();
     }
 
@@ -413,17 +414,18 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
     {
         if (BackgroundManager.IsMinecraftRunning)
         {
-            Navigation.ShowPopup(new MessageBoxPopup("FastLaunch not available", "Cannot use FastLaunch while another Minecraft instance is running", MessageStatus.Warning));
+            Navigation.ShowPopup(new MessageBoxPopup("FastLaunch not available",
+                "Cannot use FastLaunch while another Minecraft instance is running", MessageStatus.Warning));
             return;
         }
-        
+
         ContentVersion[] versions = await ShownContent.Platform.GetContentVersionsAsync(ShownContent, null, null);
 
         Navigation.ShowPopup(new VersionSelectionPopup(new MinecraftContentVersionProvider(versions, ShownContent),
             CreateFastLaunchModpackFromVersion));
     }
 
-    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    private void UpButtonClicked(object? sender, RoutedEventArgs e)
     {
         ScrollArea.Offset = Vector.Zero;
     }

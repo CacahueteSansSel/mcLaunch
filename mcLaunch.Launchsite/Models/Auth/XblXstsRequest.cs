@@ -9,7 +9,7 @@ public class XblXstsRequest
         Properties = new ModelProperties
         {
             SandboxId = "RETAIL",
-            UserTokens = new[] {token}
+            UserTokens = new[] { token }
         };
     }
 

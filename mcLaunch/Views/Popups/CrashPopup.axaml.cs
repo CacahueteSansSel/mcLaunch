@@ -1,23 +1,29 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
 using mcLaunch.Views.Pages;
+using mcLaunch.Views.Windows;
 
 namespace mcLaunch.Views.Popups;
 
 public partial class CrashPopup : UserControl
 {
     private Box? box;
+    private string? customLog;
     private string? fileToOpen;
-    string? customLog;
+    private Process? javaProcess;
 
-    public CrashPopup(int exitCode, string boxId)
+    public CrashPopup(int exitCode, string boxId, Process? javaProcess)
     {
         InitializeComponent();
 
+        this.javaProcess = javaProcess;
+        DebugButton.IsEnabled = javaProcess != null;
+        
         PopulateAsync(boxId, exitCode);
     }
 
@@ -32,7 +38,7 @@ public partial class CrashPopup : UserControl
         BodyText.IsVisible = false;
         ButtonsRow.IsEnabled = false;
 
-        box = (await BoxManager.LoadLocalBoxesAsync(includeTemp: true, runChecks: false)).FirstOrDefault(b => b.Manifest.Id == boxId);
+        box = (await BoxManager.LoadLocalBoxesAsync(true, false)).FirstOrDefault(b => b.Manifest.Id == boxId);
         if (box == null) return;
 
         OpenBoxDetailsButton.IsEnabled = box.Manifest.Type != BoxType.Temporary;
@@ -50,8 +56,8 @@ public partial class CrashPopup : UserControl
         else
         {
             bodyText = customLog ??
-                $"Minecraft has exited with code {exitCode}.\nThis indicates that Minecraft has encountered an error " +
-                $"and shut down.\nVerify that every mod is up to date, not duplicate, and compatible with each other";
+                       $"Minecraft has exited with code {exitCode}.\nThis indicates that Minecraft has encountered an error " +
+                       $"and shut down.\nVerify that every mod is up to date, not duplicate, and compatible with each other";
 
             BodyText.Text = bodyText;
             BodyText.IsVisible = true;
@@ -87,7 +93,7 @@ public partial class CrashPopup : UserControl
     {
         Navigation.HidePopup();
 
-        BoxDetailsPage page = new BoxDetailsPage(box!);
+        BoxDetailsPage page = new(box!);
         Navigation.Push(page);
 
         page.Run();
@@ -96,5 +102,13 @@ public partial class CrashPopup : UserControl
     private void OpenCrashReportButtonClicked(object? sender, RoutedEventArgs e)
     {
         if (fileToOpen != null) PlatformSpecific.OpenFile(fileToOpen);
+    }
+
+    private void DebugButtonClicked(object? sender, RoutedEventArgs e)
+    {
+        if (javaProcess == null) 
+            return;
+        
+        new DebugBoxCrashPopup(box!, javaProcess).ShowDialog(MainWindow.Instance);
     }
 }

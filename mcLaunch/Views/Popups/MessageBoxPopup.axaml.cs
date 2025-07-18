@@ -9,7 +9,7 @@ public partial class MessageBoxPopup : UserControl
     public MessageBoxPopup()
     {
         InitializeComponent();
-        
+
         DataContext = new Data("Hello, World !", "Lorem Ipsum");
     }
 

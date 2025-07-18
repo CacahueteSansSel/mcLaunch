@@ -68,10 +68,10 @@ public class SoftwareInstaller
                 : "unknown";
         string newerPlatform = Utilities.GetMcLaunchPlatformIdentifier();
         string arch = Utilities.GetArchitecture();
-        
+
         return Parameters.ReleaseToDownload.Assets
             .FirstOrDefault(asset => asset.Name.ToLower() == $"mclaunch-{platform}.zip"
-                || asset.Name.ToLower() == $"mclaunch-{newerPlatform}-{arch}.zip");
+                                     || asset.Name.ToLower() == $"mclaunch-{newerPlatform}-{arch}.zip");
     }
 
     public async Task InstallAsync()
@@ -79,7 +79,7 @@ public class SoftwareInstaller
         GitHubReleaseAsset? platformAsset = FindMcLaunchForPlatform();
 
         using MemoryStream archiveStream =
-            await DownloadManager.DownloadToMemoryAsync(platformAsset.DownloadUrl, (long) platformAsset.Size);
+            await DownloadManager.DownloadToMemoryAsync(platformAsset.DownloadUrl, (long)platformAsset.Size);
 
         OnExtractionStarted?.Invoke();
 
@@ -93,6 +93,7 @@ public class SoftwareInstaller
             string filename = $"{Parameters.TargetDirectory}/{entry.FullName}";
 
             if (File.Exists(filename))
+            {
                 try
                 {
                     File.Delete(filename);
@@ -100,6 +101,7 @@ public class SoftwareInstaller
                 catch (Exception e)
                 {
                 }
+            }
         }
 
         archive.ExtractToDirectory(Parameters.TargetDirectory, true);

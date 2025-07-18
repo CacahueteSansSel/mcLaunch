@@ -17,12 +17,12 @@ string testEnvPath = "test_env";
 if (!Directory.Exists(testEnvPath)) Directory.CreateDirectory(testEnvPath);
 AppdataFolderManager.SetCustomPath(Path.GetFullPath(testEnvPath));
 
-MinecraftFolder systemFolder = new MinecraftFolder(AppdataFolderManager.GetValidPath("system"));
+MinecraftFolder systemFolder = new(AppdataFolderManager.GetValidPath("system"));
 
 TestRunner runner = new(systemFolder);
 runner.RegisterTests(Assembly.GetExecutingAssembly().GetTypes()
     .Where(type => type.IsSubclassOf(typeof(TestBase)))
-    .Select(type => (TestBase) Activator.CreateInstance(type)!)
+    .Select(type => (TestBase)Activator.CreateInstance(type)!)
     .ToArray());
 
 await runner.RunAsync();

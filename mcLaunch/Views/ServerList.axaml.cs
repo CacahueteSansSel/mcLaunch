@@ -54,7 +54,7 @@ public partial class ServerList : UserControl
     {
         await LoadServerIconsAsync(servers);
 
-        Data ctx = (Data) DataContext;
+        Data ctx = (Data)DataContext;
         ctx.Servers = servers;
 
         NtsBanner.IsVisible = servers.Length == 0;
@@ -62,7 +62,7 @@ public partial class ServerList : UserControl
 
     private async Task LoadServerIconsAsync(MinecraftServer[] servers)
     {
-        Data ctx = (Data) DataContext;
+        Data ctx = (Data)DataContext;
 
         SetLoadingCircle(true);
 
@@ -81,7 +81,7 @@ public partial class ServerList : UserControl
     {
         if (e.AddedItems.Count > 0 && launchPage != null)
         {
-            MinecraftServer server = (MinecraftServer) e.AddedItems[0];
+            MinecraftServer server = (MinecraftServer)e.AddedItems[0];
 
             Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Connect to {server.Name} ?",
                 $"Minecraft will start and automatically connect to {server.Name} at {server.Address}",

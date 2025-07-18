@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
              xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             xmlns:controls="clr-namespace:mcLaunch.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             Margin="5"
              Width="200" Height="261"
+             RenderOptions.BitmapInterpolationMode="None"
              Background="{DynamicResource Background}"
              x:Class="mcLaunch.Views.SkinEntryCard">
     <UserControl.Styles>
@@ -17,15 +18,18 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
         </Style>
-
-        <Style Selector="views|SkinEntryCard:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource BackgroundLighter}" />
-        </Style>
     </UserControl.Styles>
-    <DockPanel Margin="20 20 20 20">
-        <TextBlock x:Name="SkinNameText" DockPanel.Dock="Bottom" FontSize="15" HorizontalAlignment="Center" Classes="light" Margin="0 5 0 0" Text="{Binding TextureKey}" />
-        <Border ClipToBounds="True" CornerRadius="4">
-            <Image asyncImageLoader:ImageLoader.Source="{Binding Url}"></Image>
-        </Border>
-    </DockPanel>
+        <DockPanel Margin="20 20 20 20">
+            <DockPanel VerticalAlignment="Bottom" Height="40" DockPanel.Dock="Bottom">
+                <Button x:Name="PlayButton" DockPanel.Dock="Right" ToolTip.Tip="Apply skin" Classes="transparent-green"
+                        HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0" Click="ApplySkinButtonClicked">
+                    <Image Source="{SvgImage /resources/icons/upload.svg}" Width="14" Height="14" />
+                </Button>
+                <TextBlock x:Name="SkinNameText" VerticalAlignment="Center" FontSize="15" HorizontalAlignment="Left"
+                           Classes="light" Margin="0 0 0 0" TextWrapping="Wrap" MaxLines="2" Text="{Binding TextureKey,FallbackValue='Skin Name'}" />
+            </DockPanel>
+            <Border ClipToBounds="True" CornerRadius="4" RenderOptions.BitmapInterpolationMode="None">
+                <controls:SkinPreview x:Name="SkinPreview" RenderOptions.BitmapInterpolationMode="None" Width="160" Height="160" Texture="/resources/skins/steve.png" />
+            </Border>
+        </DockPanel>
 </UserControl>

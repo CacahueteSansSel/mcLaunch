@@ -10,7 +10,7 @@ public static class Unix
 
         try
         {
-            using Process proc = Process.Start("/bin/bash", $"-c \"chmod {perms} {target}\"");
+            using Process proc = Process.Start("/bin/bash", $"-c \"chmod {perms} '{target}'\"");
 
             await proc.WaitForExitAsync();
 

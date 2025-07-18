@@ -18,6 +18,7 @@ public class BoxBinaryModificationPack : ModificationPack
 
         List<SerializedMinecraftContent> mods = new();
         foreach (Mod mod in boxBinary.Mods)
+        {
             mods.Add(new SerializedMinecraftContent
             {
                 IsRequired = true,
@@ -25,15 +26,20 @@ public class BoxBinaryModificationPack : ModificationPack
                 PlatformId = mod.Platform,
                 VersionId = mod.Version
             });
+        }
+
         Modifications = mods.ToArray();
 
         List<AdditionalFile> files = new();
         foreach (FSFile file in boxBinary.Files)
+        {
             files.Add(new AdditionalFile
             {
                 Path = file.AbsFilename,
                 Data = file.Data
             });
+        }
+
         AdditionalFiles = files.ToArray();
     }
 
@@ -105,7 +111,7 @@ public class BoxBinaryModificationPack : ModificationPack
 
     public override async Task ExportAsync(Box box, string filename, string[]? includedFiles)
     {
-        SerializedBox bb = new SerializedBox
+        SerializedBox bb = new()
         {
             Id = box.Manifest.Id,
             Name = box.Manifest.Name,
@@ -135,6 +141,7 @@ public class BoxBinaryModificationPack : ModificationPack
                 Version = mod.VersionId
             });
         }
+
         bb.Mods = mods.ToArray();
 
         List<FSFile> files = new();
@@ -159,8 +166,9 @@ public class BoxBinaryModificationPack : ModificationPack
                     foreach (string dirFile in Directory.GetFiles(completePath, "*", SearchOption.AllDirectories))
                     {
                         string relativePath = dirFile.Replace(completePath, "")
-                            .TrimStart(Path.DirectorySeparatorChar);
-                        
+                            .TrimStart(Path.DirectorySeparatorChar)
+                            .Replace("\\", "/");
+
                         byte[] data = await File.ReadAllBytesAsync(dirFile);
 
                         files.Add(new FSFile
@@ -182,7 +190,7 @@ public class BoxBinaryModificationPack : ModificationPack
 
             files.Add(new FSFile
             {
-                AbsFilename = modFile,
+                AbsFilename = modFile.Replace("\\", "/").TrimStart('/'),
                 Data = data
             });
         }

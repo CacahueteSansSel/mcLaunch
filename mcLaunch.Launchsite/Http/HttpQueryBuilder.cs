@@ -15,7 +15,7 @@ public class HttpQueryBuilder : Dictionary<string, string>
     {
         string final = "";
 
-        foreach (var kv in this) final += $"{kv.Key}={HttpUtility.UrlEncode(kv.Value)}&";
+        foreach (KeyValuePair<string, string> kv in this) final += $"{kv.Key}={HttpUtility.UrlEncode(kv.Value)}&";
 
         return $"?{final.TrimEnd('&')}";
     }

@@ -43,9 +43,11 @@ public partial class ContentsSubControl : SubControl
 
     public override async Task PopulateAsync()
     {
-        if (Box.Manifest.ModLoader is VanillaModLoaderSupport
-            && (ContentType == MinecraftContentType.Modification
-                || ContentType == MinecraftContentType.ShaderPack))
+        if ((Box.Manifest.ModLoader is MinigameModLoaderSupport) || (Box.Manifest.ModLoader is VanillaModLoaderSupport
+                                                                     && (ContentType ==
+                                                                         MinecraftContentType.Modification
+                                                                         || ContentType ==
+                                                                         MinecraftContentType.ShaderPack)))
         {
             ModsList.HidePageSelectors();
             VanillaDisclaimer.IsVisible = true;
@@ -99,12 +101,12 @@ public partial class ContentsSubControl : SubControl
         {
             UpdateAllButton.IsVisible = false;
             CheckForUpdatesButton.IsVisible = false;
-            
+
             return;
         }
-        
+
         BoxStoredContent[] storedContents = Box.Manifest.GetContents(ContentType);
-        
+
         CheckForUpdatesButton.IsVisible = false;
         SearchingForUpdates.IsVisible = true;
         isAnyUpdate = false;
@@ -159,10 +161,10 @@ public partial class ContentsSubControl : SubControl
 
         UpdateAllButton.IsVisible = isAnyUpdate;
         UpdateButtonCountText.Text = updatableContentsList.Count.ToString();
-        
+
         CheckForUpdatesButton.IsVisible = !isAnyUpdate;
     }
-    
+
     private void AddModsButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.Push(new ContentSearchPage(Box, ContentType));
@@ -185,7 +187,8 @@ public partial class ContentsSubControl : SubControl
 
                 if (contents.Length == 0)
                 {
-                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated", MessageStatus.None));
+                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated",
+                        MessageStatus.None));
                     return;
                 }
 
@@ -215,7 +218,7 @@ public partial class ContentsSubControl : SubControl
         foreach (MinecraftContent mod in updatableContentsList)
         {
             StatusPopup.Instance.Status = $"Updating {mod.Name} ({index}/{updatableContentsList.Count})";
-            StatusPopup.Instance.StatusPercent = (float) index / updatableContentsList.Count;
+            StatusPopup.Instance.StatusPercent = (float)index / updatableContentsList.Count;
 
             if (!await Box.UpdateModAsync(mod)) failedModUpdates++;
 
@@ -226,8 +229,11 @@ public partial class ContentsSubControl : SubControl
         Navigation.HidePopup();
 
         if (failedModUpdates > 0)
+        {
             Navigation.ShowPopup(new MessageBoxPopup("Warning",
-                $"{failedModUpdates} {ContentName}{(failedModUpdates > 1 ? "s" : "")} failed to update", MessageStatus.Warning));
+                $"{failedModUpdates} {ContentName}{(failedModUpdates > 1 ? "s" : "")} failed to update",
+                MessageStatus.Warning));
+        }
 
         isUpdating = false;
         UpdateAllButton.IsVisible = false;
@@ -254,7 +260,8 @@ public partial class ContentsSubControl : SubControl
 
                 if (contents.Length == 0)
                 {
-                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated", MessageStatus.None));
+                    Navigation.ShowPopup(new MessageBoxPopup("Information", $"No {ContentName} have been migrated",
+                        MessageStatus.None));
                     return;
                 }
 

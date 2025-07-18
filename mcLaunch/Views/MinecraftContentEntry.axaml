@@ -31,13 +31,13 @@
                 <Image Margin="5 0 0 0" Height="14" Source="{Binding Platform.Icon}"
                        VerticalAlignment="Center"
                        ToolTip.Tip="{Binding Platform.Name}" ClipToBounds="True" />
-                <StackPanel Orientation="Horizontal" Margin="5 2 0 0" Opacity="0.5" 
+                <StackPanel Orientation="Horizontal" Margin="5 2 0 0" Opacity="0.5"
                             VerticalAlignment="Center">
                     <TextBlock Classes="light" FontSize="12">by</TextBlock>
                     <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{Binding Author}" />
                 </StackPanel>
                 <views:Badge x:Name="InstalledBadge" IsVisible="False" VerticalAlignment="Center"
-                             Margin="10 0 0 0" Text="Installed"/>
+                             Margin="10 0 0 0" Text="Installed" />
                 <views:Badge x:Name="UpdateBadge" Margin="5 0 0 0" IsVisible="False" VerticalAlignment="Center"
                              Text="Update available" />
             </StackPanel>

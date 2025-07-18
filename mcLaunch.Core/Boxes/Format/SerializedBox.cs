@@ -10,7 +10,7 @@ public class SerializedBox
 
     public SerializedBox(string filename)
     {
-        BinaryReader rd = new BinaryReader(new FileStream(filename, FileMode.Open));
+        BinaryReader rd = new(new FileStream(filename, FileMode.Open));
         Read(rd);
         rd.Close();
     }
@@ -45,7 +45,7 @@ public class SerializedBox
 
     public void Save(string filename)
     {
-        FileStream fs = new FileStream(filename, FileMode.Create);
+        FileStream fs = new(filename, FileMode.Create);
         Write(new BinaryWriter(fs));
         fs.Close();
     }
@@ -105,7 +105,7 @@ public class SerializedBox
         byte[] uncompressedFS = new byte[UncompressedFSSize];
         decoded = LZ4Codec.Decode(filesystemSection, uncompressedFS);
 
-        BinaryReader fs = new BinaryReader(new MemoryStream(uncompressedFS));
+        BinaryReader fs = new(new MemoryStream(uncompressedFS));
 
         for (uint i = 0; i < FileCount; i++)
         {
@@ -136,27 +136,27 @@ public class SerializedBox
         int newSize = LZ4Codec.Encode(IconData, compressedIconData, LZ4Level.L12_MAX);
         Array.Resize(ref compressedIconData, newSize);
 
-        wr.Write((uint) newSize);
-        wr.Write((uint) IconData.LongLength);
+        wr.Write((uint)newSize);
+        wr.Write((uint)IconData.LongLength);
         wr.Write(compressedIconData);
 
         byte[] compressedBackgroundData = new byte[LZ4Codec.MaximumOutputSize(BackgroundData.Length)];
         newSize = LZ4Codec.Encode(BackgroundData, compressedBackgroundData, LZ4Level.L12_MAX);
         Array.Resize(ref compressedBackgroundData, newSize);
 
-        wr.Write((uint) newSize);
-        wr.Write((uint) BackgroundData.LongLength);
+        wr.Write((uint)newSize);
+        wr.Write((uint)BackgroundData.LongLength);
         wr.Write(compressedBackgroundData);
 
         // Mod Section
-        wr.Write((uint) Mods.LongLength);
+        wr.Write((uint)Mods.LongLength);
         foreach (Mod mod in Mods) mod.Write(wr);
 
         // Filesystem Section
-        wr.Write((uint) Files.LongLength);
+        wr.Write((uint)Files.LongLength);
 
         MemoryStream fsStream = new();
-        BinaryWriter fs = new BinaryWriter(fsStream);
+        BinaryWriter fs = new(fsStream);
 
         foreach (FSFile file in Files) file.Write(fs);
 
@@ -167,8 +167,8 @@ public class SerializedBox
         newSize = LZ4Codec.Encode(fsData, compressedFsData);
         Array.Resize(ref compressedFsData, newSize);
 
-        wr.Write((uint) compressedFsData.LongLength);
-        wr.Write((uint) fsData.LongLength);
+        wr.Write((uint)compressedFsData.LongLength);
+        wr.Write((uint)fsData.LongLength);
         wr.Write(compressedFsData);
     }
 }
@@ -192,7 +192,7 @@ public class FSFile
     public void Write(BinaryWriter wr)
     {
         wr.Write(AbsFilename);
-        wr.Write((ulong) Data.LongLength);
+        wr.Write((ulong)Data.LongLength);
         wr.Write(Data);
     }
 }
@@ -222,7 +222,7 @@ public class Mod
         wr.Write(Id);
         wr.Write(Version);
         wr.Write(Platform);
-        wr.Write((uint) Filenames.Length);
+        wr.Write((uint)Filenames.Length);
 
         foreach (string str in Filenames)
             wr.Write(str);

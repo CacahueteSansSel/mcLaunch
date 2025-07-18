@@ -3,30 +3,34 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:controls="clr-namespace:mcLaunch.Controls"
              mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.SkinsPage">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Panel>
-        <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}" />
-        <StackPanel>
-            <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
+        <DockPanel>
+            <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal" DockPanel.Dock="Top">
                 <views:BackButton />
                 <TextBlock Classes="title" Margin="15 0 0 0" FontSize="30">Your Skins</TextBlock>
             </StackPanel>
             <DockPanel Margin="0 20 0 20" Width="888">
-                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
-                    <Image Source="/resources/default_skin.png" Width="150"></Image>
-                    <TextBlock HorizontalAlignment="Center" Classes="title">Current</TextBlock>
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Left" Spacing="10" Margin="0 0 20 0">
+                    <controls:SkinPreview x:Name="CurrentSkinPreview" Width="200" Height="200" Texture="/resources/skins/steve.png" />
+                    <TextBlock HorizontalAlignment="Center" Classes="title">Current skin</TextBlock>
                 </StackPanel>
-                <ScrollViewer DockPanel.Dock="Right">
-                    <WrapPanel x:Name="SkinCardsContainer">
-                        
+                <ScrollViewer>
+                    <WrapPanel x:Name="SkinCardsContainer" ItemSpacing="5" LineSpacing="5">
+                        <Button Width="200" Height="261" Classes="secondary" Click="AddSkinButtonClicked">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+                                <Image Source="/resources/plus_large.png" Width="60" Height="60"></Image>
+                                <TextBlock HorizontalAlignment="Center" Classes="title">Add skin</TextBlock>
+                            </StackPanel>
+                        </Button>
                     </WrapPanel>
                 </ScrollViewer>
-                <Panel></Panel>
             </DockPanel>
-        </StackPanel>
+        </DockPanel>
     </Panel>
 </UserControl>

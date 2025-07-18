@@ -7,7 +7,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.Platform;
 using Avalonia.Threading;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Managers;
@@ -33,15 +32,16 @@ public class App : Application
     {
         Args = new ArgumentsParser(Environment.GetCommandLineArgs().Skip(1).ToArray());
 
-        #if DEBUG
+#if DEBUG
         TestsManager.Load();
-        #endif
-        
+#endif
+
         CurrentBuild.Load();
         Settings.Load();
         DownloadManager.Init(CurrentBuild.Version.ToString());
         await MinecraftManager.InitAsync();
         ModLoaderManager.Init();
+        //ModLoaderManager.All.Add(new MinigameModLoaderSupport());
         ModPlatformManager.Init(new MultiplexerMinecraftContentPlatform(
             new ModrinthMinecraftContentPlatform().WithIcon("modrinth"),
             new CurseForgeMinecraftContentPlatform(Credentials.Get("curseforge")).WithIcon("curseforge")
@@ -51,6 +51,7 @@ public class App : Application
         DefaultsManager.Init();
         AnonymityManager.Init();
         if (!Design.IsDesignMode) DiscordManager.Init();
+        SkinsManager.Init();
         MinecraftVersion.ModelArguments.Default =
             JsonSerializer.Deserialize<MinecraftVersion.ModelArguments>(InternalSettings.Get("default_args.json"))!;
 

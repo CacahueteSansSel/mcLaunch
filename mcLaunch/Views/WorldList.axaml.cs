@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Reactive;
 using Avalonia.Controls;
-using Avalonia.Threading;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Utilities;
@@ -10,7 +8,6 @@ using mcLaunch.Views.Pages;
 using mcLaunch.Views.Popups;
 using mcLaunch.Views.Windows.NbtEditor;
 using ReactiveUI;
-using SharpNBT;
 
 namespace mcLaunch.Views;
 
@@ -26,7 +23,7 @@ public partial class WorldList : UserControl
 
         DataContext = new Data();
 
-        SetWorlds(new []
+        SetWorlds(new[]
         {
             new MinecraftWorld
             {
@@ -54,7 +51,7 @@ public partial class WorldList : UserControl
 
     public void SetWorlds(MinecraftWorld[] worlds)
     {
-        Data ctx = (Data) DataContext;
+        Data ctx = (Data)DataContext;
 
         ctx.Worlds = worlds.Select(w => new Data.ModelWorld(w)).ToArray();
 
@@ -70,7 +67,7 @@ public partial class WorldList : UserControl
     {
         if (e.AddedItems.Count > 0 && launchPage != null && launchPage.Box.SupportsQuickPlay)
         {
-            Data.ModelWorld world = (Data.ModelWorld) e.AddedItems[0];
+            Data.ModelWorld world = (Data.ModelWorld)e.AddedItems[0];
 
             Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Launch world {world.World.Name} ?",
                 $"Minecraft will start and automatically launch the world {world.World.Name}",
@@ -99,18 +96,18 @@ public partial class WorldList : UserControl
 
         public class ModelWorld : ReactiveObject
         {
-            public MinecraftWorld World { get; set; }
-            public bool ShowAdvancedFeatures => Settings.Instance?.ShowAdvancedFeatures ?? false;
-
             public ModelWorld(MinecraftWorld world)
             {
                 World = world;
             }
 
+            public MinecraftWorld World { get; set; }
+            public bool ShowAdvancedFeatures => Settings.Instance?.ShowAdvancedFeatures ?? false;
+
             public void OpenLevelDatCommand()
             {
                 string levelDatFilename = $"{World.WorldPath}/level.dat";
-                
+
                 new NbtEditorWindow(levelDatFilename).Show(MainWindow.Instance);
             }
         }

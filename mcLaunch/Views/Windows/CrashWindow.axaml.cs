@@ -27,7 +27,7 @@ public partial class CrashWindow : Window
     {
         if (DataContext == null) return;
 
-        Clipboard.SetTextAsync((string) DataContext);
+        Clipboard.SetTextAsync((string)DataContext);
     }
 
     private void RestartButtonClicked(object? sender, RoutedEventArgs e)

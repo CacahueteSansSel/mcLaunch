@@ -10,6 +10,7 @@ public static class Api
 {
     private const int RetryCount = 2;
     private static ProductInfoHeaderValue? userAgent;
+    public static bool AllowExtendedTimeout { get; set; }
 
     public static event Action<string> OnNetworkError;
     public static event Action<string> OnNetworkSuccess;
@@ -18,11 +19,12 @@ public static class Api
     {
         userAgent = ua;
     }
-    
+
     public static async Task<XmlDocument?> GetAsyncXml(string url)
     {
-        HttpClient client = new HttpClient();
+        HttpClient client = new();
         if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
 
         HttpResponseMessage resp = null;
         int t = 0;
@@ -53,16 +55,17 @@ public static class Api
 
         OnNetworkSuccess?.Invoke(url);
 
-        XmlDocument doc = new XmlDocument();
+        XmlDocument doc = new();
         doc.LoadXml(xml);
-        
+
         return doc;
     }
 
     public static async Task<T?> GetAsync<T>(string url, bool patchDateTimes = false)
     {
-        HttpClient client = new HttpClient();
+        HttpClient client = new();
         if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
 
         HttpResponseMessage resp = null;
         int t = 0;
@@ -99,7 +102,9 @@ public static class Api
 
     public static async Task<T?> GetAsyncAuthBearer<T>(string url, string auth)
     {
-        HttpClient client = new HttpClient();
+        HttpClient client = new();
+        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth);
 
         HttpResponseMessage resp = null;
@@ -135,7 +140,10 @@ public static class Api
 
     public static async Task<JsonNode?> GetNodeAsync(string url, bool patchDateTimes = false)
     {
-        HttpClient client = new HttpClient();
+        HttpClient client = new();
+        client.Timeout = TimeSpan.FromSeconds(5);
+        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
 
         HttpResponseMessage resp = null;
         int t = 0;
@@ -170,9 +178,13 @@ public static class Api
         return JsonNode.Parse(json);
     }
 
-    public static async Task<TResponse?> PostAsync<TRequest, TResponse>(string url, TRequest data)
+    public static async Task<TResponse?> PostAsync<TRequest, TResponse>(string url, TRequest data, string? authToken = null)
     {
-        HttpClient client = new HttpClient();
+        HttpClient client = new();
+        client.Timeout = TimeSpan.FromSeconds(5);
+        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
+        if (authToken != null) client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -186,6 +198,8 @@ public static class Api
         {
             if (t >= RetryCount)
             {
+                string text = await resp.Content.ReadAsStringAsync();
+                
                 OnNetworkError?.Invoke(url);
                 return default;
             }
@@ -193,6 +207,48 @@ public static class Api
             try
             {
                 resp = await client.PostAsync(url, content);
+                if (resp.IsSuccessStatusCode) break;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{url} => (Exception) {e}");
+            }
+
+            t++;
+        }
+
+        if (!resp.IsSuccessStatusCode) return default;
+
+        string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
+
+        OnNetworkSuccess?.Invoke(url);
+
+        return JsonSerializer.Deserialize<TResponse>(json);
+    }
+    
+    public static async Task<TResponse?> PostFormAuthAsync<TResponse>(string url, MultipartFormDataContent form, string? authToken = null)
+    {
+        HttpClient client = new();
+        client.Timeout = TimeSpan.FromSeconds(5);
+        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
+        if (authToken != null) client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        HttpResponseMessage resp = null;
+        int t = 0;
+        while (true)
+        {
+            if (t >= RetryCount)
+            {
+                OnNetworkError?.Invoke(url);
+                return default;
+            }
+
+            try
+            {
+                resp = await client.PostAsync(url, form);
                 if (resp.IsSuccessStatusCode) break;
             }
             catch (Exception e)

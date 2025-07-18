@@ -24,7 +24,8 @@
                             <TextBlock x:Name="UpdateButtonCountText">0</TextBlock>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="CheckForUpdatesButton" DockPanel.Dock="Left" Padding="10" Height="39" Classes="secondary square"
+                    <Button x:Name="CheckForUpdatesButton" DockPanel.Dock="Left" Padding="10" Height="39"
+                            Classes="secondary square"
                             Click="CheckForUpdatesButtonClicked" ToolTip.Tip="Check for updates">
                         <Image Width="13" Height="13" Source="{SvgImage /resources/icons/refresh.svg}" />
                     </Button>

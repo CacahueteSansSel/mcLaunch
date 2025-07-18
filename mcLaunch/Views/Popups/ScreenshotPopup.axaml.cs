@@ -54,7 +54,7 @@ public partial class ScreenshotPopup : UserControl
 
     private void SetAsBoxBackgroundButtonClicked(object? sender, RoutedEventArgs e)
     {
-        box.SetAndSaveBackground((Bitmap) Picture.Source);
+        box.SetAndSaveBackground((Bitmap)Picture.Source);
         Navigation.HidePopup();
     }
 }

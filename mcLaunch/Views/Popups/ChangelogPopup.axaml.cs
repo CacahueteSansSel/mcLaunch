@@ -29,16 +29,14 @@ public partial class ChangelogPopup : UserControl
         TitleText.Text = TitleText.Text
             .Replace("$MOD", mod.Name);
 
-        Regex isHtmlRegex = new Regex("<\\/\\w+>");
+        Regex isHtmlRegex = new("<\\/\\w+>");
         if (isHtmlRegex.IsMatch(mod.Changelog))
         {
-            var converter = new Converter();
+            Converter converter = new();
             MarkdownArea.Markdown = HttpUtility.HtmlDecode(converter.Convert(mod.Changelog));
         }
         else
-        {
             MarkdownArea.Markdown = mod.Changelog;
-        }
     }
 
     private void InstallButtonClicked(object? sender, RoutedEventArgs e)

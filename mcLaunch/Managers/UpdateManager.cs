@@ -30,12 +30,12 @@ public static class UpdateManager
         string arch = Launchsite.Core.Utilities.GetArchitecture();
         string extension = OperatingSystem.IsWindows() ? ".exe" : "";
         string expectedInstallerName = $"mcLaunch-Installer-{platform}-{arch}{extension}";
-        
+
         foreach (GitHubRelease release in releases)
         {
             foreach (GitHubReleaseAsset asset in release.Assets)
             {
-                if (asset.Name == expectedInstallerName) 
+                if (asset.Name == expectedInstallerName)
                     return asset.DownloadUrl;
             }
         }
@@ -62,7 +62,7 @@ public static class UpdateManager
     {
         string? installerUrl = await FindInstallerUrlAsync();
         if (installerUrl == null) return false;
-        
+
         void ProgressUpdate(string str, float percent, int _)
         {
             StatusPopup.Instance.StatusPercent = percent;
@@ -75,12 +75,12 @@ public static class UpdateManager
 
             DownloadManager.OnDownloadProgressUpdate += ProgressUpdate;
         }
-        
+
         if (File.Exists("installer/installer")) File.Delete("installer/installer");
         if (File.Exists("installer/installer.exe")) File.Delete("installer/installer.exe");
 
         Directory.CreateDirectory("installer");
-        
+
         DownloadManager.Begin("mcLaunch Installer");
         DownloadManager.Add(installerUrl, Path.GetFullPath("installer/installer.exe"), null, EntryAction.Download);
         DownloadManager.End();
@@ -99,7 +99,7 @@ public static class UpdateManager
     public static async Task<bool> UpdateAsync()
     {
         if (!OperatingSystem.IsWindows()) return false;
-        
+
         if (LaunchInstaller()) return true;
 
         if (!await UpdateInstallerAsync()) return false;

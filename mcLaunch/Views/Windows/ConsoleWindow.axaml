@@ -14,29 +14,28 @@
         Background="{DynamicResource BackgroundDarker}">
     <Window.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
-        
+
         <Style Selector="TextBox.console">
             <Setter Property="CornerRadius" Value="0" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="FontFamily" Value="/resources/fonts/JetBrainsMono-Regular.ttf#JetBrains Mono" />
         </Style>
-        
+
         <Style Selector="TextBox.console:pointerover /template/ Border#PART_BorderElement">
             <Setter Property="Background" Value="Transparent" />
         </Style>
-        
+
         <Style Selector="TextBox.console:focus /template/ Border#PART_BorderElement">
-            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="BorderThickness" Value="0" />
         </Style>
     </Window.Styles>
     <DockPanel>
         <DockPanel IsHitTestVisible="False" DockPanel.Dock="Top" Height="50" Background="{DynamicResource Background}">
-            <Image Source="/resources/logo_beta.png" DockPanel.Dock="Left" Height="30" Margin="20 0 0 0"></Image>
-            <TextBlock Text="Game Console" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0"></TextBlock>
+            <Image Source="/resources/logo_beta.png" DockPanel.Dock="Left" Height="30" Margin="20 0 0 0" />
+            <TextBlock Text="Game Console" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="20 0 0 0" />
         </DockPanel>
-        <avaloniaEdit:TextEditor x:Name="ConsoleText" Padding="10" IsReadOnly="True" FontFamily="JetBrains Mono,Cascadia Code,Consolas,Menlo,Monospace">
-            
-        </avaloniaEdit:TextEditor>
+        <avaloniaEdit:TextEditor x:Name="ConsoleText" Padding="10" IsReadOnly="True"
+                                 FontFamily="JetBrains Mono,Cascadia Code,Consolas,Menlo,Monospace" />
     </DockPanel>
 </Window>

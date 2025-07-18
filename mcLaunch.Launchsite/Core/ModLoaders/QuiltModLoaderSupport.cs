@@ -1,4 +1,5 @@
-﻿using mcLaunch.Launchsite.Http;
+﻿using System.Text.Json;
+using mcLaunch.Launchsite.Http;
 using mcLaunch.Launchsite.Models.Fabric;
 
 namespace mcLaunch.Launchsite.Core.ModLoaders;
@@ -15,16 +16,23 @@ public class QuiltModLoaderSupport : ModLoaderSupport
 
     public override async Task<ModLoaderVersion[]?> GetVersionsAsync(string minecraftVersion)
     {
-        QuiltLoaderManifest[]? versions = await Api.GetAsync<QuiltLoaderManifest[]>(
-            $"{Url}/v3/versions/loader/{minecraftVersion}",
-            true);
-
-        if (versions == null) return null;
-
-        return versions.Select(ver => (ModLoaderVersion) new QuiltModLoaderVersion
+        try
         {
-            Name = ver.Loader.Version,
-            MinecraftVersion = minecraftVersion
-        }).ToArray();
+            QuiltLoaderManifest[]? versions = await Api.GetAsync<QuiltLoaderManifest[]>(
+                $"{Url}/v3/versions/loader/{minecraftVersion}",
+                true);
+
+            if (versions == null) return null;
+
+            return versions.Select(ver => (ModLoaderVersion)new QuiltModLoaderVersion
+            {
+                Name = ver.Loader.Version,
+                MinecraftVersion = minecraftVersion
+            }).ToArray();
+        }
+        catch (JsonException e)
+        {
+            return [];
+        }
     }
 }

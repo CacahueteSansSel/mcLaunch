@@ -45,9 +45,7 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
                 : $"{supportedMinecraftVersions[0]} - {supportedMinecraftVersions.Last()}";
         }
         else
-        {
             ModpackVersionsBadge.IsVisible = false;
-        }
 
         string[] supportedModloaders = this.modpack.FetchModLoaders();
         ModpackPlatformBadge.Text = string.Join(", ", supportedModloaders);
@@ -76,7 +74,8 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
         Result<Box> boxResult = await BoxManager.CreateFromPlatformModpack(modpack, modpackVersion, (msg, percent) =>
         {
             StatusPopup.Instance.Status = $"{msg}";
-            StatusPopup.Instance.StatusPercent = percent;
+            StatusPopup.Instance.StatusPercent = percent < 0f ? 0 : percent;
+            StatusPopup.Instance.StatusIndeterminate = percent < 0f;
         });
         if (boxResult.IsError)
         {
@@ -98,7 +97,7 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
         PlatformSpecific.OpenUrl(modpack.Url);
     }
 
-    void UpButtonClicked(object? sender, RoutedEventArgs e)
+    private void UpButtonClicked(object? sender, RoutedEventArgs e)
     {
         ScrollArea.Offset = Vector.Zero;
     }

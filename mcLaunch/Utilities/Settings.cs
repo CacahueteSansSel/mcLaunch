@@ -49,6 +49,9 @@ public class Settings
     [Setting(Name = "Show box infos on Discord's Rich Presence", Group = "Discord")]
     public bool ShowBoxInfosOnDiscordRpc { get; set; }
 
+    [Setting(Name = "Allow extended timeout for requests", Group = "Launcher")]
+    public bool AllowExtendedTimeout { get; set; }
+
     public Settings WithDefaults()
     {
         ExposeLauncherNameToMinecraft = true;
@@ -56,6 +59,7 @@ public class Settings
         UseDiscordRpc = true;
         CloseLauncherAtLaunch = true;
         EnableGameConsole = false;
+        AllowExtendedTimeout = false;
 
         return this;
     }
@@ -119,12 +123,16 @@ public class Settings
     public static void Load()
     {
         if (File.Exists(AppdataFolderManager.GetPath("seen_versions.json")))
+        {
             SeenVersionsList = JsonSerializer.Deserialize<List<string>>(
                 File.ReadAllText(AppdataFolderManager.GetPath("seen_versions.json")))!;
+        }
 
         if (File.Exists(AppdataFolderManager.GetPath("settings.json")))
+        {
             Instance = JsonSerializer.Deserialize<Settings>(
                 File.ReadAllText(AppdataFolderManager.GetPath("settings.json")))!;
+        }
         else Instance = new Settings().WithDefaults();
     }
 }

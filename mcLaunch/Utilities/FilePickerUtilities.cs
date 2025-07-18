@@ -1,5 +1,5 @@
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
@@ -13,7 +13,7 @@ public static class FilePickerUtilities
     {
         IStorageProvider storage = MainWindow.Instance.StorageProvider;
 
-        var files = await storage.OpenFilePickerAsync(new FilePickerOpenOptions
+        IReadOnlyList<IStorageFile>? files = await storage.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = title,
             AllowMultiple = multiple,
@@ -41,8 +41,8 @@ public static class FilePickerUtilities
         {
             new FilePickerFileType("Image")
             {
-                Patterns = new[] {"*.png", "*.jpg", "*.jpeg"},
-                MimeTypes = new[] {"image/png", "image/jpeg"}
+                Patterns = new[] { "*.png", "*.jpg", "*.jpeg" },
+                MimeTypes = new[] { "image/png", "image/jpeg" }
             }
         });
 

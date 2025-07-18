@@ -31,10 +31,12 @@ public class ForgeModLoaderVersion : ModLoaderVersion
 
         if (File.Exists($"{SystemFolderPath}/versions/{versionName}/{versionName}.jar") &&
             File.Exists($"{SystemFolderPath}/versions/{versionName}/{versionName}.json"))
+        {
             return new Result<MinecraftVersion>(JsonSerializer.Deserialize<MinecraftVersion>(
                 await File.ReadAllTextAsync($"{SystemFolderPath}/versions/{versionName}/{versionName}.json")));
+        }
 
-        HttpClient client = new HttpClient();
+        HttpClient client = new();
         client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("mcLaunch", "1.0.0"));
 
         string filename = $"{slug.ToLower()}-{FullName}-installer.jar";
@@ -60,9 +62,11 @@ public class ForgeModLoaderVersion : ModLoaderVersion
             }
 
             if (successfulInstallerUrl == null)
+            {
                 return Result<MinecraftVersion>.Error($"The {slug} installer file cannot be found for" +
                                                       $" version {minecraftVersionId} : the version may be too old" +
                                                       $" or have been deleted since");
+            }
 
             await Context.Downloader.BeginSectionAsync($"{slug} {Name} installer", false);
             await Context.Downloader.DownloadAsync(successfulInstallerUrl, fullPath, null);

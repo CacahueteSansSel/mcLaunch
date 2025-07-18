@@ -25,16 +25,19 @@ public abstract class UnitTest
         if (!condition)
             throw new Exception("Assertion failed");
     }
-    
+
     protected void Assert(bool condition, string message, string leadingMessage = "")
     {
         AssertLog += $"{message}: {(condition ? "YES" : "NO")}";
         if (!string.IsNullOrEmpty(leadingMessage)) AssertLog += $": {leadingMessage}";
 
         AssertLog += "\n";
-        
+
         if (!condition)
-            throw new Exception($"Assertion failed: {message}" + (!string.IsNullOrEmpty(leadingMessage) ? $": {leadingMessage}" : ""));
+        {
+            throw new Exception($"Assertion failed: {message}" +
+                                (!string.IsNullOrEmpty(leadingMessage) ? $": {leadingMessage}" : ""));
+        }
     }
 
     protected void AssertResultSucceeded(Result result, string message)
@@ -44,7 +47,8 @@ public abstract class UnitTest
     {
         foreach (Control control in MainWindow.Instance.GetVisualDescendants().Where(v => v is Control))
         {
-            if (control.Name == name) return (T) control;
+            if (control.Name == name)
+                return (T)control;
         }
 
         return null;
@@ -55,7 +59,8 @@ public abstract class UnitTest
         foreach (Control control in MainWindowDataContext.Instance.CurrentPopup
                      .GetVisualDescendants().Where(v => v is Control))
         {
-            if (control.Name == name) return (T) control;
+            if (control.Name == name)
+                return (T)control;
         }
 
         return null;
@@ -64,32 +69,26 @@ public abstract class UnitTest
     protected void ButtonClick(Button button)
         => button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
-    protected bool IsPopupShown<T>() where T : UserControl
-    {
-        return MainWindowDataContext.Instance.CurrentPopup is T;
-    }
+    protected bool IsPopupShown<T>() where T : UserControl => MainWindowDataContext.Instance.CurrentPopup is T;
 
-    protected bool IsPageShown<T>() where T : UserControl
-    {
-        return MainWindowDataContext.Instance.CurrentPage is T;
-    }
+    protected bool IsPageShown<T>() where T : UserControl => MainWindowDataContext.Instance.CurrentPage is T;
 
     protected async Task<Box> CreateBoxAsync(string mcVersion, string modloader)
     {
         ManifestMinecraftVersion version = await MinecraftManager.GetManifestAsync(mcVersion);
         ModLoaderVersion? latestMlVersion = await ModLoaderManager.Get(modloader)!.FetchLatestVersion(mcVersion);
         string boxName = GetType().Name;
-        
+
         Assert(latestMlVersion != null, $"Latest {modloader} version is not null");
 
-        BoxManifest newBox = new BoxManifest(boxName, "", boxName, modloader, 
+        BoxManifest newBox = new(boxName, "", boxName, modloader,
             latestMlVersion!.Name, IconCollection.Default, version, BoxType.Temporary);
 
         Result<string> result = await BoxManager.Create(newBox);
         AssertResultSucceeded(result, "Box creation succeeded");
         Assert(Directory.Exists(result.Data), "Box folder exists");
 
-        Box box = new Box(result.Data!, false);
+        Box box = new(result.Data!, false);
         await box.ReloadManifestAsync(true, false);
 
         return box;

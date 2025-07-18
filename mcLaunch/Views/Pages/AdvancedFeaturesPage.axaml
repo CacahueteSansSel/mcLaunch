@@ -40,7 +40,7 @@
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <TextBlock VerticalAlignment="Center" Classes="title">NBT Editor</TextBlock>
-                                        <views:Badge VerticalAlignment="Center" Text="Experimental"></views:Badge>
+                                        <views:Badge VerticalAlignment="Center" Text="Experimental" />
                                     </StackPanel>
                                     <TextBlock>Open the built-in NBT editor window (currently work in progress)</TextBlock>
                                 </StackPanel>

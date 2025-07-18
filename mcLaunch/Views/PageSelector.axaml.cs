@@ -22,16 +22,8 @@ public partial class PageSelector : UserControl
         PageCount = pageCount;
 
         ButtonsContainer.Children.Clear();
-        for (int i = 0; i < pageCount; i++)
+        for (int i = 0; i < Math.Min(pageCount, 9); i++)
         {
-            if (i > 9)
-            {
-                PageButton btn = new(pageCount - 1, this);
-                ButtonsContainer.Children.Add(btn);
-
-                break;
-            }
-
             PageButton button = new(i, this);
             ButtonsContainer.Children.Add(button);
         }
@@ -42,10 +34,23 @@ public partial class PageSelector : UserControl
         PageIndex = index;
         if (runCallback) _onPageChanged?.Invoke(index);
 
-        for (int i = 0; i < ButtonsContainer.Children.Count; i++)
+        if (index >= 8)
         {
-            PageButton button = (PageButton) ButtonsContainer.Children[i];
-            button.SetLight(i == index);
+            int minimum = index - 7;
+            for (int i = 0; i < ButtonsContainer.Children.Count; i++)
+            {
+                PageButton button = (PageButton)ButtonsContainer.Children[i];
+                button.SetPage(minimum + i);
+                button.SetLight(i == index - minimum);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < ButtonsContainer.Children.Count; i++)
+            {
+                PageButton button = (PageButton)ButtonsContainer.Children[i];
+                button.SetLight(i == index);
+            }
         }
     }
 

@@ -54,7 +54,7 @@ public class MinecraftVersion
                 {
                     if (Arguments.Game != null && Arguments.Game.Contains(arg)) continue;
 
-                    List<object> objs = new List<object>(Arguments.Game ?? Array.Empty<object>());
+                    List<object> objs = new(Arguments.Game ?? Array.Empty<object>());
                     objs.Add(arg);
                     Arguments.Game = objs.ToArray();
                 }
@@ -164,11 +164,40 @@ public class MinecraftVersion
 
         public string GetFinalJarFilename() => new LibraryName(Name).JarFilename;
 
+        public bool AreRulesSatisfied(out ModelRule? failingRule)
+        {
+            if (Rules == null || Rules.Length == 0)
+            {
+                failingRule = null;
+                return true;
+            }
+            
+            foreach (ModelRule rule in Rules)
+            {
+                bool satisfied = rule.Os == null || rule.Os.CheckIfSatisfied();
+
+                // Invert the boolean value if it's a "disallow" rule
+                if (rule.Action == "disallow") satisfied = !satisfied;
+
+                if (!satisfied)
+                {
+                    failingRule = rule;
+                    return false;
+                }
+            }
+
+            failingRule = null;
+            return true;
+        }
+
+        public bool AreRulesSatisfied()
+            => AreRulesSatisfied(out _);
+
         public string? DeduceUrl()
         {
             if (!NeedsToDeduceUrlFromName) return null;
 
-            LibraryName libName = new LibraryName(Name);
+            LibraryName libName = new(Name);
 
             string url = libName.BuildMavenUrl(Url);
 
@@ -294,7 +323,8 @@ public class MinecraftVersion
             bool ignoreWhitespaces = false;
 
             if (arg.Contains('$'))
-                foreach (var kv in replacements)
+            {
+                foreach (KeyValuePair<string, string> kv in replacements)
                 {
                     string toReplace = $"${{{kv.Key}}}";
                     string value = kv.Value ?? "";
@@ -307,6 +337,7 @@ public class MinecraftVersion
                     string newValue = string.IsNullOrEmpty(value) ? "\"\"" : value;
                     arg = arg.Replace(toReplace, newValue);
                 }
+            }
 
             if ((arg.Contains(" ") && !ignoreWhitespaces) || string.IsNullOrWhiteSpace(arg)) arg = $"\"{arg}\"";
 
@@ -319,6 +350,7 @@ public class MinecraftVersion
             List<string> processedArgs = new();
 
             if (Jvm != null)
+            {
                 foreach (object arg in Jvm)
                 {
                     if (arg is not JsonElement elmt) continue;
@@ -333,11 +365,13 @@ public class MinecraftVersion
                         bool abort = false;
 
                         foreach (JsonElement rule in rulesJson.EnumerateArray())
+                        {
                             if (!RuleSatisfied(rule))
                             {
                                 abort = true;
                                 break;
                             }
+                        }
 
                         if (abort) continue;
 
@@ -359,10 +393,12 @@ public class MinecraftVersion
                         }
                     }
                 }
+            }
 
             final += middle + " ";
 
             if (Game != null)
+            {
                 foreach (object arg in Game)
                 {
                     if (arg is not JsonElement elmt) continue;
@@ -373,6 +409,7 @@ public class MinecraftVersion
 
                     final += FormatArgument(elmt.GetString(), replacements) + " ";
                 }
+            }
 
             return final.Trim();
         }

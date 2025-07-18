@@ -6,18 +6,19 @@ namespace mcLaunch.Launchsite.Core;
 
 public class Minecraft
 {
-    readonly Dictionary<string, string> args = new();
-    bool disableChat;
-    bool disableMultiplayer;
-    string? jvmPath;
-    QuickPlayWorldType? quickPlayMode;
-    string? quickPlayPath;
-    string? quickPlaySingleplayerWorldName;
-    string? serverAddress;
-    uint serverPort;
-    MinecraftFolder sysFolder;
-    bool useDedicatedGraphics;
-    bool redirectOutput;
+    private readonly Dictionary<string, string> args = new();
+    private bool disableChat;
+    private bool disableMultiplayer;
+    private string? jvmPath;
+    private QuickPlayWorldType? quickPlayMode;
+    private string? quickPlayPath;
+    private string? quickPlaySingleplayerWorldName;
+    private bool redirectOutput;
+    private string? serverAddress;
+    private uint serverPort;
+    private MinecraftFolder sysFolder;
+    private bool useDedicatedGraphics;
+    private CommandLineSettings cmdLineSettings = CommandLineSettings.Default;
 
     public Minecraft(MinecraftVersion version, MinecraftFolder folder)
     {
@@ -32,6 +33,9 @@ public class Minecraft
     public MinecraftVersion Version { get; }
     public MinecraftFolder Folder { get; }
     public List<string> StandardOutput { get; } = [];
+    public string? JvmPath => jvmPath;
+    public string LibrariesFolderPath => args["library_directory"];
+    public string NativesFolderPath => args["natives_directory"];
     public event Action<string> OnStandardOutputLineReceived;
 
     public Minecraft WithSystemFolder(MinecraftFolder systemFolder)
@@ -59,6 +63,13 @@ public class Minecraft
     public Minecraft WithRedirectOutput(bool redirectOutput)
     {
         this.redirectOutput = redirectOutput;
+
+        return this;
+    }
+    
+    public Minecraft WithCommandLineSettings(CommandLineSettings settings)
+    {
+        cmdLineSettings = settings;
 
         return this;
     }
@@ -144,28 +155,22 @@ public class Minecraft
         return this;
     }
 
-    void ReadOutput(Process process)
+    private void ReadOutput(Process process)
     {
         while (!process.HasExited)
         {
             string? line = process.StandardOutput.ReadLine();
             if (line == null) break;
-            
+
             StandardOutput.Add(line);
             OnStandardOutputLineReceived?.Invoke(line);
         }
-        
+
         StandardOutput.Add($"Minecraft exited with code {process.ExitCode}");
     }
 
-    public Process Run()
+    string BuildArgs()
     {
-        string jvm = jvmPath ?? sysFolder.GetJvm(Version.JavaVersion!.Component);
-
-        if (Version.Arguments == null) Version.Arguments = MinecraftVersion.ModelArguments.Default;
-
-        if (Version.Arguments.Jvm == null) Version.Arguments.Jvm = MinecraftVersion.ModelArguments.Default.Jvm;
-
         string builtArgs = Version.Arguments.Build(args, Version.MainClass);
 
         if (disableMultiplayer) builtArgs += " --disableMultiplayer";
@@ -201,6 +206,35 @@ public class Minecraft
             }
         }
 
+        builtArgs = cmdLineSettings.BuildArguments(builtArgs);
+
+        return builtArgs;
+    }
+
+    public Process Run()
+    {
+        string jvm = jvmPath ?? sysFolder.GetJvm(Version.JavaVersion!.Component);
+
+        if (Version.Arguments == null) Version.Arguments = MinecraftVersion.ModelArguments.Default;
+
+        if (Version.Arguments.Jvm == null) Version.Arguments.Jvm = MinecraftVersion.ModelArguments.Default.Jvm;
+
+        string builtArgs = BuildArgs();
+        bool addClassPathToEnv = false;
+
+        int commandLineLength = builtArgs.Length + jvm.Length + 1;
+        if (commandLineLength > 32768)
+        {
+            string cp = args["classpath"];
+            args["classpath"] = "--";
+            
+            // Rebuild the arguments line with the new classpath
+            builtArgs = BuildArgs().Replace("-cp -- ", "");
+            
+            args["classpath"] = cp;
+            addClassPathToEnv = true;
+        }
+
         ProcessStartInfo info = new()
         {
             Arguments = builtArgs,
@@ -210,14 +244,16 @@ public class Minecraft
             RedirectStandardError = true,
             RedirectStandardOutput = redirectOutput
         };
-        
+        if (addClassPathToEnv) info.EnvironmentVariables.Add("CLASSPATH", args["classpath"]);
 
         if (useDedicatedGraphics)
+        {
             if (OperatingSystem.IsLinux() && File.Exists("/usr/bin/prime-run"))
             {
                 info.Arguments = $"{info.FileName} {info.Arguments}";
                 info.FileName = "/usr/bin/prime-run";
             }
+        }
 
         // An attempt to fix the "java opens in TextEdit" bug
         if (OperatingSystem.IsMacOS()) File.SetUnixFileMode(info.FileName, UnixFileMode.UserExecute);
