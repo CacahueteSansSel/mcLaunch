@@ -1,19 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
+using mcLaunch.Core.Core;
 using mcLaunch.Utilities;
 
 namespace mcLaunch.Views.Popups;
 
 public partial class SelectSkinPopup : UserControl
 {
-    Action<string, string> _skinSelectedCallback;
+    Action<string, string, SkinType> _skinSelectedCallback;
     private string _skinFilename;
+    private SkinType _type = SkinType.Classic;
+
+    public SelectSkinPopup()
+    {
+        InitializeComponent();
+    }
     
-    public SelectSkinPopup(Action<string, string> skinSelectedCallback)
+    public SelectSkinPopup(Action<string, string, SkinType> skinSelectedCallback)
     {
         InitializeComponent();
         
@@ -22,11 +30,11 @@ public partial class SelectSkinPopup : UserControl
 
     private void OKButtonClicked(object? sender, RoutedEventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(SkinNameInputText.Text))
+        if (string.IsNullOrWhiteSpace(SkinNameInputText.Text) || string.IsNullOrWhiteSpace(_skinFilename))
             return;
         
         Navigation.HidePopup();
-        _skinSelectedCallback?.Invoke(_skinFilename, SkinNameInputText.Text);
+        _skinSelectedCallback?.Invoke(_skinFilename, SkinNameInputText.Text, _type);
     }
 
     private async void SelectFileButtonClicked(object? sender, RoutedEventArgs e)
@@ -42,18 +50,51 @@ public partial class SelectSkinPopup : UserControl
                 new FilePickerFileType("PNG files") { Patterns = ["*.png"] }
             ]
         });
-        
-        if (list.Count == 0) return;
+
+        if (list.Count == 0)
+        {
+            ErrorText.Text = "";
+            AddButton.IsEnabled = false;
+            
+            return;
+        }
         
         IStorageFile file = list[0];
         _skinFilename = file.Path.AbsolutePath;
         
-        SkinPreview.Texture = new Bitmap(file.Path.AbsolutePath);
+        Bitmap skin = new(file.Path.AbsolutePath);
+        
+        if (skin.PixelSize.Width != 64 || skin.PixelSize.Height != 64)
+        {
+            ErrorText.Text = "Skin must be 64x64 pixels";
+            AddButton.IsEnabled = false;
+            return;
+        }
+        
+        ErrorText.Text = "";
+        AddButton.IsEnabled = !string.IsNullOrWhiteSpace(SkinNameInputText.Text);
+        
+        SkinPreview.Texture = skin.CreateScaledBitmap(new PixelSize(512, 512), BitmapInterpolationMode.None);
+        skin.Dispose();
+        
         SkinPreview.InvalidateVisual();
     }
 
     private void CancelButtonClicked(object? sender, RoutedEventArgs e)
     {
         Navigation.HidePopup();
+    }
+
+    private void SkinTypeChanged(object? sender, RoutedEventArgs e)
+    {
+        _type = SlimSkinTypeRadioButton.IsChecked!.Value ? SkinType.Slim : SkinType.Classic;
+
+        SkinPreview.Type = _type;
+        SkinPreview.InvalidateVisual();
+    }
+
+    private void SkinNameTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        AddButton.IsEnabled = !string.IsNullOrWhiteSpace(SkinNameInputText.Text);
     }
 }

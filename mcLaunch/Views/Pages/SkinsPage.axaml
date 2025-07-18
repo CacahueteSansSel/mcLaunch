@@ -10,9 +10,8 @@
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Panel>
-        <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}" />
-        <StackPanel>
-            <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">
+        <DockPanel>
+            <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal" DockPanel.Dock="Top">
                 <views:BackButton />
                 <TextBlock Classes="title" Margin="15 0 0 0" FontSize="30">Your Skins</TextBlock>
             </StackPanel>
@@ -32,6 +31,6 @@
                     </WrapPanel>
                 </ScrollViewer>
             </DockPanel>
-        </StackPanel>
+        </DockPanel>
     </Panel>
 </UserControl>

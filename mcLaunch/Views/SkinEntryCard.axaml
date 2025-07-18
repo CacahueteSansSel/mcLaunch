@@ -19,17 +19,17 @@
             <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLighter}" />
         </Style>
     </UserControl.Styles>
-        <Panel Margin="20 20 20 20">
-            <DockPanel>
-                <TextBlock x:Name="SkinNameText" DockPanel.Dock="Bottom" FontSize="15" HorizontalAlignment="Left"
-                           Classes="light" Margin="0 0 0 9" TextWrapping="Wrap" Text="{Binding TextureKey,FallbackValue='Skin Name'}" />
-                <Border ClipToBounds="True" CornerRadius="4" RenderOptions.BitmapInterpolationMode="None">
-                    <controls:SkinPreview x:Name="SkinPreview" RenderOptions.BitmapInterpolationMode="None" Width="160" Height="160" Texture="/resources/skins/steve.png" />
-                </Border>
+        <DockPanel Margin="20 20 20 20">
+            <DockPanel VerticalAlignment="Bottom" Height="40" DockPanel.Dock="Bottom">
+                <Button x:Name="PlayButton" DockPanel.Dock="Right" ToolTip.Tip="Apply skin" Classes="transparent-green"
+                        HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0" Click="ApplySkinButtonClicked">
+                    <Image Source="{SvgImage /resources/icons/upload.svg}" Width="14" Height="14" />
+                </Button>
+                <TextBlock x:Name="SkinNameText" VerticalAlignment="Center" FontSize="15" HorizontalAlignment="Left"
+                           Classes="light" Margin="0 0 0 0" TextWrapping="Wrap" MaxLines="2" Text="{Binding TextureKey,FallbackValue='Skin Name'}" />
             </DockPanel>
-            <Button x:Name="PlayButton" ToolTip.Tip="Apply skin" Classes="transparent-green"
-                    HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0" Click="ApplySkinButtonClicked">
-                <Image Source="{SvgImage /resources/icons/upload.svg}" Width="14" Height="14" />
-            </Button>
-        </Panel>
+            <Border ClipToBounds="True" CornerRadius="4" RenderOptions.BitmapInterpolationMode="None">
+                <controls:SkinPreview x:Name="SkinPreview" RenderOptions.BitmapInterpolationMode="None" Width="160" Height="160" Texture="/resources/skins/steve.png" />
+            </Border>
+        </DockPanel>
 </UserControl>

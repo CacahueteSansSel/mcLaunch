@@ -1,6 +1,7 @@
 ﻿using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Managers;
@@ -19,12 +20,12 @@ public partial class SkinEntryCard : UserControl
     public SkinEntryCard()
     {
         InitializeComponent();
+        
+        SkinNameText.TextTrimming = TextTrimming.CharacterEllipsis;
     }
 
-    public SkinEntryCard(ManifestSkin skin)
+    public SkinEntryCard(ManifestSkin skin) : this()
     {
-        InitializeComponent();
-
         Skin = skin;
         DataContext = skin;
         
@@ -34,6 +35,7 @@ public partial class SkinEntryCard : UserControl
     async void LoadSkinAsync()
     {
         SkinPreview.Texture = Skin.Bitmap;
+        SkinPreview.Type = Skin.Type;
         SkinPreview.InvalidateVisual();
 
         SkinNameText.Text = Skin.Name;

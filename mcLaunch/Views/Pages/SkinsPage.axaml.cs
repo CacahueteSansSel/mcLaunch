@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -54,19 +55,23 @@ public partial class SkinsPage : UserControl, ITopLevelPageControl
         if (profile.Skins.Length == 0) return;
 
         MinecraftProfile.ModelSkin skin = profile.Skins[0];
+        SkinType type = Enum.Parse<SkinType>(skin.Variant, true);
+        
         CurrentSkinPreview.Texture = (await BitmapUtilities.LoadBitmapAsync(skin.Url, 512, BitmapInterpolationMode.None))!;
+        CurrentSkinPreview.Type = type;
+        
         CurrentSkinPreview.InvalidateVisual();
     }
 
     private void AddSkinButtonClicked(object? sender, RoutedEventArgs e)
     {
-        Navigation.ShowPopup(new SelectSkinPopup(async (filename, name) =>
+        Navigation.ShowPopup(new SelectSkinPopup(async (filename, name, type) =>
         {
             Navigation.ShowPopup(new StatusPopup("Uploading skin...", "Uploading the skin to Minecraft..."));
             StatusPopup.Instance.StatusIndeterminate = true;
             StatusPopup.Instance.Status = "Uploading...";
             
-            await SkinsManager.AddSkin(filename, name, SkinType.Classic);
+            await SkinsManager.AddSkin(filename, name, type);
             
             StatusPopup.Instance.Status = "Loading local skins...";
             LoadLocalSkins();
