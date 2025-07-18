@@ -28,7 +28,7 @@ public partial class SettingElement : UserControl
 
     private void BooleanCheckboxChecked(object? sender, RoutedEventArgs e)
     {
-        Setting.Property.SetValue(Utilities.Settings.Instance, !BooleanCheckbox.IsChecked!.Value);
+        Setting.Property.SetValue(Utilities.Settings.Instance, BooleanCheckbox.IsChecked!.Value);
         Utilities.Settings.Save();
 
         MainWindow.Instance.TopBar.RefreshButtons();
