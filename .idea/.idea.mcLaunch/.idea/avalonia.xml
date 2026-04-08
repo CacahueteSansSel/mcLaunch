@@ -92,6 +92,7 @@
         <entry key="mcLaunch/Views/Popups/OptionalModsPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/ScreenshotPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/SelectBoxPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Popups/SelectSkinPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/StatusPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/UpdateChangelogPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/VersionSelectionPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
