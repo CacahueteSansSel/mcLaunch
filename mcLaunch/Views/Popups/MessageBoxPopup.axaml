@@ -2,9 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:popups="clr-namespace:mcLaunch.Views.Popups"
              mc:Ignorable="d" d:DesignWidth="600"
              Width="600" Height="300"
-             x:Class="mcLaunch.Views.Popups.MessageBoxPopup">
+             x:Class="mcLaunch.Views.Popups.MessageBoxPopup"
+             x:DataType="popups:MessageBoxPopup+Data">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
@@ -15,12 +17,12 @@
                 <Image x:Name="StatusWarning" IsVisible="False" Source="{SvgImage /resources/status/warning.svg}" />
                 <Image x:Name="StatusSuccess" IsVisible="False" Source="{SvgImage /resources/status/success.svg}" />
             </Panel>
-            <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+            <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25" Text="{CompiledBinding Title}" TextTrimming="CharacterEllipsis" />
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button DockPanel.Dock="Right" Classes="primary" Click="OKButtonClicked">OK</Button>
                 <Panel />
             </DockPanel>
-            <TextBlock DockPanel.Dock="Top" Margin="0 20 0 0" TextWrapping="WrapWithOverflow" Text="{Binding Text}" />
+            <TextBlock DockPanel.Dock="Top" Margin="0 20 0 0" TextWrapping="WrapWithOverflow" Text="{CompiledBinding Text}" />
         </DockPanel>
     </Border>
 </UserControl>

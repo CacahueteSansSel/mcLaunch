@@ -2,9 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:boxes="clr-namespace:mcLaunch.Core.Boxes;assembly=mcLaunch.Core"
+             xmlns:popups="clr-namespace:mcLaunch.Views.Popups"
              mc:Ignorable="d"
              Width="450" Height="500"
-             x:Class="mcLaunch.Views.Popups.SelectBoxPopup">
+             x:Class="mcLaunch.Views.Popups.SelectBoxPopup"
+             x:DataType="popups:SelectBoxPopup+Data">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
@@ -20,10 +23,10 @@
                 <Panel />
             </DockPanel>
             <DockPanel DockPanel.Dock="Top" Margin="0 5 0 5">
-                <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" Watermark="Search a box"
+                <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" PlaceholderText="Search a box"
                          TextChanged="SearchTextBoxTextChanged" />
             </DockPanel>
-            <ListBox x:Name="ContentList" SelectionMode="Single" ItemsSource="{Binding .}"
+            <ListBox x:Name="ContentList" SelectionMode="Single" ItemsSource="{CompiledBinding LoadedBoxes}"
                      SelectionChanged="ContentSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
@@ -32,18 +35,18 @@
                     </Style>
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate DataType="boxes:Box">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Image Source="{Binding Manifest.Icon.IconSmall}" Width="50" Height="50" />
+                            <Image Source="{CompiledBinding Manifest.Icon.IconSmall}" Width="50" Height="50" />
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Classes="title" Text="{Binding Manifest.Name}" />
+                                <TextBlock Classes="title" Text="{CompiledBinding Manifest.Name}" />
                                 <StackPanel Orientation="Horizontal" Spacing="3">
                                     <TextBlock FontSize="12">by</TextBlock>
-                                    <TextBlock FontSize="12" Classes="title" Text="{Binding Manifest.Author}" />
+                                    <TextBlock FontSize="12" Classes="title" Text="{CompiledBinding Manifest.Author}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Spacing="5">
-                                    <TextBlock Classes="title" Text="{Binding Manifest.Version}" />
-                                    <TextBlock Classes="light" Text="{Binding Manifest.ModLoader.Name}" />
+                                    <TextBlock Classes="title" Text="{CompiledBinding Manifest.Version}" />
+                                    <TextBlock Classes="light" Text="{CompiledBinding Manifest.ModLoader.Name}" />
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>

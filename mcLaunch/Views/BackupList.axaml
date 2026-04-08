@@ -3,7 +3,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:boxes="clr-namespace:mcLaunch.Core.Boxes;assembly=mcLaunch.Core"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="views:BackupList+Data"
              x:Class="mcLaunch.Views.BackupList">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
@@ -14,7 +16,7 @@
     </UserControl.Styles>
     <Panel>
         <StackPanel Orientation="Vertical">
-            <ListBox x:Name="BackupsList" SelectionMode="Single" ItemsSource="{Binding Backups}"
+            <ListBox x:Name="BackupsList" SelectionMode="Single" ItemsSource="{CompiledBinding Backups}"
                      SelectionChanged="BackupSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
@@ -23,24 +25,24 @@
                     </Style>
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate DataType="boxes:BoxBackup">
                         <DockPanel>
                             <Image Source="/resources/default_backup_logo.png" DockPanel.Dock="Left" Width="40"
                                    Height="40" />
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" />
                             <StackPanel Margin="10 0 10 0" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Classes="title" Text="{Binding Name}" />
-                                    <views:Badge IsVisible="{Binding IsCompleteBackup}" Margin="5 0 0 0"
+                                    <TextBlock Classes="title" Text="{CompiledBinding Name}" />
+                                    <views:Badge IsVisible="{CompiledBinding IsCompleteBackup}" Margin="5 0 0 0"
                                                  Text="Complete Box Backup" />
-                                    <views:Badge IsVisible="{Binding IsPartialBackup}" Margin="5 0 0 0"
+                                    <views:Badge IsVisible="{CompiledBinding IsPartialBackup}" Margin="5 0 0 0"
                                                  Text="Partial Box Backup" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="light" FontSize="12" Margin="0 0 0 0"
-                                               Text="{Binding CreationTime}" />
+                                               Text="{CompiledBinding CreationTime}" />
                                     <TextBlock Classes="light" FontSize="12" Margin="10 0 0 0"
-                                               Text="{Binding Filename}" Opacity="0.5" />
+                                               Text="{CompiledBinding Filename}" Opacity="0.5" />
                                 </StackPanel>
                             </StackPanel>
                         </DockPanel>

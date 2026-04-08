@@ -33,7 +33,7 @@ public partial class ContentsSubControl : SubControl
 
         ContentText.Text = ContentNamePlural.ToUpper();
         ContentCountText.Text = string.Empty;
-        SearchBox.Watermark = $"Search {ContentNamePlural.ToLower()}";
+        SearchBox.PlaceholderText = $"Search {ContentNamePlural.ToLower()}";
     }
 
     public override string Title => ContentNamePlural.ToUpper();

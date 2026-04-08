@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:boxDetails="clr-namespace:mcLaunch.Views.Pages.BoxDetails"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.BoxDetails.DirectJarModsSubControl">
     <UserControl.Styles>
@@ -42,18 +43,18 @@
                     </Style>
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="boxDetails:DirectJarModsSubControl+DirectJarModEntry">
                         <DockPanel>
                             <Border DockPanel.Dock="Left" Width="40" Height="40" CornerRadius="4" ClipToBounds="True">
                                 <Image Source="/resources/default_directjar_logo.png" />
                             </Border>
                             <StackPanel Margin="10 0 10 0" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Classes="title" Text="{Binding Name}" />
+                                    <TextBlock Classes="title" Text="{CompiledBinding Name}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal"
                                             Opacity="0.5">
-                                    <TextBlock Classes="light" FontSize="12" Text="{Binding Filename}" />
+                                    <TextBlock Classes="light" FontSize="12" Text="{CompiledBinding Filename}" />
                                 </StackPanel>
                             </StackPanel>
                         </DockPanel>

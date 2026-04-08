@@ -10,7 +10,6 @@
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Panel>
-        <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}" />
         <ScrollViewer>
             <StackPanel>
                 <StackPanel Margin="0 100 0 0" Width="888" Orientation="Horizontal">

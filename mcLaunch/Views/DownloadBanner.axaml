@@ -2,8 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="450"
-             x:Class="mcLaunch.Views.DownloadBanner">
+             x:Class="mcLaunch.Views.DownloadBanner"
+             x:DataType="views:DownloadBanner+Data">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
@@ -11,23 +13,23 @@
             Background="{DynamicResource BackgroundMiddle}" DockPanel.Dock="Right"
             ClipToBounds="True">
         <Panel>
-            <ProgressBar x:Name="DBBar" MinWidth="0" Height="43" Opacity="0.15" Value="{Binding Progress}" />
+            <ProgressBar x:Name="DBBar" MinWidth="0" Height="43" Opacity="0.15" Value="{CompiledBinding Progress}" />
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <StackPanel Orientation="Vertical" Width="40" VerticalAlignment="Center" Spacing="4">
                     <Image Width="16" Height="16" Source="{SvgImage /resources/icons/download.svg}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding ResourceName, FallbackValue='Downloaded File Name'}" TextTrimming="CharacterEllipsis" Margin="0 0 15 0" FontSize="12">-</TextBlock>
+                    <TextBlock Text="{CompiledBinding ResourceName, FallbackValue='Downloaded File Name'}" TextTrimming="CharacterEllipsis" Margin="0 0 15 0" FontSize="12">-</TextBlock>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding ResourceDetailsText, FallbackValue='Resource Details'}" TextTrimming="CharacterEllipsis" Margin="0 0 15 0" FontSize="10">-</TextBlock>
+                        <TextBlock Text="{CompiledBinding ResourceDetailsText, FallbackValue='Resource Details'}" TextTrimming="CharacterEllipsis" Margin="0 0 15 0" FontSize="10">-</TextBlock>
                         <TextBlock x:Name="FileNameText" IsVisible="False" Opacity="0.75"
-                                   Text="{Binding ResourceFileText, FallbackValue='Resource File'}" TextTrimming="CharacterEllipsis" Margin="0 0 15 0" FontSize="10">
+                                   Text="{CompiledBinding ResourceFileText, FallbackValue='Resource File'}" TextTrimming="CharacterEllipsis" Margin="0 0 15 0" FontSize="10">
                             -
                         </TextBlock>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
-            <TextBlock Text="{Binding ResourceCount, FallbackValue='1/5'}" x:Name="ResourceCountText" TextAlignment="Right"
+            <TextBlock Text="{CompiledBinding ResourceCount, FallbackValue='1/5'}" x:Name="ResourceCountText" TextAlignment="Right"
                        VerticalAlignment="Bottom" Classes="title"
                        FontSize="20"
                        Margin="0 0 5 3" Opacity="0.2" />

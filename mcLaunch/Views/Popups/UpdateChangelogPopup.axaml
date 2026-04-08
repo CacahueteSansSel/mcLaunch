@@ -3,9 +3,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:avalonia="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
+             xmlns:models="clr-namespace:mcLaunch.GitHub.Models;assembly=mcLaunch.GitHub"
              mc:Ignorable="d" d:DesignWidth="600"
              Width="450" Height="500"
-             x:Class="mcLaunch.Views.Popups.UpdateChangelogPopup">
+             x:Class="mcLaunch.Views.Popups.UpdateChangelogPopup"
+             x:DataType="models:GitHubRelease">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
@@ -15,7 +17,7 @@
                 <TextBlock x:Name="TitleText" Classes="title" TextWrapping="Wrap" FontSize="25">New update available !</TextBlock>
                 <StackPanel Orientation="Horizontal" Spacing="10" Height="35">
                     <Image Source="/resources/logo_big.png" Height="15" VerticalAlignment="Center" />
-                    <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" Text="{Binding Name}" />
+                    <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" Text="{CompiledBinding Name}" />
                 </StackPanel>
             </StackPanel>
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
@@ -25,7 +27,7 @@
             </DockPanel>
             <Border Margin="0 5 0 0" Padding="5" Classes="frame-without-shadow"
                     Background="{DynamicResource BackgroundDarker}">
-                <avalonia:MarkdownScrollViewer x:Name="MarkdownArea" Markdown="{Binding MarkdownBody}" />
+                <avalonia:MarkdownScrollViewer x:Name="MarkdownArea" Markdown="{CompiledBinding MarkdownBody}" />
             </Border>
         </DockPanel>
     </Border>

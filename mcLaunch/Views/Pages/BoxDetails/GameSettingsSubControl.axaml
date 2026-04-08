@@ -12,14 +12,14 @@
             <TextBlock Classes="title">Java Settings</TextBlock>
             <DockPanel Height="36">
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                    <TextBox x:Name="MinAllocatedRamInput" TextChanged="MinAllocatedRamInput_OnTextChanged" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Watermark="512"></TextBox>
+                    <TextBox x:Name="MinAllocatedRamInput" TextChanged="MinAllocatedRamInput_OnTextChanged" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" PlaceholderText="512"></TextBox>
                     <TextBlock VerticalAlignment="Center" Padding="5 0" Classes="title">MB</TextBlock>
                 </StackPanel>
                 <TextBlock VerticalAlignment="Center" Classes="light">Minimum Allocated RAM (-Xms)</TextBlock>
             </DockPanel>
             <DockPanel Height="36">
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                    <TextBox x:Name="MaxAllocatedRamInput" TextChanged="MaxAllocatedRamInput_OnTextChanged" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Watermark="4096"></TextBox>
+                    <TextBox x:Name="MaxAllocatedRamInput" TextChanged="MaxAllocatedRamInput_OnTextChanged" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" PlaceholderText="4096"></TextBox>
                     <TextBlock VerticalAlignment="Center" Padding="5 0" Classes="title">MB</TextBlock>
                 </StackPanel>
                 <TextBlock VerticalAlignment="Center" Classes="light">Maximum Allocated RAM (-Xmx)</TextBlock>

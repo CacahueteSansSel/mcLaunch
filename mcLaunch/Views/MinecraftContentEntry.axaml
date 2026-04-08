@@ -4,47 +4,49 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
              xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             xmlns:contents="clr-namespace:mcLaunch.Core.Contents;assembly=mcLaunch.Core"
              mc:Ignorable="d" d:DesignWidth="800"
-             x:Class="mcLaunch.Views.MinecraftContentEntry">
+             x:Class="mcLaunch.Views.MinecraftContentEntry"
+             x:DataType="contents:MinecraftContent">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <DockPanel>
         <Border DockPanel.Dock="Left" Width="40" Height="40" CornerRadius="4" ClipToBounds="True">
-            <Image asyncImageLoader:ImageLoader.Source="{Binding IconUrl}" />
+            <Image asyncImageLoader:ImageLoader.Source="{CompiledBinding IconUrl}" />
         </Border>
         <StackPanel Orientation="Vertical" VerticalAlignment="Center" DockPanel.Dock="Right" Margin="0 0 10 0">
             <StackPanel Orientation="Horizontal" Height="20" HorizontalAlignment="Right" Spacing="5"
-                        IsVisible="{Binding IsDownloadCountValid}">
+                        IsVisible="{CompiledBinding IsDownloadCountValid}">
                 <Image Source="{SvgImage /resources/icons/download.svg}" Height="14" />
-                <TextBlock Classes="title" Text="{Binding DownloadCountFormatted}" />
+                <TextBlock Classes="title" Text="{CompiledBinding DownloadCountFormatted}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Height="20" HorizontalAlignment="Right" Spacing="5"
-                        IsVisible="{Binding IsLastUpdatedValid}">
+                        IsVisible="{CompiledBinding IsLastUpdatedValid}">
                 <Image Source="{SvgImage /resources/icons/refresh.svg}" Height="14" />
-                <TextBlock Classes="title" Text="{Binding LastUpdatedFormatted}" />
+                <TextBlock Classes="title" Text="{CompiledBinding LastUpdatedFormatted}" />
             </StackPanel>
         </StackPanel>
         <StackPanel Margin="10 0 10 0" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Classes="title" VerticalAlignment="Center" Text="{Binding Name}" />
-                <Image Margin="5 0 0 0" Height="14" Source="{Binding Platform.Icon}"
+                <TextBlock Classes="title" VerticalAlignment="Center" Text="{CompiledBinding Name}" />
+                <Image Margin="5 0 0 0" Height="14" Source="{CompiledBinding Platform.Icon}"
                        VerticalAlignment="Center"
-                       ToolTip.Tip="{Binding Platform.Name}" ClipToBounds="True" />
+                       ToolTip.Tip="{CompiledBinding Platform.Name}" ClipToBounds="True" />
                 <StackPanel Orientation="Horizontal" Margin="5 2 0 0" Opacity="0.5"
                             VerticalAlignment="Center">
                     <TextBlock Classes="light" FontSize="12">by</TextBlock>
-                    <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{Binding Author}" />
+                    <TextBlock Classes="title" FontSize="12" Margin="5 0 0 0" Text="{CompiledBinding Author}" />
                 </StackPanel>
                 <views:Badge x:Name="InstalledBadge" IsVisible="False" VerticalAlignment="Center"
                              Margin="10 0 0 0" Text="Installed" />
                 <views:Badge x:Name="UpdateBadge" Margin="5 0 0 0" IsVisible="False" VerticalAlignment="Center"
                              Text="Update available" />
             </StackPanel>
-            <StackPanel IsVisible="{Binding !IsFilenameEmpty}" Orientation="Horizontal" Opacity="0.5">
-                <TextBlock Classes="light" FontSize="12" Text="{Binding Filename}" />
+            <StackPanel IsVisible="{CompiledBinding !IsFilenameEmpty}" Orientation="Horizontal" Opacity="0.5">
+                <TextBlock Classes="light" FontSize="12" Text="{CompiledBinding Filename}" />
             </StackPanel>
-            <TextBlock Classes="light" Text="{Binding ShortDescription}" Opacity="0.7" />
+            <TextBlock Classes="light" Text="{CompiledBinding ShortDescription}" Opacity="0.7" />
         </StackPanel>
     </DockPanel>
 </UserControl>

@@ -58,20 +58,20 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         foreach (PageSelector component in pageSelectors)
             component.IsVisible = false;
 
-        DataContext = new Data();
+        DataContext = new MinecraftContentListData();
     }
 
     public bool HideInstalledBadges { get; set; }
     public MinecraftContentType ContentType { get; set; }
     public bool HidePageSelector { get; set; }
-    public MinecraftContent[] Contents => ((Data)DataContext).Contents;
+    public MinecraftContent[] Contents => ((MinecraftContentListData)DataContext).Contents;
     public MinecraftContent[] SelectedContent => ContentList.SelectedItems!.Cast<MinecraftContent>().ToArray();
 
     public void OnContentAdded(MinecraftContent content)
     {
         Dispatcher.UIThread.Post(() =>
         {
-            Data ctx = (Data)DataContext;
+            MinecraftContentListData ctx = (MinecraftContentListData)DataContext;
 
             List<MinecraftContent> contents = new(ctx.Contents);
             contents.Add(content);
@@ -83,7 +83,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     {
         Dispatcher.UIThread.Post(() =>
         {
-            Data ctx = (Data)DataContext;
+            MinecraftContentListData ctx = (MinecraftContentListData)DataContext;
 
             ctx.Contents = ctx.Contents.Where(content => content.Id != contentId).ToArray();
         });
@@ -121,7 +121,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
     public void SetContents(MinecraftContent[] contents)
     {
-        Data ctx = (Data)DataContext;
+        MinecraftContentListData ctx = (MinecraftContentListData)DataContext;
 
         ctx.Contents = contents;
         list = contents.ToList();
@@ -132,7 +132,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
     public void SetQuery(string? query)
     {
-        Data ctx = (Data)DataContext;
+        MinecraftContentListData ctx = (MinecraftContentListData)DataContext;
         ctx.Contents = string.IsNullOrWhiteSpace(query)
             ? list.ToArray()
             : list.Where(mod => mod.MatchesQuery(query)).ToArray();
@@ -143,7 +143,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         if (lastBox == null) return;
 
         HidePageSelectors();
-        Data ctx = (Data)DataContext;
+        MinecraftContentListData ctx = (MinecraftContentListData)DataContext;
 
         foreach (MinecraftContent content in ctx.Contents)
         {
@@ -177,7 +177,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
     {
         SetLoadingCircle(true);
 
-        Data ctx = (Data)DataContext;
+        MinecraftContentListData ctx = (MinecraftContentListData)DataContext;
 
         ctx.Contents = await SearchContentsAsync(box, query);
 
@@ -191,7 +191,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
     private async Task<MinecraftContent[]> SearchContentsAsync(Box box, string query, bool resetPageCounter = true)
     {
-        Data ctx = (Data)DataContext;
+        MinecraftContentListData ctx = (MinecraftContentListData)DataContext;
 
         PaginatedResponse<MinecraftContent> mods = await ModPlatformManager.Platform
             .GetContentsAsync(ctx.Page, box, query, ContentType);
@@ -214,7 +214,7 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
         foreach (PageSelector component in pageSelectors)
             component.IsEnabled = false;
 
-        Data ctx = (Data)DataContext;
+        MinecraftContentListData ctx = (MinecraftContentListData)DataContext;
 
         ctx.Page = index;
         ctx.Contents = await SearchContentsAsync(lastBox, lastQuery, false);
@@ -245,29 +245,29 @@ public partial class MinecraftContentList : UserControl, IBoxEventListener
 
         base.OnUnloaded(e);
     }
+}
 
-    public class Data : ReactiveObject
+public class MinecraftContentListData : ReactiveObject
+{
+    private MinecraftContent[] contents;
+    private bool isMultipleSelection;
+    private int page;
+
+    public MinecraftContent[] Contents
     {
-        private MinecraftContent[] contents;
-        private bool isMultipleSelection;
-        private int page;
+        get => contents;
+        set => this.RaiseAndSetIfChanged(ref contents, value);
+    }
 
-        public MinecraftContent[] Contents
-        {
-            get => contents;
-            set => this.RaiseAndSetIfChanged(ref contents, value);
-        }
+    public int Page
+    {
+        get => page;
+        set => this.RaiseAndSetIfChanged(ref page, value);
+    }
 
-        public int Page
-        {
-            get => page;
-            set => this.RaiseAndSetIfChanged(ref page, value);
-        }
-
-        public bool IsMultipleSelection
-        {
-            get => isMultipleSelection;
-            set => this.RaiseAndSetIfChanged(ref isMultipleSelection, value);
-        }
+    public bool IsMultipleSelection
+    {
+        get => isMultipleSelection;
+        set => this.RaiseAndSetIfChanged(ref isMultipleSelection, value);
     }
 }

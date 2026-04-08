@@ -108,7 +108,7 @@
             <Border ClipToBounds="True">
                 <Panel Width="155" Height="155">
                     <Border Background="#66151515" CornerRadius="2" ClipToBounds="True">
-                        <Image x:Name="BoxIcon" Stretch="Uniform" Source="{Binding Icon.IconLarge}" />
+                        <Image x:Name="BoxIcon" Stretch="Uniform" Source="{CompiledBinding Icon.IconLarge}" />
                     </Border>
                     <Button x:Name="PlayButton" IsVisible="False" ToolTip.Tip="Launch box" Classes="transparent-green"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="PlayButtonClicked">
@@ -120,10 +120,10 @@
                     </Button>
                 </Panel>
             </Border>
-            <TextBlock x:Name="BoxNameText" TextTrimming="CharacterEllipsis" FontSize="20" Classes="title" Margin="0 5 0 0" Text="{Binding Name}" />
+            <TextBlock x:Name="BoxNameText" TextTrimming="CharacterEllipsis" FontSize="20" Classes="title" Margin="0 5 0 0" Text="{CompiledBinding Name}" />
             <StackPanel Orientation="Horizontal" Margin="0 0 0 3">
                 <TextBlock FontSize="12" Classes="light" Margin="0 0 0 0">by</TextBlock>
-                <TextBlock x:Name="AuthorText" FontSize="12" Classes="title" Margin="5 0 0 0" Text="{Binding Author}" />
+                <TextBlock x:Name="AuthorText" FontSize="12" Classes="title" Margin="5 0 0 0" Text="{CompiledBinding Author}" />
             </StackPanel>
             <StackPanel x:Name="Badges" Orientation="Horizontal" Spacing="5">
                 <views:Badge x:Name="VersionBadge" />

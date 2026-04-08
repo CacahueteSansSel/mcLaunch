@@ -130,7 +130,7 @@ public partial class DownloadBanner : UserControl
         });
     }
 
-    private class Data : ReactiveObject
+    public class Data : ReactiveObject
     {
         private int progress;
         private string resourceCount;

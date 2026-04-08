@@ -8,7 +8,6 @@
                 </Border>
                 <Border Classes="frame">
                     <StackPanel Orientation="Horizontal">
-                        <CaptionButtons />
                         <Button Classes="primary" Margin="5">Primary !</Button>
                         <Button Classes="secondary" Margin="5">Secondary !</Button>
                         <Button Classes="red" Margin="5">Red !</Button>
@@ -31,21 +30,6 @@
             </StackPanel>
         </Border>
     </Design.PreviewWith>
-
-    <Style Selector="CaptionButtons">
-        <Setter Property="MinHeight" Value="50" />
-        <Setter Property="Height" Value="50" />
-    </Style>
-
-    <Style Selector="CaptionButtons#PART_FullScreenButton">
-        <Setter Property="MinHeight" Value="50" />
-        <Setter Property="Height" Value="50" />
-    </Style>
-
-    <Style Selector="CaptionButtons#PART_CloseButton">
-        <Setter Property="Background" Value="#c42b1c" />
-        <Setter Property="BorderBrush" Value="#c42b1c" />
-    </Style>
 
     <Style Selector="ProgressBar:horizontal">
         <Setter Property="Foreground" Value="{DynamicResource DefaultAccent}" />
@@ -126,14 +110,14 @@
         <Setter Property="Background" Value="{DynamicResource BackgroundDarkest}" />
     </Style>
 
-    <Style Selector="TextBox:pointerover /template/ TextBlock#PART_Watermark">
+    <Style Selector="TextBox:pointerover /template/ TextBlock#PART_PlaceholderText">
         <Setter Property="Foreground" Value="{DynamicResource TextControlPlaceholderForegroundPointerOver}" />
     </Style>
 
     <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
         <Setter Property="Background" Value="{DynamicResource BackgroundDarker}" />
         <Setter Property="BorderBrush" Value="{DynamicResource DefaultAccent}" />
-        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThicknessFocused}" />
+        <Setter Property="BorderThickness" Value="2" />
     </Style>
 
     <Style Selector="TextBox:pressed /template/ ContentPresenter">
@@ -143,7 +127,7 @@
 
     <Style Selector="TextBox /template/ Border#PART_BorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource BackgroundLightest}" />
-        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThicknessFocused}" />
+        <Setter Property="BorderThickness" Value="2" />
     </Style>
 
     <Style Selector="TextBox">

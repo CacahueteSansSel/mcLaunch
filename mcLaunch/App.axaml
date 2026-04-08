@@ -1,8 +1,10 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mcLaunch="clr-namespace:mcLaunch"
              x:Class="mcLaunch.App"
              Name="mcLaunch"
-             RequestedThemeVariant="Dark">
+             RequestedThemeVariant="Dark"
+             x:DataType="mcLaunch:App+AppDataContext">
     <Application.Styles>
         <FluentTheme>
             <FluentTheme.Palettes>
@@ -33,7 +35,7 @@
     </Application.Resources>
     <NativeMenu.Menu>
         <NativeMenu>
-            <NativeMenuItem Header="About mcLaunch" Command="{Binding AboutCommand}" />
+            <NativeMenuItem Header="About mcLaunch" Command="{CompiledBinding AboutCommand}" />
         </NativeMenu>
     </NativeMenu.Menu>
 </Application>

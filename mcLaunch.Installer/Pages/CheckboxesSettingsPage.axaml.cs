@@ -12,23 +12,13 @@ public partial class CheckboxesSettingsPage : InstallerPage
         RegisterProgramListCheckbox.IsChecked = MainWindow.Instance.Parameters.RegisterInApplicationList;
     }
 
-    private void DesktopShortcutCheckbox_OnChecked(object? sender, RoutedEventArgs e)
+    private void DesktopShortcutCheckbox_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        MainWindow.Instance.Parameters.PlaceShortcutOnDesktop = true;
+        MainWindow.Instance.Parameters.RegisterInApplicationList = DesktopShortcutCheckbox.IsChecked!.Value;
     }
 
-    private void DesktopShortcutCheckbox_OnUnchecked(object? sender, RoutedEventArgs e)
+    private void RegisterProgramListCheckbox_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        MainWindow.Instance.Parameters.PlaceShortcutOnDesktop = false;
-    }
-
-    private void RegisterProgramListCheckbox_OnChecked(object? sender, RoutedEventArgs e)
-    {
-        MainWindow.Instance.Parameters.RegisterInApplicationList = true;
-    }
-
-    private void RegisterProgramListCheckbox_OnUnchecked(object? sender, RoutedEventArgs e)
-    {
-        MainWindow.Instance.Parameters.RegisterInApplicationList = false;
+        MainWindow.Instance.Parameters.RegisterInApplicationList = RegisterProgramListCheckbox.IsChecked!.Value;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia;
+using Avalonia.Logging;
 
 namespace mcLaunch.Installer;
 
@@ -19,5 +20,5 @@ internal class Program
     public static AppBuilder BuildAvaloniaApp() =>
         AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .LogToTrace();
+            .LogToTrace(LogEventLevel.Warning);
 }

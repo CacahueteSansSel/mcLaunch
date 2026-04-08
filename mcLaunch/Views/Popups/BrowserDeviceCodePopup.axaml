@@ -3,9 +3,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:auth="clr-namespace:mcLaunch.Launchsite.Auth;assembly=mcLaunch.Launchsite"
              mc:Ignorable="d" d:DesignWidth="600"
              Width="600" Height="300"
-             x:Class="mcLaunch.Views.Popups.BrowserDeviceCodePopup">
+             x:Class="mcLaunch.Views.Popups.BrowserDeviceCodePopup"
+             x:DataType="auth:BrowserLoginCallbackParameters">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
 
@@ -45,9 +47,9 @@
             </DockPanel>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock DockPanel.Dock="Top" Classes="title appears" FontSize="30" Margin="0 0 0 0"
-                           TextAlignment="Center" TextWrapping="WrapWithOverflow" Text="{Binding Code}" />
+                           TextAlignment="Center" TextWrapping="WrapWithOverflow" Text="{CompiledBinding Code}" />
                 <TextBlock DockPanel.Dock="Top" ClipToBounds="True" Margin="0 0 0 0" TextAlignment="Center"
-                           TextWrapping="WrapWithOverflow" Text="{Binding Message}" />
+                           TextWrapping="WrapWithOverflow" Text="{CompiledBinding Message}" />
             </StackPanel>
         </DockPanel>
     </Border>

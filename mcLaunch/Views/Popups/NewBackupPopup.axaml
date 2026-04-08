@@ -19,7 +19,7 @@
                 </StackPanel>
                 <StackPanel Margin="20 0 0 0" Orientation="Vertical">
                     <TextBlock Classes="light" Margin="0 0 0 3">Backup Name</TextBlock>
-                    <TextBox x:Name="BackupNameTb" Watermark="Name" UseFloatingWatermark="False" />
+                    <TextBox x:Name="BackupNameTb" PlaceholderText="Name" UseFloatingPlaceholder="False" />
                     <TextBlock Classes="light" Margin="0 20 0 3">Backup Type</TextBlock>
                     <RadioButton x:Name="CompleteBackupRadioButton" IsChecked="True">
                         <StackPanel VerticalAlignment="Top">

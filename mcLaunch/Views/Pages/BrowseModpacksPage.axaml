@@ -31,7 +31,7 @@
                                         Click="SearchButtonClicked">
                                     <Image Width="16" Height="16" Source="{SvgImage /resources/icons/search.svg}" />
                                 </Button>
-                                <TextBox x:Name="SearchTextboxInput" Watermark="Search"
+                                <TextBox x:Name="SearchTextboxInput" PlaceholderText="Search"
                                          VerticalContentAlignment="Center" />
                             </DockPanel>
                             <views:PageSelector x:Name="TopPageSelector" HorizontalAlignment="Center" Margin="0 10 0 0" />

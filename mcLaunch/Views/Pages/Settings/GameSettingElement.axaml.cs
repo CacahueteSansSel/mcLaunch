@@ -36,18 +36,6 @@ public partial class GameSettingElement : UserControl
     public Box Box { get; }
     public string SettingKey { get; }
 
-    private void BooleanCheckboxChecked(object? sender, RoutedEventArgs e)
-    {
-        Box.Options[SettingKey] = true;
-        Box.Options.Save();
-    }
-
-    private void BooleanCheckboxUnchecked(object? sender, RoutedEventArgs e)
-    {
-        Box.Options[SettingKey] = false;
-        Box.Options.Save();
-    }
-
     private void IntFloatSliderPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property.Name == "Value")
@@ -56,5 +44,11 @@ public partial class GameSettingElement : UserControl
                 Box.Options[SettingKey] is int ? (int)IntFloatSlider.Value : IntFloatSlider.Value;
             Box.Options.Save();
         }
+    }
+
+    private void BooleanCheckbox_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        Box.Options[SettingKey] = BooleanCheckbox.IsChecked;
+        Box.Options.Save();
     }
 }

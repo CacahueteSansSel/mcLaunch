@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -25,7 +26,7 @@ public partial class NbtEditorWindow : Window
 
         if (Design.IsDesignMode) Load("level.dat");
 
-        DataContext = new NbtEditorWindowDataContext(null);
+        DataContext = new Data([]);
         UpdateButtons();
     }
 
@@ -57,7 +58,7 @@ public partial class NbtEditorWindow : Window
         TagNode rootNode = GetNodeForTag(root);
         rootNode.Name = name;
         nodes.Add(rootNode);
-        DataContext = nodes;
+        DataContext = new Data(nodes.ToArray());
     }
 
     private TagNode GetNodeForTag(Tag tag)
@@ -487,6 +488,16 @@ public partial class NbtEditorWindow : Window
         {
             Parent = parent;
             return this;
+        }
+    }
+
+    public class Data
+    {
+        public TagNode[] Nodes { get; set; }
+
+        public Data(TagNode[] nodes)
+        {
+            Nodes = nodes;
         }
     }
 }

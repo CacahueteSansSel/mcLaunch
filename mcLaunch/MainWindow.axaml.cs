@@ -35,8 +35,8 @@ public partial class MainWindow : Window
             // apparently
             TopHeaderBar.IsVisible = false;
 
-        if (OperatingSystem.IsMacOS())
-            ExtendClientAreaChromeHints |= ExtendClientAreaChromeHints.OSXThickTitleBar;
+        //if (OperatingSystem.IsMacOS())
+        //    ExtendClientAreaChromeHints |= ExtendClientAreaChromeHints.OSXThickTitleBar;
 
         UpdateBar.IsVisible = false;
         Api.SetUserAgent(new ProductInfoHeaderValue("mcLaunch", CurrentBuild.Version.ToString()));

@@ -23,7 +23,7 @@ public partial class SelectBoxPopup : UserControl
     private async void FillWithLocalBoxesAsync()
     {
         loadedBoxes = await BoxManager.LoadLocalBoxesAsync(false, false);
-        DataContext = loadedBoxes;
+        DataContext = new Data(loadedBoxes);
     }
 
     private void ClosePopupButtonClicked(object? sender, RoutedEventArgs e)
@@ -48,11 +48,21 @@ public partial class SelectBoxPopup : UserControl
     {
         if (string.IsNullOrWhiteSpace(SearchTextBox.Text))
         {
-            DataContext = loadedBoxes;
+            DataContext = new Data(loadedBoxes);
             return;
         }
 
-        DataContext = loadedBoxes.Where(box =>
-            box.Manifest.Name.Contains(SearchTextBox.Text, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+        DataContext = new Data(loadedBoxes.Where(box =>
+            box.Manifest.Name.Contains(SearchTextBox.Text, StringComparison.InvariantCultureIgnoreCase)).ToArray());
+    }
+
+    public class Data
+    {
+        public Box[] LoadedBoxes { get; set; }
+
+        public Data(Box[] loadedBoxes)
+        {
+            LoadedBoxes = loadedBoxes;
+        }
     }
 }

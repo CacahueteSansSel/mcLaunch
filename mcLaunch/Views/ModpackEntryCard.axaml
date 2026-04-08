@@ -4,12 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
              xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             xmlns:contents="clr-namespace:mcLaunch.Core.Contents;assembly=mcLaunch.Core"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="261"
              Margin="5"
              Width="400" Height="261"
              Background="{DynamicResource Background}"
              Classes="smoothShow"
-             x:Class="mcLaunch.Views.ModpackEntryCard">
+             x:Class="mcLaunch.Views.ModpackEntryCard"
+             x:DataType="contents:PlatformModpack">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
 
@@ -30,13 +32,13 @@
                 <Canvas Height="120">
                     <Border Canvas.Left="40" Canvas.Top="60" ClipToBounds="True" CornerRadius="4">
                         <Image Stretch="Fill" Width="80" Height="80"
-                               asyncImageLoader:ImageLoader.Source="{Binding IconPath}" />
+                               asyncImageLoader:ImageLoader.Source="{CompiledBinding IconPath}" />
                     </Border>
                     <StackPanel Canvas.Left="135" Canvas.Top="60" Width="250" ClipToBounds="True">
-                        <TextBlock Classes="title" FontSize="20" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Classes="title" FontSize="20" Text="{CompiledBinding Name}" TextTrimming="CharacterEllipsis" />
                         <StackPanel Orientation="Horizontal" Margin="0 0 0 3">
                             <TextBlock FontSize="12" Classes="light" Margin="0 0 0 0">by</TextBlock>
-                            <TextBlock FontSize="12" Classes="title" Margin="5 0 0 0" Text="{Binding Author}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock FontSize="12" Classes="title" Margin="5 0 0 0" Text="{CompiledBinding Author}" TextTrimming="CharacterEllipsis" />
                         </StackPanel>
                     </StackPanel>
                 </Canvas>
@@ -48,7 +50,7 @@
                     <views:Badge x:Name="ModLoaderBadge" />
                 </StackPanel>
                 <TextBlock Margin="0 5 0 0" Height="65" TextWrapping="Wrap" Classes="light"
-                           Text="{Binding ShortDescription}" />
+                           Text="{CompiledBinding ShortDescription}" />
             </StackPanel>
         </StackPanel>
     </Panel>

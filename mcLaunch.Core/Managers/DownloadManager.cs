@@ -132,7 +132,6 @@ public static class DownloadManager
                         UserAgent = userAgent,
                         Accept = "*/*",
                         AllowAutoRedirect = false,
-                        AuthenticationLevel = AuthenticationLevel.None,
                         AutomaticDecompression = DecompressionMethods.All,
                         PreAuthenticate = false
                     }

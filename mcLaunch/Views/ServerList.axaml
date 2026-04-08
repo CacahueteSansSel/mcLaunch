@@ -3,8 +3,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:minecraftFormats="clr-namespace:mcLaunch.Core.MinecraftFormats;assembly=mcLaunch.Core"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="mcLaunch.Views.ServerList">
+             x:Class="mcLaunch.Views.ServerList"
+             x:DataType="views:ServerList+Data">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
 
@@ -14,7 +16,7 @@
     </UserControl.Styles>
     <Panel>
         <StackPanel Orientation="Vertical">
-            <ListBox x:Name="ServersList" SelectionMode="Single" ItemsSource="{Binding Servers}"
+            <ListBox x:Name="ServersList" SelectionMode="Single" ItemsSource="{CompiledBinding Servers}"
                      SelectionChanged="WorldSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
@@ -23,18 +25,18 @@
                     </Style>
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate DataType="minecraftFormats:MinecraftServer">
                         <DockPanel>
-                            <Image Source="{Binding Icon}" DockPanel.Dock="Left" Width="40" Height="40" />
+                            <Image Source="{CompiledBinding Icon}" DockPanel.Dock="Left" Width="40" Height="40" />
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" />
                             <StackPanel Margin="10 0 10 0" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Classes="title" Text="{Binding Name}" />
+                                    <TextBlock Classes="title" Text="{CompiledBinding Name}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Classes="title" FontSize="12" Margin="0 0 0 0" Text="{Binding Address}" />
+                                    <TextBlock Classes="title" FontSize="12" Margin="0 0 0 0" Text="{CompiledBinding Address}" />
                                     <TextBlock Classes="light" FontSize="12" Margin="0 0 0 0" Text=":" Opacity="0.5" />
-                                    <TextBlock Classes="light" FontSize="12" Margin="0 0 0 0" Text="{Binding Port}"
+                                    <TextBlock Classes="light" FontSize="12" Margin="0 0 0 0" Text="{CompiledBinding Port}"
                                                Opacity="0.5" />
                                 </StackPanel>
                             </StackPanel>

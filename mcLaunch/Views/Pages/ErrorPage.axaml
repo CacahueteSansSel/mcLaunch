@@ -2,16 +2,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pages="clr-namespace:mcLaunch.Views.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.ErrorPage"
-             Background="{DynamicResource BackgroundDarker}">
+             Background="{DynamicResource BackgroundDarker}"
+             x:DataType="pages:ErrorPage+Data">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <StackPanel Orientation="Vertical" Spacing="20" Margin="100">
         <TextBlock FontSize="25" Classes="title">An error occurred</TextBlock>
         <TextBlock FontSize="15" Classes="light">An error occurred and the launcher needs to stop immediately</TextBlock>
-        <TextBlock FontSize="15" Classes="light" Text="{Binding Text}" />
+        <TextBlock FontSize="15" Classes="light" Text="{CompiledBinding Text}" />
         <Button Classes="primary" Click="ExitLauncherButtonClicked">Exit launcher</Button>
     </StackPanel>
 </UserControl>

@@ -5,11 +5,13 @@
              xmlns:views="clr-namespace:mcLaunch.Views"
              xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              xmlns:controls="clr-namespace:mcLaunch.Controls"
+             xmlns:managers="clr-namespace:mcLaunch.Core.Managers;assembly=mcLaunch.Core"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              Width="200" Height="261"
              RenderOptions.BitmapInterpolationMode="None"
              Background="{DynamicResource Background}"
-             x:Class="mcLaunch.Views.SkinEntryCard">
+             x:Class="mcLaunch.Views.SkinEntryCard"
+             x:DataType="managers:ManifestSkin">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
 
@@ -26,7 +28,7 @@
                     <Image Source="{SvgImage /resources/icons/upload.svg}" Width="14" Height="14" />
                 </Button>
                 <TextBlock x:Name="SkinNameText" VerticalAlignment="Center" FontSize="15" HorizontalAlignment="Left"
-                           Classes="light" Margin="0 0 0 0" TextWrapping="Wrap" MaxLines="2" Text="{Binding TextureKey,FallbackValue='Skin Name'}" />
+                           Classes="light" Margin="0 0 0 0" TextWrapping="Wrap" MaxLines="2" Text="{CompiledBinding Name,FallbackValue='Skin Name'}" />
             </DockPanel>
             <Border ClipToBounds="True" CornerRadius="4" RenderOptions.BitmapInterpolationMode="None">
                 <controls:SkinPreview x:Name="SkinPreview" RenderOptions.BitmapInterpolationMode="None" Width="160" Height="160" Texture="/resources/skins/steve.png" />

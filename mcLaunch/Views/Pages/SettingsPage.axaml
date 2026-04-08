@@ -10,7 +10,6 @@
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Panel>
-        <Image Stretch="UniformToFill" Source="{Binding Manifest.Background}" />
         <Button Margin="0 0 15 20" ZIndex="10" IsHitTestVisible="True" VerticalAlignment="Bottom"
                 HorizontalAlignment="Right" Classes="transparent" Click="UpButtonClicked">
             <Image Source="{SvgImage /resources/icons/arrow_up.svg}"
