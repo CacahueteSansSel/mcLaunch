@@ -6,7 +6,7 @@
              xmlns:mcLaunch="clr-namespace:mcLaunch"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.WorldList"
-             x:DataType="views:WorldList+Data">
+             x:DataType="views:WorldList+WorldListData">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
 
@@ -25,7 +25,7 @@
                     </Style>
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="views:WorldList+Data+ModelWorld">
+                    <DataTemplate DataType="views:WorldList+WorldListData+ModelWorld">
                         <DockPanel>
                             <Image Source="{CompiledBinding World.Icon}" DockPanel.Dock="Left" Width="40" Height="40" />
                             <StackPanel IsVisible="{CompiledBinding ShowAdvancedFeatures}" Orientation="Horizontal"

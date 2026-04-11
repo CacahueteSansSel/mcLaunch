@@ -28,7 +28,7 @@
                     </ItemsRepeater.Layout>
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate DataType="boxes:Box">
-                            <views:BoxEntryCard DataContext="{CompiledBinding Manifest}" Box="{CompiledBinding .}" />
+                            <views:BoxEntryCard Box="{CompiledBinding}" />
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>

@@ -17,10 +17,10 @@ public partial class DownloadBanner : UserControl
     {
         InitializeComponent();
 
-        DataContext = new Data();
+        DataContext = new DownloadBannerData();
     }
 
-    private Data UIDataContext => (Data)DataContext;
+    private DownloadBannerData UIDataContext => (DownloadBannerData)DataContext;
     public bool IsForcedToBeShown { get; set; }
 
     public void ForceToShow()
@@ -130,7 +130,7 @@ public partial class DownloadBanner : UserControl
         });
     }
 
-    public class Data : ReactiveObject
+    public class DownloadBannerData : ReactiveObject
     {
         private int progress;
         private string resourceCount;

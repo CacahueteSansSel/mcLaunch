@@ -12,7 +12,7 @@ public partial class Badge : UserControl
             "Editor",
             true);
 
-    private Data data;
+    private BadgeData data;
 
     public Badge()
     {
@@ -23,7 +23,7 @@ public partial class Badge : UserControl
     {
         InitializeComponent();
 
-        data = new Data(text);
+        data = new BadgeData(text);
         DataContext = data;
     }
 
@@ -32,18 +32,18 @@ public partial class Badge : UserControl
         get => data.Text;
         set
         {
-            if (data == null) data = new Data(value);
+            if (data == null) data = new BadgeData(value);
 
             data.Text = value;
             DataContext = data;
         }
     }
 
-    public class Data : ReactiveObject
+    public class BadgeData : ReactiveObject
     {
         private string text;
 
-        public Data(string text)
+        public BadgeData(string text)
         {
             this.text = text;
         }

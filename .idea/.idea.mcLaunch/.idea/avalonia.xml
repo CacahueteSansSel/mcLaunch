@@ -44,16 +44,26 @@
         <entry key="mcLaunch/Views/Pages/SettingsPage.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Pages/SkinsPage.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/BrowserDeviceCodePopup.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Popups/ChangelogPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/ConfirmMessageBoxPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/CrashPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Popups/DataMigrationPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/DuplicateBoxPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/EditBoxPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/ExportBoxFilesSelectionPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/ExportBoxPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/FastLaunchPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Popups/GameLaunchPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Popups/ImportBoxPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Popups/InstallContentOnPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Popups/LauncherUpdatedPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Popups/LoadingPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/MessageBoxPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Popups/ModsPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/NewBackupPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/NewBoxPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Popups/OptionalModsPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Popups/ScreenshotPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/SelectBoxPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/SelectSkinPopup.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Popups/StatusPopup.axaml" value="mcLaunch/mcLaunch.csproj" />

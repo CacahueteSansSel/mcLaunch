@@ -29,7 +29,7 @@ public partial class UnitTestsWindow : Window
 
         foreach (UnitTest test in TestsManager.Tests) entries.Add(new UnitTestEntry(test, UnitTestStateType.NotTested));
 
-        DataContext = new Data { Entries = entries.ToArray() };
+        DataContext = new UnitTestsWindowData { Entries = entries.ToArray() };
     }
 
     private async Task RunTestsAsync()
@@ -70,7 +70,7 @@ public partial class UnitTestsWindow : Window
         RunTestsButton.IsEnabled = true;
     }
 
-    private void UpdateEntries() => ((Data)DataContext).Entries = entries.ToArray();
+    private void UpdateEntries() => ((UnitTestsWindowData)DataContext).Entries = entries.ToArray();
 
     private async void RunAllTestsButtonClicked(object? sender, RoutedEventArgs e)
     {
@@ -112,7 +112,7 @@ public partial class UnitTestsWindow : Window
         public bool IsFailed => State == UnitTestStateType.Failed;
     }
 
-    public class Data : ReactiveObject
+    public class UnitTestsWindowData : ReactiveObject
     {
         private UnitTestEntry[] entries;
 

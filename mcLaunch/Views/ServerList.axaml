@@ -6,7 +6,7 @@
              xmlns:minecraftFormats="clr-namespace:mcLaunch.Core.MinecraftFormats;assembly=mcLaunch.Core"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.ServerList"
-             x:DataType="views:ServerList+Data">
+             x:DataType="views:ServerList+ServerListData">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
 

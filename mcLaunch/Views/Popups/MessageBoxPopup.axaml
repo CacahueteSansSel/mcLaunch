@@ -5,8 +5,9 @@
              xmlns:popups="clr-namespace:mcLaunch.Views.Popups"
              mc:Ignorable="d" d:DesignWidth="600"
              Width="600" Height="300"
+             DataContext="{x:Null}"
              x:Class="mcLaunch.Views.Popups.MessageBoxPopup"
-             x:DataType="popups:MessageBoxPopup+Data">
+             x:DataType="popups:MessageBoxPopup+MessageBoxPopupData">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>

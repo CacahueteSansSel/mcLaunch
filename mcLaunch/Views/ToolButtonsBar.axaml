@@ -7,7 +7,7 @@
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="65"
              Height="65" Background="{DynamicResource Background}"
              x:Class="mcLaunch.Views.ToolButtonsBar"
-             x:DataType="views:ToolButtonsBar+Data">
+             x:DataType="views:ToolButtonsBar+ToolButtonsBarData">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>

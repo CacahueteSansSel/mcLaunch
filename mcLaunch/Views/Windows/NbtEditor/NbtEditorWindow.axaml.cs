@@ -26,7 +26,7 @@ public partial class NbtEditorWindow : Window
 
         if (Design.IsDesignMode) Load("level.dat");
 
-        DataContext = new Data([]);
+        DataContext = new NbtEditorWindowData([]);
         UpdateButtons();
     }
 
@@ -58,7 +58,7 @@ public partial class NbtEditorWindow : Window
         TagNode rootNode = GetNodeForTag(root);
         rootNode.Name = name;
         nodes.Add(rootNode);
-        DataContext = new Data(nodes.ToArray());
+        DataContext = new NbtEditorWindowData(nodes.ToArray());
     }
 
     private TagNode GetNodeForTag(Tag tag)
@@ -491,11 +491,11 @@ public partial class NbtEditorWindow : Window
         }
     }
 
-    public class Data
+    public class NbtEditorWindowData
     {
         public TagNode[] Nodes { get; set; }
 
-        public Data(TagNode[] nodes)
+        public NbtEditorWindowData(TagNode[] nodes)
         {
             Nodes = nodes;
         }

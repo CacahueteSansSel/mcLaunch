@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d"
-             x:DataType="views:Badge+Data"
+             DataContext="{x:Null}"
+             x:DataType="views:Badge+BadgeData"
              x:Class="mcLaunch.Views.Badge">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />

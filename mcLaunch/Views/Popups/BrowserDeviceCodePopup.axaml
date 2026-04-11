@@ -6,6 +6,7 @@
              xmlns:auth="clr-namespace:mcLaunch.Launchsite.Auth;assembly=mcLaunch.Launchsite"
              mc:Ignorable="d" d:DesignWidth="600"
              Width="600" Height="300"
+             DataContext="{x:Null}"
              x:Class="mcLaunch.Views.Popups.BrowserDeviceCodePopup"
              x:DataType="auth:BrowserLoginCallbackParameters">
     <UserControl.Styles>

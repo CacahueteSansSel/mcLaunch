@@ -25,7 +25,7 @@ public partial class ToolButtonsBar : UserControl
     {
         InitializeComponent();
 
-        DataContext = new Data(this);
+        DataContext = new ToolButtonsBarData(this);
 
         if (Design.IsDesignMode)
         {
@@ -38,7 +38,7 @@ public partial class ToolButtonsBar : UserControl
         RefreshButtons();
     }
 
-    public Data UIDataContext => (Data)DataContext;
+    public ToolButtonsBarData UIDataContext => (ToolButtonsBarData)DataContext;
 
     public void RefreshButtons()
     {
@@ -129,7 +129,7 @@ public partial class ToolButtonsBar : UserControl
         SkinHeadPreview.InvalidateVisual();
     }
 
-    public class Data : ReactiveObject
+    public class ToolButtonsBarData : ReactiveObject
     {
         private MinecraftAuthenticationResult? account;
         private Bitmap head;
@@ -139,7 +139,7 @@ public partial class ToolButtonsBar : UserControl
         private string resourceDetailsText = "-";
         private string resourceName = "No pending download";
 
-        public Data(ToolButtonsBar bar)
+        public ToolButtonsBarData(ToolButtonsBar bar)
         {
             AuthenticationManager.OnLogin += async result =>
             {

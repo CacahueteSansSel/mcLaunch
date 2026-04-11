@@ -6,8 +6,9 @@
              xmlns:popups="clr-namespace:mcLaunch.Views.Popups"
              mc:Ignorable="d"
              Width="450" Height="500"
+             DataContext="{x:Null}"
              x:Class="mcLaunch.Views.Popups.SelectBoxPopup"
-             x:DataType="popups:SelectBoxPopup+Data">
+             x:DataType="popups:SelectBoxPopup+SelectBoxPopupData">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>

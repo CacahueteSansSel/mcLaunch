@@ -13,7 +13,7 @@
         Title="Unit Tests"
         Icon="/resources/icon.ico"
         Background="{DynamicResource BackgroundDarker}"
-        x:DataType="windows:UnitTestsWindow+Data">
+        x:DataType="windows:UnitTestsWindow+UnitTestsWindowData">
     <Window.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>

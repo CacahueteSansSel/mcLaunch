@@ -6,8 +6,9 @@
              xmlns:popups="clr-namespace:mcLaunch.Views.Popups"
              mc:Ignorable="d"
              Width="450" Height="320"
+             DataContext="{x:Null}"
              x:Class="mcLaunch.Views.Popups.StatusPopup"
-             x:DataType="popups:StatusPopup+Data">
+             x:DataType="popups:StatusPopup+StatusPopupData">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>

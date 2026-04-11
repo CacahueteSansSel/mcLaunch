@@ -6,6 +6,7 @@
              xmlns:dataContexts="clr-namespace:mcLaunch.Views.DataContexts"
              mc:Ignorable="d" d:DesignWidth="600"
              Width="600" Height="460"
+             DataContext="{x:Null}"
              x:Class="mcLaunch.Views.Popups.NewBoxPopup"
              x:DataType="dataContexts:MinecraftVersionSelectionDataContext">
     <UserControl.Styles>

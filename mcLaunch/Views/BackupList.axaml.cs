@@ -21,7 +21,7 @@ public partial class BackupList : UserControl
     {
         InitializeComponent();
 
-        DataContext = new Data();
+        DataContext = new BackupListData();
         if (Design.IsDesignMode) SetDefaultBackups();
     }
 
@@ -44,7 +44,7 @@ public partial class BackupList : UserControl
 
     public async Task SetBackupsAsync(BoxBackup[] backups)
     {
-        Data ctx = (Data)DataContext;
+        BackupListData ctx = (BackupListData)DataContext;
         ctx.Backups = backups;
 
         NtsBanner.IsVisible = backups.Length == 0;
@@ -52,7 +52,7 @@ public partial class BackupList : UserControl
 
     private async Task LoadServerIconsAsync(MinecraftServer[] servers)
     {
-        Data ctx = (Data)DataContext;
+        BackupListData ctx = (BackupListData)DataContext;
 
         SetLoadingCircle(true);
 
@@ -102,7 +102,7 @@ public partial class BackupList : UserControl
         BackupsList.UnselectAll();
     }
 
-    public class Data : ReactiveObject
+    public class BackupListData : ReactiveObject
     {
         private BoxBackup[] backups;
         private int page;

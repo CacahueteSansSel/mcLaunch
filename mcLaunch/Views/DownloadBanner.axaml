@@ -5,7 +5,7 @@
              xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="450"
              x:Class="mcLaunch.Views.DownloadBanner"
-             x:DataType="views:DownloadBanner+Data">
+             x:DataType="views:DownloadBanner+DownloadBannerData">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>

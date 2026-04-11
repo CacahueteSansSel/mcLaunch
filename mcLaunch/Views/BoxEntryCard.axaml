@@ -11,7 +11,8 @@
              Classes="smoothShow"
              PointerEntered="InputElement_OnPointerEntered"
              PointerExited="InputElement_OnPointerExited"
-             x:DataType="boxes:BoxManifest"
+             DataContext="{x:Null}"
+             x:DataType="boxes:Box"
              x:Class="mcLaunch.Views.BoxEntryCard">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
@@ -108,7 +109,7 @@
             <Border ClipToBounds="True">
                 <Panel Width="155" Height="155">
                     <Border Background="#66151515" CornerRadius="2" ClipToBounds="True">
-                        <Image x:Name="BoxIcon" Stretch="Uniform" Source="{CompiledBinding Icon.IconLarge}" />
+                        <Image x:Name="BoxIcon" Stretch="Uniform" Source="{CompiledBinding Manifest.Icon.IconLarge}" />
                     </Border>
                     <Button x:Name="PlayButton" IsVisible="False" ToolTip.Tip="Launch box" Classes="transparent-green"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="PlayButtonClicked">
@@ -120,10 +121,10 @@
                     </Button>
                 </Panel>
             </Border>
-            <TextBlock x:Name="BoxNameText" TextTrimming="CharacterEllipsis" FontSize="20" Classes="title" Margin="0 5 0 0" Text="{CompiledBinding Name}" />
+            <TextBlock x:Name="BoxNameText" TextTrimming="CharacterEllipsis" FontSize="20" Classes="title" Margin="0 5 0 0" Text="{CompiledBinding Manifest.Name}" />
             <StackPanel Orientation="Horizontal" Margin="0 0 0 3">
                 <TextBlock FontSize="12" Classes="light" Margin="0 0 0 0">by</TextBlock>
-                <TextBlock x:Name="AuthorText" FontSize="12" Classes="title" Margin="5 0 0 0" Text="{CompiledBinding Author}" />
+                <TextBlock x:Name="AuthorText" FontSize="12" Classes="title" Margin="5 0 0 0" Text="{CompiledBinding Manifest.Author}" />
             </StackPanel>
             <StackPanel x:Name="Badges" Orientation="Horizontal" Spacing="5">
                 <views:Badge x:Name="VersionBadge" />

@@ -5,6 +5,7 @@
              xmlns:views="clr-namespace:mcLaunch.Views"
              xmlns:dataContexts="clr-namespace:mcLaunch.Views.DataContexts"
              mc:Ignorable="d" d:DesignWidth="500" Width="500" Height="350"
+             DataContext="{x:Null}"
              x:Class="mcLaunch.Views.Popups.FastLaunchPopup"
              x:DataType="dataContexts:MinecraftVersionSelectionDataContext">
     <UserControl.Styles>

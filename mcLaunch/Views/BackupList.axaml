@@ -5,7 +5,7 @@
              xmlns:views="clr-namespace:mcLaunch.Views"
              xmlns:boxes="clr-namespace:mcLaunch.Core.Boxes;assembly=mcLaunch.Core"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="views:BackupList+Data"
+             x:DataType="views:BackupList+BackupListData"
              x:Class="mcLaunch.Views.BackupList">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />

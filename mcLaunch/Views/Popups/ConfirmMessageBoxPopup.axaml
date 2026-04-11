@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:popups="clr-namespace:mcLaunch.Views.Popups"
              mc:Ignorable="d" d:DesignWidth="600"
-             Width="600" Height="300"
+             Width="600" Height="300" 
+             DataContext="{x:Null}"
              x:Class="mcLaunch.Views.Popups.ConfirmMessageBoxPopup"
-             x:DataType="popups:ConfirmMessageBoxPopup+Data">
+             x:DataType="popups:ConfirmMessageBoxPopup+ConfirmMessageBoxPopupData">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>

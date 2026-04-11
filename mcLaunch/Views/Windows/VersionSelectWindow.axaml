@@ -11,7 +11,7 @@
         Title="Select a Minecraft version"
         Icon="/resources/icon.ico"
         Background="{DynamicResource BackgroundDarker}"
-        x:DataType="windows:VersionSelectWindow+Data">
+        x:DataType="windows:VersionSelectWindow+VersionSelectWindowData">
     <Window.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>

@@ -18,7 +18,7 @@ public partial class ErrorPage : UserControl, ITopLevelPageControl
 
         Title = message;
 
-        DataContext = new Data
+        DataContext = new ErrorPageData
         {
             Text = message
         };
@@ -31,7 +31,7 @@ public partial class ErrorPage : UserControl, ITopLevelPageControl
         Environment.Exit(0);
     }
 
-    public class Data : ReactiveObject
+    public class ErrorPageData : ReactiveObject
     {
         public string Text { get; set; }
     }

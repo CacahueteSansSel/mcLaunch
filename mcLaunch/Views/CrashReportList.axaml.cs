@@ -17,7 +17,7 @@ public partial class CrashReportList : UserControl
     {
         InitializeComponent();
 
-        DataContext = new Data();
+        DataContext = new CrashReportListData();
     }
 
     public void SetBox(Box box)
@@ -32,7 +32,7 @@ public partial class CrashReportList : UserControl
 
     public void SetCrashReports(MinecraftCrashReport[] reports)
     {
-        Data ctx = (Data)DataContext;
+        CrashReportListData ctx = (CrashReportListData)DataContext;
 
         ctx.Reports = reports;
 
@@ -55,7 +55,7 @@ public partial class CrashReportList : UserControl
         ReportsList.UnselectAll();
     }
 
-    public class Data : ReactiveObject
+    public class CrashReportListData : ReactiveObject
     {
         private int page;
         private MinecraftCrashReport[] reports;

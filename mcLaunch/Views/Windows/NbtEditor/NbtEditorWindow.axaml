@@ -15,7 +15,7 @@
         Title="NBT Editor"
         Icon="/resources/icon.ico"
         Background="{DynamicResource BackgroundDarker}"
-        x:DataType="nbtEditor:NbtEditorWindow+Data">
+        x:DataType="nbtEditor:NbtEditorWindow+NbtEditorWindowData">
     <Window.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>

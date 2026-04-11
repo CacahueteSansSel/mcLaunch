@@ -6,6 +6,7 @@
              xmlns:models="clr-namespace:mcLaunch.GitHub.Models;assembly=mcLaunch.GitHub"
              mc:Ignorable="d" d:DesignWidth="600"
              Width="450" Height="500"
+             DataContext="{x:Null}"
              x:Class="mcLaunch.Views.Popups.UpdateChangelogPopup"
              x:DataType="models:GitHubRelease">
     <UserControl.Styles>

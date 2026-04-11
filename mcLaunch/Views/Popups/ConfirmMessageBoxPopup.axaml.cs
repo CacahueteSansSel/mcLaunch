@@ -21,7 +21,7 @@ public partial class ConfirmMessageBoxPopup : UserControl
 
         this.confirmCallback = confirmCallback;
         this.cancelCallback = cancelCallback;
-        DataContext = new Data(title, text);
+        DataContext = new ConfirmMessageBoxPopupData(title, text);
     }
 
     private void YesButtonClicked(object? sender, RoutedEventArgs e)
@@ -36,9 +36,9 @@ public partial class ConfirmMessageBoxPopup : UserControl
         cancelCallback?.Invoke();
     }
 
-    public class Data
+    public class ConfirmMessageBoxPopupData
     {
-        public Data(string title, string text)
+        public ConfirmMessageBoxPopupData(string title, string text)
         {
             Title = title;
             Text = text;
