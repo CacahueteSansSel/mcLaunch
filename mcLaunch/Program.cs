@@ -16,8 +16,6 @@ internal class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        GC.KeepAlive(typeof(SvgImageExtension).Assembly);
-        GC.KeepAlive(typeof(Avalonia.Svg.Svg).Assembly);
         AppBuilder app = BuildAvaloniaApp();
 
         if (Debugger.IsAttached)

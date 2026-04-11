@@ -10,5 +10,5 @@
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
-    <mdxaml:MarkdownScrollViewer x:Name="MarkdownArea" Margin="0 0 0 0" Markdown="{CompiledBinding .}" />
+    <TextBlock x:Name="MarkdownArea" Margin="0 0 0 0" Text="{CompiledBinding .}" />
 </UserControl>

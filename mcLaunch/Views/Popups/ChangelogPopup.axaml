@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:avalonia="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
              mc:Ignorable="d" d:DesignWidth="600"
              Width="600" Height="450"
              x:Class="mcLaunch.Views.Popups.ChangelogPopup">
@@ -19,7 +18,7 @@
             </DockPanel>
             <Border Margin="0 15 0 0" Padding="5" Classes="frame-without-shadow" BoxShadow=""
                     Background="{DynamicResource BackgroundDarker}">
-                <avalonia:MarkdownScrollViewer x:Name="MarkdownArea" />
+                <TextBlock x:Name="MarkdownArea" />
             </Border>
         </DockPanel>
     </Border>

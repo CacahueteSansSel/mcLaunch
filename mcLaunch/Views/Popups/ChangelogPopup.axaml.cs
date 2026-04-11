@@ -33,10 +33,10 @@ public partial class ChangelogPopup : UserControl
         if (isHtmlRegex.IsMatch(mod.Changelog))
         {
             Converter converter = new();
-            MarkdownArea.Markdown = HttpUtility.HtmlDecode(converter.Convert(mod.Changelog));
+            MarkdownArea.Text = HttpUtility.HtmlDecode(converter.Convert(mod.Changelog));
         }
         else
-            MarkdownArea.Markdown = mod.Changelog;
+            MarkdownArea.Text = mod.Changelog;
     }
 
     private void InstallButtonClicked(object? sender, RoutedEventArgs e)
