@@ -30,8 +30,10 @@
 
         <Panel IsHitTestVisible="{CompiledBinding IsPopup}">
             <DockPanel>
-                <Panel DockPanel.Dock="Top" IsEnabled="{CompiledBinding IsPopup}" IsVisible="{CompiledBinding IsPopup}" IsHitTestVisible="False" Background="black" Height="50" Opacity="0.5" />
-                <Panel IsEnabled="{CompiledBinding IsPopup}" IsVisible="{CompiledBinding IsPopup}" Background="black" Opacity="0.5" />
+                <Panel DockPanel.Dock="Top" IsEnabled="{CompiledBinding IsPopup}" IsVisible="{CompiledBinding IsPopup}"
+                       IsHitTestVisible="False" Background="black" Height="50" Opacity="0.5" />
+                <Panel IsEnabled="{CompiledBinding IsPopup}" IsVisible="{CompiledBinding IsPopup}" Background="black"
+                       Opacity="0.5" />
             </DockPanel>
             <TransitioningContentControl Content="{CompiledBinding CurrentPopup}" />
         </Panel>
