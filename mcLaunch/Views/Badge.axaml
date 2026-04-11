@@ -5,7 +5,6 @@
              xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d"
              DataContext="{x:Null}"
-             x:DataType="views:Badge+BadgeData"
              x:Class="mcLaunch.Views.Badge">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
@@ -21,7 +20,7 @@
     </UserControl.Styles>
     <Border Classes="badge">
         <StackPanel Orientation="Horizontal">
-            <TextBlock x:Name="Label" Margin="2" Classes="light" Text="{CompiledBinding Text}">Test</TextBlock>
+            <TextBlock x:Name="Label" Margin="2" Classes="light">Test</TextBlock>
         </StackPanel>
     </Border>
 </UserControl>

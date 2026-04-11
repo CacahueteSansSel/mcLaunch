@@ -6,6 +6,7 @@
              xmlns:mcLaunch="clr-namespace:mcLaunch"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.WorldList"
+             DataContext="{x:Null}"
              x:DataType="views:WorldList+WorldListData">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />

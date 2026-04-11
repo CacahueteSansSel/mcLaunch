@@ -6,6 +6,7 @@
              xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.BoxDetails.BackupListSubControl"
+             DataContext="0"
              x:DataType="sys:Int32">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />

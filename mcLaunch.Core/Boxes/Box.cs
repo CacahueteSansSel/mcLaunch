@@ -28,6 +28,7 @@ public class Box : IEquatable<Box>
     private string launcherVersion = "0.0.0";
     private bool redirectOutput;
     private FileSystemWatcher? watcher;
+    private bool freezeWatcher = false;
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
@@ -125,7 +126,7 @@ public class Box : IEquatable<Box>
 
     private void OnFileDeleted(object sender, FileSystemEventArgs e)
     {
-        if (DownloadManager.IsProcessing) return;
+        if (DownloadManager.IsProcessing || freezeWatcher) return;
 
         string relativePath = e.FullPath.Replace(Folder.CompletePath, "")
             .Trim('\\').Trim('/')
@@ -154,7 +155,7 @@ public class Box : IEquatable<Box>
 
     private async void OnFileCreated(object sender, FileSystemEventArgs e)
     {
-        if (DownloadManager.IsProcessing) return;
+        if (DownloadManager.IsProcessing || freezeWatcher) return;
 
         string relativePath = e.FullPath.Replace(Folder.CompletePath, "")
             .Trim('\\').Trim('/')
@@ -187,6 +188,7 @@ public class Box : IEquatable<Box>
 
     public void Delete()
     {
+        freezeWatcher = true;
         Directory.Delete(Path, true);
     }
 
@@ -203,6 +205,8 @@ public class Box : IEquatable<Box>
     public async Task<BoxBackup?> CreateBackupAsync(string name)
     {
         if (HasBackup(name)) return null;
+
+        freezeWatcher = true;
 
         string path = $"backups/{name}.tar.gz";
         string fullPath = $"{Path}/{path}";
@@ -228,6 +232,8 @@ public class Box : IEquatable<Box>
         BoxBackup backup = new(name, BoxBackupType.Complete, DateTime.Now, path);
         Manifest.Backups.Add(backup);
         await SaveManifestAsync();
+        
+        freezeWatcher = false;
 
         return backup;
     }
@@ -236,6 +242,8 @@ public class Box : IEquatable<Box>
     {
         BoxBackup? backup = GetBackup(name);
         if (backup == null) return false;
+        
+        freezeWatcher = true;
 
         switch (backup.Type)
         {
@@ -267,14 +275,14 @@ public class Box : IEquatable<Box>
                 }
 
                 // Ensure the backups are still listed even when restoring an earlier backup
-                ReloadManifest(true);
+                await ReloadManifestAsync(true);
                 Manifest.Backups = backups;
-                await SaveManifestAsync();
 
                 // Reload icon and background
                 await LoadIconAsync();
                 LoadBackground();
-
+                
+                freezeWatcher = false;
                 return true;
             case BoxBackupType.Partial:
                 break;
@@ -286,6 +294,8 @@ public class Box : IEquatable<Box>
     public string[] InstallDatapack(string versionId, string filename)
     {
         List<string> paths = new();
+        
+        freezeWatcher = true;
 
         foreach (string worldPath in Directory.GetDirectories($"{Folder.Path}/saves"))
         {
@@ -303,6 +313,8 @@ public class Box : IEquatable<Box>
 
         BoxStoredContent? content = Manifest.GetContentByVersion(versionId);
         if (content != null) content.Filenames = [..content.Filenames, ..paths.ToArray()];
+        
+        freezeWatcher = false;
 
         return paths.ToArray();
     }
@@ -781,12 +793,16 @@ public class Box : IEquatable<Box>
 
     public async Task SaveManifestAsync()
     {
-        await File.WriteAllTextAsync(manifestPath, JsonSerializer.Serialize(Manifest));
+        await new FileAccessFailSafe(async () =>
+        {
+            await File.WriteAllTextAsync(manifestPath, JsonSerializer.Serialize(Manifest));
+        }).RunAsync();
     }
 
+    [Obsolete("Use SaveManifestAsync instead")]
     public void SaveManifest()
     {
-        File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest));
+        SaveManifestAsync().Wait();
     }
 
     // Launch Minecraft normally

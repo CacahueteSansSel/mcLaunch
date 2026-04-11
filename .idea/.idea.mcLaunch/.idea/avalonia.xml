@@ -24,10 +24,12 @@
         <entry key="mcLaunch/Views/PageSelector.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Pages/AdvancedFeaturesPage.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Pages/BoxDetails/BackupListSubControl.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Pages/BoxDetails/ContentsSubControl.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Pages/BoxDetails/CrashReportListSubControl.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Pages/BoxDetails/DirectJarModsSubControl.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Pages/BoxDetails/GameSettingsSubControl.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Pages/BoxDetails/ReadmeSubControl.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Pages/BoxDetails/ScreenshotListSubControl.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Pages/BoxDetails/ServerListSubControl.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Pages/BoxDetails/WorldListSubControl.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Pages/BoxDetailsPage.axaml" value="mcLaunch/mcLaunch.csproj" />
@@ -72,6 +74,7 @@
         <entry key="mcLaunch/Views/ServerList.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/SkinEntryCard.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/ToolButtonsBar.axaml" value="mcLaunch/mcLaunch.csproj" />
+        <entry key="mcLaunch/Views/Windows/AboutWindow.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Windows/ConsoleWindow.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Windows/CrashWindow.axaml" value="mcLaunch/mcLaunch.csproj" />
         <entry key="mcLaunch/Views/Windows/DebugBoxCrashPopup.axaml" value="mcLaunch/mcLaunch.csproj" />

@@ -48,14 +48,14 @@ public partial class GameSettingsSubControl : SubControl
             MessageStatus.Success));
     }
 
-    private void CustomJavaArgsInput_OnTextChanged(object? sender, TextChangedEventArgs e)
+    private async void CustomJavaArgsInput_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         Box.Manifest.CommandLineSettings.CustomJavaArguments = CustomJavaArgsInput.Text!;
         
-        Box.SaveManifest();
+        await Box.SaveManifestAsync();
     }
 
-    private void MaxAllocatedRamInput_OnTextChanged(object? sender, TextChangedEventArgs e)
+    private async void MaxAllocatedRamInput_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         bool isValid = int.TryParse(MaxAllocatedRamInput.Text, out int maxRam) && maxRam > Box.Manifest.CommandLineSettings.MinimumAllocatedRam;
         MaxAllocatedRamInput.Foreground =
@@ -64,10 +64,10 @@ public partial class GameSettingsSubControl : SubControl
         if (!isValid) return;
         
         Box.Manifest.CommandLineSettings.MaximumAllocatedRam = maxRam;
-        Box.SaveManifest();
+        await Box.SaveManifestAsync();
     }
 
-    private void MinAllocatedRamInput_OnTextChanged(object? sender, TextChangedEventArgs e)
+    private async void MinAllocatedRamInput_OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         bool isValid = int.TryParse(MinAllocatedRamInput.Text, out int minRam) && minRam < Box.Manifest.CommandLineSettings.MaximumAllocatedRam && minRam > 256;
         MinAllocatedRamInput.Foreground =
@@ -76,6 +76,6 @@ public partial class GameSettingsSubControl : SubControl
         if (!isValid) return;
         
         Box.Manifest.CommandLineSettings.MinimumAllocatedRam = minRam;
-        Box.SaveManifest();
+        await Box.SaveManifestAsync();
     }
 }

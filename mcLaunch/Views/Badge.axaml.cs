@@ -12,46 +12,17 @@ public partial class Badge : UserControl
             "Editor",
             true);
 
-    private BadgeData data;
-
     public Badge()
     {
         InitializeComponent();
     }
 
-    public Badge(string text)
+    public string? Text
     {
-        InitializeComponent();
-
-        data = new BadgeData(text);
-        DataContext = data;
-    }
-
-    public string Text
-    {
-        get => data.Text;
+        get => Label.Text;
         set
         {
-            if (data == null) data = new BadgeData(value);
-
-            data.Text = value;
-            DataContext = data;
-        }
-    }
-
-    public class BadgeData : ReactiveObject
-    {
-        private string text;
-
-        public BadgeData(string text)
-        {
-            this.text = text;
-        }
-
-        public string Text
-        {
-            get => text;
-            set => this.RaiseAndSetIfChanged(ref text, value);
+            Label.Text = value;
         }
     }
 }

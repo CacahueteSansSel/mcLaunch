@@ -6,6 +6,7 @@
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mcLaunch.Views.Pages.BoxDetails.WorldListSubControl"
+             DataContext="0"
              x:DataType="system:Int32">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
