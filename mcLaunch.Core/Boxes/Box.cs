@@ -29,6 +29,7 @@ public class Box : IEquatable<Box>
     private bool redirectOutput;
     private FileSystemWatcher? watcher;
     private bool freezeWatcher = false;
+    private JsonSerializerOptions jsonOptions = new() { TypeInfoResolver = BoxManifestJsonContext.Default };
 
     public Box(BoxManifest manifest, string path, bool createMinecraft = true)
     {
@@ -353,12 +354,12 @@ public class Box : IEquatable<Box>
 
         if (isReload)
         {
-            // We backup the manifest's icon and background to avoid loading those every time
+            // We back up the manifest's icon and background to avoid loading those every time
             icon = Manifest!.Icon;
             background = Manifest.Background;
         }
 
-        Manifest = JsonSerializer.Deserialize<BoxManifest>(await File.ReadAllTextAsync(manifestPath))!;
+        Manifest = JsonSerializer.Deserialize<BoxManifest>(await File.ReadAllTextAsync(manifestPath), jsonOptions)!;
         if (runChecks) await RunPostDeserializationChecksAsync();
 
         if (isReload)
@@ -795,7 +796,7 @@ public class Box : IEquatable<Box>
     {
         await new FileAccessFailSafe(async () =>
         {
-            await File.WriteAllTextAsync(manifestPath, JsonSerializer.Serialize(Manifest));
+            await File.WriteAllTextAsync(manifestPath, JsonSerializer.Serialize(Manifest, jsonOptions));
         }).RunAsync();
     }
 
