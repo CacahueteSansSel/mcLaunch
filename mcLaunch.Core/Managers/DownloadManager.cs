@@ -4,6 +4,7 @@ using System.Net.Security;
 using System.Security.Cryptography;
 using Downloader;
 using mcLaunch.Core.Core;
+using mcLaunch.Core.Logging;
 using mcLaunch.Core.Managers.DownloaderBackends;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Launchsite.Core;
@@ -87,7 +88,7 @@ public static class DownloadManager
     private static async Task<bool> UseFallbackDownloader(string sourceUrl, string targetFilename,
         Action<float> progressUpdated, Action<bool, Exception> finished)
     {
-        Console.WriteLine($"Using Fallback Downloader for {sourceUrl}");
+        Logs.Debug($"using fallback downloader for {sourceUrl}");
 
         using FallbackDownloader downloader = new(userAgent);
         downloader.ProgressUpdated += progressUpdated;
@@ -127,6 +128,8 @@ public static class DownloadManager
                 {
                 }
             }
+            
+            Logs.Debug($"downloading {entry.Source}: using downloader backend {Backend.GetType().Name}");
 
             bool success = await Backend.Download(entry.Source, entry.Target, (name, percent) =>
             {
@@ -137,7 +140,7 @@ public static class DownloadManager
 
             if (!success || !File.Exists(entry.Target))
             {
-                Console.WriteLine($"Backend {Backend.GetType().Name} failed to download {entry.Target} => switching to the fallback downloader");
+                Logs.Warning($"backend {Backend.GetType().Name} failed to download {entry.Target}: switching to the fallback downloader");
                 
                 await UseFallbackDownloader(entry.Source, entry.Target, pp =>
                 {
@@ -146,7 +149,7 @@ public static class DownloadManager
                         sectionIndex + 1);
                 }, (success, error) =>
                 {
-                    if (!success) Console.WriteLine($"Fallback Downloader error : {error}");
+                    if (!success) Logs.Error($"fallback downloader error: {error}");
 
                     OnDownloadError?.Invoke(section.Name, entry.Source);
                 });

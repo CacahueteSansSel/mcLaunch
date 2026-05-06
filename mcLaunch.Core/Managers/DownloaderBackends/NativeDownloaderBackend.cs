@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using mcLaunch.Core.Logging;
 
 namespace mcLaunch.Core.Managers.DownloaderBackends;
 
@@ -9,7 +10,15 @@ public class NativeDownloaderBackend : DownloaderBackend
         HttpClient client = new();
         client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
 
-        await using Stream sourceStream = await client.GetStreamAsync(sourceUrl);
+        HttpResponseMessage resp = await client.GetAsync(sourceUrl, HttpCompletionOption.ResponseHeadersRead);
+        if (!resp.IsSuccessStatusCode)
+        {
+            Logs.Warning($"when downloading {sourceUrl} : server responded with non-200 HTTP error {(int)resp.StatusCode}");
+            
+            return false;
+        }
+        
+        await using Stream sourceStream = await resp.Content.ReadAsStreamAsync();
         await using FileStream targetStream = new FileStream(filename, FileMode.Create);
         long length = 0;
         int offset = 0;
