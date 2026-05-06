@@ -2,8 +2,9 @@
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography;
-using Downloader;
 using mcLaunch.Core.Core;
+using mcLaunch.Core.Logging;
+using mcLaunch.Core.Managers.DownloaderBackends;
 using mcLaunch.Core.Utilities;
 using mcLaunch.Launchsite.Core;
 using mcLaunch.Launchsite.Download;
@@ -22,6 +23,7 @@ public static class DownloadManager
     public static int PendingSectionCount => sections.Count;
     public static string DescriptionLine => CurrentSection == null ? "No pending download" : CurrentSection.Name;
     public static bool IsProcessing { get; private set; }
+    public static DownloaderBackend? Backend { get; private set; }
 
     public static event Action<string, float, int>? OnDownloadProgressUpdate;
     public static event Action? OnDownloadFinished;
@@ -34,6 +36,8 @@ public static class DownloadManager
     {
         Context.Init(new Downloader());
         userAgent = $"mcLaunch/{version}";
+
+        Backend = new NativeDownloaderBackend { UserAgent = userAgent };
     }
 
     public static void Begin(string name)
@@ -83,7 +87,7 @@ public static class DownloadManager
     private static async Task<bool> UseFallbackDownloader(string sourceUrl, string targetFilename,
         Action<float> progressUpdated, Action<bool, Exception> finished)
     {
-        Console.WriteLine($"Using Fallback Downloader for {sourceUrl}");
+        Logs.Debug($"using fallback downloader for {sourceUrl}");
 
         using FallbackDownloader downloader = new(userAgent);
         downloader.ProgressUpdated += progressUpdated;
@@ -123,36 +127,20 @@ public static class DownloadManager
                 {
                 }
             }
+            
+            Logs.Debug($"downloading {entry.Source}: using downloader backend {Backend.GetType().Name}");
 
-            IDownload? download = DownloadBuilder.New()
-                .WithConfiguration(new DownloadConfiguration
-                {
-                    RequestConfiguration = new RequestConfiguration
-                    {
-                        UserAgent = userAgent,
-                        Accept = "*/*",
-                        AllowAutoRedirect = false,
-                        AutomaticDecompression = DecompressionMethods.All,
-                        PreAuthenticate = false
-                    }
-                })
-                .WithUrl(entry.Source)
-                .WithFolder(new DirectoryInfo(folder))
-                .WithFileName(Path.GetFileName(entry.Target))
-                .Build();
-
-            download.DownloadProgressChanged += (sender, args) =>
+            bool success = await Backend.Download(entry.Source, entry.Target, (name, percent) =>
             {
                 OnDownloadProgressUpdate?.Invoke(entry.Source,
-                    progress / (float)section.Entries.Count +
-                    (float)(args.ProgressPercentage / 100) * (1 / (float)section.Entries.Count),
+                    progress / (float)section.Entries.Count + percent * (1 / (float)section.Entries.Count),
                     sectionIndex + 1);
-            };
+            });
 
-            Stream? stream = await download.StartAsync();
-
-            if (download.Package.Status == DownloadStatus.Failed || !File.Exists(entry.Target))
+            if (!success || !File.Exists(entry.Target))
             {
+                Logs.Warning($"backend {Backend.GetType().Name} failed to download {entry.Target}: switching to the fallback downloader");
+                
                 await UseFallbackDownloader(entry.Source, entry.Target, pp =>
                 {
                     OnDownloadProgressUpdate?.Invoke(entry.Source,
@@ -160,7 +148,7 @@ public static class DownloadManager
                         sectionIndex + 1);
                 }, (success, error) =>
                 {
-                    if (!success) Console.WriteLine($"Fallback Downloader error : {error}");
+                    if (!success) Logs.Error($"fallback downloader error: {error}");
 
                     OnDownloadError?.Invoke(section.Name, entry.Source);
                 });
@@ -213,24 +201,6 @@ public static class DownloadManager
                     OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
                 }
             }
-
-            /*
-             *await Parallel.ForEachAsync(section.Entries.Where(entry => entry.Action == EntryAction.Download),
-               async (entry, token) =>
-               {
-                   if (entry.Source.Contains(".jar")) Console.WriteLine(entry.Source);
-                   await DownloadEntryAsync(entry, section, sectionIndex, progress);
-
-                   progress++;
-                   float percent = (float) progress / section.Entries.Count;
-
-                   if (progressPercent < percent)
-                   {
-                       progressPercent = percent;
-                       OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
-                   }
-               });
-             */
 
             foreach (DownloadEntry entry in section.Entries.Where(entry => entry.Action != EntryAction.Download))
             {

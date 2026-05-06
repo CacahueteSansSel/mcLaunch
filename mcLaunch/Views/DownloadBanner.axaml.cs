@@ -102,6 +102,7 @@ public partial class DownloadBanner : UserControl
 
     private void OnDownloadFinished()
     {
+        lastProgress = 0;
         UIDataContext.Progress = 0;
         UIDataContext.ResourceName = string.Empty;
         UIDataContext.ResourceCount = string.Empty;
@@ -115,7 +116,7 @@ public partial class DownloadBanner : UserControl
 
     private void OnDownloadProgressUpdate(string file, float percent, int currentSectionIndex)
     {
-        //if (lastProgress >= percent) return;
+        if (lastProgress >= percent) return;
         lastProgress = percent;
 
         Dispatcher.UIThread.Post(() =>

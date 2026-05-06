@@ -151,6 +151,7 @@ public class BoxManifest : ReactiveObject
 
     public void AddContent(MinecraftContent content, string versionId, string[] filenames)
     {
+        if (content == null) return;
         if (filenames.Length == 0) return;
         if (HasContentStrict(content.Id, content.ModPlatformId)) return;
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Net.Security;
 using System.Threading.Tasks;
-using Downloader;
 
 namespace mcLaunch.Installer.Core;
 
@@ -13,25 +13,38 @@ public static class DownloadManager
 
     public static async Task<MemoryStream> DownloadToMemoryAsync(string url, long? expectedSize = null)
     {
-        DownloadService download = new(new DownloadConfiguration
+        HttpClient client = new();
+
+        HttpResponseMessage resp = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+        resp.EnsureSuccessStatusCode();
+        
+        await using Stream sourceStream = await resp.Content.ReadAsStreamAsync();
+        MemoryStream targetStream = new MemoryStream();
+        long length = 0;
+        int offset = 0;
+        byte[] buffer = new byte[81920];
+
+        try
         {
-            RequestConfiguration = new RequestConfiguration
-            {
-                UserAgent = "mcLaunch.Installer/1.1.0",
-                Accept = "*/*",
-                AllowAutoRedirect = false,
-                AutomaticDecompression = DecompressionMethods.All,
-                PreAuthenticate = false
-            }
-        });
-
-        download.DownloadProgressChanged += (sender, args) =>
+            length = sourceStream.Length;
+        }
+        catch (Exception e)
         {
-            OnDownloadProgressUpdate?.Invoke(Path.GetFileName(url), (float)(args.ProgressPercentage / 100f));
-        };
+            
+        }
 
-        Stream stream = await download.DownloadFileTaskAsync(url);
+        while (true)
+        {
+            int bytesRead = await sourceStream.ReadAsync(buffer.AsMemory());
+            if (bytesRead <= 0) break;
 
-        return (MemoryStream)stream;
+            offset += bytesRead;
+            
+            await targetStream.WriteAsync(buffer, 0, bytesRead);
+            
+            OnDownloadProgressUpdate?.Invoke(Path.GetFileName(url), (float)(length != 0 ? offset / (double)length : 1));
+        }
+        
+        return targetStream;
     }
 }
