@@ -37,7 +37,7 @@ public static class DownloadManager
         Context.Init(new Downloader());
         userAgent = $"mcLaunch/{version}";
 
-        Backend = new ExternalDownloaderBackend();
+        Backend = new NativeDownloaderBackend { UserAgent = userAgent };
     }
 
     public static void Begin(string name)
@@ -199,24 +199,6 @@ public static class DownloadManager
                     OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
                 }
             }
-
-            /*
-             *await Parallel.ForEachAsync(section.Entries.Where(entry => entry.Action == EntryAction.Download),
-               async (entry, token) =>
-               {
-                   if (entry.Source.Contains(".jar")) Console.WriteLine(entry.Source);
-                   await DownloadEntryAsync(entry, section, sectionIndex, progress);
-
-                   progress++;
-                   float percent = (float) progress / section.Entries.Count;
-
-                   if (progressPercent < percent)
-                   {
-                       progressPercent = percent;
-                       OnDownloadProgressUpdate?.Invoke(entry.Source, progressPercent, sectionIndex + 1);
-                   }
-               });
-             */
 
             foreach (DownloadEntry entry in section.Entries.Where(entry => entry.Action != EntryAction.Download))
             {

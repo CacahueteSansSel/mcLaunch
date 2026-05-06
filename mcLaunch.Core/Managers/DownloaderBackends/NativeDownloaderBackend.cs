@@ -11,10 +11,31 @@ public class NativeDownloaderBackend : DownloaderBackend
 
         await using Stream sourceStream = await client.GetStreamAsync(sourceUrl);
         await using FileStream targetStream = new FileStream(filename, FileMode.Create);
-        int readBytes = 0;
+        long length = 0;
+        int offset = 0;
+        byte[] buffer = new byte[81920];
 
-        //todo
+        try
+        {
+            length = sourceStream.Length;
+        }
+        catch (Exception e)
+        {
+            
+        }
+
+        while (true)
+        {
+            int bytesRead = await sourceStream.ReadAsync(buffer.AsMemory());
+            if (bytesRead <= 0) break;
+
+            offset += bytesRead;
+            
+            await targetStream.WriteAsync(buffer, 0, bytesRead);
+            
+            updateCallback?.Invoke(sourceUrl, (float)(length != 0 ? offset / (double)length : 1));
+        }
         
-        return false;
+        return true;
     }
 }
