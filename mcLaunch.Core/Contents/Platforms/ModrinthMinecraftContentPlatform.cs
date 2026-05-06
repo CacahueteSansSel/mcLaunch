@@ -438,8 +438,9 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
             filenames.Add($"{folder}/{filename}");
         }
 
-        targetBox.Manifest.AddContent(await GetContentAsync(version.ProjectId), version.Id,
-            filenames.ToArray());
+        MinecraftContent? content = await GetContentAsync(version.ProjectId);
+        if (content != null)
+            targetBox.Manifest.AddContent(content, version.Id, filenames.ToArray());
 
         DownloadManager.End();
 

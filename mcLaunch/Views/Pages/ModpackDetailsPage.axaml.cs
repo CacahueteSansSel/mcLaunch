@@ -57,8 +57,6 @@ public partial class ModpackDetailsPage : UserControl, ITopLevelPageControl
 
     private void CloneButtonClicked(object? sender, RoutedEventArgs e)
     {
-        CloneButton.IsVisible = false;
-
         Navigation.ShowPopup(new VersionSelectionPopup(modpack, CreateModpack));
     }
 

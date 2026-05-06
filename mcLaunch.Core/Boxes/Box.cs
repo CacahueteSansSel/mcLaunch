@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using mcLaunch.Core.Contents;
 using mcLaunch.Core.Contents.Platforms;
 using mcLaunch.Core.Core;
+using mcLaunch.Core.Logging;
 using mcLaunch.Core.Managers;
 using mcLaunch.Core.MinecraftFormats;
 using mcLaunch.Core.Utilities;
@@ -150,7 +151,7 @@ public class Box : IEquatable<Box>
         }
         catch (Exception exception)
         {
-            Console.WriteLine(exception);
+            Logs.Warning($"error while tracking deleted file (most of the time, it's ok): {exception.Message}");
         }
     }
 

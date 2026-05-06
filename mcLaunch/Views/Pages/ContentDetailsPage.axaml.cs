@@ -132,7 +132,8 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
     private async void InstallContentFromVersion(IVersion incomingVersion)
     {
         ContentVersion version = (ContentVersion)incomingVersion;
-
+        
+        InstallButton.IsVisible = false;
         LoadingButtonFrame.IsVisible = true;
 
         PaginatedResponse<MinecraftContentPlatform.ContentDependency> deps =
@@ -251,13 +252,13 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
         isInstalling = true;
 
-        InstallButton.IsVisible = false;
-        InstallButton.IsEnabled = false;
+        //InstallButton.IsVisible = false;
+        //InstallButton.IsEnabled = false;
 
         UninstallButton.IsVisible = false;
         UninstallButton.IsEnabled = false;
 
-        LoadingButtonFrame.IsVisible = true;
+        //LoadingButtonFrame.IsVisible = true;
 
         ContentVersion[] versions =
             await ModPlatformManager.Platform.GetContentVersionsAsync(ShownContent,
@@ -276,12 +277,9 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
                 $"for Minecraft {TargetBox.Manifest.Version} or {TargetBox.Manifest.ModLoaderId}",
                 MessageStatus.Error));
 
-            LoadingButtonFrame.IsVisible = false;
             SetInstalled(false);
             return;
         }
-
-        LoadingButtonFrame.IsVisible = false;
 
         Navigation.ShowPopup(new VersionSelectionPopup(new MinecraftContentVersionProvider(versions, ShownContent),
             InstallContentFromVersion));
