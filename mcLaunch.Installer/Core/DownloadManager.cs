@@ -20,7 +20,6 @@ public static class DownloadManager
                 UserAgent = "mcLaunch.Installer/1.1.0",
                 Accept = "*/*",
                 AllowAutoRedirect = false,
-                AuthenticationLevel = AuthenticationLevel.None,
                 AutomaticDecompression = DecompressionMethods.All,
                 PreAuthenticate = false
             }
