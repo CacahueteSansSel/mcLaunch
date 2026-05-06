@@ -803,7 +803,10 @@ public class Box : IEquatable<Box>
     [Obsolete("Use SaveManifestAsync instead")]
     public void SaveManifest()
     {
-        SaveManifestAsync().Wait();
+        new FileAccessFailSafe(async () =>
+        {
+            File.WriteAllText(manifestPath, JsonSerializer.Serialize(Manifest, jsonOptions));
+        }).Run();
     }
 
     // Launch Minecraft normally

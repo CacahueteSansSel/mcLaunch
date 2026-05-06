@@ -13,6 +13,27 @@ public class FileAccessFailSafe
         _callback = callback;
     }
 
+    public void Run()
+    {
+        while (true)
+        {
+            try
+            {
+                _callback.Invoke();
+                break;
+            }
+            catch (IOException e)
+            {
+                if (!e.Message.Contains("used by another process"))
+                    throw;
+                
+                Console.WriteLine("IOException in FileAccessFailSafe, retrying");
+
+                Thread.Sleep(100);
+            }
+        }
+    }
+
     public async Task RunAsync()
     {
         while (true)
