@@ -86,6 +86,7 @@ public partial class DownloadBanner : UserControl
         UIDataContext.ResourceName = string.IsNullOrWhiteSpace(sectionName) ? "Downloading" : sectionName;
         UIDataContext.ResourceCount = $"{index}/{DownloadManager.PendingSectionCount}";
         UIDataContext.ResourceFileText = string.Empty;
+        FileNameText.Text = string.Empty;
 
         IsVisible = true;
     }
@@ -96,6 +97,7 @@ public partial class DownloadBanner : UserControl
         UIDataContext.ResourceName = string.IsNullOrWhiteSpace(name) ? "Preparing download" : $"Preparing {name}";
         UIDataContext.ResourceDetailsText = string.Empty;
         UIDataContext.ResourceFileText = string.Empty;
+        FileNameText.Text = string.Empty;
 
         IsVisible = true;
     }
@@ -107,6 +109,7 @@ public partial class DownloadBanner : UserControl
         UIDataContext.ResourceCount = string.Empty;
         UIDataContext.ResourceDetailsText = string.Empty;
         UIDataContext.ResourceFileText = string.Empty;
+        FileNameText.Text = string.Empty;
 
         ResourceCountText.IsVisible = false;
 
