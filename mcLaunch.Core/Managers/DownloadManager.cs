@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography;
-using Downloader;
 using mcLaunch.Core.Core;
 using mcLaunch.Core.Logging;
 using mcLaunch.Core.Managers.DownloaderBackends;

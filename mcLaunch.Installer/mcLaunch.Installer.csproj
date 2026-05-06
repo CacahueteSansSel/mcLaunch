@@ -24,7 +24,6 @@
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.1" />
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.1" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.1" />
-        <PackageReference Include="Downloader" Version="5.1.0" />
     </ItemGroup>
 
     <ItemGroup>
