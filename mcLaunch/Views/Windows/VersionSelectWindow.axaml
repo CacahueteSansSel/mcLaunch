@@ -2,20 +2,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:mcLaunch.Launchsite.Models;assembly=mcLaunch.Launchsite"
+        xmlns:windows="clr-namespace:mcLaunch.Views.Windows"
         mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="400"
         Width="300" Height="400" CanResize="False"
         x:Class="mcLaunch.Views.Windows.VersionSelectWindow"
         WindowStartupLocation="CenterScreen"
         Title="Select a Minecraft version"
         Icon="/resources/icon.ico"
-        Background="{DynamicResource BackgroundDarker}">
+        Background="{DynamicResource BackgroundDarker}"
+        x:DataType="windows:VersionSelectWindow+VersionSelectWindowData">
     <Window.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>
     <Border Classes="frame">
         <DockPanel Margin="5">
             <DockPanel DockPanel.Dock="Top">
-                <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" Watermark="Search version"
+                <TextBox x:Name="SearchTextBox" VerticalContentAlignment="Center" PlaceholderText="Search version"
                          TextChanged="SearchVersionTextBoxTextChanged" />
             </DockPanel>
             <Button DockPanel.Dock="Bottom" x:Name="SelectButton" HorizontalAlignment="Right" Margin="0 20 0 0"
@@ -23,7 +26,7 @@
                     Click="SelectVersionButtonClicked" IsVisible="False" IsDefault="True">
                 Select
             </Button>
-            <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{Binding .}"
+            <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{CompiledBinding Versions}"
                      SelectionChanged="VersionSelectionChanged" DoubleTapped="VersionListDoubleTapped">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
@@ -32,13 +35,13 @@
                     </Style>
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate DataType="models:ManifestMinecraftVersion">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" Spacing="5">
                                 <TextBlock>Minecraft</TextBlock>
-                                <TextBlock Text="{Binding Id}" />
+                                <TextBlock Text="{CompiledBinding Id}" />
                             </StackPanel>
-                            <TextBlock Classes="light" Opacity="0.5" Text="{Binding Type}" />
+                            <TextBlock Classes="light" Opacity="0.5" Text="{CompiledBinding Type}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

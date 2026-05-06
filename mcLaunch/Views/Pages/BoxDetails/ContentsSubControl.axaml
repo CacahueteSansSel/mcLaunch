@@ -41,7 +41,7 @@
                         <Image Width="13" Height="13" Source="{SvgImage /resources/icons/curseforge.svg}" />
                     </Button>
                     <views:SeparatorLine />
-                    <TextBox x:Name="SearchBox" Watermark="Search mod" Width="300" VerticalContentAlignment="Center"
+                    <TextBox x:Name="SearchBox" PlaceholderText="Search mod" Width="300" VerticalContentAlignment="Center"
                              TextChanged="SearchBoxTextChanged" />
                 </StackPanel>
                 <StackPanel Height="15" x:Name="SearchingForUpdates" DockPanel.Dock="Left" IsVisible="False"

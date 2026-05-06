@@ -30,6 +30,9 @@ public partial class BackupListSubControl : SubControl
 
     private void NewBackupButtonClicked(object? sender, RoutedEventArgs e)
     {
-        Navigation.ShowPopup(new NewBackupPopup(Box));
+        Navigation.ShowPopup(new NewBackupPopup(Box, async () =>
+        {
+            await PopulateAsync();
+        }));
     }
 }

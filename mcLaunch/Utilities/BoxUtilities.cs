@@ -187,7 +187,7 @@ public static class BoxUtilities
             }
             else
             {
-                Bitmap bmp = new(AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_box_logo.png")));
+                Bitmap bmp = new(AssetLoader.Open(new Uri("avares://mcLaunch/resources/default_mr_modpack_logo.png")));
                 box.SetAndSaveIcon(bmp);
             }
         }

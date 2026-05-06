@@ -26,7 +26,7 @@ public partial class VersionSelectWindow : Window
         if (this.listener != null)
             versions = versions.Where(version => this.listener.ShouldShowMinecraftVersion(version)).ToArray();
 
-        DataContext = versions;
+        DataContext = new VersionSelectWindowData(versions);
     }
 
     public VersionSelectWindow(string title) : this()
@@ -83,13 +83,23 @@ public partial class VersionSelectWindow : Window
             SelectButton.IsVisible = false;
         }
 
-        DataContext = RunSearch(SearchTextBox.Text);
+        DataContext = new VersionSelectWindowData(RunSearch(SearchTextBox.Text));
     }
 
     private void VersionListDoubleTapped(object? sender, TappedEventArgs e)
     {
         if (selectedVersion != null)
             Close(selectedVersion);
+    }
+
+    public class VersionSelectWindowData
+    {
+        public ManifestMinecraftVersion[] Versions { get; set; }
+
+        public VersionSelectWindowData(ManifestMinecraftVersion[] versions)
+        {
+            Versions = versions;
+        }
     }
 }
 

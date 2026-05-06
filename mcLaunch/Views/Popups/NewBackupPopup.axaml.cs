@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Core.Boxes;
 using mcLaunch.Utilities;
@@ -8,17 +9,20 @@ namespace mcLaunch.Views.Popups;
 public partial class NewBackupPopup : UserControl
 {
     private readonly Box box;
+    private Action backupCreatedCallback;
 
     public NewBackupPopup()
     {
         InitializeComponent();
     }
 
-    public NewBackupPopup(Box box)
+    public NewBackupPopup(Box box, Action backupCreatedCallback)
     {
         InitializeComponent();
 
         this.box = box;
+        this.backupCreatedCallback = backupCreatedCallback;
+        
         BackupOfBoxCard.SetBox(box);
     }
 
@@ -52,5 +56,7 @@ public partial class NewBackupPopup : UserControl
 
         Navigation.ShowPopup(new MessageBoxPopup("Backup created",
             $"Your backup {backup.Name} for {box.Manifest.Name} has been created", MessageStatus.Success));
+        
+        backupCreatedCallback?.Invoke();
     }
 }

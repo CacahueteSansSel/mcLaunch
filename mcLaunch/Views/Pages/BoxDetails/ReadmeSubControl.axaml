@@ -3,10 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="mcLaunch.Views.Pages.BoxDetails.ReadmeSubControl">
+             x:Class="mcLaunch.Views.Pages.BoxDetails.ReadmeSubControl"
+             DataContext=""
+             x:DataType="system:String">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
-    <mdxaml:MarkdownScrollViewer x:Name="MarkdownArea" Margin="0 0 0 0" Markdown="{Binding .}" />
+    <TextBlock x:Name="MarkdownArea" Margin="0 0 0 0" Text="{CompiledBinding .}" />
 </UserControl>

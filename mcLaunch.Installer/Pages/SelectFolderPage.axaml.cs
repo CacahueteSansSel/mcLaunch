@@ -1,5 +1,8 @@
-﻿using Avalonia.Controls;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 
 namespace mcLaunch.Installer.Pages;
 
@@ -14,10 +17,16 @@ public partial class SelectFolderPage : InstallerPage
 
     private async void SelectFolderButtonClicked(object? sender, RoutedEventArgs e)
     {
-        OpenFolderDialog ofd = new();
-        ofd.Title = "Select the target installation directory";
+        IReadOnlyList<IStorageFolder> result = await MainWindow.Instance.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
+        {
+            Title = "Select the target installation directory"
+        });
+        
+        if (result == null || result.Count == 0) return;
 
-        string? path = await ofd.ShowAsync(MainWindow.Instance);
+        string? path = result.First().TryGetLocalPath();
+        if (path == null) return;
+        
         if (!string.IsNullOrWhiteSpace(path))
         {
             TargetPathInput.Text = path;

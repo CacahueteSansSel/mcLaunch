@@ -10,14 +10,14 @@ public partial class MessageBoxPopup : UserControl
     {
         InitializeComponent();
 
-        DataContext = new Data("Hello, World !", "Lorem Ipsum");
+        DataContext = new MessageBoxPopupData("Hello, World !", "Lorem Ipsum");
     }
 
     public MessageBoxPopup(string title, string text, MessageStatus status)
     {
         InitializeComponent();
 
-        DataContext = new Data(title, text);
+        DataContext = new MessageBoxPopupData(title, text);
 
         StatusError.IsVisible = status == MessageStatus.Error;
         StatusWarning.IsVisible = status == MessageStatus.Warning;
@@ -29,9 +29,9 @@ public partial class MessageBoxPopup : UserControl
         Navigation.HidePopup();
     }
 
-    public class Data
+    public class MessageBoxPopupData
     {
-        public Data(string title, string text)
+        public MessageBoxPopupData(string title, string text)
         {
             Title = title;
             Text = text;

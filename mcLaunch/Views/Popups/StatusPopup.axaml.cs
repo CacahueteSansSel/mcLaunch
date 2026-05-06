@@ -6,7 +6,7 @@ namespace mcLaunch.Views.Popups;
 
 public partial class StatusPopup : UserControl
 {
-    private readonly Data dctx;
+    private readonly StatusPopupData dctx;
 
     public StatusPopup()
     {
@@ -14,7 +14,7 @@ public partial class StatusPopup : UserControl
 
         if (Design.IsDesignMode)
         {
-            dctx = new Data
+            dctx = new StatusPopupData
             {
                 Title = "Sample Title",
                 Text = "Sample Text",
@@ -31,7 +31,7 @@ public partial class StatusPopup : UserControl
         Instance = this;
         InitializeComponent();
 
-        dctx = new Data
+        dctx = new StatusPopupData
         {
             Title = title,
             Text = text,
@@ -87,7 +87,7 @@ public partial class StatusPopup : UserControl
         }
     }
 
-    public class Data : ReactiveObject
+    public class StatusPopupData : ReactiveObject
     {
         private int statusPercent;
         private string statusText;

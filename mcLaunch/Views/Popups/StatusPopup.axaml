@@ -3,21 +3,24 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:popups="clr-namespace:mcLaunch.Views.Popups"
              mc:Ignorable="d"
              Width="450" Height="320"
-             x:Class="mcLaunch.Views.Popups.StatusPopup">
+             DataContext="{x:Null}"
+             x:Class="mcLaunch.Views.Popups.StatusPopup"
+             x:DataType="popups:StatusPopup+StatusPopupData">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <DockPanel Margin="38">
             <StackPanel DockPanel.Dock="Top">
-                <TextBlock Classes="title" FontSize="25" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
-                <TextBlock Margin="0 10 0 0" TextWrapping="WrapWithOverflow" Text="{Binding Text}" />
+                <TextBlock Classes="title" FontSize="25" Text="{CompiledBinding Title}" TextTrimming="CharacterEllipsis" />
+                <TextBlock Margin="0 10 0 0" TextWrapping="WrapWithOverflow" Text="{CompiledBinding Text}" />
             </StackPanel>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Spacing="5" Margin="0 20 0 0">
-                <TextBlock Classes="light" Text="{Binding StatusText}" TextTrimming="CharacterEllipsis" />
-                <ProgressBar x:Name="Bar" Value="{Binding StatusPercent}" IsIndeterminate="True" />
+                <TextBlock Classes="light" Text="{CompiledBinding StatusText}" TextTrimming="CharacterEllipsis" />
+                <ProgressBar x:Name="Bar" Value="{CompiledBinding StatusPercent}" IsIndeterminate="True" />
                 <Panel x:Name="DownloadBannerContainer" IsVisible="False">
                     <views:DownloadBanner x:Name="DownloadBanner" />
                 </Panel>

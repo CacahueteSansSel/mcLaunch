@@ -3,8 +3,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:mcLaunch="clr-namespace:mcLaunch"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="mcLaunch.Views.WorldList">
+             x:Class="mcLaunch.Views.WorldList"
+             DataContext="{x:Null}"
+             x:DataType="views:WorldList+WorldListData">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
 
@@ -14,7 +17,7 @@
     </UserControl.Styles>
     <Panel>
         <StackPanel Orientation="Vertical">
-            <ListBox x:Name="WorldsList" SelectionMode="Single" ItemsSource="{Binding Worlds}"
+            <ListBox x:Name="WorldsList" SelectionMode="Single" ItemsSource="{CompiledBinding Worlds}"
                      SelectionChanged="WorldSelectionChanged">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
@@ -23,34 +26,34 @@
                     </Style>
                 </ListBox.Styles>
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate DataType="views:WorldList+WorldListData+ModelWorld">
                         <DockPanel>
-                            <Image Source="{Binding World.Icon}" DockPanel.Dock="Left" Width="40" Height="40" />
-                            <StackPanel IsVisible="{Binding ShowAdvancedFeatures}" Orientation="Horizontal"
+                            <Image Source="{CompiledBinding World.Icon}" DockPanel.Dock="Left" Width="40" Height="40" />
+                            <StackPanel IsVisible="{CompiledBinding ShowAdvancedFeatures}" Orientation="Horizontal"
                                         DockPanel.Dock="Right">
                                 <Button Classes="transparent square" ToolTip.Tip="Open level.dat in NBT Editor"
-                                        Command="{Binding OpenLevelDatCommand}">
+                                        Command="{CompiledBinding OpenLevelDatCommand}">
                                     <Image Source="{SvgImage /resources/icons/nbt.svg}" Width="13" Height="13" />
                                 </Button>
                             </StackPanel>
                             <StackPanel Margin="10 0 10 0" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Classes="title" Text="{Binding World.Name}" />
-                                    <views:Badge IsVisible="{Binding World.IsCheats}"
+                                    <TextBlock Classes="title" Text="{CompiledBinding World.Name}" />
+                                    <views:Badge IsVisible="{CompiledBinding World.IsCheats}"
                                                  Margin="10 0 0 0" Text="Commands" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="title" FontSize="12" Margin="0 0 0 0"
-                                               Text="{Binding World.GameMode}" />
+                                               Text="{CompiledBinding World.GameMode}" />
                                     <TextBlock Classes="title" FontSize="12" Margin="4 0 0 0">mode</TextBlock>
                                     <TextBlock Classes="light" FontSize="12" Margin="0 0 0 0">, Minecraft</TextBlock>
                                     <TextBlock Classes="light" FontSize="12" Margin="4 0 0 0"
-                                               Text="{Binding World.Version}" />
+                                               Text="{CompiledBinding World.Version}" />
                                     <TextBlock Classes="light" FontSize="12" Margin="0 0 0 0">, last opened </TextBlock>
                                     <TextBlock Classes="title" FontSize="12" Margin="4 0 0 0"
-                                               Text="{Binding World.LastPlayed}" />
+                                               Text="{CompiledBinding World.LastPlayed}" />
                                 </StackPanel>
-                                <TextBlock Classes="light" Text="{Binding World.ShortDescription}" Opacity="0.7" />
+                                <TextBlock Classes="light" Text="{CompiledBinding World.FolderName}" Opacity="0.7" />
                             </StackPanel>
                         </DockPanel>
                     </DataTemplate>

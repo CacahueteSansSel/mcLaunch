@@ -5,14 +5,16 @@
              xmlns:views="clr-namespace:mcLaunch.Views"
              xmlns:avalonia1="clr-namespace:TheArtOfDev.HtmlRenderer.Avalonia;assembly=Avalonia.HtmlRenderer"
              xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             xmlns:contents="clr-namespace:mcLaunch.Core.Contents;assembly=mcLaunch.Core"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
-             x:Class="mcLaunch.Views.Pages.ContentDetailsPage">
+             x:Class="mcLaunch.Views.Pages.ContentDetailsPage"
+             x:DataType="contents:MinecraftContent">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Panel>
         <Image x:Name="DefaultBackground" Stretch="UniformToFill" Source="/resources/background_default.png" />
-        <Image Stretch="UniformToFill" asyncImageLoader:ImageLoader.Source="{Binding BackgroundPath}" />
+        <Image Stretch="UniformToFill" asyncImageLoader:ImageLoader.Source="{CompiledBinding BackgroundPath}" />
         <Button Margin="0 0 15 20" ZIndex="10" IsHitTestVisible="True" VerticalAlignment="Bottom"
                 HorizontalAlignment="Right" Classes="transparent" Click="UpButtonClicked">
             <Image Source="{SvgImage /resources/icons/arrow_up.svg}"
@@ -31,7 +33,7 @@
                 <Border Classes="frame" Margin="0 10 0 100" Width="888">
                     <StackPanel Margin="1" Orientation="Vertical">
                         <DockPanel Margin="38 38 38 0" LastChildFill="True">
-                            <Image DockPanel.Dock="Left" asyncImageLoader:ImageLoader.Source="{Binding IconUrl}"
+                            <Image DockPanel.Dock="Left" asyncImageLoader:ImageLoader.Source="{CompiledBinding IconUrl}"
                                    Height="155" Width="155"
                                    Stretch="Uniform" />
                             <StackPanel DockPanel.Dock="Right" Margin="0 0 0 0" Orientation="Vertical">
@@ -59,10 +61,10 @@
                                 </Border>
                             </StackPanel>
                             <StackPanel Classes="smoothShowLeft" Margin="29 0 0 0" Orientation="Vertical">
-                                <TextBlock Classes="title" FontSize="32" TextTrimming="CharacterEllipsis" Text="{Binding Name, FallbackValue='Awesome Mod Name That Is really Long'}" />
+                                <TextBlock Classes="title" FontSize="32" TextTrimming="CharacterEllipsis" Text="{CompiledBinding Name, FallbackValue='Awesome Mod Name That Is really Long'}" />
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Classes="light" FontSize="16">by</TextBlock>
-                                    <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16" TextTrimming="CharacterEllipsis" Text="{Binding Author, FallbackValue='The Author'}" />
+                                    <TextBlock Classes="title" Margin="5 0 0 0" FontSize="16" TextTrimming="CharacterEllipsis" Text="{CompiledBinding Author, FallbackValue='The Author'}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0" Spacing="5">
                                     <views:Badge x:Name="ModPlatformBadge" HorizontalAlignment="Left" />
@@ -77,7 +79,7 @@
                         </DockPanel>
                         <StackPanel Orientation="Vertical" Margin="38 0 38 38">
                             <avalonia1:HtmlPanel x:Name="DescHtmlPanel" Margin="0 10 0 0"
-                                                 Text="{Binding LongDescriptionBody}" />
+                                                 Text="{CompiledBinding LongDescriptionBody}" />
                         </StackPanel>
                     </StackPanel>
                 </Border>

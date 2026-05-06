@@ -42,7 +42,9 @@ public partial class ContentDetailsPage : UserControl, ITopLevelPageControl
 
         ShownContent = shownContent;
         TargetBox = targetBox;
-        DataContext = shownContent;
+        
+        if (DataContext != shownContent)
+            DataContext = shownContent;
 
         switch (shownContent.Type)
         {

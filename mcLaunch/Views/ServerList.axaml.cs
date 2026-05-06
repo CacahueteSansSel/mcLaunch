@@ -20,7 +20,7 @@ public partial class ServerList : UserControl
     {
         InitializeComponent();
 
-        DataContext = new Data();
+        DataContext = new ServerListData();
         if (Design.IsDesignMode) SetDefaultServers();
     }
 
@@ -54,7 +54,7 @@ public partial class ServerList : UserControl
     {
         await LoadServerIconsAsync(servers);
 
-        Data ctx = (Data)DataContext;
+        ServerListData ctx = (ServerListData)DataContext;
         ctx.Servers = servers;
 
         NtsBanner.IsVisible = servers.Length == 0;
@@ -62,7 +62,7 @@ public partial class ServerList : UserControl
 
     private async Task LoadServerIconsAsync(MinecraftServer[] servers)
     {
-        Data ctx = (Data)DataContext;
+        ServerListData ctx = (ServerListData)DataContext;
 
         SetLoadingCircle(true);
 
@@ -91,7 +91,7 @@ public partial class ServerList : UserControl
         ServersList.UnselectAll();
     }
 
-    public class Data : ReactiveObject
+    public class ServerListData : ReactiveObject
     {
         private int page;
         private MinecraftServer[] servers;

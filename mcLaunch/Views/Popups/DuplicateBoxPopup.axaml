@@ -24,9 +24,9 @@
                 </StackPanel>
                 <StackPanel Margin="20 0 0 0" Orientation="Vertical">
                     <TextBlock Classes="light" Margin="0 0 0 3">New box name</TextBlock>
-                    <TextBox x:Name="BoxNameTb" Watermark="Name" UseFloatingWatermark="False" />
+                    <TextBox x:Name="BoxNameTb" PlaceholderText="Name" UseFloatingPlaceholder="False" />
                     <TextBlock Classes="light" Margin="0 20 0 3">New box author name</TextBlock>
-                    <TextBox x:Name="BoxAuthorTb" Watermark="Author" UseFloatingWatermark="False" />
+                    <TextBox x:Name="BoxAuthorTb" PlaceholderText="Author" UseFloatingPlaceholder="False" />
                 </StackPanel>
             </DockPanel>
             <DockPanel Margin="0 20 0 0">

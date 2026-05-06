@@ -2,9 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:contents="clr-namespace:mcLaunch.Core.Contents;assembly=mcLaunch.Core"
+             xmlns:core="clr-namespace:mcLaunch.Core.Core;assembly=mcLaunch.Core"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              Width="800" Height="450"
-             x:Class="mcLaunch.Views.Popups.VersionSelectionPopup">
+             DataContext="{x:Null}"
+             x:Class="mcLaunch.Views.Popups.VersionSelectionPopup"
+             x:DataType="core:IVersionContent">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
@@ -12,14 +16,14 @@
         <DockPanel Margin="38">
             <TextBlock DockPanel.Dock="Top" Classes="title" FontSize="25">Select the version to install</TextBlock>
             <TextBlock x:Name="DescriptionText" DockPanel.Dock="Top" Classes="light" Opacity="0.5"
-                       Text="{Binding Name}" />
+                       Text="{CompiledBinding Name}" />
             <DockPanel DockPanel.Dock="Bottom" Margin="0 20 0 0">
                 <Button x:Name="InstallButton" DockPanel.Dock="Right" Classes="primary" Click="InstallButtonClicked">Install</Button>
                 <Button DockPanel.Dock="Right" Classes="secondary" Click="CloseButtonClicked" Margin="0 0 10 0">Cancel</Button>
                 <Panel />
             </DockPanel>
             <ScrollViewer Margin="0 5 0 0">
-                <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{Binding ContentVersions}"
+                <ListBox x:Name="ModList" SelectionMode="Single" ItemsSource="{CompiledBinding ContentVersions}"
                          SelectionChanged="VersionSelectionChanged" DoubleTapped="VersionListDoubleTapped">
                     <ListBox.Styles>
                         <Style Selector="ListBoxItem">
@@ -30,10 +34,10 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Classes="title" Text="{Binding Name}" />
+                                <TextBlock Classes="title" Text="{CompiledBinding Name}" />
                                 <StackPanel Orientation="Horizontal" Spacing="5">
                                     <TextBlock>Minecraft</TextBlock>
-                                    <TextBlock Text="{Binding MinecraftVersion}" />
+                                    <TextBlock Text="{CompiledBinding MinecraftVersion}" />
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>

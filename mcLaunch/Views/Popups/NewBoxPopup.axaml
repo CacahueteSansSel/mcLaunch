@@ -3,16 +3,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:mcLaunch.Views"
+             xmlns:dataContexts="clr-namespace:mcLaunch.Views.DataContexts"
              mc:Ignorable="d" d:DesignWidth="600"
              Width="600" Height="460"
-             x:Class="mcLaunch.Views.Popups.NewBoxPopup">
+             DataContext="{x:Null}"
+             x:Class="mcLaunch.Views.Popups.NewBoxPopup"
+             x:DataType="dataContexts:MinecraftVersionSelectionDataContext">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </UserControl.Styles>
     <Border Classes="frame">
         <StackPanel Margin="38">
             <TextBlock Classes="title" FontSize="25">Create a new box</TextBlock>
-            <TextBlock x:Name="CustomText" IsVisible="False" Opacity="0.5" Text="{Binding CustomText}" />
+            <TextBlock x:Name="CustomText" IsVisible="False" Opacity="0.5" Text="{CompiledBinding CustomText}" />
             <DockPanel Margin="0 20 0 0">
                 <StackPanel>
                     <TextBlock Classes="light" Margin="0 0 0 5">Icon</TextBlock>
@@ -29,21 +32,21 @@
                 </StackPanel>
                 <StackPanel Margin="20 0 0 0" Orientation="Vertical">
                     <TextBlock Classes="light" Margin="0 0 0 5">Box Name</TextBlock>
-                    <TextBox x:Name="BoxNameTb" Watermark="Name" UseFloatingWatermark="False"
+                    <TextBox x:Name="BoxNameTb" PlaceholderText="Name" UseFloatingPlaceholder="False"
                              KeyUp="BoxNameTextChanged" />
                     <TextBlock Classes="light" Margin="0 20 0 5">Author Name</TextBlock>
-                    <TextBox x:Name="AuthorNameTb" Watermark="Author" UseFloatingWatermark="False" />
+                    <TextBox x:Name="AuthorNameTb" PlaceholderText="Author" UseFloatingPlaceholder="False" />
                     <TextBlock Classes="light" Margin="0 20 0 5">Minecraft version</TextBlock>
                     <views:MinecraftVersionSelector x:Name="VersionSelector" />
                     <TextBlock Classes="light" Margin="0 20 0 5">Mod Loader</TextBlock>
-                    <ComboBox x:Name="ModloaderCbox" SelectedItem="{Binding SelectedModLoader}"
-                              ItemsSource="{Binding ModLoaders}">
+                    <ComboBox x:Name="ModloaderCbox" SelectedItem="{CompiledBinding SelectedModLoader}"
+                              ItemsSource="{CompiledBinding ModLoaders}">
                         <ComboBox.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate DataType="dataContexts:DataContextModLoader">
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0 0 7 0" />
-                                    <TextBlock Text="{Binding Name}" />
-                                    <TextBlock Margin="7 0 0 0" Opacity="0.5" Text="{Binding LatestVersion.Name}" />
+                                    <Image Source="{CompiledBinding Icon}" Width="16" Height="16" Margin="0 0 7 0" />
+                                    <TextBlock Text="{CompiledBinding Name}" />
+                                    <TextBlock Margin="7 0 0 0" Opacity="0.5" Text="{CompiledBinding LatestVersion.Name}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>

@@ -79,7 +79,7 @@ public partial class SettingsPage : UserControl, ITopLevelPageControl
 
     private void NbtEditorButtonClicked(object? sender, RoutedEventArgs e)
     {
-        new NbtEditorWindow("level.dat").Show();
+        new NbtEditorWindow().Show();
     }
 
     private async void ReinstallButtonClicked(object? sender, RoutedEventArgs e)

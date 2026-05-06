@@ -7,6 +7,7 @@ using Avalonia.Animation;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
@@ -34,19 +35,15 @@ public partial class BoxEntryCard : UserControl
 
         if (Design.IsDesignMode)
         {
-            DataContext = new BoxManifest("TestBox", "1.0.0", "TestModLoader", "TestModLoaderId", "0.0.0",
-                IconCollection.FromResources("box_icons/0.png"), new ManifestMinecraftVersion() { }, BoxType.Default);
+            //DataContext = new BoxManifest("TestBox", "1.0.0", "TestModLoader", "TestModLoaderId", "0.0.0",
+            //    IconCollection.FromResources("box_icons/0.png"), new ManifestMinecraftVersion() { }, BoxType.Default);
         }
     }
 
     public Box Box
     {
         get => box;
-        set
-        {
-            box = value;
-            SetBox(box);
-        }
+        set => SetBox(value);
     }
 
     private void UpdateDeletedStatus()
@@ -83,7 +80,9 @@ public partial class BoxEntryCard : UserControl
         this.box = box;
 
         IsEnabled = true;
-        DataContext = box.Manifest;
+        
+        if (DataContext != box)
+            DataContext = box;
 
         UpdateDeletedStatus();
 
@@ -108,7 +107,7 @@ public partial class BoxEntryCard : UserControl
             return;
         }
 
-        if (BackgroundManager.IsBoxRunning(Box))
+        if (BackgroundManager.IsBoxRunning((Box)Box))
         {
             StopButton.IsVisible = true;
             PlayButton.IsVisible = false;
@@ -167,19 +166,19 @@ public partial class BoxEntryCard : UserControl
         Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Delete {box.Manifest.Name} ?", "This action is irreversible",
             () =>
             {
-                Box.Delete();
+                ((Box)Box).Delete();
                 MainPage.Instance.PopulateBoxListAsync();
             }));
     }
 
     private void OpenFolderMenuOptionClicked(object? sender, RoutedEventArgs e)
     {
-        PlatformSpecific.OpenFolder(Box.Path);
+        PlatformSpecific.OpenFolder(((Box)Box).Path);
     }
 
     private void DuplicateOptionClicked(object? sender, RoutedEventArgs e)
     {
-        Navigation.ShowPopup(new DuplicateBoxPopup(Box));
+        Navigation.ShowPopup(new DuplicateBoxPopup((Box)Box));
     }
 
     private async void CompleteReportOptionClicked(object? sender, RoutedEventArgs e)
@@ -190,7 +189,7 @@ public partial class BoxEntryCard : UserControl
             return;
         }
 
-        string report = await BoxUtilities.GenerateReportAsync(Box);
+        string report = await BoxUtilities.GenerateReportAsync((Box)Box);
         MainWindow.Instance.Clipboard?.SetTextAsync(report);
 
         Navigation.ShowPopup(new MessageBoxPopup("Success", "Report copied to clipboard", MessageStatus.Success));
@@ -204,7 +203,7 @@ public partial class BoxEntryCard : UserControl
             return;
         }
 
-        string report = await BoxUtilities.GenerateReportAsync(Box, false);
+        string report = await BoxUtilities.GenerateReportAsync((Box)Box, false);
         MainWindow.Instance.Clipboard?.SetTextAsync(report);
 
         Navigation.ShowPopup(new MessageBoxPopup("Success", "Report copied to clipboard", MessageStatus.Success));
@@ -254,6 +253,6 @@ public partial class BoxEntryCard : UserControl
 
     private void ExportOptionClicked(object? sender, RoutedEventArgs e)
     {
-        Navigation.ShowPopup(new ExportBoxPopup(Box));
+        Navigation.ShowPopup(new ExportBoxPopup((Box)Box));
     }
 }

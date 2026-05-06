@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:mcLaunch.Views"
+        xmlns:windows="clr-namespace:mcLaunch.Views.Windows"
         mc:Ignorable="d"
         Width="1280" Height="720" CanResize="True"
         x:Class="mcLaunch.Views.Windows.UnitTestsWindow"
@@ -11,7 +12,8 @@
         ExtendClientAreaToDecorationsHint="True"
         Title="Unit Tests"
         Icon="/resources/icon.ico"
-        Background="{DynamicResource BackgroundDarker}">
+        Background="{DynamicResource BackgroundDarker}"
+        x:DataType="windows:UnitTestsWindow+UnitTestsWindowData">
     <Window.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>
@@ -29,20 +31,20 @@
             </StackPanel>
             <DockPanel>
                 <ListBox SelectionChanged="ListItemSelectionChanged" DockPanel.Dock="Left" Width="300"
-                         ItemsSource="{Binding Entries}">
+                         ItemsSource="{CompiledBinding Entries}">
                     <ListBox.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate DataType="windows:UnitTestsWindow+UnitTestEntry">
                             <DockPanel>
                                 <Panel DockPanel.Dock="Right" MaxHeight="20">
                                     <Image Source="{SvgImage /resources/status/error.svg}"
-                                           IsVisible="{Binding IsFailed}" Height="20" />
+                                           IsVisible="{CompiledBinding IsFailed}" Height="20" />
                                     <Image Source="{SvgImage /resources/status/success.svg}"
-                                           IsVisible="{Binding IsSucceeded}" Height="20" />
+                                           IsVisible="{CompiledBinding IsSucceeded}" Height="20" />
                                     <Image Source="{SvgImage /resources/icons/unit_test.svg}"
-                                           IsVisible="{Binding IsNotTested}" Height="20" />
-                                    <views:LoadingCircle IsVisible="{Binding IsLoading}" RenderTransform="scale(0.7)" />
+                                           IsVisible="{CompiledBinding IsNotTested}" Height="20" />
+                                    <views:LoadingCircle IsVisible="{CompiledBinding IsLoading}" RenderTransform="scale(0.7)" />
                                 </Panel>
-                                <TextBlock Text="{Binding TestName}" />
+                                <TextBlock Text="{CompiledBinding TestName}" />
                             </DockPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

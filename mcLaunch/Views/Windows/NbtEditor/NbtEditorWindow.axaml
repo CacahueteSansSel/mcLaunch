@@ -3,6 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:mcLaunch.Views"
+        xmlns:models="clr-namespace:mcLaunch.Models"
+        xmlns:mcLaunch="clr-namespace:mcLaunch"
+        xmlns:nbtEditor="clr-namespace:mcLaunch.Views.Windows.NbtEditor"
         mc:Ignorable="d"
         Width="800" Height="600" CanResize="True"
         x:Class="mcLaunch.Views.Windows.NbtEditor.NbtEditorWindow"
@@ -11,7 +14,8 @@
         ExtendClientAreaToDecorationsHint="True"
         Title="NBT Editor"
         Icon="/resources/icon.ico"
-        Background="{DynamicResource BackgroundDarker}">
+        Background="{DynamicResource BackgroundDarker}"
+        x:DataType="nbtEditor:NbtEditorWindow+NbtEditorWindowData">
     <Window.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
     </Window.Styles>
@@ -88,44 +92,44 @@
                     </Button>
                 </StackPanel>
                 <Panel DockPanel.Dock="Top" Height="1" Background="{DynamicResource BackgroundLighter}" />
-                <TreeView x:Name="TagTree" ItemsSource="{Binding .}" SelectionChanged="TagTreeSelectionChanged">
+                <TreeView x:Name="TagTree" ItemsSource="{CompiledBinding Nodes}" SelectionChanged="TagTreeSelectionChanged">
                     <TreeView.ItemTemplate>
-                        <TreeDataTemplate ItemsSource="{Binding Children}">
+                        <TreeDataTemplate DataType="nbtEditor:NbtEditorWindow+TagNode" ItemsSource="{CompiledBinding Children}">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <Panel>
-                                    <Image Source="{SvgImage /resources/nbt/byte.svg}" IsVisible="{Binding IsByte}"
+                                    <Image Source="{SvgImage /resources/nbt/byte.svg}" IsVisible="{CompiledBinding IsByte}"
                                            Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/byte_array.svg}"
-                                           IsVisible="{Binding IsByteArray}" Height="20" />
+                                           IsVisible="{CompiledBinding IsByteArray}" Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/compound.svg}"
-                                           IsVisible="{Binding IsCompound}" Height="20" />
-                                    <Image Source="{SvgImage /resources/nbt/double.svg}" IsVisible="{Binding IsDouble}"
+                                           IsVisible="{CompiledBinding IsCompound}" Height="20" />
+                                    <Image Source="{SvgImage /resources/nbt/double.svg}" IsVisible="{CompiledBinding IsDouble}"
                                            Height="20" />
-                                    <Image Source="{SvgImage /resources/nbt/float.svg}" IsVisible="{Binding IsFloat}"
+                                    <Image Source="{SvgImage /resources/nbt/float.svg}" IsVisible="{CompiledBinding IsFloat}"
                                            Height="20" />
-                                    <Image Source="{SvgImage /resources/nbt/int.svg}" IsVisible="{Binding IsInt}"
+                                    <Image Source="{SvgImage /resources/nbt/int.svg}" IsVisible="{CompiledBinding IsInt}"
                                            Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/int_array.svg}"
-                                           IsVisible="{Binding IsIntArray}" Height="20" />
-                                    <Image Source="{SvgImage /resources/nbt/list.svg}" IsVisible="{Binding IsList}"
+                                           IsVisible="{CompiledBinding IsIntArray}" Height="20" />
+                                    <Image Source="{SvgImage /resources/nbt/list.svg}" IsVisible="{CompiledBinding IsList}"
                                            Height="20" />
-                                    <Image Source="{SvgImage /resources/nbt/long.svg}" IsVisible="{Binding IsLong}"
+                                    <Image Source="{SvgImage /resources/nbt/long.svg}" IsVisible="{CompiledBinding IsLong}"
                                            Height="20" />
                                     <Image Source="{SvgImage /resources/nbt/long_array.svg}"
-                                           IsVisible="{Binding IsLongArray}" Height="20" />
-                                    <Image Source="{SvgImage /resources/nbt/short.svg}" IsVisible="{Binding IsShort}"
+                                           IsVisible="{CompiledBinding IsLongArray}" Height="20" />
+                                    <Image Source="{SvgImage /resources/nbt/short.svg}" IsVisible="{CompiledBinding IsShort}"
                                            Height="20" />
-                                    <Image Source="{SvgImage /resources/nbt/string.svg}" IsVisible="{Binding IsString}"
+                                    <Image Source="{SvgImage /resources/nbt/string.svg}" IsVisible="{CompiledBinding IsString}"
                                            Height="20" />
                                 </Panel>
                                 <Panel>
                                     <TextBlock VerticalAlignment="Center" MinWidth="250"
-                                               IsVisible="{Binding IsNameEmpty}" Text="{Binding TypeLine}"
+                                               IsVisible="{CompiledBinding IsNameEmpty}" Text="{CompiledBinding TypeLine}"
                                                Opacity="0.5" Classes="light" />
                                     <TextBlock VerticalAlignment="Center" MinWidth="250"
-                                               IsVisible="{Binding !IsNameEmpty}" Text="{Binding Name}" />
+                                               IsVisible="{CompiledBinding !IsNameEmpty}" Text="{CompiledBinding Name}" />
                                 </Panel>
-                                <TextBox Width="200" IsVisible="{Binding HasValue}" Text="{Binding Value, Mode=TwoWay}" />
+                                <TextBox Width="200" IsVisible="{CompiledBinding HasValue}" Text="{CompiledBinding Value, Mode=TwoWay}" />
                             </StackPanel>
                         </TreeDataTemplate>
                     </TreeView.ItemTemplate>

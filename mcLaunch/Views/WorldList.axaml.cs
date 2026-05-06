@@ -21,7 +21,7 @@ public partial class WorldList : UserControl
     {
         InitializeComponent();
 
-        DataContext = new Data();
+        DataContext = new WorldListData();
 
         SetWorlds(new[]
         {
@@ -51,9 +51,9 @@ public partial class WorldList : UserControl
 
     public void SetWorlds(MinecraftWorld[] worlds)
     {
-        Data ctx = (Data)DataContext;
+        WorldListData ctx = (WorldListData)DataContext;
 
-        ctx.Worlds = worlds.Select(w => new Data.ModelWorld(w)).ToArray();
+        ctx.Worlds = worlds.Select(w => new WorldListData.ModelWorld(w)).ToArray();
 
         NtsBanner.IsVisible = worlds.Length == 0;
     }
@@ -67,7 +67,7 @@ public partial class WorldList : UserControl
     {
         if (e.AddedItems.Count > 0 && launchPage != null && launchPage.Box.SupportsQuickPlay)
         {
-            Data.ModelWorld world = (Data.ModelWorld)e.AddedItems[0];
+            WorldListData.ModelWorld world = (WorldListData.ModelWorld)e.AddedItems[0];
 
             Navigation.ShowPopup(new ConfirmMessageBoxPopup($"Launch world {world.World.Name} ?",
                 $"Minecraft will start and automatically launch the world {world.World.Name}",
@@ -77,7 +77,7 @@ public partial class WorldList : UserControl
         WorldsList.UnselectAll();
     }
 
-    public class Data : ReactiveObject
+    public class WorldListData : ReactiveObject
     {
         private int page;
         private ModelWorld[] worlds;

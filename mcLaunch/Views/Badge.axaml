@@ -2,7 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:mcLaunch.Views"
              mc:Ignorable="d"
+             DataContext="{x:Null}"
              x:Class="mcLaunch.Views.Badge">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/AppStyles.axaml" />
@@ -18,7 +20,7 @@
     </UserControl.Styles>
     <Border Classes="badge">
         <StackPanel Orientation="Horizontal">
-            <TextBlock x:Name="Label" Margin="2" Classes="light" Text="{Binding Text}">Test</TextBlock>
+            <TextBlock x:Name="Label" Margin="2" Classes="light">Test</TextBlock>
         </StackPanel>
     </Border>
 </UserControl>

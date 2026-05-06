@@ -31,7 +31,7 @@ public class NeoForgeModLoaderSupport : ModLoaderSupport
         try
         {
             NeoForgeMavenQuery? query = await Api.GetAsync<NeoForgeMavenQuery>
-                (string.Format(OlderMavenQueryUrl, minecraftVersion));
+                (string.Format(OlderMavenQueryUrl, $"{minecraftVersion}."));
 
             string versionName;
             bool newer = false;
@@ -42,10 +42,10 @@ public class NeoForgeModLoaderSupport : ModLoaderSupport
                 // Minecraft version or not, but we will try that for now
 
                 query = await Api.GetAsync<NeoForgeMavenQuery>
-                    (string.Format(NewerMavenQueryUrl, minecraftVersion[2..]));
+                    (string.Format(NewerMavenQueryUrl, $"{minecraftVersion[2..]}."));
 
                 if (query == null) return null;
-                if (!query.Version.StartsWith(minecraftVersion[2..])) return null;
+                if (!query.Version.StartsWith($"{minecraftVersion[2..]}.")) return null;
 
                 versionName = query.Version;
                 newer = true;
