@@ -34,6 +34,8 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
         {
             ((MinecraftVersionSelectionDataContext)DataContext!).CustomText = this.listener.CustomShownText;
             CustomText.IsVisible = true;
+
+            Height += 20;
         }
 
         Random rng = new();
@@ -44,9 +46,9 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
         if (AuthenticationManager.Account != null) AuthorNameTb.Text = AuthenticationManager.Account.Username;
 
         VersionSelector.Listener = this;
-        VersionSelector.OnVersionChanged += version => { FetchModLoadersLatestVersions(version.Id); };
+        VersionSelector.OnVersionChanged += version => { FetchModLoadersLatestVersions(version.Id, false); };
 
-        FetchModLoadersLatestVersions(VersionSelector.Version.Id);
+        FetchModLoadersLatestVersions(VersionSelector.Version.Id, true);
     }
 
     public bool ShouldShowMinecraftVersion(ManifestMinecraftVersion version)
@@ -57,9 +59,15 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
         return true;
     }
 
-    private async void FetchModLoadersLatestVersions(string versionId)
+    private async void FetchModLoadersLatestVersions(string versionId, bool first)
     {
-        if (listener != null) await listener.InitializeAsync();
+        if (first)
+        {
+            if (listener != null) await listener.InitializeAsync();
+            VersionSelector.SetDefaultVersion();
+            
+            return;
+        }
 
         CreateButton.IsEnabled = false;
         MinecraftVersionSelectionDataContext ctx = (MinecraftVersionSelectionDataContext)DataContext!;
@@ -76,6 +84,20 @@ public partial class NewBoxPopup : UserControl, IMinecraftVersionSelectionListen
         }
 
         ctx.ModLoaders = all.Select(m => new DataContextModLoader(m)).ToArray();
+        if (ctx.ModLoaders.Length == 0)
+        {
+            ModloaderCbox.IsEditable = true;
+            ModloaderCbox.Text = "No modloader available";
+            ModloaderCbox.IsEnabled = false;
+            
+            return;
+        }
+        else
+        {
+            ModloaderCbox.IsEditable = false;
+            ModloaderCbox.IsEnabled = true;
+        }
+        
         ctx.SelectedModLoader = ctx.ModLoaders[0];
         CreateButton.IsEnabled = true;
     }

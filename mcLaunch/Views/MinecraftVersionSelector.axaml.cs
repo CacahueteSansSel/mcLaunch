@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using mcLaunch.Core.Managers;
@@ -33,6 +34,16 @@ public partial class MinecraftVersionSelector : UserControl
         Version = newVersion;
         DataContext = Version;
         OnVersionChanged?.Invoke(Version);
+    }
+
+    public void SetDefaultVersion()
+    {
+        ManifestMinecraftVersion[] versions = Listener == null
+            ? MinecraftManager.ManifestVersions
+            : MinecraftManager.ManifestVersions
+                .Where(ver => Listener.ShouldShowMinecraftVersion(ver)).ToArray();
+
+        SetVersion(versions[0]);
     }
 
     public void SetVersion(ManifestMinecraftVersion version)
