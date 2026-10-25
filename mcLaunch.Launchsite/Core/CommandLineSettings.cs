@@ -13,14 +13,17 @@ public class CommandLineSettings
     public int MaximumAllocatedRam { get; set; }
     public string CustomJavaArguments { get; set; }
 
-    public string BuildArguments(string prefix)
+    public string BuildArguments(string nextArgs)
     {
-        string args = $"{prefix} ";
-
+        string args = "";
+        
         args += $"-Xms{MinimumAllocatedRam}m ";
         args += $"-Xmx{MaximumAllocatedRam}m ";
         if (!string.IsNullOrWhiteSpace(CustomJavaArguments))
             args += $"{CustomJavaArguments.Trim()} ";
+
+        if (!string.IsNullOrWhiteSpace(nextArgs))
+            args += nextArgs;
         
         return args;
     }

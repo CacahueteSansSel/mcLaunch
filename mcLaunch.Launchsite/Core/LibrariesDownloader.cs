@@ -143,6 +143,7 @@ public class LibrariesDownloader
             LibraryName name = new(lib.Name);
 
             if (name.Name != "lwjgl") continue;
+            if (!lib.AreRulesSatisfied()) continue;
 
             string versionNumbers = new(name.Version.Where(char.IsNumber).ToArray());
             ulong curVersionInt = ulong.Parse(versionNumbers);

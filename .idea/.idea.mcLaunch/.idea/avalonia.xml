@@ -3,6 +3,7 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="mcLaunch.Installer/App.axaml" value="mcLaunch.Installer/mcLaunch.Installer.csproj" />
         <entry key="mcLaunch.Installer/MainWindow.axaml" value="mcLaunch.Installer/mcLaunch.Installer.csproj" />
         <entry key="mcLaunch.Installer/Pages/CheckboxesSettingsPage.axaml" value="mcLaunch.Installer/mcLaunch.Installer.csproj" />
         <entry key="mcLaunch.Installer/Pages/SelectFolderPage.axaml" value="mcLaunch.Installer/mcLaunch.Installer.csproj" />

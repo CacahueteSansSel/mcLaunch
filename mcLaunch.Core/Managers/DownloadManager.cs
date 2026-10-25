@@ -38,6 +38,7 @@ public static class DownloadManager
         userAgent = $"mcLaunch/{version}";
 
         Backend = new NativeDownloaderBackend { UserAgent = userAgent };
+        Backend.Init(); // setup the user agent
     }
 
     public static void Begin(string name)
@@ -99,64 +100,66 @@ public static class DownloadManager
     private static async Task DownloadEntryAsync(DownloadEntry entry, DownloadSection section, int sectionIndex,
         int progress)
     {
-        try
+        // Some files can have empty source link, we ignore those
+        if (string.IsNullOrWhiteSpace(entry.Source)) return;
+
+        if (File.Exists(entry.Target) && entry.Hash != null)
         {
-            // Some files can have empty source link, we ignore those
-            if (string.IsNullOrWhiteSpace(entry.Source)) return;
+            string localFileHash = Convert.ToHexString(
+                SHA1.HashData(await File.ReadAllBytesAsync(entry.Target))).ToLower();
 
-            if (File.Exists(entry.Target) && entry.Hash != null)
+            if (localFileHash == entry.Hash.ToLower())
+                return;
+        }
+
+        if (entry.Hash == null && File.Exists(entry.Target)) return;
+
+        string file = Path.GetFileName(entry.Target);
+        string folder = entry.Target.Replace(file, "").TrimEnd('/');
+        if (!Directory.Exists(folder))
+        {
+            try
             {
-                string localFileHash = Convert.ToHexString(
-                    SHA1.HashData(await File.ReadAllBytesAsync(entry.Target))).ToLower();
-
-                if (localFileHash == entry.Hash.ToLower())
-                    return;
+                Directory.CreateDirectory(folder);
             }
-
-            if (entry.Hash == null && File.Exists(entry.Target)) return;
-
-            string file = Path.GetFileName(entry.Target);
-            string folder = entry.Target.Replace(file, "").TrimEnd('/');
-            if (!Directory.Exists(folder))
+            catch (Exception e)
             {
-                try
-                {
-                    Directory.CreateDirectory(folder);
-                }
-                catch (Exception e)
-                {
-                }
-            }
-            
-            Logs.Debug($"downloading {entry.Source}: using downloader backend {Backend.GetType().Name}");
-
-            bool success = await Backend.Download(entry.Source, entry.Target, (name, percent) =>
-            {
-                OnDownloadProgressUpdate?.Invoke(entry.Source,
-                    progress / (float)section.Entries.Count + percent * (1 / (float)section.Entries.Count),
-                    sectionIndex + 1);
-            });
-
-            if (!success || !File.Exists(entry.Target))
-            {
-                Logs.Warning($"backend {Backend.GetType().Name} failed to download {entry.Target}: switching to the fallback downloader");
-                
-                await UseFallbackDownloader(entry.Source, entry.Target, pp =>
-                {
-                    OnDownloadProgressUpdate?.Invoke(entry.Source,
-                        (float)progress / section.Entries.Count + pp,
-                        sectionIndex + 1);
-                }, (success, error) =>
-                {
-                    if (!success) Logs.Error($"fallback downloader error: {error}");
-
-                    OnDownloadError?.Invoke(section.Name, entry.Source);
-                });
             }
         }
-        catch (InvalidProgramException e)
+        
+        Logs.Debug($"downloading {entry.Source}: using downloader backend {Backend.GetType().Name}");
+
+        bool success = await Backend.Download(entry.Source, entry.Target, (name, percent) =>
         {
-            OnDownloadError?.Invoke(section.Name, entry.Source);
+            OnDownloadProgressUpdate?.Invoke(entry.Source,
+                progress / (float)section.Entries.Count + percent * (1 / (float)section.Entries.Count),
+                sectionIndex + 1);
+        });
+
+        if (!success || !File.Exists(entry.Target))
+        {
+            Logs.Warning($"backend {Backend.GetType().Name} failed to download {entry.Target}: switching to the fallback downloader");
+            
+            await UseFallbackDownloader(entry.Source, entry.Target, pp =>
+            {
+                OnDownloadProgressUpdate?.Invoke(entry.Source,
+                    (float)progress / section.Entries.Count + pp,
+                    sectionIndex + 1);
+            }, (success, error) =>
+            {
+                if (!success) Logs.Error($"fallback downloader error: {error}");
+
+                OnDownloadError?.Invoke(section.Name, entry.Source);
+            });
+        }
+        
+        if (entry.Hash != null)
+        {
+            string localFileHash = Convert.ToHexString(
+                SHA1.HashData(await File.ReadAllBytesAsync(entry.Target))).ToLower();
+
+            if (localFileHash != entry.Hash.ToLower())
+                throw new Exception($"File {entry.Target} does not match expected SHA1 hash {localFileHash}");
         }
     }
 
@@ -180,6 +183,10 @@ public static class DownloadManager
         if (IsProcessing) return;
         IsProcessing = true;
 
+        bool abortDownload = false;
+        DownloadSection? abortedSection = null;
+        DownloadEntry? abortedEntry = null;
+
         int sectionIndex = 0;
         foreach (DownloadSection section in sections)
         {
@@ -190,7 +197,18 @@ public static class DownloadManager
             float progressPercent = 0f;
             foreach (DownloadEntry entry in section.Entries.Where(entry => entry.Action == EntryAction.Download))
             {
-                await DownloadEntryAsync(entry, section, sectionIndex, progress);
+                try
+                {
+                    await DownloadEntryAsync(entry, section, sectionIndex, progress);
+                }
+                catch (Exception e)
+                {
+                    abortDownload = true;
+                    abortedSection = section;
+                    abortedEntry = entry;
+                    
+                    break;
+                }
 
                 progress++;
                 float percent = (float)progress / section.Entries.Count;
@@ -232,6 +250,13 @@ public static class DownloadManager
         IsProcessing = false;
         sections.Clear();
         currentSectionEntries.Clear();
+
+        if (abortDownload)
+        {
+            OnDownloadError?.Invoke(abortedSection!.Name, abortedEntry!.Source);
+            return;
+        }
+        
         OnDownloadFinished?.Invoke();
     }
 

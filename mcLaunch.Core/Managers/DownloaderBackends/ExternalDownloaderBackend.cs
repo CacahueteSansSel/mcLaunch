@@ -5,6 +5,11 @@ namespace mcLaunch.Core.Managers.DownloaderBackends;
 [Obsolete]
 public class ExternalDownloaderBackend : DownloaderBackend
 {
+    public override void Init()
+    {
+        // obsolete
+    }
+
     public override async Task<bool> Download(string sourceUrl, string filename, Action<string, float>? updateCallback)
     {
         string? dirName = Path.GetDirectoryName(filename);

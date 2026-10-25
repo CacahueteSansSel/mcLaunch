@@ -5,11 +5,20 @@ namespace mcLaunch.Core.Managers.DownloaderBackends;
 
 public class NativeDownloaderBackend : DownloaderBackend
 {
+    private HttpClient client;
+    
+    public NativeDownloaderBackend()
+    {
+        client = new HttpClient();
+    }
+
+    public override void Init()
+    {
+        client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
+    }
+
     public override async Task<bool> Download(string sourceUrl, string filename, Action<string, float>? updateCallback)
     {
-        HttpClient client = new();
-        client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
-
         HttpResponseMessage resp = await client.GetAsync(sourceUrl, HttpCompletionOption.ResponseHeadersRead);
         if (!resp.IsSuccessStatusCode)
         {

@@ -8,6 +8,8 @@ namespace mcLaunch.Launchsite.Http;
 
 public static class Api
 {
+    static HttpClient client = new();
+    
     private const int RetryCount = 2;
     private static ProductInfoHeaderValue? userAgent;
     public static bool AllowExtendedTimeout { get; set; }
@@ -18,14 +20,17 @@ public static class Api
     public static void SetUserAgent(ProductInfoHeaderValue ua)
     {
         userAgent = ua;
+        if (userAgent != null)
+        {
+            client.DefaultRequestHeaders.UserAgent.Clear();
+            client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+        }
+        
+        // if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
     }
 
     public static async Task<XmlDocument?> GetAsyncXml(string url)
     {
-        HttpClient client = new();
-        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
-        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
-
         HttpResponseMessage resp = null;
         int t = 0;
         while (true)
@@ -63,10 +68,6 @@ public static class Api
 
     public static async Task<T?> GetAsync<T>(string url, bool patchDateTimes = false)
     {
-        HttpClient client = new();
-        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
-        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
-
         HttpResponseMessage resp = null;
         int t = 0;
         while (true)
@@ -102,9 +103,6 @@ public static class Api
 
     public static async Task<T?> GetAsyncAuthBearer<T>(string url, string auth)
     {
-        HttpClient client = new();
-        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
-        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth);
 
         HttpResponseMessage resp = null;
@@ -135,16 +133,13 @@ public static class Api
 
         OnNetworkSuccess?.Invoke(url);
 
+        client.DefaultRequestHeaders.Authorization = null;
+
         return JsonSerializer.Deserialize<T>(json);
     }
 
     public static async Task<JsonNode?> GetNodeAsync(string url, bool patchDateTimes = false)
     {
-        HttpClient client = new();
-        client.Timeout = TimeSpan.FromSeconds(5);
-        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
-        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
-
         HttpResponseMessage resp = null;
         int t = 0;
         while (true)
@@ -180,12 +175,9 @@ public static class Api
 
     public static async Task<TResponse?> PostAsync<TRequest, TResponse>(string url, TRequest data, string? authToken = null)
     {
-        HttpClient client = new();
-        client.Timeout = TimeSpan.FromSeconds(5);
-        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
-        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
         if (authToken != null) client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
+        client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         string inputJson = JsonSerializer.Serialize(data);
@@ -222,18 +214,17 @@ public static class Api
         string json = Encoding.UTF8.GetString(await resp.Content.ReadAsByteArrayAsync());
 
         OnNetworkSuccess?.Invoke(url);
+        
+        client.DefaultRequestHeaders.Authorization = null;
 
         return JsonSerializer.Deserialize<TResponse>(json);
     }
     
     public static async Task<TResponse?> PostFormAuthAsync<TResponse>(string url, MultipartFormDataContent form, string? authToken = null)
     {
-        HttpClient client = new();
-        client.Timeout = TimeSpan.FromSeconds(5);
-        if (userAgent != null) client.DefaultRequestHeaders.UserAgent.Add(userAgent);
-        if (!AllowExtendedTimeout) client.Timeout = TimeSpan.FromSeconds(5);
         if (authToken != null) client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
-
+        
+        client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         HttpResponseMessage resp = null;
@@ -265,6 +256,8 @@ public static class Api
 
         OnNetworkSuccess?.Invoke(url);
 
+        client.DefaultRequestHeaders.Authorization = null;
+        
         return JsonSerializer.Deserialize<TResponse>(json);
     }
 }

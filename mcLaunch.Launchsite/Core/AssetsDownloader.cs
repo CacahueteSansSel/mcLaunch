@@ -79,7 +79,7 @@ public class AssetsDownloader
 
             string assetPath = $"{prefixFolder}/{asset.Hash}".FixPath();
 
-            await Context.Downloader.DownloadAsync(asset.Url, assetPath, null);
+            await Context.Downloader.DownloadAsync(asset.Url, assetPath, asset.Hash);
 
             cur++;
             percentCallback?.Invoke(percent);

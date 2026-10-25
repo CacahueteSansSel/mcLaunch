@@ -52,6 +52,8 @@ public class BoxStoredContent
     {
         foreach (string file in Filenames)
         {
+            if (file.Contains("..")) continue;
+            
             if (Path.IsPathFullyQualified(file))
                 throw new Exception("Mod filename is absolute : was the manifest updated to Manifest Version 2 ?");
 

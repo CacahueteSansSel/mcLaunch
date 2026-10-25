@@ -233,9 +233,9 @@ public partial class BoxDetailsPage : UserControl, ITopLevelPageControl
         if (java.HasExited)
         {
             Navigation.ShowPopup(new CrashPopup(java.ExitCode, Box.Manifest.Id, java)
-                .WithCustomLog(java.StartInfo.RedirectStandardError
-                    ? java.StandardError.ReadToEnd()
-                    : "Minecraft exited in early startup process"));
+                .WithCustomLog(Box.Minecraft.StandardError.Count > 0
+                    ? string.Join(Environment.NewLine, Box.Minecraft.StandardError)
+                    : "Minecraft exited without any error"));
 
             return;
         }

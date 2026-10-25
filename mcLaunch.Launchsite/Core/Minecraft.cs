@@ -33,10 +33,12 @@ public class Minecraft
     public MinecraftVersion Version { get; }
     public MinecraftFolder Folder { get; }
     public List<string> StandardOutput { get; } = [];
+    public List<string> StandardError { get; } = [];
     public string? JvmPath => jvmPath;
     public string LibrariesFolderPath => args["library_directory"];
     public string NativesFolderPath => args["natives_directory"];
     public event Action<string> OnStandardOutputLineReceived;
+    public event Action<string> OnStandardErrorLineReceived;
 
     public Minecraft WithSystemFolder(MinecraftFolder systemFolder)
     {
@@ -155,9 +157,23 @@ public class Minecraft
         return this;
     }
 
-    private void ReadOutput(Process process)
+    private void ReadStderr(Process process)
     {
-        while (!process.HasExited)
+        while (true)
+        {
+            string? line = process.StandardError.ReadLine();
+            if (line == null) break;
+
+            StandardError.Add(line);
+            OnStandardErrorLineReceived?.Invoke(line);
+        }
+
+        StandardError.Add($"Minecraft exited with code {process.ExitCode}");
+    }
+
+    private void ReadStdout(Process process)
+    {
+        while (true)
         {
             string? line = process.StandardOutput.ReadLine();
             if (line == null) break;
@@ -241,7 +257,7 @@ public class Minecraft
             FileName = jvm,
             UseShellExecute = false,
             WorkingDirectory = Folder.CompletePath,
-            RedirectStandardError = true,
+            RedirectStandardError = redirectOutput,
             RedirectStandardOutput = redirectOutput
         };
         if (addClassPathToEnv) info.EnvironmentVariables.Add("CLASSPATH", args["classpath"]);
@@ -259,7 +275,11 @@ public class Minecraft
         if (OperatingSystem.IsMacOS()) File.SetUnixFileMode(info.FileName, UnixFileMode.UserExecute);
 
         Process java = Process.Start(info)!;
-        if (redirectOutput) new Thread(() => ReadOutput(java)).Start();
+        if (redirectOutput)
+        {
+            new Thread(() => ReadStderr(java)).Start();
+            new Thread(() => ReadStdout(java)).Start();
+        }
 
         return java;
     }

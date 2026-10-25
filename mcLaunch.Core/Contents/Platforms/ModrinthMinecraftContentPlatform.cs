@@ -120,6 +120,8 @@ public class ModrinthMinecraftContentPlatform : MinecraftContentPlatform
         FacetCollection collection = new();
 
         collection.Add(Facet.ProjectType(ProjectType.Modpack));
+        if (!string.IsNullOrWhiteSpace(minecraftVersion)) 
+            collection.Add(Facet.Version(minecraftVersion));
 
         SearchResponse search;
 

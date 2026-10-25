@@ -13,7 +13,7 @@ public static class CacheManager
 
         Directory.CreateDirectory(FolderPath);
         Directory.CreateDirectory($"{FolderPath}/bitmaps");
-        Directory.CreateDirectory($"{FolderPath}/mods");
+        Directory.CreateDirectory($"{FolderPath}/contents");
     }
 
     public static void Store(Bitmap? bmp, string id)
@@ -36,7 +36,7 @@ public static class CacheManager
 
         try
         {
-            using FileStream fs = new($"{FolderPath}/mods/{id}.cache", FileMode.Create);
+            using FileStream fs = new($"{FolderPath}/contents/{id}.cache", FileMode.Create);
             mod.WriteToStream(fs);
         }
         catch

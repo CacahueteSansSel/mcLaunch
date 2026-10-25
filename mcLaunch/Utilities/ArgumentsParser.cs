@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace mcLaunch.Utilities;
@@ -28,7 +29,9 @@ public class ArgumentsParser
             if (current.Contains('='))
             {
                 string[] tokens = current.Split('=');
-                dict.Add(tokens[0].TrimStart('-').Trim(), tokens[1].Trim());
+                string key = tokens[0].TrimStart('-').Trim();
+
+                dict[key] = tokens[1].Trim();
                 
                 continue;
             }
@@ -37,13 +40,13 @@ public class ArgumentsParser
 
             if (current.StartsWith('-') && next != null && !next.StartsWith('-'))
             {
-                dict.Add(current.TrimStart('-'), next);
+                dict[current.TrimStart('-')] = next;
                 i++;
 
                 continue;
             }
 
-            dict.Add(current.TrimStart('-'), string.Empty);
+            dict[current.TrimStart('-')] = string.Empty;
         }
     }
 

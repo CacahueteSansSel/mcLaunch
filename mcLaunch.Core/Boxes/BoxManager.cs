@@ -116,6 +116,19 @@ public static class BoxManager
             await MinecraftManager.GetManifestAsync(pack.MinecraftVersion));
 
         if (pack.Id != null) manifest.Id = pack.Id;
+        
+        // Safety check
+        if (manifest.Id.Contains('.') || manifest.Id.Contains(':') || manifest.Id.Contains('/') || manifest.Id.Contains('\\'))
+        {
+            // If the ID seems to be invalid, we generate a fresh new one
+            manifest.Id = IdGenerator.Generate();
+        }
+
+        if (Directory.Exists($"{BoxesPath}/{manifest.Id}"))
+        {
+            // If the directory already exist (so, we have an instance with the same ID), we generate a fresh new one
+            manifest.Id = IdGenerator.Generate();
+        }
 
         Result<string> path = await Create(manifest);
         if (path.IsError) return new Result<Box>(path);

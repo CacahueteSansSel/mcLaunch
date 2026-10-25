@@ -84,7 +84,7 @@ public class BoxManifest : ReactiveObject
 
     [JsonIgnore] public string DatapacksCount => ContentDatapacks.Count().ToString();
 
-    [JsonIgnore] public string ShadersCount => ShadersCount.Count().ToString();
+    [JsonIgnore] public string ShadersCount => ContentShaders.Count().ToString();
 
     [JsonIgnore] public string ContentWorldsCount => ContentWorlds.Count().ToString();
 
@@ -221,22 +221,23 @@ public class BoxManifest : ReactiveObject
         });
 
         // Remove duplicates
-        HashSet<string> seenContents = [];
-        HashSet<string> toRemoveContents = [];
-        foreach (BoxStoredContent content in Contents)
+        HashSet<string> seenContentIds = [];
+        HashSet<BoxStoredContent> toRemove = [];
+        for (var i = 0; i < Contents.Count; i++)
         {
+            BoxStoredContent content = Contents[i];
             if (content.Content == null) continue;
 
-            if (seenContents.Contains(content.Content!.Id))
+            if (seenContentIds.Contains(content.Content!.Id))
             {
-                toRemoveContents.Add(content.Content!.Id);
+                toRemove.Add(content);
                 continue;
             }
 
-            seenContents.Add(content.Content.Id);
+            seenContentIds.Add(content.Content.Id);
         }
-
-        Contents.RemoveAll(content => content.Content == null || toRemoveContents.Contains(content.Content!.Id));
+        
+        Contents.RemoveAll(toRemove.Contains);
 
         return hadChange;
     }
@@ -255,6 +256,8 @@ public class BoxManifest : ReactiveObject
 
         if (ModLoader != null) mcVersion = await ModLoader.PostProcessMinecraftVersionAsync(mcVersion);
 
+        MinecraftVersionPatcher.Patch(mcVersion);
+
         await BoxManager.SetupVersionAsync(mcVersion, downloadAllAfter: false);
 
         ModLoaderSupport modLoader = ModLoader;
@@ -272,7 +275,10 @@ public class BoxManifest : ReactiveObject
             }
 
             ModLoaderVersion? version = versions.FirstOrDefault(v => v.Name == ModLoaderVersion);
-            if (version == null) version = versions[0];
+            if (version == null)
+            {
+                return Result<MinecraftVersion>.Error($"Cannot find modloader version {ModLoaderVersion}");
+            }
 
             Result<MinecraftVersion> versionResult = await version.GetMinecraftVersionAsync(Version);
             if (versionResult.IsError) return versionResult;

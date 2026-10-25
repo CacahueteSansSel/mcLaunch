@@ -50,6 +50,12 @@ public class SerializedBox
         fs.Close();
     }
 
+    void VerifyExternalBufferSize(uint size)
+    {
+        if (size > 500000000) 
+            throw new BoxBinaryFormatException($"provided size is too large (max. 500MB)");
+    }
+
     private void Read(BinaryReader rd)
     {
         if (new string(rd.ReadChars(5)) != "ddBox")
@@ -67,6 +73,10 @@ public class SerializedBox
         // Resources Section
         CompressedIconSize = rd.ReadUInt32();
         UncompressedIconSize = rd.ReadUInt32();
+        
+        VerifyExternalBufferSize(CompressedBackgroundSize);
+        VerifyExternalBufferSize(UncompressedIconSize);
+        
         byte[] compressedData = new byte[CompressedIconSize];
         for (ulong i = 0; i < CompressedIconSize; i++)
             compressedData[i] = rd.ReadByte();
@@ -76,6 +86,10 @@ public class SerializedBox
 
         CompressedBackgroundSize = rd.ReadUInt32();
         UncompressedBackgroundSize = rd.ReadUInt32();
+        
+        VerifyExternalBufferSize(CompressedBackgroundSize);
+        VerifyExternalBufferSize(UncompressedBackgroundSize);
+        
         byte[] compressedBackgroundData = new byte[CompressedBackgroundSize];
         for (ulong i = 0; i < CompressedBackgroundSize; i++)
             compressedBackgroundData[i] = rd.ReadByte();
@@ -99,6 +113,10 @@ public class SerializedBox
         Files = new FSFile[FileCount];
         CompressedFSSize = rd.ReadUInt32();
         UncompressedFSSize = rd.ReadUInt32();
+        
+        VerifyExternalBufferSize(CompressedFSSize);
+        VerifyExternalBufferSize(UncompressedFSSize);
+        
         byte[] filesystemSection = new byte[CompressedFSSize];
         for (ulong i = 0; i < CompressedFSSize; i++)
             filesystemSection[i] = rd.ReadByte();
