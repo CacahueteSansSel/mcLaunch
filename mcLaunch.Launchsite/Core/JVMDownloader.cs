@@ -1,5 +1,7 @@
-﻿using System.Text.Json;
+﻿using System.IO.Compression;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using mcLaunch.Launchsite.Core.Azul.Models;
 using mcLaunch.Launchsite.Http;
 using mcLaunch.Launchsite.Models;
 using mcLaunch.Launchsite.Utils;
@@ -56,6 +58,18 @@ public class JvmDownloader
 
         if (platform == "mac-os-arm64")
         {
+            if (name == "jre-legacy")
+            {
+                AzulJvmEntry[] entries = await AzulJvmApi.GetAsync(8, Utilities.GetZuluPlatformIdentifier(),
+                    Utilities.GetArchitecture());
+
+                if (entries.Length > 0)
+                {
+                    await DownloadAzulJvmAsync(Path.Combine(targetPath, "jre.bundle"), entries[0]);
+                    return;
+                }
+            }
+            
             // Adding macos intel platform if the java version we want is too old to even exist on apple silicon platforms
             platforms.Add("mac-os");
         }
@@ -104,5 +118,16 @@ public class JvmDownloader
 
             await Context.Downloader.ChmodAsync(macosJavaPath, "+x");
         }
+    }
+
+    private async Task DownloadAzulJvmAsync(string path, AzulJvmEntry entry)
+    {
+        string tmpFilename = Path.Combine(Path.GetTempPath(), "temp-jvm-jre.zip");
+
+        if (!await Context.Downloader.DownloadAsync(entry.DownloadUrl!, tmpFilename, null))
+            return;
+        
+        if (!await Context.Downloader.ExtractAsync(tmpFilename, path, true))
+            return;
     }
 }

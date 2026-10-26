@@ -1,5 +1,6 @@
 ﻿using System.IO.Compression;
 using System.Security.Cryptography;
+using mcLaunch.Launchsite.Core;
 
 namespace mcLaunch.Launchsite.Download;
 
@@ -33,9 +34,12 @@ public class HttpResourceDownloader : ResourceDownloader
         return true;
     }
 
-    public override async Task<bool> ExtractAsync(string sourceArchive, string targetDir)
+    public override async Task<bool> ExtractAsync(string sourceArchive, string targetDir, bool excludeTopDirectory = false)
     {
-        ZipFile.ExtractToDirectory(sourceArchive, targetDir, true);
+        await ZipFile.ExtractToDirectoryAsync(sourceArchive, targetDir, true);
+
+        Utilities.RemoveTopDirectory(targetDir);
+        
         return true;
     }
 

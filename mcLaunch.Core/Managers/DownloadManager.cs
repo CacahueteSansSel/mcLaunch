@@ -80,9 +80,9 @@ public static class DownloadManager
         });
     }
 
-    public static void Add(string source, string target, string? hash, EntryAction action)
+    public static void Add(string source, string target, string? hash, EntryAction action, bool excludeTopDirectory = false)
     {
-        currentSectionEntries.Add(new DownloadEntry { Source = source, Target = target, Hash = hash, Action = action });
+        currentSectionEntries.Add(new DownloadEntry { Source = source, Target = target, Hash = hash, Action = action, ExtractExcludeTopDirectory = excludeTopDirectory});
     }
 
     private static async Task<bool> UseFallbackDownloader(string sourceUrl, string targetFilename,
@@ -163,11 +163,21 @@ public static class DownloadManager
         }
     }
 
-    private static Task ExtractEntryAsync(DownloadEntry entry)
+    private static async Task ExtractEntryAsync(DownloadEntry entry)
     {
         if (!Directory.Exists(entry.Target)) Directory.CreateDirectory(entry.Target);
 
-        return Task.Run(() => ZipFile.ExtractToDirectory(entry.Source, entry.Target, true));
+        try
+        {
+            await ZipFile.ExtractToDirectoryAsync(entry.Source, entry.Target, true);
+        
+            if (entry.ExtractExcludeTopDirectory) 
+                Launchsite.Core.Utilities.RemoveTopDirectory(entry.Target);
+        }
+        catch (Exception e)
+        {
+            
+        }
     }
 
     private static async Task ChmodEntryAsync(DownloadEntry entry)
@@ -277,9 +287,9 @@ public static class DownloadManager
             return true;
         }
 
-        public override async Task<bool> ExtractAsync(string sourceArchive, string targetDir)
+        public override async Task<bool> ExtractAsync(string sourceArchive, string targetDir, bool excludeTopDirectory = false)
         {
-            Add(sourceArchive, targetDir, null, EntryAction.Extract);
+            Add(sourceArchive, targetDir, null, EntryAction.Extract, excludeTopDirectory);
 
             return true;
         }
@@ -333,6 +343,7 @@ public class DownloadEntry
     public string? Hash { get; init; }
     public long? Size { get; init; }
     public EntryAction Action { get; init; }
+    public bool ExtractExcludeTopDirectory { get; set; }
 }
 
 public class DownloadSection
